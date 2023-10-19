@@ -1,0 +1,4033 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>68232 &ndash; Proposal for the Managed Build system in 3.0</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "68232 – Proposal for the Managed Build system in 3.0",
+                             "show_bug.cgi?id=68232" );
+        document.title = "68232 – Proposal for the Managed Build system in 3.0";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "68232 – Proposal for the Managed Build system in 3.0", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_CLOSED
+                 bz_product_CDT
+                 bz_component_cdt-build
+                 bz_bug_68232 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;68232</span>
+
+        <span id="subtitle" class="subheader">Proposal for the Managed Build system in 3.0</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2014-01-28 21:42:34 EST</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=68232&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=68232" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2014-01-28 21:42:34">
+  <input type="hidden" name="id" value="68232">
+  <input type="hidden" name="token" value="1629876962-IbX6ufrtKoke8G2qA3hbFQ-zXXRQpE9QdVW7AIttnRk">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=68232"><b>Bug&nbsp;68232</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">Proposal for the Managed Build system in 3.0</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span>Proposal for the Managed Build system in 3.0
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      'Proposal for the Managed Build system in 3.0' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">CLOSED
+          FIXED
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >CDT
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >Tools
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=CDT"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >cdt-build
+
+  (<a href="buglist.cgi?component=cdt-build&amp;product=CDT&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>2.0 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">All
+        All
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P3
+       enhancement<span id="votes_container">
+      with
+      <a href="page.cgi?id=voting/bug.html&amp;bug_id=68232">1 
+            vote</a>
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=68232#vote_68232">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>4.0 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard">
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'cdt-build-inbox\x40eclipse.org',
+        'jonah\x40kichwacoders.com');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          <tr>
+    <th class="field_label">
+      <label>Duplicates (5)</label>:
+    </th>
+    <td class="field_value">
+      <span id="duplicates"><a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Thoughts about the new Build Configuration"
+   href="show_bug.cgi?id=37124">37124</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Include Paths &amp; Toolchain Path Settings"
+   href="show_bug.cgi?id=44279">44279</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - multipl binaries in managed make"
+   href="show_bug.cgi?id=44887">44887</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Extensibility: Custom option editors for Managed Make Builder"
+   href="show_bug.cgi?id=64641">64641</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Build configurations do not show up in project menu"
+   href="show_bug.cgi?id=71782">71782</a> 
+      </span>
+      (<a href="buglist.cgi?bug_id=37124,44279,44887,64641,71782">view as bug list</a>)
+    </td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+
+  </td>
+  </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2004-06-22 16:41 EDT by <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2014-01-28 21:42 EST
+      (<a href="show_activity.cgi?id=68232">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>23 
+          users
+          <span id="cc_edit_area_showhide_container" class="bz_default_hidden">
+            (<a href="#" id="cc_edit_area_showhide">show</a>)
+          </span>
+        <div id="cc_edit_area">
+          <br>
+            <select id="cc" multiple="multiple" size="5" >
+                <option value="achapiro">achapiro</option>
+                <option value="benlau">benlau</option>
+                <option value="bill.hilliard">bill.hilliard</option>
+                <option value="bnicolle">bnicolle</option>
+                <option value="cdtdoug">cdtdoug</option>
+                <option value="dinglis">dinglis</option>
+                <option value="eclipse">eclipse</option>
+                <option value="EclipseBug.Tracker">EclipseBug.Tracker</option>
+                <option value="jeremiah.lott">jeremiah.lott</option>
+                <option value="kesselhaus">kesselhaus</option>
+                <option value="leo.treggiari">leo.treggiari</option>
+                <option value="mikhail.sennikovskiy">mikhail.sennikovskiy</option>
+                <option value="Mikhail.Voronin">Mikhail.Voronin</option>
+                <option value="norbert.schulz">norbert.schulz</option>
+                <option value="patrick">patrick</option>
+                <option value="pmac">pmac</option>
+                <option value="pmasse">pmasse</option>
+                <option value="recoskie">recoskie</option>
+                <option value="robert.monteleone">robert.monteleone</option>
+                <option value="sam.robb">sam.robb</option>
+                <option value="sevoy">sevoy</option>
+                <option value="sridhars">sridhars</option>
+                <option value="tim.c.chen">tim.c.chen</option>
+            </select>
+        </div>
+          <script type="text/javascript">
+            hideEditableField( 'cc_edit_area_showhide_container', 
+                               'cc_edit_area', 
+                               'cc_edit_area_showhide', 
+                               '', 
+                               '');  
+          </script>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" >
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+      <tr id="a1" class="bz_contenttype_text_html">
+        <td>
+            <a href="attachment.cgi?id=12694"
+               title="View the content of the attachment">
+          <b>Proposal for the Managed Build system</b></a>
+
+          <span class="bz_attach_extra_info">
+              (296.06 KB,
+                text/html)
+
+            <br>
+            <a href="#attach_12694"
+               title="Go to the comment associated with the attachment">2004-06-22 16:42 EDT</a>,
+
+            <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=12694&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a2" class="bz_contenttype_text_html bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=12695"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Proposal for the Managed Build system</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (296.06 KB,
+                text/html)
+
+            <br>
+            <a href="#attach_12695"
+               title="Go to the comment associated with the attachment">2004-06-22 16:46 EDT</a>,
+
+            <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=12695&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a3" class="bz_contenttype_application_octet-stream">
+        <td>
+            <a href="attachment.cgi?id=12697"
+               title="View the content of the attachment">
+          <b>Proposal as a MS Word document</b></a>
+
+          <span class="bz_attach_extra_info">
+              (469.50 KB,
+                application/octet-stream)
+
+            <br>
+            <a href="#attach_12697"
+               title="Go to the comment associated with the attachment">2004-06-22 17:26 EDT</a>,
+
+            <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=12697&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a4" class="bz_contenttype_image_gif">
+        <td>
+            <a href="attachment.cgi?id=12703"
+               title="View the content of the attachment">
+          <b>.gif file of proposed object model</b></a>
+
+          <span class="bz_attach_extra_info">
+              (12.68 KB,
+                image/gif)
+
+            <br>
+            <a href="#attach_12703"
+               title="Go to the comment associated with the attachment">2004-06-23 00:15 EDT</a>,
+
+            <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=12703&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a5" class="bz_contenttype_application_msword">
+        <td>
+            <a href="attachment.cgi?id=12718"
+               title="View the content of the attachment">
+          <b>Comments</b></a>
+
+          <span class="bz_attach_extra_info">
+              (37.00 KB,
+                application/msword)
+
+            <br>
+            <a href="#attach_12718"
+               title="Go to the comment associated with the attachment">2004-06-23 11:20 EDT</a>,
+
+            <span class="vcard"><span class="fn">Alex Chapiro</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=achapiro&#64;qnx.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=achapiro&#64;qnx.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=12718&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a6" class="bz_contenttype_application_octet-stream">
+        <td>
+            <a href="attachment.cgi?id=12914"
+               title="View the content of the attachment">
+          <b>Responses to date (as Word document)</b></a>
+
+          <span class="bz_attach_extra_info">
+              (55.00 KB,
+                application/octet-stream)
+
+            <br>
+            <a href="#attach_12914"
+               title="Go to the comment associated with the attachment">2004-06-30 12:47 EDT</a>,
+
+            <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=12914&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a7" class="bz_contenttype_text_html">
+        <td>
+            <a href="attachment.cgi?id=12915"
+               title="View the content of the attachment">
+          <b>Responses to date (HTML version)</b></a>
+
+          <span class="bz_attach_extra_info">
+              (29.92 KB,
+                text/html)
+
+            <br>
+            <a href="#attach_12915"
+               title="Go to the comment associated with the attachment">2004-06-30 12:48 EDT</a>,
+
+            <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=12915&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a8" class="bz_contenttype_application_msword">
+        <td>
+            <a href="attachment.cgi?id=13797"
+               title="View the content of the attachment">
+          <b>MS Word version of summary of proposal review</b></a>
+
+          <span class="bz_attach_extra_info">
+              (36.00 KB,
+                application/msword)
+
+            <br>
+            <a href="#attach_13797"
+               title="Go to the comment associated with the attachment">2004-08-06 14:19 EDT</a>,
+
+            <span class="vcard"><span class="fn">Sean Evoy</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=sevoy&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=sevoy&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=13797&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a9" class="bz_contenttype_text_html">
+        <td>
+            <a href="attachment.cgi?id=13798"
+               title="View the content of the attachment">
+          <b>HTML version of conference call summary</b></a>
+
+          <span class="bz_attach_extra_info">
+              (12.22 KB,
+                text/html)
+
+            <br>
+            <a href="#attach_13798"
+               title="Go to the comment associated with the attachment">2004-08-06 14:21 EDT</a>,
+
+            <span class="vcard"><span class="fn">Sean Evoy</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=sevoy&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=sevoy&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=13798&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a10" class="bz_contenttype_application_octet-stream">
+        <td>
+            <a href="attachment.cgi?id=13800"
+               title="View the content of the attachment">
+          <b>Updated proposal after review meetings</b></a>
+
+          <span class="bz_attach_extra_info">
+              (620.50 KB,
+                application/octet-stream)
+
+            <br>
+            <a href="#attach_13800"
+               title="Go to the comment associated with the attachment">2004-08-06 17:17 EDT</a>,
+
+            <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=13800&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a11" class="bz_contenttype_text_html bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=13801"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Update proposal after reviews (HTML Version)</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (339.64 KB,
+                text/html)
+
+            <br>
+            <a href="#attach_13801"
+               title="Go to the comment associated with the attachment">2004-08-06 17:22 EDT</a>,
+
+            <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=13801&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a12" class="bz_contenttype_image_gif">
+        <td>
+            <a href="attachment.cgi?id=13802"
+               title="View the content of the attachment">
+          <b>.gif file of proposed object model</b></a>
+
+          <span class="bz_attach_extra_info">
+              (13.96 KB,
+                image/gif)
+
+            <br>
+            <a href="#attach_13802"
+               title="Go to the comment associated with the attachment">2004-08-06 17:28 EDT</a>,
+
+            <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=13802&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a13" class="bz_contenttype_text_html">
+        <td>
+            <a href="attachment.cgi?id=13809"
+               title="View the content of the attachment">
+          <b> Updated proposal (HTML version)</b></a>
+
+          <span class="bz_attach_extra_info">
+              (357.93 KB,
+                text/html)
+
+            <br>
+            <a href="#attach_13809"
+               title="Go to the comment associated with the attachment">2004-08-08 13:01 EDT</a>,
+
+            <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=13809&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a14" class="bz_contenttype_application_octet-stream">
+        <td>
+            <a href="attachment.cgi?id=14859"
+               title="View the content of the attachment">
+          <b>Updated proposal for CDT 2.1 (Word document)</b></a>
+
+          <span class="bz_attach_extra_info">
+              (696.50 KB,
+                application/octet-stream)
+
+            <br>
+            <a href="#attach_14859"
+               title="Go to the comment associated with the attachment">2004-09-28 22:15 EDT</a>,
+
+            <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=14859&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a15" class="bz_contenttype_text_html">
+        <td>
+            <a href="attachment.cgi?id=14860"
+               title="View the content of the attachment">
+          <b>Updated proposal (html format)</b></a>
+
+          <span class="bz_attach_extra_info">
+              (661.79 KB,
+                text/html)
+
+            <br>
+            <a href="#attach_14860"
+               title="Go to the comment associated with the attachment">2004-09-28 22:42 EDT</a>,
+
+            <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=14860&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a16" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=15364"
+               title="View the content of the attachment">
+          <b>Initial patch for MBS Core (1 of 3)</b></a>
+
+          <span class="bz_attach_extra_info">
+              (635.55 KB,
+                patch)
+
+            <br>
+            <a href="#attach_15364"
+               title="Go to the comment associated with the attachment">2004-10-25 14:17 EDT</a>,
+
+            <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+                  <span title="Doug Schaefer">cdtdoug</span>:
+                iplog+
+                <br>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=15364&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=15364&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a17" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=15365"
+               title="View the content of the attachment">
+          <b>Initial patch for MBS Core.Tests (1 of 3)</b></a>
+
+          <span class="bz_attach_extra_info">
+              (145.24 KB,
+                patch)
+
+            <br>
+            <a href="#attach_15365"
+               title="Go to the comment associated with the attachment">2004-10-25 14:18 EDT</a>,
+
+            <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+                  <span title="Doug Schaefer">cdtdoug</span>:
+                iplog+
+                <br>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=15365&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=15365&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a18" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=15366"
+               title="View the content of the attachment">
+          <b>Initial patch for MBS UI (3 of 3) - Core.tests should have been 2 of 3...</b></a>
+
+          <span class="bz_attach_extra_info">
+              (378.38 KB,
+                patch)
+
+            <br>
+            <a href="#attach_15366"
+               title="Go to the comment associated with the attachment">2004-10-25 14:20 EDT</a>,
+
+            <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+                  <span title="Doug Schaefer">cdtdoug</span>:
+                iplog+
+                <br>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=15366&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=15366&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a19" class="bz_contenttype_application_octet-stream">
+        <td>
+            <a href="attachment.cgi?id=15725"
+               title="View the content of the attachment">
+          <b>Instructions for converting manifest files from 2.0 to 2.1</b></a>
+
+          <span class="bz_attach_extra_info">
+              (247.50 KB,
+                application/octet-stream)
+
+            <br>
+            <a href="#attach_15725"
+               title="Go to the comment associated with the attachment">2004-11-08 10:50 EST</a>,
+
+            <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=15725&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a20" class="bz_contenttype_text_html bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=81641"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">List of proposed MBS items that have not been implemented</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (54.21 KB,
+                text/html)
+
+            <br>
+            <a href="#attach_81641"
+               title="Go to the comment associated with the attachment">2007-10-30 16:27 EDT</a>,
+
+            <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=81641&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a21" class="bz_contenttype_text_html">
+        <td>
+            <a href="attachment.cgi?id=81648"
+               title="View the content of the attachment">
+          <b>List of proposed MBS items that have not been implemented</b></a>
+
+          <span class="bz_attach_extra_info">
+              (10.65 KB,
+                text/html)
+
+            <br>
+            <a href="#attach_81648"
+               title="Go to the comment associated with the attachment">2007-10-30 16:35 EDT</a>,
+
+            <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=81648&amp;action=edit">Details</a>
+        </td>
+      </tr>
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <span class="bz_attach_view_hide">
+            <a href="#a0" onclick="return toggle_display(this);">Show
+              Obsolete</a> (3)
+            <a id="view_all" href="attachment.cgi?bugid=68232&amp;action=viewall&amp;hide_obsolete=1">View All</a>
+        </span>
+        <a href="attachment.cgi?bugid=68232&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=68232&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-06-22 16:41:13 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I'm going to attach an html file (I hope it works...) with a proposal for the 
+functionality for the Managed Build system in the next major release of CDT 
+(3.0?).  There are a large number of additional requirements over what is 
+supported in CDT 2.0.  I have gathered these requirements from within Intel 
+and from conversations on the cdt-dev mailing list.  Intel is very interested 
+in this functionality and will be willing to commit developers to the 
+implementation.  I'd like to start discussion now since the sooner we get 
+started, the more we will be able to complete in CDT 3.0.</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-06-22 16:42:52 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=12694" name="attach_12694" title="Proposal for the Managed Build system">attachment 12694</a> <a href="attachment.cgi?id=12694&amp;action=edit" title="Proposal for the Managed Build system">[details]</a></span>
+Proposal for the Managed Build system</pre>
+    </div>
+
+    <div id="c2" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c2">Comment 2</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-06-22 16:46:14 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=12695" name="attach_12695" title="Proposal for the Managed Build system">attachment 12695</a> <a href="attachment.cgi?id=12695&amp;action=edit" title="Proposal for the Managed Build system">[details]</a></span>
+Proposal for the Managed Build system</pre>
+    </div>
+
+    <div id="c3" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c3">Comment 3</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Doug Schaefer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=cdtdoug&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=cdtdoug&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-06-22 16:51:58 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">That's great news, Leo. I'll take a look once I get my head out of my little 
+performance hell :) Hopefully soon.</pre>
+    </div>
+
+    <div id="c4" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c4">Comment 4</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-06-22 17:26:09 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=12697" name="attach_12697" title="Proposal as a MS Word document">attachment 12697</a> <a href="attachment.cgi?id=12697&amp;action=edit" title="Proposal as a MS Word document">[details]</a></span>
+Proposal as a MS Word document
+
+This is the proposal as a MS Word document. The HTML attachment is not showing
+the objetc model diagram.  I guess this is because it is a separate .gif file. 
+If anyone knows how to fix the HTML version, let me know.</pre>
+    </div>
+
+    <div id="c5" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c5">Comment 5</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Brent Nicolle</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=bnicolle&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=bnicolle&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-06-22 17:35:57 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Word works for me, but if you upload the GIF file separately,
+any MS-allergic folks can at least manually reconstruct your complete
+HTML doc.  Alternatively you can Zip up all the contents - particularly
+if you had had lots of images or wacky relative paths.
+</pre>
+    </div>
+
+    <div id="c6" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c6">Comment 6</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-06-23 00:15:48 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=12703" name="attach_12703" title=".gif file of proposed object model">attachment 12703</a> <a href="attachment.cgi?id=12703&amp;action=edit" title=".gif file of proposed object model">[details]</a></span>
+.gif file of proposed object model</pre>
+    </div>
+
+    <div id="c7" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c7">Comment 7</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mirza Hadzic</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mirza&#64;seznam.cz" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mirza&#64;seznam.cz" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-06-23 02:48:05 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Document looks great. I have minor suggestion:
+
+- For a standard set of c/c++ compilers (gcc, intel, MS) there should be tabs
+for configuration of all command line options using GUI. &quot;Wizard&quot; buttons to
+quicly set often choices: (best performance, small code, debug) should be on
+this tabs, so user can choose &quot;small code&quot; and then fine-tune some radio buttons
+or check boxes. However, command line as string should also be there, if someone
+wants to edit it manually.</pre>
+    </div>
+
+    <div id="c8" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c8">Comment 8</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Doug Schaefer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=cdtdoug&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=cdtdoug&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-06-23 09:48:28 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Assigning to Leo. This will stop the bugzilla messages from getting sent to the 
+inbox. Everyone interested in this should sign up to the CC list.</pre>
+    </div>
+
+    <div id="c9" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c9">Comment 9</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Chris Recoskie</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=recoskie&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=recoskie&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-06-23 10:14:07 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">A great start so far.
+
+Would also like to see:
+
+Tools - Provide a way in the tool definition to specify that the tool does not 
+require sending the name of the output file.  Our tools do not provide a way 
+to set the output file name except in the final link step.  Sending the output 
+name creates errors.
+
+More comments to come as I digest the rest of the document.  The provisions 
+for custom option editors and validators are especially good.</pre>
+    </div>
+
+    <div id="c10" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c10">Comment 10</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Alex Chapiro</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=achapiro&#64;qnx.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=achapiro&#64;qnx.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-06-23 11:20:24 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=12718" name="attach_12718" title="Comments">attachment 12718</a> <a href="attachment.cgi?id=12718&amp;action=edit" title="Comments">[details]</a></span>
+Comments
+
+This is a very good document. Basically it covers all extra requirements we
+have for MBS. I still have some minor notes that I included into attached
+document.
+I'm not ready to comment the second part of document (model description), but I
+think it is really less important as long as we have consensus about proposed
+functions</pre>
+    </div>
+
+    <div id="c11" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c11">Comment 11</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-06-30 12:47:21 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=12914" name="attach_12914" title="Responses to date (as Word document)">attachment 12914</a> <a href="attachment.cgi?id=12914&amp;action=edit" title="Responses to date (as Word document)">[details]</a></span>
+Responses to date (as Word document)
+
+Here are answers to he questions/suggestions that I have received so far.  Note
+that I will be on vacation beginning July 7th and returning July 21st – I’ll
+have limited internet access.</pre>
+    </div>
+
+    <div id="c12" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c12">Comment 12</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-06-30 12:48:33 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=12915" name="attach_12915" title="Responses to date (HTML version)">attachment 12915</a> <a href="attachment.cgi?id=12915&amp;action=edit" title="Responses to date (HTML version)">[details]</a></span>
+Responses to date (HTML version)</pre>
+    </div>
+
+    <div id="c13" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c13">Comment 13</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Chris Recoskie</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=recoskie&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=recoskie&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-06-30 15:39:23 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Answer to Leo's question:
+
+If you do not specify an output flag, no output flag is passed, but the name 
+of the output file is still passed.
+
+E.g. myCompiler foo.o foo.c
+
+If you specify the output flag (e.g. -o) then you get the usual thing...
+
+mycompiler -o foo.o foo.c</pre>
+    </div>
+
+    <div id="c14" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c14">Comment 14</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Kleo Hapitas</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=khapitas&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=khapitas&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-07-07 16:55:00 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">PR was not targeted to any particular release. Changing target milestone to 2.1</pre>
+    </div>
+
+    <div id="c15" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c15">Comment 15</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Chris Recoskie</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=recoskie&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=recoskie&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-07-14 10:48:03 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Some additional feedback:
+
+Re: options,
+
+- Currently we have some options which take string arguments, but which have a 
+default value that the user will get if they only pass the option without a 
+parameter (e.g. &quot;Generate a dependency list for the source file into the file 
+filename.pp   Optionally, name the output file.&quot;).  Currently it is not 
+possible to facilitate this as if the string field is blank, the command does 
+not get passed.  I propose that we add boolString option type, which would 
+essentially be a checkbox to turn the option off/on, coupled with an edit box 
+to edit any optional parameters.  I know that I could do this with a custom 
+editor but I think there is enough demand for us to create a built-in editor 
+for this.
+
+- Does it make sense to support dependant options? (options which are only 
+valid if other options are set).  I do not have a current need for this but I 
+am wondering if others might.
+
+Re: Help,
+
+-  Should we have help support for option categories or tools?  What about 
+help for the entire toolchain?
+
+Grab bag:
+
+-  I want to have support for switching out toolsets (i.e. keep your 
+toolchain, but use new executable tools within it).  Our users often get 
+updated release of our code generation tools which they want to switch back 
+and forth between.  They might get updated tools, but not a new IDE product, 
+and will want to upgrade the CG tools.  Or, they might get a new IDE but they 
+are in the middle of their project and cannot switch CG tools (this is very 
+common in the embedded world) so they will want to point the IDE at their old 
+tools.
+
+The thought I had was to have an extension point mechanism that would allow 
+for the registration of sets of tool executables.  Users could then select 
+from a GUI which CG tools they wanted.  The CG tools plug-in would specify 
+target architecture and a &quot;compiler family&quot; to allow the MBS to determine 
+compatibility between tool-chain definitions and installed tool executables.
+
+This was work I was planning to do at some point (I was hoping for our current 
+product but probably not until after now...) so I don't mind being prime on 
+that feature and comitting it, depending on timing.
+
+-  JUnit testing.  This isn't a product requirement per se but I think we 
+should spend some time getting some more comprehensive unit tests put together.
+
+-  All default tool-chain implementations segregated into their own plug-ins 
+to facilitate their easy removal for ISV products based on CDT.  Right now I 
+have to fork the UI plugin in order to remove all the GNU definitions, as the 
+GNU definitions don't make sense for my product.
+
+-  We should specify requirements for the makefile generator(s).  Obviously we 
+need the current GNU generator but I think we also need a more generic 
+generator that does a pretty good job on arbitrary tool definitions.  The user 
+would still be able to resort to creating their own generator but this should 
+be looked upon as a last resort to be used by users whose toolchains fall 
+under obscure or unusual corner cases.  Right now everything non-GNU requires 
+a custom makefile generator.
+</pre>
+    </div>
+
+    <div id="c16" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c16">Comment 16</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mirza Hadzic</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mirza&#64;seznam.cz" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mirza&#64;seznam.cz" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-07-16 10:19:00 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">maybe this managed built system can utilize cmake (www.cmake.org)
+- runs on virtually every platform (yes, including AIX  ;-) )
+- can generate makefiles and workspace/projects for MSC++
+- is tested with wide variety of OS/compilers out there
+- has bsd licence
+- is very simple, yet powerful
+</pre>
+    </div>
+
+    <div id="c17" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c17">Comment 17</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-07-28 10:13:26 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Sean raised a question at the end of yesterday's meeting asking whether the 
+Option, Command attribute needed more sophisticated output formatting (I'm 
+paraphrasing, so the question might have been somewhat different...).  I 
+thought of a simple extension today that may solve most of the common problems.
+
+The 2 problems that I am aware of are:
+ o  A required space between the command and the value
+ o  Quotes required around the value - e.g., for when the value may contain em 
+bedded spaces
+
+For String and StringList options (and any specializations of these option 
+types that we may define...), the Command attribute may contain %s to indicate 
+where the option value should be placed in the generated option string.  If no 
+%s is present in the Command attribute, the option value is placed after the 
+specified Command attribute value (i.e., the current behavior).
+
+Examples of Command attribute values that handle the 2 cases above:
+ o Required space:   /foo %s
+ o Required quotes:  /bar:&quot;%s&quot;
+
+</pre>
+    </div>
+
+    <div id="c18" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c18">Comment 18</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-07-28 11:19:00 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Below are my responses to Chris' comments:
+
+<span class="quote">&gt;Re: options,</span >
+
+<span class="quote">&gt;- Currently we have some options which take string arguments, but which have a
+&gt;a default value that the user will get if they only pass the option without a 
+&gt;parameter (e.g. &quot;Generate a dependency list for the source file into the file 
+&gt;filename.pp   Optionally, name the output file.&quot;).  Currently it is not 
+&gt;possible to facilitate this as if the string field is blank, the command does 
+&gt;not get passed.  I propose that we add boolString option type, which would 
+&gt;essentially be a checkbox to turn the option off/on, coupled with an edit box 
+&gt;to edit any optional parameters.  I know that I could do this with a custom 
+&gt;editor but I think there is enough demand for us to create a built-in editor 
+&gt;for this.</span >
+
+We discussed this a little yesterday.  Visual Studio (and other UIs) often use 
+2 separate options to handle this.  The first option is a boolean that 
+indicates  whether or not a particular &quot;output&quot; is generated, and a separate 
+string option is used to override the default name of the &quot;output&quot;.  
+We could take this approach in the MBS, except that special handling of the
+command output is then required, because you don't want to have the &quot;command&quot;
+generated twice on the command line when the boolean is set and a string
+value is entered by the user.
+
+The problem with defining a new type is that the type would then require
+additional type-specific attributes (e.g., there are separate UI &quot;prompt&quot;
+strings required for the &quot;check box&quot; and the &quot;edit box&quot; in the UI).  We 
+already have at least one option-type-specific attribute in the Option element
+ - commandFalse is only used with boolean options (mea culpa - I added it...).
+I'm wondering whether there is a better alternative to loading up the Option 
+element with option-type specific attributes.  For example, could the Option 
+element contain option-type-specific child elements for these option type 
+specific attributes?  Then, an optional &quot;booleanOption&quot; element child could 
+specify the commandFalse attribute when that needed to be used for a 
+particular boolean option.
+
+<span class="quote">&gt;- Does it make sense to support dependant options? (options which are only 
+&gt;valid if other options are set).  I do not have a current need for this but I 
+&gt;am wondering if others might.</span >
+
+Yes, definitely.  Not including it was an oversight on my part.  I suggest
+adding an &quot;isVisible&quot; attribute.  It specifies a class name that implements
+an interface with a method that returns an enumerated value.  The values
+include:
+ o  VisibleAndEnabled - the option is visible in the UI and enabled (this is 
+    the default when the isVisible attribute is not specified)
+ o  NotVisible - the option should not be displayed in the UI
+ o  Disabled - the option is displayed in the UI but is disabled (the value
+    cannot be changed)
+The logic for supporting the dependent options is then up to the tool-chain
+integrator.
+
+Re: Help,
+
+<span class="quote">&gt;-  Should we have help support for option categories or tools?  What about 
+&gt;help for the entire toolchain?</span >
+
+Those make sense to me.  I'll add appropriate attributes to the proposal.
+
+<span class="quote">&gt;Grab bag:</span >
+&gt;
+<span class="quote">&gt;-  I want to have support for switching out toolsets (i.e. keep your 
+&gt;toolchain, but use new executable tools within it).  Our users often get 
+&gt;updated release of our code generation tools which they want to switch back 
+&gt;and forth between.  They might get updated tools, but not a new IDE product, 
+&gt;and will want to upgrade the CG tools.  Or, they might get a new IDE but they 
+&gt;are in the middle of their project and cannot switch CG tools (this is very 
+&gt;common in the embedded world) so they will want to point the IDE at their old 
+&gt;tools.</span >
+&gt;
+<span class="quote">&gt;The thought I had was to have an extension point mechanism that would allow 
+&gt;for the registration of sets of tool executables.  Users could then select 
+&gt;from a GUI which CG tools they wanted.  The CG tools plug-in would specify 
+&gt;target architecture and a &quot;compiler family&quot; to allow the MBS to determine 
+&gt;compatibility between tool-chain definitions and installed tool executables.</span >
+&gt;
+<span class="quote">&gt;This was work I was planning to do at some point (I was hoping for our </span >
+current 
+<span class="quote">&gt;product but probably not until after now...) so I don't mind being prime on 
+&gt;that feature and comitting it, depending on timing.</span >
+
+I agree that this is functionality that would be useful to multiple tool-chain
+providers.  My current thought is a toolChain attribute that specifies a 
+class name that implements an interface to be defined.
+
+<span class="quote">&gt;-  JUnit testing.  This isn't a product requirement per se but I think we 
+&gt;should spend some time getting some more comprehensive unit tests put 
+&gt;together.</span >
+
+Certainly the current tests need to continue to work in order to test backward
+compatibility.  New tests need to be written for any new functionality.  Are 
+there specific areas of the CDT 2.0 functionality that you think should have
+additional tests?
+
+<span class="quote">&gt;-  All default tool-chain implementations segregated into their own plug-ins 
+&gt;to facilitate their easy removal for ISV products based on CDT.  Right now I 
+&gt;have to fork the UI plugin in order to remove all the GNU definitions, as the 
+&gt;GNU definitions don't make sense for my product.</span >
+
+I agree.
+
+<span class="quote">&gt;-  We should specify requirements for the makefile generator(s).  Obviously 
+&gt;we need the current GNU generator but I think we also need a more generic 
+&gt;generator that does a pretty good job on arbitrary tool definitions.  The </span >
+user 
+<span class="quote">&gt;would still be able to resort to creating their own generator but this should 
+&gt;be looked upon as a last resort to be used by users whose toolchains fall 
+&gt;under obscure or unusual corner cases.  Right now everything non-GNU requires 
+&gt;a custom makefile generator.</span >
+
+I agree that CDT should provide an implementation for a &quot;generic&quot; make.  The
+issue was raised yesterday whether it is OK if some of the MBS model could not
+be supported by all &quot;builders&quot;.  At best, this is undesirable, but maybe
+unavoidable.  I would suggest that builders be required to somehow indicate to
+the user what part(s) of a project specification they were not able to &quot;honor&quot;,
+e.g. in the build output window and log file.
+</pre>
+    </div>
+
+    <div id="c19" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c19">Comment 19</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Sean Evoy</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=sevoy&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=sevoy&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-07-28 16:32:51 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">This is a comment in response to Chris' point on the behaviour of the makefile 
+generator in the face of no output flag (#13). As Chris pointed out, if there 
+is no output flag defined, the Gnu makefile generator will create a line like
+&lt;command&gt; &lt;flags&gt; &lt;outputFlag&gt;&lt;output&gt; &lt;inputs&gt; 
+if it is a build target and 
+&lt;tool_command&gt; &lt;flags&gt; &lt;outputFlag&gt;$&#64; $&lt; 
+if it is a rule.
+
+In the case of a target, this works fine with Gnu tools like the archiver which 
+does not want an output flag (but does expect the archive name to be part of 
+the command line), and the assembler/linker which require there to be an output 
+flag.
+
+Since some tools prefer to decide the name of the output based on the name of 
+the input (or some other heuristic out of our control), we need some way to 
+format what goes into the make/jam/cmake/whatever file. This goes back to my 
+final question of the kick-off meeting, namely do we need additional syntax in 
+the description of an option or tool to handle these types of subtle 
+differences? Alternatively, should we just offer an extension point that lets 
+the makefile generator querry a class supplied by the integrator that answers a 
+properly formatted output for the tool?
+
+Leo has raised two points that I completely agree on. We need to know whether 
+or not to insert spaces after the ouput flag, and when to quote values with 
+embedded spaces. We also need a way to describe what to do if there is no 
+output flag. Some toolchains may need the inputs to be specified before the 
+output(s). I am not sure if we can come up with a way of encoding all of the 
+possible variations in the manifest or not. I am still thinking about this.</pre>
+    </div>
+
+    <div id="c20" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c20">Comment 20</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-07-29 09:31:39 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">What about adding a &quot;commandPattern&quot; attribute to the tool that specifies the 
+command line using replaceable arguments.  This is similar to what I proposed 
+for generating option commands (%s).  
+
+I don't know what the best syntax for the replaceable arguments would be, but 
+let's assume that the replaceable arguments would be delimited by &lt;&gt;.  The 
+default for a tool command line would be as it is today:
+
+&lt;command&gt; &lt;flags&gt; &lt;outputFlag&gt;&lt;output&gt; &lt;inputs&gt; 
+
+But the tool could change this pattern to suite its needs.  For example, if 
+the &quot;inputs&quot; need to come before the &quot;flags&quot; and there needs to be a space 
+between the &quot;outputFlag&quot; and &quot;output&quot;, then the tool would specify:
+
+&lt;command&gt; &lt;inputs&gt; &lt;flags&gt; &lt;outputFlag&gt; &lt;output&gt; 
+
+All other characters in the pattern would be output as-is.  For example, if 
+there needed to be braces around the flags and parenthesis around the output:
+
+&lt;command&gt; {&lt;flags&gt;} &lt;outputFlag&gt;(&lt;output&gt;) &lt;inputs&gt; 
+
+Would this mechanism be able to handle what the &quot;outputPrefix&quot; attribute 
+currently does?
+
+On a different issue, does the &quot;outputFlag&quot; really need to be handled using 
+unique attribute(s)?  If we use the concept of &quot;special&quot; options being 
+recognized using the name-alias mechanism, as in my proposal, could the output 
+flag simply be a normal option with a well-known alias name?
+</pre>
+    </div>
+
+    <div id="c21" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c21">Comment 21</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Sean Evoy</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=sevoy&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=sevoy&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-07-29 09:54:15 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">My response to Leo (#20). A formating string would be a good idea with a fall-
+back position that the implementer can supply a class that does more difficult 
+formatting for those cases that do not work with the default. 
+
+My gut feeling on the output flag is that if we still need that data after we 
+have a formatting string (or some equivalent functionality), then we should 
+only make it an option if we expect the user to modify it. Otherwsie, we should 
+encode it statically.  </pre>
+    </div>
+
+    <div id="c22" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c22">Comment 22</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Sean Evoy</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=sevoy&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=sevoy&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-08-06 14:19:34 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=13797" name="attach_13797" title="MS Word version of summary of proposal review">attachment 13797</a> <a href="attachment.cgi?id=13797&amp;action=edit" title="MS Word version of summary of proposal review">[details]</a></span>
+MS Word version of summary of proposal review
+
+This attachment contains a Word document summarizing the major comments from
+the two conference calls (July 27, 2004 and July 29, 2004) in which we reviewed
+the MBS 3.0 proposal.</pre>
+    </div>
+
+    <div id="c23" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c23">Comment 23</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Sean Evoy</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=sevoy&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=sevoy&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-08-06 14:21:08 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=13798" name="attach_13798" title="HTML version of conference call summary">attachment 13798</a> <a href="attachment.cgi?id=13798&amp;action=edit" title="HTML version of conference call summary">[details]</a></span>
+HTML version of conference call summary
+
+This attachment contains an HTML summary of the major comments from the two
+conference calls (July 27 and 29, 2004) in which we reviewed the MBS proposal.</pre>
+    </div>
+
+    <div id="c24" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c24">Comment 24</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-08-06 17:17:12 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=13800" name="attach_13800" title="Updated proposal after review meetings">attachment 13800</a> <a href="attachment.cgi?id=13800&amp;action=edit" title="Updated proposal after review meetings">[details]</a></span>
+Updated proposal after review meetings
+
+Attached is the updated proposal with changes from last week's review meeting. 
+There is a MS Word version and an HTML version.  New text is identified by
+being in blue with change bars in the left margin.  Some of the schema tables
+contain change bars where the only change was in the capitilzation of attribute
+names.
+
+Please review and continue to enter your comments in this report.  Also you are
+invited to identify the high priority items that you need first in order to be
+able to use the MBS as your build system.</pre>
+    </div>
+
+    <div id="c25" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c25">Comment 25</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-08-06 17:22:22 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=13801" name="attach_13801" title="Update proposal after reviews (HTML Version)">attachment 13801</a> <a href="attachment.cgi?id=13801&amp;action=edit" title="Update proposal after reviews (HTML Version)">[details]</a></span>
+Update proposal after reviews (HTML Version)</pre>
+    </div>
+
+    <div id="c26" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c26">Comment 26</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-08-06 17:28:06 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=13802" name="attach_13802" title=".gif file of proposed object model">attachment 13802</a> <a href="attachment.cgi?id=13802&amp;action=edit" title=".gif file of proposed object model">[details]</a></span>
+.gif file of proposed object model</pre>
+    </div>
+
+    <div id="c27" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c27">Comment 27</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-08-06 17:32:20 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The HTML version doesn't seem to have the &quot;change&quot; indicators (blue text and 
+line in left margin).  I'll see if I can get MS Word to generate them.  Use 
+the Word version if you can.</pre>
+    </div>
+
+    <div id="c28" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c28">Comment 28</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-08-08 13:01:39 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=13809" name="attach_13809" title="Updated proposal (HTML version)">attachment 13809</a> <a href="attachment.cgi?id=13809&amp;action=edit" title="Updated proposal (HTML version)">[details]</a></span>
+ Updated proposal (HTML version)
+
+This HTML version is much better.  I post-processed the Word output using MS
+Front Page.</pre>
+    </div>
+
+    <div id="c29" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c29">Comment 29</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Alex Chapiro</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=achapiro&#64;qnx.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=achapiro&#64;qnx.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-08-10 14:01:09 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">In case if it might be interesting, I prioritized listed reqirements acording to
+QNX vision of MBS solution. Requirement numeration corresponds to the latest
+Leo's document.
+
+_*Project types/Projects*_
+(Must be)  -  1, 2, 5
+(Nice to have)  -  3, 4, 7, 8, 10
+(Optional)  -  6, 9
+
+*_Configurations_*
+(Must be)  -  1, 2, 4, 8, 10, 13, 17
+(Nice to have)  -  6, 7, 9, 14, 15
+(Optional)  -  3, 5, 11, 12
+
+_*Tool-Chains*_
+(Must be)  -  1, 5, 6, 7, 8, 11, 12, 14, 15, 17
+(Nice to have)  -  2, 3, 9, 13, 18
+(Optional)  -  4, 10, 16
+
+_*Tools*_
+(Must be)  -  1, 4, 5, 6, 9 (should be on the tool-chain level), 11
+(Nice to have)  -  2, 3, 8, 10, 12, 16
+(Optional)  -  7, 13, 14, 15
+
+_*Options*_
+(Must be)  -  1, 2, 3, 4, 8, 9
+(Nice to have)  -  5, 6, 7, 10, 11
+(Optional)  -  14, 15
+
+_*Property Pages*_
+(Must be)  -  1, 3, 4, 5, 6
+(Nice to have)  -  2, 7
+(Optional)
+
+*_Project Resources_*
+(Must be)  -  1, 2, 5
+(Nice to have)  -  3, 4
+(Optional)
+
+_*Building*_
+(Must be)  -1, 2, 3
+(Nice to have)
+(Optional)
+
+</pre>
+    </div>
+
+    <div id="c30" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c30">Comment 30</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mirza Hadzic</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mirza&#64;seznam.cz" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mirza&#64;seznam.cz" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-08-11 03:15:23 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">How about adding &quot;profiler&quot; / &quot;profiler parser&quot; to configuration and platform.
+It would be nice to have unified C/C++ profiling across platforms, but I am not
+sure is it realistic.</pre>
+    </div>
+
+    <div id="c31" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c31">Comment 31</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Alex Chapiro</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=achapiro&#64;qnx.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=achapiro&#64;qnx.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-08-11 08:30:29 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I think more general solution is better when each new component can expose
+additional predefined configuration(s) via extension point, defined in MBS plugin.</pre>
+    </div>
+
+    <div id="c32" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c32">Comment 32</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Sean Evoy</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=sevoy&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=sevoy&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-08-12 13:54:18 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Build configurations do not show up in project menu"
+   href="show_bug.cgi?id=71782">Bug 71782</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c33" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c33">Comment 33</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Sean Evoy</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=sevoy&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=sevoy&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-08-12 13:55:37 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Extensibility: Custom option editors for Managed Make Builder"
+   href="show_bug.cgi?id=64641">Bug 64641</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c34" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c34">Comment 34</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Chris Recoskie</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=recoskie&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=recoskie&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-08-18 11:28:25 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Further feedback re: project versioning.
+
+Currently in the MBS you can specify your managed build revision, and if new 
+revisions of the MBS come out, your projects will get converted to the new 
+revision.
+
+I am currently running into a serious problem in that I need to somehow be 
+able to handle versioning of projects with respect to my own toolchain.  As 
+time marches on, bugs are fixed, CDT-based products updated, etc., the number 
+of options and the representations of existing options changes in my 
+toolchain.  As a result, upon going to an updated toolchain, some of the 
+options get &quot;lost&quot;.
+
+E.g.
+
+1.  Optimization level was a string option
+2.  user sets optimization level equal to &quot;3&quot;
+3.  Toolchain is updated.  Opt level is now an enumerated option.
+4.  User cleans the project.  Since the old option no longer appears, 
+optimization gets set to &quot;None&quot;.
+
+I would like to see in the toolchain schema a way to specify a toolchain 
+converter class that will handle converting the project to a new version of 
+the toolchain.
+
+The IToolChainConverter interface would provide the following methods:
+
+1.  GetConvertableToolchains - returns a list of IDs of toolchains and their 
+versions which the converter is able to convert.
+
+2.  ConvertProject - take a project and a version number as input, and convert 
+the project of the specified version number to the latest version.  
+
+Upon discovery of new toolchains, all applicable projects currently in the 
+system are prompted for conversion.  If an existing project is imported, it is 
+also prompted for conversion.
+
+Potentially, it may or may not make sense to want to convert between different 
+toolchains, not just different versions of the same toolchain.  I am not 
+thinking of this so much in terms of converting between disparate toolchains 
+(although you could certainly use it for that), but more in terms of handling 
+the case where an ISV drastically rearchitects their toolchain to make it more 
+generic, potentially ends up renaming it, etc.</pre>
+    </div>
+
+    <div id="c35" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c35">Comment 35</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-08-18 11:37:09 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Hi Chris,
+
+I was just thinking about a similar issue yesterday.  I don't have any good 
+ideas yet, but here are the questions I came up with:
+
+1.	Managed Build project files (.cdtbuild) references – Managed Build 
+project files (.cdtbuild) contain many references (by string “id”) to elements 
+defined in the Managed Build manifest files (plugin.xml).  What are the issues 
+regarding these references when upgrading the CDT version or a tool 
+integration.
+•	A tool integrator must maintain IDs forever?  What happens if a tool 
+or option is no longer supported?
+•	When the user upgrades their CDT version, they must also upgrade all 
+of their tool integrations at the same time?
+•	What does the Managed Build system do when a referenced ID cannot be 
+found?  Because of an upgrade?  Because of moving a project to another system 
+that does not have the same set of tool integrations?
+•	Should manifest file elements be copied to the .cdtbuild file rather 
+than using references to the .cdtbuild file?  This would mean that there would 
+be no automatic upgrade of tool integration information for a project when an 
+updated tool integration was installed.  This probably has advantages and 
+disadvantages.  What are they?
+</pre>
+    </div>
+
+    <div id="c36" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c36">Comment 36</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Chris Recoskie</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=recoskie&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=recoskie&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-08-20 11:04:43 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Interesting issue I'm also running into...
+
+Re: defined macros.  Some of our compiler options, if turned on, will cause 
+the compiler to automatically turn on certain macros in the preprocessor.  
+E.g. if I turn on the --stric_ansi compiler option, this causes __STDC__ to be 
+defined in the code.
+
+Right now I'm going to have to hack around this by making something which 
+listens to changes in the build options (specifically to my boolean --
+strict_ansi compiler option) and responds to changes to it by adding/removing 
+__STDC__ to the list of defined macros as appropriate.
+
+If I don't hack around it, users can create valid code, but the syntax checker 
+will highlight errors that don't exist because it doesn't have the true 
+version of the macros as the preprocessor sees them.
+
+I suspect that there are other tools (GNU included) which suffer from this.
+
+There are two ways to go about this:
+
+a) options can specify changes to the various special option types that they 
+contribute, e.g. an option can specify macros it defines/subtracts, include 
+paths it adds/removes, etc.
+
+b) Options can specify changes to arbitrary options that they can make
+
+A related issue is that we actually have an option --undefine which is the 
+inverse to --define, that is, it undefines a macro.  As you can see this all 
+gets messy very quickly.
+
+I know we talked about turning options on/off based on the values of others 
+but it seems that we are going to need to support modifying other options in 
+arbitrary ways.
+
+I want to advocate solution b.  Having one big build change listener with a 
+huge switch statement (or worse... a gazillion listeners that each get 
+notified each time an option is changed) is very ugly.
+
+Ideally, when defining the option in the manifest, I want to specify a change 
+listener class for that option.  The listener would have access to the build 
+info, and hence could then go in and modify any other options as appropriate.  
+Similarly, clients could register programmatically to receive event 
+notifications only for changes to the specific options they are interested in.
+
+I think there is also a need as per my recent post on cdt-dev for a separate 
+notification mechanism that sends a delta of all changed options for those 
+clients that care about the presence of *any* change to the options, or which 
+care about large batches of options and thus it would be easier for them to 
+handle things in the classic switch statement style rather than individually 
+registering for a gazillion different options.  It also makes it handy if they 
+care for whatever reason about the options having been set at the same time, 
+as opposed to seeing those updates serially as a sequence of separate event 
+notifications.</pre>
+    </div>
+
+    <div id="c37" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c37">Comment 37</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Monali BHALERAO</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=monalib&#64;kpitcummins.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=monalib&#64;kpitcummins.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-09-13 09:09:14 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The Managed Build Proposal addresses a lot of my concerns but I am just voicing 
+three of my immediate requirements.
+
+1] Enable/disable debug options [GNU: -g] depending on configuration selected 
+i.e. debug /release.
+
+2] This is already there in the proposal but I am putting it down again : 
+Enabling /disabling options depending on certain other options.
+
+3] Adding a table [2 column] as an option with the ability to add or modify the 
+cell contents - this is for &quot;sections&quot; required by linker script in embedded 
+toolchains.
+
+I would also like to try and attempt to add these in the managed build code, if 
+Sean can point out where I need to begin. 
+</pre>
+    </div>
+
+    <div id="c38" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c38">Comment 38</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-09-28 22:15:10 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=14859" name="attach_14859" title="Updated proposal for CDT 2.1 (Word document)">attachment 14859</a> <a href="attachment.cgi?id=14859&amp;action=edit" title="Updated proposal for CDT 2.1 (Word document)">[details]</a></span>
+Updated proposal for CDT 2.1 (Word document)
+
+This update contains the following new items:
+1. A proposal for tool-chain, multi-version support.
+2. Details on tool command line generation support.
+3. The parts of the proposal to be implemented for CDT 2.1 - basically the new
+object model and support for file specific tool options.</pre>
+    </div>
+
+    <div id="c39" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c39">Comment 39</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-09-28 22:42:56 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=14860" name="attach_14860" title="Updated proposal (html format)">attachment 14860</a> <a href="attachment.cgi?id=14860&amp;action=edit" title="Updated proposal (html format)">[details]</a></span>
+Updated proposal (html format)</pre>
+    </div>
+
+    <div id="c40" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c40">Comment 40</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Alex Chapiro</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=achapiro&#64;qnx.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=achapiro&#64;qnx.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-10-11 22:09:42 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">After re-reading of the latest edition of CDT Managed Build System 3.0 Proposal.
+If it is not overcomplicate too much an implementation, is it possible to invent
+a sort of notification mechanism  between different options (like Java couple
+Observable/Observer) to provide conditional changing of the state of the UI
+element that represent any option (enable/disable or visible/invisible). For
+example, for GNU linker option -soname makes sence only for SO target. As long
+as the user can change the target type for any configuration, it would be nice
+to change the soname visibility as well.
+Of course, it is not a critical requirement, just a sort of a convinient feature.</pre>
+    </div>
+
+    <div id="c41" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c41">Comment 41</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-10-25 11:29:02 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I have submitted our initial patch for the Managed Build System (MBS) work
+for CDT 2.1.
+
+New Functionality:
+
+  New model for manifest file and .cdtbuild file:
+    o Old model manifest files continue to be supported.
+    o The new model should be used in the future since not all new 
+      functionality will be available from the old model.  In general, no 
+      significant effort will be expended in making new functionality work
+      with the old model manifest files.  However, in some cases, new
+      functionality will automatically work with old model manifest files.
+      The new functionality in this patch appears to work with old model 
+      manifest files.  The GNU tool-chain definition has been updated to use
+      the new model.
+    o Old model project (.cdtbuild) files are converted upon approval
+      by end-user.  Converted project files will no longer work with CDT 2.0.
+ 
+  Support for file-specific tool command line options:
+    o A specific file in a configuration can use different tool options
+      than the rest of the files in the configuration.
+    o A specific file can be excluded from the build of a configuration.
+
+  New attributes that add flexibility to tool command line generation:
+    o Tool.commandLinePattern:  Specifies a command “pattern” that indicates 
+      how the parts of the command line are used to create the entire command 
+      line.  The pattern consists of the replaceable variables COMMAND, FLAGS, 
+      OUTPUT_FLAG, OUTPUT_PREFIX, OUTPUT and INPUTS.  The default command line 
+      pattern is 
+      ${COMMAND} ${FLAGS} ${OUTPUT_FLAG}${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}
+      White space and other characters are significant and are copied to the 
+      generated command.
+    o Tool.commandLineGenerator:  The name of a class that implements 
+      IManagedCommandLineGenerator (to be defined in the ISV document).
+    o Option.command:  The command provides a “pattern” for specifying where 
+      the value should be placed for options of type string and stringlist.
+      The pattern can contain the replaceable variable VALUE.  If no ${VALUE}
+      is specified in the command, the option value is appended to the end of
+      the specified command (as happens in CDT 2.0).
+
+  Modified UI:
+    o Error parsers are no longer selectable in the project creation wizard.
+      This is because error parsers are set per-configuration, and 
+      per-configuation changes are made via the property page.
+    o C/C++ Build page of MBS project properties now contains all of the
+      per-configuration settings for the project.  There are 4 tabs for 
+      Tool Settings, Build Settings, Error Parsers, and Binary Parsers.
+      Note that binary parsers are not yet applied per configuration because
+      the rest of CDT is not currently set up to handle it.
+    o File properties now contains a C/C++ Build page where the tool options 
+      for a particular file can be set.
+
+
+To Do:
+    o There remain a few functionality problems that need to be worked on, but
+      I am not aware of any regressions from the CDT 2.0 MBS functionality.
+    o End-user documentation needs to be contributed.
+    o ISV documentation needs to be contributed.
+    o Additional JUnit tests for the new model.
+
+
+How you can help:
+
+After the patch is applied, please test your existing tool-chain definitions 
+with the new code.  All existing integrations should be able to use the file 
+specific tool option functionality.  If you can use the new command line 
+generation functionality, try that out.  If you're ambitious, try converting 
+your tool definitions to use the new model.
+</pre>
+    </div>
+
+    <div id="c42" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c42">Comment 42</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Doug Schaefer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=cdtdoug&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=cdtdoug&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-10-25 13:41:47 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Hi Leo, this is great news. Can you point everyone at the patch. I don't see it
+attached here or on the cdt-patch list. Thanks.</pre>
+    </div>
+
+    <div id="c43" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c43">Comment 43</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-10-25 14:17:47 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=15364&amp;action=diff" name="attach_15364" title="Initial patch for MBS Core (1 of 3)">attachment 15364</a> <a href="attachment.cgi?id=15364&amp;action=edit" title="Initial patch for MBS Core (1 of 3)">[details]</a></span>
+Initial patch for MBS Core (1 of 3)</pre>
+    </div>
+
+    <div id="c44" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c44">Comment 44</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-10-25 14:18:39 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=15365&amp;action=diff" name="attach_15365" title="Initial patch for MBS Core.Tests (1 of 3)">attachment 15365</a> <a href="attachment.cgi?id=15365&amp;action=edit" title="Initial patch for MBS Core.Tests (1 of 3)">[details]</a></span>
+Initial patch for MBS Core.Tests (1 of 3)</pre>
+    </div>
+
+    <div id="c45" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c45">Comment 45</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-10-25 14:20:08 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=15366&amp;action=diff" name="attach_15366" title="Initial patch for MBS UI (3 of 3) - Core.tests should have been 2 of 3...">attachment 15366</a> <a href="attachment.cgi?id=15366&amp;action=edit" title="Initial patch for MBS UI (3 of 3) - Core.tests should have been 2 of 3...">[details]</a></span>
+Initial patch for MBS UI (3 of 3) - Core.tests should have been 2 of 3...</pre>
+    </div>
+
+    <div id="c46" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c46">Comment 46</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Sean Evoy</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=sevoy&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=sevoy&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-11-01 15:00:39 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Include Paths &amp; Toolchain Path Settings"
+   href="show_bug.cgi?id=44279">Bug 44279</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c47" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c47">Comment 47</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Sean Evoy</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=sevoy&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=sevoy&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-11-02 11:19:25 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - multipl binaries in managed make"
+   href="show_bug.cgi?id=44887">Bug 44887</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c48" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c48">Comment 48</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Sean Evoy</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=sevoy&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=sevoy&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-11-02 11:37:20 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Thoughts about the new Build Configuration"
+   href="show_bug.cgi?id=37124">Bug 37124</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c49" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c49">Comment 49</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mirza Hadzic</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mirza&#64;seznam.cz" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mirza&#64;seznam.cz" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-11-03 05:03:16 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Question: Is <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED INVALID - Subproject libs not found by linker"
+   href="show_bug.cgi?id=48330">bug 48330</a> covered by new MBS? (how to hyperlink bug?)</pre>
+    </div>
+
+    <div id="c50" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c50">Comment 50</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Doug Schaefer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=cdtdoug&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=cdtdoug&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-11-05 08:53:21 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Some of this was done in 2.1, but the bulk is for 3.0.</pre>
+    </div>
+
+    <div id="c51" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c51">Comment 51</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-11-08 10:50:11 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=15725" name="attach_15725" title="Instructions for converting manifest files from 2.0 to 2.1">attachment 15725</a> <a href="attachment.cgi?id=15725&amp;action=edit" title="Instructions for converting manifest files from 2.0 to 2.1">[details]</a></span>
+Instructions for converting manifest files from 2.0 to 2.1
+
+This MS Word document contains instructions for converting a manifest file from
+the old model to the new model.  The instructions will become part of the MBS
+ISV document, but here they are in case anyone wants to do a conversion right
+now.  Questions/comments are welcome.</pre>
+    </div>
+
+    <div id="c52" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c52">Comment 52</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-27 15:12:50 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Some of this proposal has been done in CDT 2.1, and more in CDT 3.0.  Other 
+parts remain undone, so I'm setting the target milestone to &quot;future&quot;.</pre>
+    </div>
+
+    <div id="c53" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c53">Comment 53</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Chris Recoskie</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=recoskie&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=recoskie&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-16 14:11:27 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Can we get the unfinished parts put into separate bugzillas?  I don't think anyone has looked at this bug in a year and a half now, and it would be a shame to lose track of this info.</pre>
+    </div>
+
+    <div id="c54" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c54">Comment 54</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Doug Schaefer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=cdtdoug&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=cdtdoug&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-16 14:32:44 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">:). Are we done yet? The Future seems to have came and went. It is getting less and less clear what of this is still planned/needed/unfinished. Thoughts Leo?</pre>
+    </div>
+
+    <div id="c55" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c55">Comment 55</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Chris Recoskie</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=recoskie&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=recoskie&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-16 14:44:37 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I think we'd be better of trying to keep track of this on the Wiki...</pre>
+    </div>
+
+    <div id="c56" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c56">Comment 56</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-16 17:14:04 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=68232#c54">comment #54</a>)
+<span class="quote">&gt; :). Are we done yet? The Future seems to have came and went. It is getting less
+&gt; and less clear what of this is still planned/needed/unfinished. Thoughts Leo?</span >
+
+</pre>
+    </div>
+
+    <div id="c57" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c57">Comment 57</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-16 17:16:14 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=68232#c56">comment #56</a>)
+<span class="quote">&gt; (In reply to <a href="show_bug.cgi?id=68232#c54">comment #54</a>)
+&gt; &gt; :). Are we done yet? The Future seems to have came and went. It is getting less
+&gt; &gt; and less clear what of this is still planned/needed/unfinished. Thoughts Leo?</span >
+
+I think that there are ideas in the document that have not been implemented.  I don't think that anyone is actively thinking about implementing these ideas.  Maybe it's time to close this one and just leave it for reference.
+
+Leo</pre>
+    </div>
+
+    <div id="c58" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c58">Comment 58</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Doug Schaefer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=cdtdoug&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=cdtdoug&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-16 19:24:20 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=68232#c57">comment #57</a>)
+<span class="quote">&gt; I think that there are ideas in the document that have not been implemented.  I
+&gt; don't think that anyone is actively thinking about implementing these ideas. 
+&gt; Maybe it's time to close this one and just leave it for reference.</span >
+
+Cool. As Chris mentioned, feel free to put this info on the wiki so we don't lose it.</pre>
+    </div>
+
+    <div id="c59" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c59">Comment 59</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-30 16:27:25 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=81641" name="attach_81641" title="List of proposed MBS items that have not been implemented">attachment 81641</a> <a href="attachment.cgi?id=81641&amp;action=edit" title="List of proposed MBS items that have not been implemented">[details]</a></span>
+List of proposed MBS items that have not been implemented</pre>
+    </div>
+
+    <div id="c60" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c60">Comment 60</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-30 16:35:31 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=81648" name="attach_81648" title="List of proposed MBS items that have not been implemented">attachment 81648</a> <a href="attachment.cgi?id=81648&amp;action=edit" title="List of proposed MBS items that have not been implemented">[details]</a></span>
+List of proposed MBS items that have not been implemented</pre>
+    </div>
+
+    <div id="c61" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c61">Comment 61</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-30 16:46:14 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Closing.  Any future work will be tracked elsewhere.</pre>
+    </div>
+
+    <div id="c62" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=68232#c62">Comment 62</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Treggiari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.treggiari&#64;intel.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.treggiari&#64;intel.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-30 16:47:44 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Marking as CLOSED.</pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=68232">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=68232">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=68232">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=68232&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=68232" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>

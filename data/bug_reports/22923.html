@@ -1,0 +1,1983 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>22923 &ndash; [CVS Core] Request: Robust Unix permissions support</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "22923 – [CVS Core] Request: Robust Unix permissions support",
+                             "show_bug.cgi?id=22923" );
+        document.title = "22923 – [CVS Core] Request: Robust Unix permissions support";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "22923 – [CVS Core] Request: Robust Unix permissions support", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_RESOLVED
+                 bz_product_Platform
+                 bz_component_Team
+                 bz_bug_22923 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;22923</span>
+
+        <span id="subtitle" class="subheader">[CVS Core] Request: Robust Unix permissions support</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2011-10-12 11:44:18 EDT</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=22923&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=22923" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2011-10-12 11:44:18">
+  <input type="hidden" name="id" value="22923">
+  <input type="hidden" name="token" value="1629850692-zBwkjYH0fU8NXpWu13hQbIQ1vz28k77QLXWVfngrHIs">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=22923"><b>Bug&nbsp;22923</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">[CVS Core] Request: Robust Unix permissions support</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span>[CVS Core] Request: Robust Unix permissions support
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      '[CVS Core] Request: Robust Unix permissions support' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">RESOLVED
+          FIXED
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >Platform
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >Eclipse Project
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=Platform"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >Team
+
+  (<a href="buglist.cgi?component=Team&amp;product=Platform&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>2.0 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">Other
+        Linux
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P3
+       normal<span id="votes_container">
+      with
+      <a href="page.cgi?id=voting/bug.html&amp;bug_id=22923">5 
+            votes</a>
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=22923#vote_22923">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>3.1 M3 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">Platform-VCM-Inbox</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=platform-vcm-inbox&#64;eclipse.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=platform-vcm-inbox&#64;eclipse.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard">
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'platform-team-inbox\x40eclipse.org',
+        '');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          <tr>
+    <th class="field_label">
+      <label>Duplicates (6)</label>:
+    </th>
+    <td class="field_value">
+      <span id="duplicates"><a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - CVS: consider file permissions on checkout and commit (1GK92JS)"
+   href="show_bug.cgi?id=4895">4895</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - executable bit lost by cvs checkout"
+   href="show_bug.cgi?id=24609">24609</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - File permissions are not correctly set when using CVS"
+   href="show_bug.cgi?id=41749">41749</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - file flags lost on checkout"
+   href="show_bug.cgi?id=59295">59295</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - eclipse's cvs client does not honor the executable permission"
+   href="show_bug.cgi?id=69146">69146</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - File Permission on CVS Checkout not working properly"
+   href="show_bug.cgi?id=80351">80351</a> 
+      </span>
+      (<a href="buglist.cgi?bug_id=4895,24609,41749,59295,69146,80351">view as bug list</a>)
+    </td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+<a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [resources] Need API to maintain file permissions"
+   href="show_bug.cgi?id=26100">26100</a> 
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+
+  </td>
+  </tr>
+
+    <tr>
+      <th>&nbsp;</th>
+
+      <td id="show_dependency_tree_or_graph">
+        Show dependency <a href="showdependencytree.cgi?id=22923&amp;hide_resolved=1">tree</a>
+
+      </td>
+    </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2002-08-27 17:53 EDT by <span class="vcard"><span class="fn">Jeff Brown</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=j9brown&#64;math.uwaterloo.ca" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=j9brown&#64;math.uwaterloo.ca" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2011-10-12 11:44 EDT
+      (<a href="show_activity.cgi?id=22923">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>17 
+          users
+          <span id="cc_edit_area_showhide_container" class="bz_default_hidden">
+            (<a href="#" id="cc_edit_area_showhide">show</a>)
+          </span>
+        <div id="cc_edit_area">
+          <br>
+            <select id="cc" multiple="multiple" size="5" >
+                <option value="A.Kuckartz">A.Kuckartz</option>
+                <option value="adaline">adaline</option>
+                <option value="akiezun">akiezun</option>
+                <option value="artho">artho</option>
+                <option value="dj.houghton">dj.houghton</option>
+                <option value="edoardo">edoardo</option>
+                <option value="gykapolnas">gykapolnas</option>
+                <option value="jasc">jasc</option>
+                <option value="jean-michel_lemieux">jean-michel_lemieux</option>
+                <option value="Mike_Wilson">Mike_Wilson</option>
+                <option value="mlq.eclipse">mlq.eclipse</option>
+                <option value="mober.at+eclipse">mober.at+eclipse</option>
+                <option value="mwinter">mwinter</option>
+                <option value="osh">osh</option>
+                <option value="patrick.pastoor">patrick.pastoor</option>
+                <option value="thomasf">thomasf</option>
+                <option value="tromey">tromey</option>
+            </select>
+        </div>
+          <script type="text/javascript">
+            hideEditableField( 'cc_edit_area_showhide_container', 
+                               'cc_edit_area', 
+                               'cc_edit_area_showhide', 
+                               '', 
+                               '');  
+          </script>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" >
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+      <tr id="a1" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=2316"
+               title="View the content of the attachment">
+          <b>add file permission support to cvs core</b></a>
+
+          <span class="bz_attach_extra_info">
+              (10.12 KB,
+                patch)
+
+            <br>
+            <a href="#attach_2316"
+               title="Go to the comment associated with the attachment">2002-11-05 16:44 EST</a>,
+
+            <span class="vcard"><span class="fn">Tom Tromey</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tromey&#64;redhat.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tromey&#64;redhat.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=2316&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=2316&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <span class="bz_attach_view_hide">
+            <a id="view_all" href="attachment.cgi?bugid=22923&amp;action=viewall">View All</a>
+        </span>
+        <a href="attachment.cgi?bugid=22923&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=22923&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=22923#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jeff Brown</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=j9brown&#64;math.uwaterloo.ca" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=j9brown&#64;math.uwaterloo.ca" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2002-08-27 17:53:07 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The lack of support for Unix permissions causes serious usability problems 
+when working with C/C++ projects in such an environment.  It is not practical 
+to manually chmod scripts and other executables in (very) large projects.</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=22923#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Michael Valenta</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=valentam&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=valentam&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2002-08-28 10:36:01 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">To elaborate, a project on a Linux/Unix machine may contain files whose 
+execution bit is set. When this project is first uploaded to a CVS reposiory 
+using Eclipse, the execution bit is not transfered. To correct this problem a 
+user must manually perform a chmod on the server for each desired file. Once 
+the executable bits are set, Eclipse use will not unset them.
+
+Unfortunately, Java has no facility that I know of to obtain the executable bit 
+so we would require some other mechanism to get this information.</pre>
+    </div>
+
+    <div id="c2" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=22923#c2">Comment 2</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jeff Brown</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=j9brown&#64;math.uwaterloo.ca" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=j9brown&#64;math.uwaterloo.ca" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2002-09-02 23:25:05 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I'm not above suggesting adding stat and chmod natives to make this work.  
+Ideally this should be done by Core, but the functionality is sufficiently 
+useful to me that I might consider hacking a temporary CVS-only solution in 
+the form of a patch.</pre>
+    </div>
+
+    <div id="c3" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=22923#c3">Comment 3</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Michael Valenta</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=valentam&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=valentam&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2002-10-10 08:10:13 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - executable bit lost by cvs checkout"
+   href="show_bug.cgi?id=24609">Bug 24609</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c4" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=22923#c4">Comment 4</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Michael Valenta</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=valentam&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=valentam&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2002-10-17 09:06:28 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - CVS: consider file permissions on checkout and commit (1GK92JS)"
+   href="show_bug.cgi?id=4895">Bug 4895</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c5" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=22923#c5">Comment 5</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tom Tromey</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tromey&#64;redhat.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tromey&#64;redhat.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2002-11-05 16:44:00 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=2316&amp;action=diff" name="attach_2316" title="add file permission support to cvs core">attachment 2316</a> <a href="attachment.cgi?id=2316&amp;action=edit" title="add file permission support to cvs core">[details]</a></span>
+add file permission support to cvs core
+
+This patch adds file permission support to the cvs core.
+It is a hacky approach (to say the least).
+I've only written the native code for Unix, as I don't
+have access to other systems.  The code as is should
+be portable across many Unix implementations.</pre>
+    </div>
+
+    <div id="c6" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=22923#c6">Comment 6</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">DJ Houghton</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=dj.houghton&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=dj.houghton&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2003-01-17 15:21:20 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Adding <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [resources] Need API to maintain file permissions"
+   href="show_bug.cgi?id=26100">bug 26100</a> for reference. (might be dup of <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - [resources] DCR: Need means to access/change file permissions"
+   href="show_bug.cgi?id=20575">bug 20575</a> though...will look 
+at combining them)</pre>
+    </div>
+
+    <div id="c7" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=22923#c7">Comment 7</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Kevin McGuire</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Kevin_McGuire&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Kevin_McGuire&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2003-01-22 13:51:32 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Not possible for 2.1</pre>
+    </div>
+
+    <div id="c8" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=22923#c8">Comment 8</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Kevin McGuire</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Kevin_McGuire&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Kevin_McGuire&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2003-02-18 13:55:42 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">From my reading on CVS newsgroups, this is a common problem with no known 
+solution, for both clients and CVSNT.</pre>
+    </div>
+
+    <div id="c9" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=22923#c9">Comment 9</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tom Tromey</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tromey&#64;redhat.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tromey&#64;redhat.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2003-02-18 14:03:36 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">If I check out gcc with Eclipse, I lose all the executable
+bits on the configure scripts.  This means I have to chmod
+them by hand in order to make the build work; for a large
+tree like gcc, this isn't really practical (for one thing it
+assumes that all developers know what all the executable scripts
+are).
+
+On the other hand, if I do the checkout with the command-line
+cvs client, the bits are preserved.
+
+Preserving these bits, when possible, is very important in
+some situations.  Eclipse could follow the command-line client's
+behavior.  I know this is possible because I have a fix in
+our local tree to do this.
+
+Please reopen this bug report.  It is still important.
+
+(I'm not sure what you read on the cvs newsgroups.  Probably
+that once the file has been checked in, there is no way to
+change the permissions remotely.  That is a problem, but it isn't
+what this report is about.)</pre>
+    </div>
+
+    <div id="c10" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=22923#c10">Comment 10</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Kevin McGuire</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Kevin_McGuire&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Kevin_McGuire&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2003-02-18 14:58:10 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The thing is that we don't see a way to fix this (not that we don't think its 
+a problem).  The real problem is that there is no JDK that will let us set 
+executable.  One that might is a long way out.  Even with it, there's the 
+issue of cross platform.
+
+The newsgroup postings I saw indicated that it was both uncommon for people to 
+put executables under version control, and since certain client/server combos 
+are guaranteed to lose them, its common for the user to manage this by hand.
+
+All that said, its more appropriate for it to be marked P5 (since it *is* 
+still a bug, just unfixable).</pre>
+    </div>
+
+    <div id="c11" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=22923#c11">Comment 11</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tom Tromey</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tromey&#64;redhat.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tromey&#64;redhat.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2003-02-18 16:41:15 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I think the non-portability isn't a major problem.
+If I was going to write a real fix for this, rather
+than the hacks that I have, I would put new code in
+org.eclipse.core.resources to let us manipulate the
+executable bit.  There is already native code there
+for similar purposes.
+
+Checking in executable scripts is actually not uncommon.
+It is a contentious issue, but many projects have chosen
+to check in their configure scripts and other auto* support
+code.  At least two major free software projects, gcc and gdb,
+do this.  I'm certain many more do as well.</pre>
+    </div>
+
+    <div id="c12" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=22923#c12">Comment 12</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Boris Shingarov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=bshingar&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=bshingar&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2003-03-07 20:50:22 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Daniel Roth &lt;<a href="mailto:roth&#64;infraroth.de">roth&#64;infraroth.de</a>&gt; also complains in the newsgroup that (on Windows
+I presume) the archive bit does not get set properly.</pre>
+    </div>
+
+    <div id="c13" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=22923#c13">Comment 13</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jeff Brown</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=j9brown&#64;math.uwaterloo.ca" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=j9brown&#64;math.uwaterloo.ca" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2003-03-07 21:43:22 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The problem was a particular nuisance at my last workplace where the CVS 
+repository contains a large number (hundreds!) of pre-built binaries and 
+modules making up a customized Linux distribution.  Most of the build scripts 
+assumed that permissions were set appropriately on all files because there was 
+no need to go through the nuisance of doing things otherwise at the time.
+
+I am not concerned about the cross-platform portability issue.  CVS 
+permissions are a platform-dependent hack anyways.  I understand that it is 
+not desirable to place this type of code in the CVS Team branch, and Core 
+Resources are not willing to commit to support at the moment either.
+
+Here is a short-term alternative that requires minimum commitment from 
+everyone.  CVS Team provides an internal (non-API) extension point.  A 
+separately distributed platform-specific plugin binds to this extension point 
+a supplies a proxy interface as described below.  The plugin may be 
+independently developed by a third party with the understanding that the 
+interface is &quot;unstable&quot;.
+
+The actual interface only requires two services like those defined in the 
+patch from a few months ago: getCVSPermissionsFor(IResource, String), and 
+setCVSPermissionsFor(IResource, String).
+
+Pros:
+- Better CVS command line compatibility.
+- Boon for many C/C++ developers.
+- CVS Team code will already contain the necessary logic and code paths to 
+implement the &quot;right fix&quot; if/when Core Resources decides to go ahead with it.
+
+Cons:
+- Obviously does not resolve other permissions issues elsewhere in Workbench.
+- Therefore may confuse developers.
+
+Nifty non-CVS things I just came up with:
+
+As a temporary hack, someone could implement a plugin action contribution for 
+permissions wrangling on POSIX compliant platforms.  On Windows, it would be 
+neat to hook the Navigator into the COM interfaces that make File-&gt;Properties 
+possible throughout the OS.  Presto, instant permissions wrangling on Windows 
+too.</pre>
+    </div>
+
+    <div id="c14" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=22923#c14">Comment 14</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jan Schulz</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jasc&#64;gmx.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jasc&#64;gmx.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2003-07-25 17:13:15 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Any plans to do something about this in 3.0?</pre>
+    </div>
+
+    <div id="c15" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=22923#c15">Comment 15</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jean-Michel Lemieux</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jean-michel_lemieux&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jean-michel_lemieux&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2003-08-20 14:48:42 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - File permissions are not correctly set when using CVS"
+   href="show_bug.cgi?id=41749">Bug 41749</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c16" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=22923#c16">Comment 16</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Michael Valenta</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=valentam&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=valentam&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-04-21 09:58:31 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - file flags lost on checkout"
+   href="show_bug.cgi?id=59295">Bug 59295</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c17" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=22923#c17">Comment 17</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jean-Michel Lemieux</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jean-michel_lemieux&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jean-michel_lemieux&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-07-05 10:50:04 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - eclipse's cvs client does not honor the executable permission"
+   href="show_bug.cgi?id=69146">Bug 69146</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c18" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=22923#c18">Comment 18</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jean-Michel Lemieux</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jean-michel_lemieux&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jean-michel_lemieux&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-10-21 13:55:12 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The resources plug-in has added support for file permissions. We will ensure
+that persmissions are conserved when transfering files to/from CVS server.</pre>
+    </div>
+
+    <div id="c19" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=22923#c19">Comment 19</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Michael Valenta</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=valentam&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=valentam&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-10-29 10:46:59 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The patch for this was released for M3</pre>
+    </div>
+
+    <div id="c20" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=22923#c20">Comment 20</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Michael Valenta</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=valentam&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=valentam&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-12-07 05:36:56 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - File Permission on CVS Checkout not working properly"
+   href="show_bug.cgi?id=80351">Bug 80351</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c21" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=22923#c21">Comment 21</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Sangjin Han</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=adaline&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=adaline&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-05-28 17:00:05 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">This bug still happens on my Eclipse 3.1.2/Mac OS X.</pre>
+    </div>
+
+    <div id="c22" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=22923#c22">Comment 22</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Gyorgy Kapolnas</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=gykapolnas&#64;erad.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=gykapolnas&#64;erad.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-10-03 10:29:34 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I use eclipse 3.2 on linux and it seems to preserve the user rights, but loose the group and other rights. Is it by any chance some configuration issue?
+Is there a way to use the native CVS utilities from within eclipse instead of the built-in one?</pre>
+    </div>
+
+    <div id="c23" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=22923#c23">Comment 23</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Michael Valenta</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=valentam&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=valentam&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-10-03 10:57:12 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Yes, you can use the CVS command line client to check out the project and then import it into Eclipse.</pre>
+    </div>
+
+    <div id="c24" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=22923#c24">Comment 24</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Gyorgy Kapolnas</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=gykapolnas&#64;erad.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=gykapolnas&#64;erad.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-10-03 11:07:21 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">This solution is far from being perfect, because update also messes up the flags when called from eclipse. I know that I can use the commandline tool to update also, but this would be az extremely lame and unconfortable solution (if I may call it so). I think this bug is not fully fixed.</pre>
+    </div>
+
+    <div id="c25" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=22923#c25">Comment 25</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Michael Valenta</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=valentam&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=valentam&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-10-03 11:22:34 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Update only sets permissions for new files. I am a bit confused about the problem you are seeing (i.e. I didn't think CVS communicated group permissions to the client). Could you provide more specifics about the scenario (i.e. what the server permissions are, what you would expect the client permissions to be and what the client permissions are being set to?</pre>
+    </div>
+
+    <div id="c26" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=22923#c26">Comment 26</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Gyorgy Kapolnas</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=gykapolnas&#64;erad.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=gykapolnas&#64;erad.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-10-03 11:48:39 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Here is my scenarion:
+The program what I'm working on runs as a different user, so I work as user a, run eclipse and edit resources as user a. Amongst the files there is a number of shell scripts, having the flags on the CVS server like this:
+-r-xr-xr-x  1 rty    cvs  2473 Sep 25 17:34 listBackup.sh,v
+after checking out with command line cvs util the file looks like this:
+-rwxr-xr-x  1 rty rty  1737 Sep 25 17:34 listBackup.sh
+when checking out into eclipse the checked aout file looks like this:
+-r-xr--r--  1 rty rty   1737 Sep 25 17:34 listBackup.sh
+
+I tried to reproduce the flag corruption during update, but it looks like you are right about it. Sometimes I run into errors of lost executable flags, but maybe they are all new files added to the project by someone else.
+
+I don't know whether the command line CVS utility receives the group/other rights from the server or simply copies the user's execution rights, but it works better in this case. Maybe copying the exec right from the user to the others and group would be a usable solution for eclipse as well...</pre>
+    </div>
+
+    <div id="c27" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=22923#c27">Comment 27</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Michael Valenta</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=valentam&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=valentam&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-10-03 12:19:34 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The code does appear to only set the user execute bit. The code that sets the permissions was provided as a patch on <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [resources] Need API to maintain file permissions"
+   href="show_bug.cgi?id=26100">bug 26100</a>. You may want to ask this question there as the authors of the patch would be the best people to answer this question.</pre>
+    </div>
+
+    <div id="c28" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=22923#c28">Comment 28</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Gyorgy Kapolnas</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=gykapolnas&#64;erad.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=gykapolnas&#64;erad.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-10-03 12:46:15 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I'll do that, thanks</pre>
+    </div>
+
+    <div id="c29" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=22923#c29">Comment 29</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2011-10-12 11:44:18 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Support for group / other permissions was added on Core/Resources API in Eclipse 3.6 through <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - Provide finer grained file permissions access"
+   href="show_bug.cgi?id=297228">bug 297228</a> -- did CVS ever pick up the new API ?</pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=22923">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=22923">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=22923">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=22923&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=22923" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>

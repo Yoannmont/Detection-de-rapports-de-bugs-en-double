@@ -1,0 +1,4244 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>170910 &ndash; [api][nls] Prepare RSE Service API For Terminal Integrations</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "170910 – [api][nls] Prepare RSE Service API For Terminal Integrations",
+                             "show_bug.cgi?id=170910" );
+        document.title = "170910 – [api][nls] Prepare RSE Service API For Terminal Integrations";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "170910 – [api][nls] Prepare RSE Service API For Terminal Integrations", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_RESOLVED
+                 bz_product_Target_Management
+                 bz_component_RSE
+                 bz_bug_170910 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;170910</span>
+
+        <span id="subtitle" class="subheader">[api][nls] Prepare RSE Service API For Terminal Integrations</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2011-05-26 06:02:36 EDT</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=170910&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=170910" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2011-05-26 06:02:36">
+  <input type="hidden" name="id" value="170910">
+  <input type="hidden" name="token" value="1629867621-vbzsV1nKCVzfp0BER6RQvfzKr8lwcQarrQzGFfYuKE4">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=170910"><b>Bug&nbsp;170910</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">[api][nls] Prepare RSE Service API For Terminal Integrations</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span>[api][nls] Prepare RSE Service API For Terminal Integrations
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      '[api][nls] Prepare RSE Service API For Terminal Integrations' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">RESOLVED
+          FIXED
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >Target Management
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >Tools
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=Target Management"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >RSE
+
+  (<a href="buglist.cgi?component=RSE&amp;product=Target%20Management&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>1.0.1 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">All
+        All
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P3
+       enhancement<span id="votes_container">
+      with
+      <a href="page.cgi?id=voting/bug.html&amp;bug_id=170910">4 
+            votes</a>
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=170910#vote_170910">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>3.0 M6 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'tm.rse-inbox\x40eclipse.org',
+        'ddykstal.eclipse\x40gmail.com');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >api, contributed
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          <tr>
+    <th class="field_label">
+      <label>Duplicates (1)</label>:
+    </th>
+    <td class="field_value">
+      <span id="duplicates"><a class="bz_bug_link 
+          bz_status_CLOSED  bz_closed"
+   title="CLOSED DUPLICATE - Need an RSE Shell with terminal emulation (since command view doesnt work well for dynamic real-time views)"
+   href="show_bug.cgi?id=159162">159162</a> 
+      </span>
+      (<a href="buglist.cgi?bug_id=159162">view as bug list</a>)
+    </td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+<a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [terminal][api][breaking] Abstract base class TerminalConnectorImpl should provide more default functionality"
+   href="show_bug.cgi?id=225853">225853</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [api][breaking] RSE IService should be IAdaptable"
+   href="show_bug.cgi?id=226262">226262</a> 
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+<a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [rseterminal] Integrate the TM Terminal View with RSE"
+   href="show_bug.cgi?id=226764">226764</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - [shellprocesses] Shell Processes Subsystem should use getAdapter() to work on top of ITerminalService as well"
+   href="show_bug.cgi?id=227574">227574</a> 
+  </td>
+  </tr>
+
+    <tr>
+      <th>&nbsp;</th>
+
+      <td id="show_dependency_tree_or_graph">
+        Show dependency <a href="showdependencytree.cgi?id=170910&amp;hide_resolved=1">tree</a>
+
+      </td>
+    </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2007-01-18 09:42 EST by <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2011-05-26 06:02 EDT
+      (<a href="show_activity.cgi?id=170910">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>8 
+          users
+          <span id="cc_edit_area_showhide_container" class="bz_default_hidden">
+            (<a href="#" id="cc_edit_area_showhide">show</a>)
+          </span>
+        <div id="cc_edit_area">
+          <br>
+            <select id="cc" multiple="multiple" size="5" >
+                <option value="anna.dushistova">anna.dushistova</option>
+                <option value="dmcknigh">dmcknigh</option>
+                <option value="francescocriv">francescocriv</option>
+                <option value="gpapayia">gpapayia</option>
+                <option value="torkildr">torkildr</option>
+                <option value="wb-rel">wb-rel</option>
+                <option value="xuanchen">xuanchen</option>
+                <option value="ykuo">ykuo</option>
+            </select>
+        </div>
+          <script type="text/javascript">
+            hideEditableField( 'cc_edit_area_showhide_container', 
+                               'cc_edit_area', 
+                               'cc_edit_area_showhide', 
+                               '', 
+                               '');  
+          </script>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" >
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+      <tr id="a1" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=94053"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Adds streaming support to IHostShell</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (2.72 KB,
+                patch)
+
+            <br>
+            <a href="#attach_94053"
+               title="Go to the comment associated with the attachment">2008-03-28 15:54 EDT</a>,
+
+            <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=94053&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=94053&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a2" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=94054"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Adds streaming support to SshHostShell</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (1.09 KB,
+                patch)
+
+            <br>
+            <a href="#attach_94054"
+               title="Go to the comment associated with the attachment">2008-03-28 15:55 EDT</a>,
+
+            <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=94054&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=94054&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a3" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=94056"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Adds streaming support to TelnetHostShell</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (1.17 KB,
+                patch)
+
+            <br>
+            <a href="#attach_94056"
+               title="Go to the comment associated with the attachment">2008-03-28 15:56 EDT</a>,
+
+            <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=94056&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=94056&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a4" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=94707"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">patch for existing rse plugins</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (250.56 KB,
+                patch)
+
+            <br>
+            <a href="#attach_94707"
+               title="Go to the comment associated with the attachment">2008-04-03 08:31 EDT</a>,
+
+            <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+                  <span title="Martin Oberhuber">mober.at+eclipse</span>:
+                review-
+                <br>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=94707&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=94707&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a5" class="bz_contenttype_application_octet-stream bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=94709"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">new rse terminal plugins</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (89.48 KB,
+                application/octet-stream)
+
+            <br>
+            <a href="#attach_94709"
+               title="Go to the comment associated with the attachment">2008-04-03 08:33 EDT</a>,
+
+            <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=94709&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a6" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=94791"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">improved patch for existing rse plugins</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (20.19 KB,
+                patch)
+
+            <br>
+            <a href="#attach_94791"
+               title="Go to the comment associated with the attachment">2008-04-03 18:15 EDT</a>,
+
+            <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+                  <span title="Martin Oberhuber">mober.at+eclipse</span>:
+                review-
+                <br>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=94791&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=94791&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a7" class="bz_contenttype_application_x-zip-compressed bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=94937"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Updated terminal plugins for recent Terminal refactorings</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (48.02 KB,
+                application/x-zip-compressed)
+
+            <br>
+            <a href="#attach_94937"
+               title="Go to the comment associated with the attachment">2008-04-04 17:41 EDT</a>,
+
+            <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=94937&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a8" class="bz_contenttype_image_png">
+        <td>
+            <a href="attachment.cgi?id=94965"
+               title="View the content of the attachment">
+          <b>Screenshot of Shells wizard page</b></a>
+
+          <span class="bz_attach_extra_info">
+              (32.27 KB,
+                image/png)
+
+            <br>
+            <a href="#attach_94965"
+               title="Go to the comment associated with the attachment">2008-04-05 12:07 EDT</a>,
+
+            <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=94965&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a9" class="bz_contenttype_image_png">
+        <td>
+            <a href="attachment.cgi?id=94966"
+               title="View the content of the attachment">
+          <b>Created connection in System View.</b></a>
+
+          <span class="bz_attach_extra_info">
+              (14.70 KB,
+                image/png)
+
+            <br>
+            <a href="#attach_94966"
+               title="Go to the comment associated with the attachment">2008-04-05 12:09 EDT</a>,
+
+            <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=94966&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a10" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=94967"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">patch with fixed copyright</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (21.11 KB,
+                patch)
+
+            <br>
+            <a href="#attach_94967"
+               title="Go to the comment associated with the attachment">2008-04-05 12:20 EDT</a>,
+
+            <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=94967&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=94967&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a11" class="bz_contenttype_application_octet-stream bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=94968"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">new rse terminal plugins with fixed copyright</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (95.87 KB,
+                application/octet-stream)
+
+            <br>
+            <a href="#attach_94968"
+               title="Go to the comment associated with the attachment">2008-04-05 12:22 EDT</a>,
+
+            <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=94968&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a12" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=95078"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Updated patch without ITerminalService in the Service</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (10.70 KB,
+                patch)
+
+            <br>
+            <a href="#attach_95078"
+               title="Go to the comment associated with the attachment">2008-04-07 13:05 EDT</a>,
+
+            <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=95078&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=95078&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a13" class="bz_contenttype_application_x-zip-compressed bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=95079"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">New Terminal integration plugins</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (53.64 KB,
+                application/x-zip-compressed)
+
+            <br>
+            <a href="#attach_95079"
+               title="Go to the comment associated with the attachment">2008-04-07 13:10 EDT</a>,
+
+            <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=95079&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a14" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=95107"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">patch for existing rse plugins with fixed APIs</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (33.54 KB,
+                patch)
+
+            <br>
+            <a href="#attach_95107"
+               title="Go to the comment associated with the attachment">2008-04-07 16:04 EDT</a>,
+
+            <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+                  <span title="Martin Oberhuber">mober.at+eclipse</span>:
+                review-
+                <br>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=95107&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=95107&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a15" class="bz_contenttype_application_octet-stream bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=95109"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">new terminal plugins with new API used</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (99.62 KB,
+                application/octet-stream)
+
+            <br>
+            <a href="#attach_95109"
+               title="Go to the comment associated with the attachment">2008-04-07 16:05 EDT</a>,
+
+            <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=95109&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a16" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=95116"
+               title="View the content of the attachment">
+          <b>patch for existing rse plugins with fixed APIs</b></a>
+
+          <span class="bz_attach_extra_info">
+              (29.39 KB,
+                patch)
+
+            <br>
+            <a href="#attach_95116"
+               title="Go to the comment associated with the attachment">2008-04-07 16:39 EDT</a>,
+
+            <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+                  <span title="Martin Oberhuber">mober.at+eclipse</span>:
+                iplog+
+                <br>
+                  <span title="Martin Oberhuber">mober.at+eclipse</span>:
+                review-
+                <br>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=95116&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=95116&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a17" class="bz_contenttype_application_octet-stream">
+        <td>
+            <a href="attachment.cgi?id=95117"
+               title="View the content of the attachment">
+          <b>new terminal plugins with new API used</b></a>
+
+          <span class="bz_attach_extra_info">
+              (99.62 KB,
+                application/octet-stream)
+
+            <br>
+            <a href="#attach_95117"
+               title="Go to the comment associated with the attachment">2008-04-07 16:40 EDT</a>,
+
+            <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+                  <span title="Martin Oberhuber">mober.at+eclipse</span>:
+                iplog+
+                <br>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=95117&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a18" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=95455"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Patch adding Terminal API to existing RSE plugins</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (103.52 KB,
+                patch)
+
+            <br>
+            <a href="#attach_95455"
+               title="Go to the comment associated with the attachment">2008-04-09 21:16 EDT</a>,
+
+            <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=95455&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=95455&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a19" class="bz_contenttype_application_zip bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=95456"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Terminal Plugins v4</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (52.41 KB,
+                application/zip)
+
+            <br>
+            <a href="#attach_95456"
+               title="Go to the comment associated with the attachment">2008-04-09 21:20 EDT</a>,
+
+            <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=95456&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a20" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=95680"
+               title="View the content of the attachment">
+          <b>Patch modifying RSE after main API is committed</b></a>
+
+          <span class="bz_attach_extra_info">
+              (95.42 KB,
+                patch)
+
+            <br>
+            <a href="#attach_95680"
+               title="Go to the comment associated with the attachment">2008-04-11 09:41 EDT</a>,
+
+            <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=95680&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=95680&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a21" class="bz_contenttype_application_zip">
+        <td>
+            <a href="attachment.cgi?id=95681"
+               title="View the content of the attachment">
+          <b>Terminal Plugins (v5) based on committed Terminal API</b></a>
+
+          <span class="bz_attach_extra_info">
+              (52.53 KB,
+                application/zip)
+
+            <br>
+            <a href="#attach_95681"
+               title="Go to the comment associated with the attachment">2008-04-11 09:43 EDT</a>,
+
+            <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=95681&amp;action=edit">Details</a>
+        </td>
+      </tr>
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <span class="bz_attach_view_hide">
+            <a href="#a0" onclick="return toggle_display(this);">Show
+              Obsolete</a> (15)
+            <a id="view_all" href="attachment.cgi?bugid=170910&amp;action=viewall&amp;hide_obsolete=1">View All</a>
+        </span>
+        <a href="attachment.cgi?bugid=170910&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=170910&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-18 09:42:47 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Integrate the Terminal View with RSE (in addition to the current Commands view)</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-18 09:45:29 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Just like with the discovery feature, the rse integration should become part of the TM-terminal feature but not introduce a hard feature dependency to RSE.
+
+The Terminal View should be a separate subsystem (just like the current Shells subsystem) and use the RSE IHostShell interface as the channel for data. Terminal widgets should be in a tabbed view just like the current RSE Command Shell implementation.
+
+Collaborate with WickedShell for further improvements of Command Shell and Terminal.</pre>
+    </div>
+
+    <div id="c2" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c2">Comment 2</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-18 09:57:26 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_CLOSED  bz_closed"
+   title="CLOSED DUPLICATE - Need an RSE Shell with terminal emulation (since command view doesnt work well for dynamic real-time views)"
+   href="show_bug.cgi?id=159162">Bug 159162</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c3" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c3">Comment 3</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-05-18 15:45:30 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Need to move this to RC1.</pre>
+    </div>
+
+    <div id="c4" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c4">Comment 4</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-06-05 12:38:09 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Need to defer to the Future due to lack of resources.</pre>
+    </div>
+
+    <div id="c5" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c5">Comment 5</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-16 10:02:28 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">CQ:WIND00108146  
+CQ:WIND00108146  </pre>
+    </div>
+
+    <div id="c6" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c6">Comment 6</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Wizard85</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=francescocriv&#64;hotmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=francescocriv&#64;hotmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-26 01:41:07 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Hi,
+
+I'm the final year student of computer science engineering and I carry out as thesis this project. After have talked about it with Martin I'm actually studying the general structure of RSE and I'll implement a new Terminal, for the subsystem shell, more efficient and &quot;manageable&quot;.
+If I'll have any doubts I'll write here.
+
+Greetings,
+
+CF</pre>
+    </div>
+
+    <div id="c7" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c7">Comment 7</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-03-19 10:15:17 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">CQ:WIND00118363 
+
+Requirements for this:
+* Be able to completely substitute Remote Command View by a Terminal View
+  in a given connection configuration (based on system type) or even 
+  installation (never show any remote command view)
+* Keep the existing IHostShell / IShellService APIs even when servicing a
+  Terminal
+
+So here is how I think this should be done:
+
+* Create a new &quot;Terminal Subsystem&quot; that can be used just like the current
+  &quot;Command Subsystem&quot; in RSE but uses a Terminal View rather than the Command
+  View.
+* API-wise, the Terminal Subsystem should be equivalent or comparable to the
+  Command Subsystem i.e. it should implement IShellServiceSubSystem. This is
+  important because the Terminal Subsystem should be used as a replacement
+  of the Remote Command Subsystem in those system types that want to bring
+  it in. Also, this would allow eventually to use any existing shell service
+  (SSH, Telnet, DStore) to be used as the service provider for the Terminal UI.
+* It will still be necessary to register each subsystem instance separately,
+  i.e. create an SSH Terminal Subsystem / Telnet Terminal Subsystem etc
+  although the Services beneath it are exchangeable.
+* Create a new org.elipse.rse.subsystems.terminal.ui which is a clone of
+  shells.ui in that it provides a single view with tabs to pick the terminals.
+  Each tab is to embed a terminal widget.
+
+For communication, the Terminal needs a Stream from the remote whereas IHostShell uses sendCommand / IHostShellOutputListener in a line-based
+scenario. This scenario can lead to embedding unwanted CRLF sequence in
+the stream, or waiting too long for data. Therefore, I think that in order
+to do this properly we may need an API extension to IHostShell, such that
+it's possible to get an InputStream / OutputStream for the remote system.
+
+For backward compatibility, the default implementation could construct the existing HostShelOutputStream out of the events being generated. But moving forward, the Stream should be the primary means for communication since it's more versatile than the command / event paradigm.
+
+Since this is an API change we'll need it by M6 which is real soon. Marking the bug as such.
+
+Summing up, I propose with a Terminal for SSH only (the Telnet and dstore variants should be easy to create as clones of that one if needed):
+
+1. org.eclipse.rse.subsystems.terminal.ssh
+   - SshTerminalServiceSubSystem extends ShellServiceSubSystem
+2. org.eclipse.rse.ui.terminal 
+   - clone of rse.ui.shells, embedding terminal widget in tabbed view
+3. Beef us IShellService / IHostShell to support Streams
+
+Actually, another option for this might be doing (2) and (3) only: Keep the existing SshShellServiceSubSystem but only beef up the rse.shells.ui such that on each tabbed page (or via preference) the user can choose between Terminal and Shell representation.
+The problem with this approach might be that it mixes up dependencies - there should still be an RSE version that comes completely without Terminal so the termianl beef-up would need to be kind of an extension to the commands view. 
+
+The other point is that such an approach would unnecessarily waste resources in the IRemoteOutput / IRemoteError objects in memory, which the Terminal does not need at all since it is purely streams based.</pre>
+    </div>
+
+    <div id="c8" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c8">Comment 8</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-03-19 10:26:15 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I think another requirement for the new host shell API will be that the Terminal needs to talk back to the remote in the case where the terminal size changes. See the current ITerminalConnector interface, it has getOutputStream() / isLocalEcho() / setTerminalSize() methods. These will be needed for the new host shell API as well.
+
+Another comment is that some users would like to do something about the wasted screen area so you can actually use it in a smaller view or just give a option to use the terminal view instead. 
+
+Regarding that second point, my opinion is that using the tabbed interface from the command shell has its advantages as well, though using the full Terminal View would be an option as well. Problem with using the Terminal View would be how to separate RSE-driven terminals from view/ITerminalConnector driven terminals. Because if it's RSE-driven, RSE needs to be the master about connect/disconnect lifecycle. But it's something to consider.</pre>
+    </div>
+
+    <div id="c9" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c9">Comment 9</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-03-28 15:54:10 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=94053&amp;action=diff" name="attach_94053" title="Adds streaming support to IHostShell">attachment 94053</a> <a href="attachment.cgi?id=94053&amp;action=edit" title="Adds streaming support to IHostShell">[details]</a></span>
+Adds streaming support to IHostShell</pre>
+    </div>
+
+    <div id="c10" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c10">Comment 10</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-03-28 15:55:39 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=94054&amp;action=diff" name="attach_94054" title="Adds streaming support to SshHostShell">attachment 94054</a> <a href="attachment.cgi?id=94054&amp;action=edit" title="Adds streaming support to SshHostShell">[details]</a></span>
+Adds streaming support to SshHostShell</pre>
+    </div>
+
+    <div id="c11" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c11">Comment 11</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-03-28 15:56:53 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=94056&amp;action=diff" name="attach_94056" title="Adds streaming support to TelnetHostShell">attachment 94056</a> <a href="attachment.cgi?id=94056&amp;action=edit" title="Adds streaming support to TelnetHostShell">[details]</a></span>
+Adds streaming support to TelnetHostShell</pre>
+    </div>
+
+    <div id="c12" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c12">Comment 12</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-02 18:16:55 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Can you please combine the three patches into one. Add Javadocs as well as &#64;since tags to the new IHostShell APIs proposed (e.g. what is InputStream... remote-to-local or local-to-remote? Is there any handling for special shell characters like BREAK? Is it allowed for implementers to return &lt;code&gt;null&lt;/code&gt; and if yes, under what circumstances and what does it mean? What happens when multiple clients get an output stream and try to read from it? Can the methods be called on any thread at any time, or are there any restrictions?)
+
+Also, edit the copyright headers adding your name. We'll also need a Legal Message from you indicating that you contribute your work under EPL, and are allowed doing so by your employer - along the lines of <a href="http://www.eclipse.org/dsdp/tm/development/committer_howto.php#external_contrib">http://www.eclipse.org/dsdp/tm/development/committer_howto.php#external_contrib</a>
+
+</pre>
+    </div>
+
+    <div id="c13" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c13">Comment 13</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-03 08:31:05 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=94707&amp;action=diff" name="attach_94707" title="patch for existing rse plugins">attachment 94707</a> <a href="attachment.cgi?id=94707&amp;action=edit" title="patch for existing rse plugins">[details]</a></span>
+patch for existing rse plugins
+
+This patch includes all the changes needed in existing plugins to integrate terminal view into RSE.</pre>
+    </div>
+
+    <div id="c14" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c14">Comment 14</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-03 08:33:29 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=94709" name="attach_94709" title="new rse terminal plugins">attachment 94709</a> <a href="attachment.cgi?id=94709&amp;action=edit" title="new rse terminal plugins">[details]</a></span>
+new rse terminal plugins
+
+This is an archive with new rse plugins that contain new terminal subsystem and tabbed view UI implementation.</pre>
+    </div>
+
+    <div id="c15" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c15">Comment 15</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-03 08:37:58 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Comment on <span class="bz_obsolete"><a href="attachment.cgi?id=94707&amp;action=diff" name="attach_94707" title="patch for existing rse plugins">attachment 94707</a> <a href="attachment.cgi?id=94707&amp;action=edit" title="patch for existing rse plugins">[details]</a></span>
+patch for existing rse plugins
+
+The patch includes tons of changes which are just reformatting of existing code. The patch is 250KB large, this makes reviewing it close to impossible. Please use Eclipse Team &gt; Synchronize to get rid of any changes that are just reformattings, such that we can review the real changes (for instance: SystemViewRemoteFileAdapter
+).</pre>
+    </div>
+
+    <div id="c16" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c16">Comment 16</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-03 08:42:48 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">In your patch, rse.files.ui has a dependency on subsystems.terminal.core (which in turn has a dependency on tm.terminal I guess).
+
+We cannot have this dependency, you must get rid of it somehow. Because IBM wants to ship RSE without any terminal, and your dependency would make that impossible.</pre>
+    </div>
+
+    <div id="c17" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c17">Comment 17</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-03 18:15:02 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=94791&amp;action=diff" name="attach_94791" title="improved patch for existing rse plugins">attachment 94791</a> <a href="attachment.cgi?id=94791&amp;action=edit" title="improved patch for existing rse plugins">[details]</a></span>
+improved patch for existing rse plugins
+
+We, Anna Dushistova,Yu-Fen Kuo and Eugeniy Melekhov, declare that we developed attached code from scratch, without referencing any 3rd party materials except
+material licensed under the EPL. We are authorized by our employer to
+make this contribution under the EPL.</pre>
+    </div>
+
+    <div id="c18" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c18">Comment 18</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-04 15:56:09 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Comment on <span class="bz_obsolete"><a href="attachment.cgi?id=94791&amp;action=diff" name="attach_94791" title="improved patch for existing rse plugins">attachment 94791</a> <a href="attachment.cgi?id=94791&amp;action=edit" title="improved patch for existing rse plugins">[details]</a></span>
+improved patch for existing rse plugins
+
+Improved patch looks much better, but I cannot quite see why you need an ITerminalService? It's signature is the same as IShellService, and I had hoped that any shell service can be used to feed the terminal at some point.
+
+Is it just because of the setPtyType() call that you added?
+
+Anyways, if the ITerminalService were to be kept (which I'm not recommending), the copyright headers are wrong. You quite apparently copied &amp; pasted IShellService / AbstractShellService / SshShellService, so you also need to keep those copyrigt headers intact and just add a line like &quot;Yu-Fen Kuo (MontaVista) - [170910] derived from IShellService
+
+But I must say, we're getting close, and thanks for all your work so far. I'm confident that we can get this done.</pre>
+    </div>
+
+    <div id="c19" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c19">Comment 19</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-04 16:01:41 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">In the file adapter, instead of
+    temp.getConfigurationId().endsWith(&quot;terminals&quot;)
+we'll probably want to use
+    temp.getSubSystemConfiguration().getCategory().equals(&quot;terminals&quot;)
+to make this more explicit... but we'll need some investigation here, and it's an implementation detail that doesn't change API ao I'm fine with it.
+
+</pre>
+    </div>
+
+    <div id="c20" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c20">Comment 20</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-04 17:41:27 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=94937" name="attach_94937" title="Updated terminal plugins for recent Terminal refactorings">attachment 94937</a> <a href="attachment.cgi?id=94937&amp;action=edit" title="Updated terminal plugins for recent Terminal refactorings">[details]</a></span>
+Updated terminal plugins for recent Terminal refactorings
+
+Attached patch updates the Terminal plugins to work with the recent Terminal refactorings according to <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [terminal][api][breaking] Abstract base class TerminalConnectorImpl should provide more default functionality"
+   href="show_bug.cgi?id=225853">bug 225853</a> (patch from there must be applied to make the terminal work).
+
+This works really nicely, thanks!!!
+
+My only concern is that the Copyright Headers are not correct because you apparently copied pre-existing classes. When you do that, you need to keep existing copyright headers intact and just add your own &quot;Yu-Fen Kuo (Montavista) - Adapted from XXX&quot; at the end.</pre>
+    </div>
+
+    <div id="c21" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c21">Comment 21</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-04 17:46:54 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The patch for existing RSE plugins is 173 LOC.
+The new plugin ZIP is 1969 LOC total.
+Though most of the lines is just adapted from pre-existing RSE code.
+
+Still, we'll need to push the ZIP through EMO Review. We can do that as soon as you've updated the copyright headers. Contribution should go into M7.
+
+The API changes in IHostShell should go into M6, and we can do that because it's only 173 LOC. Please answer my questions in <a href="show_bug.cgi?id=170910#c18">comment #18</a>, and get rid of ITerminalService and friends if you can.
+
+Thanks!</pre>
+    </div>
+
+    <div id="c22" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c22">Comment 22</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-04 17:51:17 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Martin, I'll fix the copyright tomorrow(Moscow time), is that ok?
+And we will try to figure out if we can get rid of ITerminalService or not.</pre>
+    </div>
+
+    <div id="c23" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c23">Comment 23</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Yufen Kuo</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ykuo&#64;mvista.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ykuo&#64;mvista.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-04 18:29:45 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Martin, 
+
+If you look closely, ITerminalService does not define all the APIs IShellService does. It does not define runCommands apis, originally we want to define a new interface for ITerminalService because we would like to have less dependencies from shell service as possible so in the future that if shell service were to be removed then there are less code changes to other plugins. 
+
+But if you feel strongly about replacing ITerminalService with IShellService, we can do that too. Right now in the terminal UI, there is extra text field for you to type commands, if you feel there is a need for that, we can add that too.
+
+For the copyright headers, we were not sure what to put, so just put something there as a template so we can change it later.
+
+the setPtyType() call was added because the shell connections were sending weird control characters to terminal.  this call fixes the problem.
+
+There is also a race condition that I was not able to fix I put a temporatory workaround to sleep the RSETerminalConnectionThread, it is between setDimension and processText, if you can look into it that might be great!</pre>
+    </div>
+
+    <div id="c24" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c24">Comment 24</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-04 18:35:15 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Why would you think that shell services would be removed? - I'd really like to keep IShellService / IHostShell as the single non-UI service to drive both the Terminal UI as well as the Shell UI. Additional methods in IShellService won't hurt, you don't need to drive them, do you?
+
+The setPTY() thing shows that we might need API to tell the underlying shell what PTY it should emulate... and looks like we'd need to do so in the constructor... which would be a breaking API change.
+
+The Copyright Headers should remain intact when copying an existing EPL'd class. Just add your own line with &quot;...adapted from &lt;originalClass&gt;&quot; at the end. This makes it possible to know at any time who's got copyright rights on the code (pedigree inlined with the code).
+
+The race condition we can look at later, once the stuff is committed. It worked really nice for me! Thanks again!
+</pre>
+    </div>
+
+    <div id="c25" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c25">Comment 25</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Yufen Kuo</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ykuo&#64;mvista.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ykuo&#64;mvista.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-04 19:03:22 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=170910#c24">comment #24</a>)
+<span class="quote">&gt; Why would you think that shell services would be removed? - I'd really like to
+&gt; keep IShellService / IHostShell as the single non-UI service to drive both the
+&gt; Terminal UI as well as the Shell UI. Additional methods in IShellService won't
+&gt; hurt, you don't need to drive them, do you?
+&gt; 
+&gt; The setPTY() thing shows that we might need API to tell the underlying shell
+&gt; what PTY it should emulate... and looks like we'd need to do so in the
+&gt; constructor... which would be a breaking API change.
+&gt; 
+&gt; The Copyright Headers should remain intact when copying an existing EPL'd
+&gt; class. Just add your own line with &quot;...adapted from &lt;originalClass&gt;&quot; at the
+&gt; end. This makes it possible to know at any time who's got copyright rights on
+&gt; the code (pedigree inlined with the code).
+&gt; 
+&gt; The race condition we can look at later, once the stuff is committed. It worked
+&gt; really nice for me! Thanks again!
+&gt; </span >
+
+Thanks Martin, I think IShellService is written for a particular subsystem. And what protocol the subsystem uses - like IHostShell can be reused amoung different subsystems. That is why I defined a new ITerminalService but still uses IHostShell.
+I am hoping that IHostShell related calls can be refactored into a common plugin for other plugins to reuse in the future. But maybe I was thinking too much about the future.
+
+Either way, you know the code a lot better than us, and I will leave you to make the best judgement about it</pre>
+    </div>
+
+    <div id="c26" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c26">Comment 26</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-04 19:20:20 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=170910#c25">comment #25</a>)
+<span class="quote">&gt; Thanks Martin, I think IShellService is written for a particular subsystem. And
+&gt; what protocol the subsystem uses - like IHostShell can be reused amoung
+&gt; different subsystems.</span >
+
+No, I don't think so. IShellService is what the name says -- a non-UI, subsystem-less service for any kinds of shells. You can share the same service in multiple subsystems, or the other way round - use a single subsystem and switch the service impl below it as long as implements the same interface.
+
+For instance, TelnetShellSubSystem can use SshShellService because it implements IShellService -- just by switching the service impl after it has been instantiated. DaveM will be able to explain more if there are still questions.
+
+The service defines the data transfer layer, independent of UI presentation.
+The subsystem defines the UI presentation.
+
+It's unfortunate that we have to define separate subsystem instances for each service impl (because the way the extension points work currently), but it's not very logical and in fact subsystems such as SshFileSubsystem don't have much implementation of their own rather than just extending FileServiceSubSystem and instantiating it by contributing their kind of service impl (which can be replaced later).
+
+Long story short, I'm very confident that you can get rid of ITerminalService, and add an API method to IShellService instead for passing the &quot;String pty&quot; on construction.
+</pre>
+    </div>
+
+    <div id="c27" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c27">Comment 27</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-05 12:07:52 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=94965" name="attach_94965" title="Screenshot of Shells wizard page">attachment 94965</a> <a href="attachment.cgi?id=94965&amp;action=edit" title="Screenshot of Shells wizard page">[details]</a></span>
+Screenshot of Shells wizard page
+
+So, I tried to switch to IShellService. It doesn't work for me.
+Though you can see the subsystem in the wizard page and even select it(see the picture), it doesn't create a connection with that subsystem.</pre>
+    </div>
+
+    <div id="c28" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c28">Comment 28</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-05 12:09:54 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=94966" name="attach_94966" title="Created connection in System View.">attachment 94966</a> <a href="attachment.cgi?id=94966&amp;action=edit" title="Created connection in System View.">[details]</a></span>
+Created connection in System View.
+
+Am I missing something obvious here?</pre>
+    </div>
+
+    <div id="c29" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c29">Comment 29</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-05 12:20:37 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=94967&amp;action=diff" name="attach_94967" title="patch with fixed copyright">attachment 94967</a> <a href="attachment.cgi?id=94967&amp;action=edit" title="patch with fixed copyright">[details]</a></span>
+patch with fixed copyright</pre>
+    </div>
+
+    <div id="c30" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c30">Comment 30</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-05 12:22:12 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=94968" name="attach_94968" title="new rse terminal plugins with fixed copyright">attachment 94968</a> <a href="attachment.cgi?id=94968&amp;action=edit" title="new rse terminal plugins with fixed copyright">[details]</a></span>
+new rse terminal plugins with fixed copyright</pre>
+    </div>
+
+    <div id="c31" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c31">Comment 31</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-07 13:05:18 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=95078&amp;action=diff" name="attach_95078" title="Updated patch without ITerminalService in the Service">attachment 95078</a> <a href="attachment.cgi?id=95078&amp;action=edit" title="Updated patch without ITerminalService in the Service">[details]</a></span>
+Updated patch without ITerminalService in the Service
+
+I did some experiments and found out the following:
+
+When we try to re-use the IShellService directly for the Terminal Subsystem, the Wizard thinks that &quot;Shells&quot; and &quot;Terminals&quot; are variants of the same service and presents them as alternatives in the wizard. This has two implications:
+  1.) User can only choose between EITHER Remote Commands, OR Terminals, but
+      not both. This is related to <a class="bz_bug_link 
+          bz_status_ASSIGNED "
+   title="ASSIGNED - [components][api] two or more subsystems of the same kind cannot be added to the same host"
+   href="show_bug.cgi?id=174495">bug 174495</a>, and <a class="bz_bug_link 
+          bz_status_ASSIGNED "
+   title="ASSIGNED - [components][api][performance] Introduce subsystem configuration families"
+   href="show_bug.cgi?id=217894">bug 217894</a>.
+  2.) Because of the way the wizard currently works when &quot;ssh.shells&quot; and
+      &quot;ssh.terminals&quot; are in the same wizard page, the wizard first instantiates
+      an SshShellServiceSubSystemConfiguration, and then switch it to Terminal
+      later. But this is only allowed if both the Shells and the Terminals
+      configuration extend the same base (ShellServiceSubSystemConfiguration).
+      This behavior is also described in <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [regression] SSH processes and shells subsytems are broken for new connections in 3.0M5"
+   href="show_bug.cgi?id=220524#c2">bug 220524 comment 2</a> and below.
+
+This behavior is not what we really want to have. What I envision is
+  1.) Ability to run &quot;Shells&quot; and &quot;Terminals&quot; subsystems in parallel, when 
+      both are configured
+  2.) The &quot;Terminals&quot; subsystem to provide full access to the IShellService
+      API as well as the IRemoteCmdSubSystem API, when no Shells subsystem
+      is configured (i.e. when there are only Terminals, it should be a
+      fully usable replacement for Shells, such that it can be used for
+      ShellProcessesSubsystem as well as RemoteCDTLaunch).
+
+I think the right solution is to keep the IShellService exactly as it is at the service layer; but, in order to allow for Terminals and Shells in parallel, we need an ITerminalService additional markup. This can be a generic Proxy for IShellService (which then works for Telnet, DStore etc. all the like) and should live in Terminals.core.
+
+Attached patch is the stripped-down variant of existing RSE plugin modifications. I'd still like the following changes in this:
+  1.) We cannot setPty(&quot;ansi&quot;); in SshShell directly. We should create new API
+      for a new IShellService#launchShell(String ptyType, ...) that explicitly
+      passes the PTY to use.
+  2.) I don't like the implicit dependency on Terminals in the
+      RemoteFileAdapter. I think that plugin.xml markup with the Eclipse 
+      Expression language along with PropertyTesters should make it possible
+      to have the same implemented in the terminals.core plugin or terminals.ui
+
+Number (1) here is a must-fix for M6 IMHO since it is API. Number (2) can be done later since it is not API.</pre>
+    </div>
+
+    <div id="c32" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c32">Comment 32</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-07 13:10:22 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=95079" name="attach_95079" title="New Terminal integration plugins">attachment 95079</a> <a href="attachment.cgi?id=95079&amp;action=edit" title="New Terminal integration plugins">[details]</a></span>
+New Terminal integration plugins
+
+Attached are the new Terminal Integration Plugins based on the concept I mentioned before. The new trick is the 
+
+   public class TerminalService implements ITerminalService, IShellService {
+      public TerminalService(IShellService delegate) {
+         this.delegate = delegate;
+      }
+      public void launchShell(...) {
+         delegate.launchShell(...);
+      }
+   }
+
+which provides the new interface type ITerminalService which we need, but is capable of delegating requests to any kind of underlying shell service (dstore, telnet or whatever).
+
+The implementation does support shells and terminals in parallel; but it is not yet complete because TerminalSubSystem does not implement IRemoteCmdSubSystem, so it is not yet a full replacement for shells; thus, in a systemType that pulls in e.g. Ssh-Files / Ssh-Terminals / LinuxShellProcesses, the shell processes will not work. Support for the IRemoteCmdSubSystem needs to be put into the TerminalSubSystem.</pre>
+    </div>
+
+    <div id="c33" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c33">Comment 33</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-07 13:15:39 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Action items for Yu-Fen, Anna and Eugeniy for M6:
+
+(1) Create new API for passing the PTY type into IShellService upon launching 
+    a new shell (or terminal); when PTY type is not set (empty), fall back
+    to current behavior.
+
+(2) Add code to the Terminal Subsystem Impl that shows what to do if 
+    getInputStream() / getOutputStream return null (this is the default return
+    value and happens for dstore. It's an important proof of concept of the API
+    to see that we can gracefully handle null return value.
+
+Action items that can be after M6 (but soon after it, since I need to push the contribution through EMO legal review and want that review complete by M7 == feature freeze!):
+
+(3) Make TerminalSubSystem implement IRemoteCmdSubSystem
+
+(4) Test in various combinations of system type (e.g. terminal + linux shell 
+    processes); dstore implementation
+
+(5) Create Unit Tests for all new API</pre>
+    </div>
+
+    <div id="c34" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c34">Comment 34</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-07 16:04:41 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=95107&amp;action=diff" name="attach_95107" title="patch for existing rse plugins with fixed APIs">attachment 95107</a> <a href="attachment.cgi?id=95107&amp;action=edit" title="patch for existing rse plugins with fixed APIs">[details]</a></span>
+patch for existing rse plugins with fixed APIs
+
+Martin, I added the ptyType parameter to launchShell/runCommand methods in IShellService.</pre>
+    </div>
+
+    <div id="c35" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c35">Comment 35</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-07 16:05:55 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=95109" name="attach_95109" title="new terminal plugins with new API used">attachment 95109</a> <a href="attachment.cgi?id=95109&amp;action=edit" title="new terminal plugins with new API used">[details]</a></span>
+new terminal plugins with new API used</pre>
+    </div>
+
+    <div id="c36" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c36">Comment 36</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-07 16:15:07 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Comment on <span class="bz_obsolete"><a href="attachment.cgi?id=95107&amp;action=diff" name="attach_95107" title="patch for existing rse plugins with fixed APIs">attachment 95107</a> <a href="attachment.cgi?id=95107&amp;action=edit" title="patch for existing rse plugins with fixed APIs">[details]</a></span>
+patch for existing rse plugins with fixed APIs
+
+I think there's no good adding the ptyType parameter to the runCommand() method, because runCommand() is meant as a single command invocation. You don't want to have a terminal attached to that one which does any interactive things. 
+
+That's the difference between launchShell() and runCommand() -- runCommand() is always non-interactive, therefore I don't think it needs the ptyType parameter. I think you should get rid of it.</pre>
+    </div>
+
+    <div id="c37" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c37">Comment 37</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-07 16:15:50 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">PS when attaching a new patch, please use the &quot;obsoletes...&quot; functionality to obsolete those previous patches that are not current any more.</pre>
+    </div>
+
+    <div id="c38" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c38">Comment 38</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-07 16:39:22 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=95116&amp;action=diff" name="attach_95116" title="patch for existing rse plugins with fixed APIs">attachment 95116</a> <a href="attachment.cgi?id=95116&amp;action=edit" title="patch for existing rse plugins with fixed APIs">[details]</a></span>
+patch for existing rse plugins with fixed APIs</pre>
+    </div>
+
+    <div id="c39" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c39">Comment 39</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-07 16:40:09 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=95117" name="attach_95117" title="new terminal plugins with new API used">attachment 95117</a> <a href="attachment.cgi?id=95117&amp;action=edit" title="new terminal plugins with new API used">[details]</a></span>
+new terminal plugins with new API used</pre>
+    </div>
+
+    <div id="c40" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c40">Comment 40</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-07 16:42:21 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Martin, I have no permissions to mark your attachments as obsolete. I can do it only with my own attachments.</pre>
+    </div>
+
+    <div id="c41" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c41">Comment 41</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-08 18:53:04 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Comment on <span class=""><a href="attachment.cgi?id=95116&amp;action=diff" name="attach_95116" title="patch for existing rse plugins with fixed APIs">attachment 95116</a> <a href="attachment.cgi?id=95116&amp;action=edit" title="patch for existing rse plugins with fixed APIs">[details]</a></span>
+patch for existing rse plugins with fixed APIs
+
+Ok, after reviewing the patch again and thorough thought here is what I think:
+
+1.) Just changing the existing IShellService.launchShell() factory method breaks too many clients. We need to be backward compatible here, keeping the old two launchShell() methods but adding a new third one which adds the &quot;String ptyType&quot; parameter. This should make the patch MUCH smaller since existing code remains source compatible.
+
+2.) IHostShell.getInputStream() and IHostShell.getOutputStream() must throw an Exception in case another client has already grabbed the corresponding Stream. We cannot support multiple clients (potentially in multiple Threads) grabbing the same Stream; because if two clients read from the same InputStream, each will only get partial data. If two clients write to the same OutputStream, and that Steram is not synchronized, Threading problems can lead to loss of data.
+
+Therefore, the get*Stream() methods need to declare &quot;...throws IOException&quot; and Javadoc &#64;throws needs to explain that this happens when another client already has the Stream.
+
+3.) In order to avoid a situation where client A gets the input stream and client b gets the output stream, I propose adding an &quot;Object receiver&quot; parameter to get*Stream(), such that when some receiver registered for getting the OutputStream, only the same receiver can also get the InputStream (or an IOException is thrown).
+
+4.) In terms of implementation in SshHostShell and TelnetHostShell, we'll need to care for multi-threaded access between the input stream registered by getInputStream() and the IHostShellOutputReader obtained by getStandardOutputReader. We'll need some multiplexing here, that needs to be done BEFORE applying the encoding, since the Terminal's Stream could be used for xyzmodem data transfer for instance. But all these are implementation details and can be fixed later. 
+
+For now, the API needs to be fixed according to (1)-(3).</pre>
+    </div>
+
+    <div id="c42" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c42">Comment 42</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-09 06:31:50 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=170910#c41">comment #41</a>)
+<span class="quote">&gt; 3.) In order to avoid a situation where client A gets the input stream and
+&gt; client b gets the output stream, I propose adding an &quot;Object receiver&quot;
+&gt; parameter to get*Stream(), such that when some receiver registered for getting
+&gt; the OutputStream, only the same receiver can also get the InputStream (or an
+&gt; IOException is thrown).
+&gt; 
+&gt; 4.) In terms of implementation in SshHostShell and TelnetHostShell, we'll need
+&gt; to care for multi-threaded access between the input stream registered by
+&gt; getInputStream() and the IHostShellOutputReader obtained by
+&gt; getStandardOutputReader. We'll need some multiplexing here, that needs to be
+&gt; done BEFORE applying the encoding, since the Terminal's Stream could be used
+&gt; for xyzmodem data transfer for instance. But all these are implementation
+&gt; details and can be fixed later. </span >
+
+Hi Martin, I'm not sure I understand your synchronization concerns.
+Isn't it true that the only client that has access to the given instance of IHostShell is the client that created that instance?
+That means it's in client's power to control access to the streams(i.e. allow reading/writing), so the problem of synchronization is the problem of client, not provider. That's why I would have the existing API.
+If you still see the problem here, could you please provide me with test case that shows it?
+ </pre>
+    </div>
+
+    <div id="c43" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c43">Comment 43</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-09 06:44:38 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=170910#c42">comment #42</a>)
+<span class="quote">&gt; Isn't it true that the only client that has access to the given instance of
+&gt; IHostShell is the client that created that instance?</span >
+
+Hm... that's a valid point indeed. On the other hand, it's always hard for an API to say: here you've got an instance of Object X, you may do this or that with it, and especially when you give that instance to others you must make sure that they also don't.... see the point? It makes it hard to understand (and follow) the contract properly.
+
+Therefore it's better to enforce the contract if possible, and actually I had that idea yesterday for what I hope will be the final revision of API changes:
+
+(1) I think we'd better use IAdaptable on the ISHellService in order to turn
+    it into an ITerminalService (which in turn would extend IShellService
+    as it does now).
+    Advantage of IShellService.getAdapter(IterminalService) is that 
+    implementations are not forced to think about terminal service right
+    away, but the service adapter can be contributed later by some completely
+    different plugin. The getAdapter() mechanism models the relationship 
+    between IShellService and ITerminalService, in that an existing shell
+    service can be the channel for terminals.
+
+(2) In the light of IShellService bing IAdaptable, I think that IService 
+    in general should be IAdaptable, and there should be an AbstractService
+    base class which extends PlatformObject and provides default 
+    implementations of all the services. This should be enforced in the
+    IService interfaces with &#64;noimplement.
+    We've tried the IAdaptable approach before in <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [api] Add support for &quot;file permissions&quot; and &quot;owner&quot; properties for unix files"
+   href="show_bug.cgi?id=209593">bug 209593</a> but ended up
+    implementing IPermissionsService directly in DStoreFileService and others.
+    Today, I think that making all services IAdaptable is the better approach
+    and we should go for it since it gives us lots of functionality to 
+    improve services in the future.
+
+(3) When IShellService is IAdaptable, we don't need the extra launchShell()
+    constructor with the ptyType argument any more in IShellService. We'd
+    rather move that one into the ITerminalService that the IShellService
+    can adapt to.
+
+(4) The new ITerminalService#launchTerminal() or probably 
+    ITerminalService#makeTerminalConnection() doesn't return an IHostShell
+    but returns an ITerminalConnection object, which provides the 
+    getInputStream(Object) getOutputStream(Object) setTerminalSize() methods
+    we need.
+    By having that interface separate from IHostShell we don't need to 
+    think about multi-threading and serving the listener interface at the
+    same time as the terminal. Users who want the listener interface need
+    to construct a new IHostSHell object; others construct an
+    ITerminalConnection object.
+
+(5) Rather than throwing an IOException, get*Stream() could probably also
+    just return null if the Stream is not available for any reason. I'll 
+    need to think a little bit more about this... disadvantage of returning
+    null is that it needs to be handled right away and cannot carry any
+    message what went wrong... perhaps we should even throw 
+    SystemMessageException rather than IOException.
+
+Now what's interesting is that this proposal brings us quite close again to a
+patch variant that we already had in <span class="bz_obsolete"><a href="attachment.cgi?id=94791&amp;action=diff" name="attach_94791" title="improved patch for existing rse plugins">attachment 94791</a> <a href="attachment.cgi?id=94791&amp;action=edit" title="improved patch for existing rse plugins">[details]</a></span>: Separate
+launchTerminal() constructor, separate ITerminalService interface. But there
+are some important differences:
+  * Using IAdaptable to get to the ITerminalService since they are related
+  * ITerminalService extends IShellService to provide IHostShell interface
+  * get*Stream() and setPtySize() separate from IHostShell
+
+I guess what the evolution of these ideas shows us, is that creating good APIs
+takes time and community involvement - I'm thankful for  all the disucssions
+I've had with Michael Scharf, Anna, Yu-Fen and others about the topic. It also
+shows us that while the initial submission was working already there was still
+a lot of work necessary to evolve the APIs; and, that having exemplary
+implementation helps a lot in designing the good APIs.</pre>
+    </div>
+
+    <div id="c44" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c44">Comment 44</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-09 06:55:32 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I've filed <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [api][breaking] RSE IService should be IAdaptable"
+   href="show_bug.cgi?id=226262">bug 226262</a> for making IService IAdaptable.</pre>
+    </div>
+
+    <div id="c45" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c45">Comment 45</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-09 07:47:23 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=170910#c43">comment #43</a>)
+<span class="quote">&gt; (In reply to <a href="show_bug.cgi?id=170910#c42">comment #42</a>)
+&gt; &gt; Isn't it true that the only client that has access to the given instance of
+&gt; &gt; IHostShell is the client that created that instance?
+&gt; 
+&gt; Hm... that's a valid point indeed. On the other hand, it's always hard for an
+&gt; API to say: here you've got an instance of Object X, you may do this or that
+&gt; with it, and especially when you give that instance to others you must make
+&gt; sure that they also don't.... see the point? It makes it hard to understand
+&gt; (and follow) the contract properly.</span >
+
+I would say that this is very rare case, and I would let the client control the provider itself, like it's done in Unix streaming API.
+If we start solving problems of client on provider's side, we might end up with adding methods like giveInput/OutputStream(),releaseInput/OutputStream() and unproper usage of those will lead to memory/resource leaks,etc.  
+</pre>
+    </div>
+
+    <div id="c46" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c46">Comment 46</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-09 08:17:41 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=170910#c45">comment #45</a>)
+<span class="quote">&gt; I would say that this is very rare case, and I would let the client
+&gt; control the provider itself, like it's done in Unix streaming API.</span >
+
+I don't know what you mean by Unix streaming API, and I don't think it's such a rare case. It's sufficient that client of ITerminalService tries to log terminal I/O by listening to the output:
+
+IHostShell hs = terminalService.launchTerminal(someArgs);
+RSETerminalConnector tc = new RSETerminalConnector(
+       hs.getInputStream(), hs.getOutputStream());
+hs.addHostShellOutputListener(new IHostShellOutputListener() {
+   public void shellOutputChanged(String out) {
+      System.out.println(out);
+   }
+});
+
+This will royally break the Terminal, because the outputListener and the terminal's input stream compete for reading the remote, and only one of them can win. That's why in <a href="show_bug.cgi?id=170910#c43">comment 43</a> point(4) I propose to change the signature to have ITerminalService#launchTerminal() return an ITerminalConnection rather than IHostShell. 
+
+The problem is with IHostShell providign both getInputStream() and addOutputListener(). This is different than UNIX Streams which don't allow adding listeners. And we can easily avoid the situation by returning different interface than IHostShell which just doesn't provide the addOutputListener. 
+
+<span class="quote">&gt; If we start solving problems of client on provider's side, we might end up
+&gt; with adding methods like giveInput/OutputStream(),
+&gt; releaseInput/OutputStream() ...</span >
+
+But that's what this whole discussion is about: about improving API to *not* add such additional methods, such that a *minimal API* with *as few methods as possible* is done which allows user to do what he needs to do, and doesn't give him the chance to mess up things.
+
+I'd always rather be as restrictive with an API as possible, but still as extendable as possible. This seems to be a contradiction, but the point is to provide restrictive maintainable API now and support future extensions via getAdapter() in a way that future adapter writers are enabled to again provide safe APIs for their stuff.
+
+If you worry about not understanding everything here, don't worry since I think it's not really that much of a deal. I think I can come up with a patch for the proposed API changes relatively easily, then you can see the code and see how it works.</pre>
+    </div>
+
+    <div id="c47" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c47">Comment 47</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-09 08:36:22 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">
+(In reply to <a href="show_bug.cgi?id=170910#c46">comment #46</a>)
+<span class="quote">&gt; But that's what this whole discussion is about: about improving API to *not*
+&gt; add such additional methods, such that a *minimal API* with *as few methods as
+&gt; possible* is done which allows user to do what he needs to do, and doesn't give
+&gt; him the chance to mess up things.
+&gt; 
+&gt; I'd always rather be as restrictive with an API as possible, but still as
+&gt; extendable as possible. This seems to be a contradiction, but the point is to
+&gt; provide restrictive maintainable API now and support future extensions via
+&gt; getAdapter() in a way that future adapter writers are enabled to again provide
+&gt; safe APIs for their stuff.</span >
+
+I got confused now, I thought you want to make IHostShell do the sync.
+The idea with IAdaptable seems fine to me.</pre>
+    </div>
+
+    <div id="c48" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c48">Comment 48</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-09 08:39:01 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=170910#c47">comment #47</a>)
+<span class="quote">&gt; I got confused now, I thought you want to make IHostShell do the sync.</span >
+
+I did want to do that first, and even started an implementation, but then I saw that it's really messy and risky and lots of effort -- and can be avoided by having separate interfaces for IHostShell (listener based API) and ITerminalConnection (streams based API).
+
+If you have an idea for a better name of ITerminalConnection, I'd be happy to hear it. I thought about
+   IHostTerminal
+   IStreamedHostShell
+   IHostShellWithStreams
+   ITerminalHostShell
+   ...
+?
+</pre>
+    </div>
+
+    <div id="c49" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c49">Comment 49</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-09 08:54:23 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I would go for either IStreamedHostShell or ITerminalHostShell.</pre>
+    </div>
+
+    <div id="c50" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c50">Comment 50</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-09 21:16:25 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=95455&amp;action=diff" name="attach_95455" title="Patch adding Terminal API to existing RSE plugins">attachment 95455</a> <a href="attachment.cgi?id=95455&amp;action=edit" title="Patch adding Terminal API to existing RSE plugins">[details]</a></span>
+Patch adding Terminal API to existing RSE plugins
+
+Next incarnation of patches to RSE for adding the Terminal Service.
+
+API Changes:
+------------
+* Adding ITerminalService, ITerminalHostShell
+
+All other changes are &quot;internal&quot; non-API.
+Open questions and notes:
+
+* I'm not sure if it's a good idea that ITerminalService extends IShellService.
+  The rationale here was that any Terminal subsystem should also be able to
+  run standard RSE shell commands, such that the Command Subsystem UI can 
+  be totally removed. I'm not sure, however, if it's necessary for this that
+  ITerminalService extends IShellService. Adapting to it might suffice.
+  Also read the next comment on this issue.
+
+* The patch to the telnet plugin is not yet ready to commit and supposedly 
+  also won't work. What I want to achieve ultimately is get away from the
+  specialized SshTerminalSubsystem, and have a generic TerminalSubSystem
+  instead (similar to the Linux Shell Processes Subsystem), which builds on
+  an existing IShellService that it adapts to an ITerminalService -- when 
+  this is possible, the Terminal can work.
+
+Please review these API changes / additions for now, for fitness to include into M6. Actual Terminal Implementation can then be added in M7 since it doesn't
+provide any additional API.</pre>
+    </div>
+
+    <div id="c51" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c51">Comment 51</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-09 21:20:29 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=95456" name="attach_95456" title="Terminal Plugins v4">attachment 95456</a> <a href="attachment.cgi?id=95456&amp;action=edit" title="Terminal Plugins v4">[details]</a></span>
+Terminal Plugins v4
+
+Next incarnation of Terminal Plugins, for testing and verifying the API from the previous patch. These plugins do not add any new API, have been versioned 0.1.0 (Incubation) and can thus be finally checked in with M7.
+
+Please review the current contribution for API appropriateness.</pre>
+    </div>
+
+    <div id="c52" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c52">Comment 52</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-10 19:05:48 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Here are some more thoughts about this proposed API, I'd love to discuss these with somebody:
+
+IHostShell and ITerminalHostShell are just two different ways of looking at
+a remote &quot;shell-channel&quot; like connection. Some of the differences are that
+
+- IHostShell is text-based and line-based. It supports cases where the Encoding
+  of system dependent commands into Java Unicode Strings as well as the parsing
+  into distinct lines happens on the _remote_ side (which might make sense on
+  some mainframes).
+
++ ITerminalHostShell is streams-based and thus deals with byte streams that
+  can be decoded and parsed into lines on the _client_ side.
+
+- IHostShell supports _multiple listeners_ and _multiple command senders_
+  due to its listener model, which can do one-to-many communications.
+
++ ITerminalHostShell usually supports a _single_ client to the Streams only.
+  This could be changed with StremMultiplexer / StreamDuplicator classes that
+  use some (custom) scheme to (de)multiplex the single Stream for multiple
+  clients, but that's nontrivial.
+
++ ITerminalHostShell has some extra methods related to setting terminal size
+  or checking for local echo. These are related to &quot;Pseudo Terminals&quot; on the
+  remote adn don't make sense in a line-based scheme.
+
+Looking at ITerminalHostShell from a different angle, it's also a &quot;Remote Execution&quot; kind of service, very similar to Java Runtime.getRuntime().exec() which returns a Process object -- it's got an initial directory, comand and evnironment. What's a Java Process object locally, is very similar to ITerminalHostShell. I do not think that we should have IRemoteProcess because we cannot easily kill the process etc, but we should think about adding these methods from Process:
+
+interface ITerminalHostShell {
+   getErrorStream(); //may be null if not supported
+   exitValue();      //throws exception while still running
+   waitFor();        //wait until one of the Streams closes
+   destroy();        //we probably shouldn't support this but use close()
+                     //or exit() instead -- since we cannot really destroy
+                     //the remote process but we can close comm channels.
+}
+
+See how having this API at the Service layer would make the Linux Shell Processes Service much easier!
+
+I also notice that it looks like in some cases it might make sense for a system to support an ITerminalService but no IShellService; in some cases the other way round. To me, though, the ITerminalService does seem more versatile, and adapting an ITerminalHostShell to an IHostShell should be fairly straightforward (actually having similar code as in e.g. SshHostShell right now, but in a single common place rather than copied &amp; pasted to multiple places). There might be exceptions, as mentioned, like Mainframes which perform line parsing and/or encoding themselves on the remote; but in general, I could see the ITerminalService become the &quot;prime&quot; kind of Service that extenders implement, with a single generic adapter that adapts it to an IShellService.
+
+All that being said, I think that 
+1.) ITerminalService should *not extend* IShellService but rather adapt to 
+    it if needed; 
+2.) We should add the 3 methods mentioned above to ITerminalHostShell:
+    getErrorStream(), exitValue(), waitFor()
+3.) We should also think about adding methods
+    setDefaultEncoding(), getTerminalSize(), getTerminalType() for cases
+    where these settings really come from the Remote rather than being set
+    by the user.
+
+What I'm still choking a little on, is finding better names instead of ITerminalService / ITerminalHostShell. In reality, it's just the &quot;Streaming Variant&quot; of IHostShell since it doesn't necessarily involve a Terminal in the case where just a remote command is executed (in a pseudo termianl or not in any terminal). But I'm not too fond about IStreamShellService / IStreamShell for instance... but then perhaps these are not too bad?
+
+Thoughts?
+
+Please speak now since I'd like to commit the API Changes -- well, basically only adding the two new interfaces plus related classes:
+   ITerminalService + ITerminalHostShell 
+or whatever we rename it to. These should be reasonably well thought-out now such that the risk of having to change them again for M7 is not too high though I'd be OK with still modifying that brand-new API.
+
+Thanks for any feedback!</pre>
+    </div>
+
+    <div id="c53" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c53">Comment 53</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-11 03:56:48 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=170910#c52">comment #52</a>)
+<span class="quote">&gt; Here are some more thoughts about this proposed API, I'd love to discuss these
+&gt; with somebody:
+&gt; All that being said, I think that 
+&gt; 1.) ITerminalService should *not extend* IShellService but rather adapt to 
+&gt;     it if needed; 
+&gt; 2.) We should add the 3 methods mentioned above to ITerminalHostShell:
+&gt;     getErrorStream(), exitValue(), waitFor()</span >
+
+Yes, I would totally agree with that. Actually we even added getErrorStream() when we were doing initial API addition but we were not able to find out if this method is supported in undelying ssh implementation, that is why we removed it from our patch.
+
+
+</pre>
+    </div>
+
+    <div id="c54" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c54">Comment 54</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-11 04:36:53 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Thanks for the thumbs up.
+
+For SSH, it's not possible to get separate output and error streams; so, an SSH implementation would return null for getErrorStream(). But users could put their own protocol on top of SSH Channel, in order to encode it: for instance, you run a program on the remote side which takes output / error streams, and encodes these in a format like gdb/mi for instance, or differently -- basically multiplexing multiple streams onto the one channel.
+
+In RSE, an extender of SshTerminalShell could now demultiplex the one channel into separate streams again. Actually, they don't even have to subclass SshTerminalShell for that, but they can also decorate the generic ITerminalHostShell with their demultiplexer:
+
+public ITerminalShell makeTerminalWithStdErr(final ITerminalShell base) {
+   final MyDemuxer demux = new MyDemuxer(base.getOutputStream());
+   return new ITerminalShell {
+      public OutputStream getOutputStream() {
+          return demux.getOutputStream();
+      }
+      public OutputStream getErrorStream() {
+          return demux.getErrorStream();
+      }
+      public void setTerminalSize(int x, int y) {
+          base.setTerminalSize(x, y);
+      }
+   }
+}
+
+having a baseclass DelegatingTerminalShell (or TerminalShellDecorator) available as part of the API would help creating such Decorators easily, and in a backward compatible fashion in case we choose to add methods to the API later on -- similar as we've done it for the AbstractDelegatingConnectorService in RSE.
+On a different note, I've been thinking that the Service we are providing here is really much about handling arbitrary connections that use Streams for communication. Connection can be local or remote, it can offer terminal-specific functionality like setTerminalSize() or isLocalEcho() or not. I was thus wondering what you thought about renaming the classes as follows:
+
+interface IStreamShell            -- instead of ITerminalHostShell
+interface IStreamShellService     -- instead of ITerminalService
+
+where the notion of a &quot;Shell&quot; is a connection that provides stdin, stdout, stderr, a status (&quot;running/terminated&quot;), and an exitValue. In that notion, the Terminal-specific methods (isLocalEcho() / setTerminalSize()) might not even be part of the IStreamShell interface but might be added via getAdapter() because just like with the Decorator pattern we've seen above, a 3rd party can add such functionality on top of a normal IStreamShell later on. The only difference between Decorator and Adatper pattern here is, that you'd be using the Decorator to modify already-existing functionality and use the Adapter to add new functionality from the outside.</pre>
+    </div>
+
+    <div id="c55" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c55">Comment 55</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-11 04:44:32 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Actually, since I think the IStreamShell is the &quot;right kind of shell&quot; anyways and should replace the IHostShell eventually.... what about this:
+
+interface IBaseShell                         -- like java.lang.Process
+interface ITerminalShell extends IBaseShell  -- adding setTerminalSize() etc
+interface IBaseShellService                  -- launchBaseShell()
+interface ITerminalService extends IBaseShellService -- launchTerminal()
+
+We'd need an ITerminalService because the factory method (launchTerminal) requires us to have the ptyType available from the very beginning, at least for SSH we cannot change the ptyType later on so it must be available at construction already.
+
+IBaseShellService can adapt to IShellService eventually, because it's always possible to adapt an IBaseShell to an IHostShell (with code similar to what we have in SshHostShell already). Of course, an IBaseShell can also adapt to an ITerminalShell and not only extend it, so 3rd parties can add the terminal specific stuff on top of an IBaseShell later on.</pre>
+    </div>
+
+    <div id="c56" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c56">Comment 56</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-11 05:05:56 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=170910#c55">comment #55</a>)
+<span class="quote">&gt; Actually, since I think the IStreamShell is the &quot;right kind of shell&quot; anyways
+&gt; and should replace the IHostShell eventually.... what about this:
+&gt; 
+&gt; interface IBaseShell                         -- like java.lang.Process
+&gt; interface ITerminalShell extends IBaseShell  -- adding setTerminalSize() etc
+&gt; interface IBaseShellService                  -- launchBaseShell()
+&gt; interface ITerminalService extends IBaseShellService -- launchTerminal()
+&gt; 
+&gt; We'd need an ITerminalService because the factory method (launchTerminal)
+&gt; requires us to have the ptyType available from the very beginning, at least for
+&gt; SSH we cannot change the ptyType later on so it must be available at
+&gt; construction already.
+&gt; 
+&gt; IBaseShellService can adapt to IShellService eventually, because it's always
+&gt; possible to adapt an IBaseShell to an IHostShell (with code similar to what we
+&gt; have in SshHostShell already). Of course, an IBaseShell can also adapt to an
+&gt; ITerminalShell and not only extend it, so 3rd parties can add the terminal
+&gt; specific stuff on top of an IBaseShell later on.</span >
+
+Martin, is ITerminalShell=IStreamShell? I'm a little bit confused with all the name changes.
+ 
+
+</pre>
+    </div>
+
+    <div id="c57" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c57">Comment 57</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-11 05:38:59 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Actually I'm splitting it up. 
+
+Our current ITerminalHostShell --&gt; ITerminalShell
+Proposed IStreamShell --&gt; IBaseShell
+
+Since I think the right way of dealing with basic shells is using Streams.
+</pre>
+    </div>
+
+    <div id="c58" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c58">Comment 58</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Anna Dushistova</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=anna.dushistova&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=anna.dushistova&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-11 05:45:07 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=170910#c57">comment #57</a>)
+<span class="quote">&gt; Actually I'm splitting it up. 
+&gt; 
+&gt; Our current ITerminalHostShell --&gt; ITerminalShell
+&gt; Proposed IStreamShell --&gt; IBaseShell</span >
+
+Ok, got it.
+
+<span class="quote">&gt; Since I think the right way of dealing with basic shells is using Streams.</span >
+
+I agree, I like the proposed changes so far. Thanks!
+
+</pre>
+    </div>
+
+    <div id="c59" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c59">Comment 59</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-11 09:41:21 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=95680&amp;action=diff" name="attach_95680" title="Patch modifying RSE after main API is committed">attachment 95680</a> <a href="attachment.cgi?id=95680&amp;action=edit" title="Patch modifying RSE after main API is committed">[details]</a></span>
+Patch modifying RSE after main API is committed
+
+I have committed what I think is the right API into
+    org.eclipse.rse.internal.services.terminals:
+
+[170910][api] Add API for Stream-based shells and terminals in RSE
+
+This is still marked as EXPERIMENTAL for now, that's also why it is in an &quot;internal&quot; package. I would like to foster more review and discussion, in order to make those APIs official with M7.
+
+Attached patch contains the new version (V5) of applying these APIs to the RSE SSH Services. Note that from the remaining patch and contribution, nothing needs to be API at all.
+
+Please try it out, review the APIs and give feedback!</pre>
+    </div>
+
+    <div id="c60" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c60">Comment 60</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-11 09:43:59 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=95681" name="attach_95681" title="Terminal Plugins (v5) based on committed Terminal API">attachment 95681</a> <a href="attachment.cgi?id=95681&amp;action=edit" title="Terminal Plugins (v5) based on committed Terminal API">[details]</a></span>
+Terminal Plugins (v5) based on committed Terminal API
+
+Attached are the new RSE Terminal Integration Plugins that work against the committed experimental API. Note that these require the Terminal Encoding Patch from <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [terminal][api] Terminal should allow setting the encoding to use"
+   href="show_bug.cgi?id=204796">bug 204796</a>.
+
+Please test and give feedback.</pre>
+    </div>
+
+    <div id="c61" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c61">Comment 61</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-11 13:17:42 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I further slightly improved the Terminal APIs and fixed few minor issues. In my opinion, they are now good enough for broader review, so I'd like to reinterpret this bug as the one working out the APIs, and create a new bug (assigned M7) for the implementation.
+
+Changed the Summary, becasause this is not API breaking, previous value was:
+[api][breaking] Integrate the TM Terminal View with RSE
+
+The final APIs are not breaking at all, but are all additional in new package 
+   org.eclipse.rse.internal.services.terminals
+They are all marked as &quot;EXPERIMENTAL&quot; for now and that's also why they are in the &quot;internal&quot; package. They are, however, exported without the x-internal keyword so no warnings are seen when using them. I plan making them final in M7.
+
+I'm not 100% happy with the package name yet, so that might be subject to change. I am, however, adding the new package to the rse.doc.isv search path, so Javadocs will be available on the dsdp.eclipse.org/help/latest server.
+
+Summary of API Additions (org.eclipse.rse.internal.services.terminals):
+-----------------------------------------------------------------------
+ITerminalService
+AbstractTerminalService implements ITerminalService
+
+IBaseShell
+ITerminalShell extends IBaseShell
+AbstractTerminalShell implements ITerminalShell
+
+ProcessBaseShell implements IBaseShell
+BaseShellDecorator implements IBaseShell
+TerminalShellDecorator implements ITerminalShell
+-----------------------------------------------------------------------
+
+Based on these API additions, I have also implemented
+   SshTerminalService
+   SshTerminalShell
+as a proof of concept. These classes are internal, but what's new about them is that they implement the IAdaptable interface as per <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [api][breaking] RSE IService should be IAdaptable"
+   href="show_bug.cgi?id=226262">bug 226262</a>, so a client that has an IShellService can now do getAdapter(ITerminalService.class), and if it happens to be an SSH Shell service he'll get the Terminal Service. By this way, clients can get access to the SshTerminalService instance although it's internal.
+
+What I also did in the services.ssh package was make the 
+   ISshService#getShellProvider() 
+method public, to make sure that externally contributed adapters which want to adapt an SshTerminalService to something different, can get access to the Shell Provider (which they desparately need in order to be able to do anything useful on the same session).
+
+I'm not going to accept the contributions that change the TelnetHostShell (since it's not right what this is doing anyways); and I'm also not going to accept the changes to RemoteFileSubSystemAdapter (since that should better be handled as described in <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [api] Launch Shell and Launch Terminal actions should be contributed declaratively"
+   href="show_bug.cgi?id=226550">bug 226550</a>). This means, that from the Original MontaVista contribution not much remains in the codebase, since I wrote all the new Terminal API from scratch. What remains is:
+  SshServiceResources.java   (5 lines courtesy Yu-Fen)
+  SshServiceResources.properties (3 lines courtesy Yu-Fen)
+  SshTerminalShell.java (ca. 20 lines courtesy Anna around writeToShell()).
+
+Sorry Eugeniy, but your contributions have been purged so far, though I think you've also got some stuff in the 3 implementation plugins to be contributed for M7, right?
+  
+Fix committed:
+[170910] Adopt RSE ITerminalService API for SSH
+   org.eclipse.rse.services.ssh
+
+Marking bug fixed now.</pre>
+    </div>
+
+    <div id="c62" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c62">Comment 62</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-11 13:38:42 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Xuan: Note that this is adding two late NLS Strings for rse.services.ssh, though these would typically never be seen in an RSE product that doesn't use the Terminal.</pre>
+    </div>
+
+    <div id="c63" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c63">Comment 63</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Xuan Chen</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=xuanchen&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=xuanchen&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-11 14:03:43 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Since SSH is picked up by us (part of SDK zip), the translation change should be included in the next PII drop (April 21 driver).</pre>
+    </div>
+
+    <div id="c64" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c64">Comment 64</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-11 18:09:33 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">PII should not be a problem since this is committed and released for M6.
+
+Request for adding Terminal integration plugins to RSE is now tracked in <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [rseterminal] Integrate the TM Terminal View with RSE"
+   href="show_bug.cgi?id=226764">bug 226764</a>, with some additional missing features mentioned there.
+
+Documentation for the new API is available on
+<a href="http://dsdp.eclipse.org/help/latest/topic/org.eclipse.rse.doc.isv/reference/api/org/eclipse/rse/internal/services/terminals/package-summary.html">http://dsdp.eclipse.org/help/latest/topic/org.eclipse.rse.doc.isv/reference/api/org/eclipse/rse/internal/services/terminals/package-summary.html</a>
+
+Please continue discussing and giving feedback about the provisional rse.internal.services.terminals API, preferredly by filing a separate new enhancement request for each issue.</pre>
+    </div>
+
+    <div id="c65" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c65">Comment 65</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2011-05-25 07:27:22 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Comment on <span class=""><a href="attachment.cgi?id=95117" name="attach_95117" title="new terminal plugins with new API used">attachment 95117</a> <a href="attachment.cgi?id=95117&amp;action=edit" title="new terminal plugins with new API used">[details]</a></span>
+new terminal plugins with new API used
+
+Marking Anna's contribution as used</pre>
+    </div>
+
+    <div id="c66" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c66">Comment 66</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2011-05-25 07:27:57 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Comment on <span class=""><a href="attachment.cgi?id=95116&amp;action=diff" name="attach_95116" title="patch for existing rse plugins with fixed APIs">attachment 95116</a> <a href="attachment.cgi?id=95116&amp;action=edit" title="patch for existing rse plugins with fixed APIs">[details]</a></span>
+patch for existing rse plugins with fixed APIs
+
+Marking Anna's contribution as used</pre>
+    </div>
+
+    <div id="c67" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170910#c67">Comment 67</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2011-05-26 06:02:36 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">See also <a href="https://dev.eclipse.org/ipzilla/show_bug.cgi?id=2256">https://dev.eclipse.org/ipzilla/show_bug.cgi?id=2256</a></pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=170910">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=170910">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=170910">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=170910&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=170910" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>

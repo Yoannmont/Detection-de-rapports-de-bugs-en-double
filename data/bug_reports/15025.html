@@ -1,0 +1,2401 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>15025 &ndash; implement java.awt.Robot for SWT</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "15025 – implement java.awt.Robot for SWT",
+                             "show_bug.cgi?id=15025" );
+        document.title = "15025 – implement java.awt.Robot for SWT";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "15025 – implement java.awt.Robot for SWT", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_RESOLVED
+                 bz_product_Platform
+                 bz_component_SWT
+                 bz_bug_15025 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;15025</span>
+
+        <span id="subtitle" class="subheader">implement java.awt.Robot for SWT</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2008-09-29 03:46:10 EDT</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=15025&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=15025" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2008-09-29 03:46:10">
+  <input type="hidden" name="id" value="15025">
+  <input type="hidden" name="token" value="1629861786-y3LkA6zRqqcTYiBcJYAnVlmxh4XcAgZvoXzBXRj7fYA">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=15025"><b>Bug&nbsp;15025</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">implement java.awt.Robot for SWT</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span>implement java.awt.Robot for SWT
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      'implement java.awt.Robot for SWT' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">RESOLVED
+          FIXED
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >Platform
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >Eclipse Project
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=Platform"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >SWT
+
+  (<a href="buglist.cgi?component=SWT&amp;product=Platform&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>2.0 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">All
+        All
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P3
+       enhancement<span id="votes_container">
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=15025#vote_15025">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>--- &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">Christophe Cornu</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=christophe.cornu+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=christophe.cornu+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard">
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'platform-swt-inbox\x40eclipse.org',
+        '');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >helpwanted
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          <tr>
+    <th class="field_label">
+      <label>Duplicates (2)</label>:
+    </th>
+    <td class="field_value">
+      <span id="duplicates"><a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Posting key and mouse events to widgets (BBAWT)"
+   href="show_bug.cgi?id=21083">21083</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Programmatically clicking on, typing in, and focusing on Widgets"
+   href="show_bug.cgi?id=38438">38438</a> 
+      </span>
+      (<a href="buglist.cgi?bug_id=21083,38438">view as bug list</a>)
+    </td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+<a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [plan item] Support GUI test tools"
+   href="show_bug.cgi?id=37704">37704</a> 
+  </td>
+  </tr>
+
+    <tr>
+      <th>&nbsp;</th>
+
+      <td id="show_dependency_tree_or_graph">
+        Show dependency <a href="showdependencytree.cgi?id=15025&amp;hide_resolved=1">tree</a>
+
+      </td>
+    </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2002-05-01 14:39 EDT by <span class="vcard"><span class="fn">Mazen Faraj</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mfaraj&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mfaraj&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2008-09-29 03:46 EDT
+      (<a href="show_activity.cgi?id=15025">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>9 
+          users
+          <span id="cc_edit_area_showhide_container" class="bz_default_hidden">
+            (<a href="#" id="cc_edit_area_showhide">show</a>)
+          </span>
+        <div id="cc_edit_area">
+          <br>
+            <select id="cc" multiple="multiple" size="5" >
+                <option value="burner">burner</option>
+                <option value="chris">chris</option>
+                <option value="danrubel">danrubel</option>
+                <option value="dlwhiteman">dlwhiteman</option>
+                <option value="kehn">kehn</option>
+                <option value="ktdale">ktdale</option>
+                <option value="marcelop">marcelop</option>
+                <option value="n.a.edgar">n.a.edgar</option>
+                <option value="Sebastian_Peleato">Sebastian_Peleato</option>
+            </select>
+        </div>
+          <script type="text/javascript">
+            hideEditableField( 'cc_edit_area_showhide_container', 
+                               'cc_edit_area', 
+                               'cc_edit_area_showhide', 
+                               '', 
+                               '');  
+          </script>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" >
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <a href="attachment.cgi?bugid=15025&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=15025&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=15025#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mazen Faraj</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mfaraj&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mfaraj&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2002-05-01 14:39:36 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Not sure if this capability is available in 2.0 line items, but I thought
+I should file it anyway.
+
+The feature is to ask the SWT team to implement a similar set of APIs
+that are included in java.awt.Robot, but tailored for SWT widgets. 
+
+The quick answer to why this is needed is for automating Eclipse UI testing,
+not through the usual &quot;recording&quot; software products out there, but through
+writting Java testcases that actually represent your UI automated test. 
+Picture this, when you run your automated JUnit testcases in Eclipse, you are 
+running these automated UI testcases also. So your JUnit testcases are not only
+for &quot;backend&quot; or &quot;logic&quot; testing! you are also testing your UI functionality.
+
+BACKGROUND:
+-----------
+as of JDK 1.3, Sun added a class called java.awt.Robot which is intended for
+_exactly_ that ! automating UI testing.
+You can creat events _directly_ at the platform's native input queue. and
+since you are
+writting Java code, you can write code that is totally independant of widget
+location.
+Your UI layout can totally change and your robot testcase still runs like a
+charm!
+bingo, real automation.
+
+THE PROBLEM :(
+Even though I had a prototype working that used Sun's Robot class to automate 
+Eclipse UI testing, there are gltiches.
+the java.awt.robot class was designed for AWT classes. I worked around some
+of the
+problems with using that class with SWT, as opposed to AWT. but still,
+things where
+not working as designed just because of the SWT mix with Robot.
+
+WHY AM I SAYING ALL THIS  :)
+well, SWT team can easily look into creating a similar class (its a very
+small set of APIs, but they
+are very powerful).
+And if you guys do that, then you have given developers a solution for
+automating Eclipse UI testing!
+
+
+Im taking the liberty of adding two class just to give you an idea of 
+the sort of thing that I am talking about, and how a UI testcase might look
+like.
+
+**********************************
+
+
+package org.eclipse.robot;
+
+/*
+ * (c) Copyright IBM Corp. 2000, 2001.
+ * All Rights Reserved.
+ */
+
+import org.eclipse.ui.*;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.graphics.*;
+
+/**
+ * This interface represents the Eclipse-oriented script actions.
+ * &lt;p&gt;
+ * This adds Eclipse functionality to the Robot interface.
+ */
+
+public interface IEclipseRobot extends IRobot {
+	
+	//*******************************//
+	// Eclipse Workbench interface   //
+	//*******************************//
+	
+	/**
+	 * Opens a Perspective with the given identifier. 
+	 * &lt;p&gt;
+	 * The IObjectIdentifier should be of type Perspective, and the 
+	 * recognition method is the perspective's name or ID. 
+	 * If newPage is true, it will open the perspective in a 
+	 * new page even if the perspective is already open.  
+	 * If newPage is false, tries to find an open perspective with 
+	 * the given identifier, and switch to it. If not found, returns
+	 * null.  
+	 * &lt;p&gt;
+	 * Returns the opened perspective, or null if command failed.
+	 */
+	public IPerspectiveDescriptor openPerspective(IObjectIdentifier 
+identifier, 
+									
+	   boolean newPage);
+									
+	   
+	/**
+	 * Opens a Perspective with the given perspective id. 
+	 * &lt;p&gt;
+	 * The object type and recognition method here are the 
+	 * the default values for a Perspective.
+	 * If newPage is true, it will open the perspective in a 
+	 * new page even if the perspective is already open.  
+	 * If newPage is false, tries to find an open perspective with 
+	 * the given identifier, and switch to it. If not found, returns
+	 * null.  
+	 * &lt;p&gt;
+	 * Returns the opened perspective, or null if command failed.
+	 */
+	public IPerspectiveDescriptor openPerspective(String perspectiveId, 
+boolean newPage);
+	
+	
+	/**
+	 * Opens a View with the given identifier. 
+	 * &lt;p&gt;
+	 * The IObjectIdentifier should be the 
+	 * view's name or ID. 
+	 * &lt;p&gt;
+	 * Returns the opened view, or null if command failed.
+	 */
+	public IViewPart openView(IObjectIdentifier identifier);
+	
+	/**
+	 * Opens a View with the given id 
+	 * &lt;p&gt;
+	 * The object type and recognition method here are the 
+	 * the default values for a Perspective.
+	 * &lt;p&gt;
+	 * Returns the opened view, or null if command failed.
+	 */
+	public IViewPart openView(String viewId);
+	
+	
+	/**
+	 * Detaches an open View. 
+	 * &lt;p&gt;
+	 * Clicks on specified view, and drags it outside the current 
+	 * Eclipse Window.
+	 * &lt;p&gt;
+	 * Returns IRobotConst.SUCCESS or IRobotConst.FAILURE
+	 */
+	public int detachView(IObjectIdentifier identifier);
+	
+	/**
+	 * Detaches an open View with the given Id. 
+	 * &lt;p&gt;
+	 * Clicks on specified view, and drags it outside the current 
+	 * Eclipse Window.
+	 * &lt;p&gt;
+	 * Returns IRobotConst.SUCCESS or IRobotConst.FAILURE
+	 */
+	public int detachView(String viewId);
+	
+	
+	/**
+	 * Sets the current context to the given object, and gives 
+	 * it focus.
+	 * &lt;p&gt;
+	 * Everything is either an 
+	 * org.eclipse.jface.window.Window or an 
+	 * org.eclipse.jface.window.Wizard. 
+	 * The IObjectIdentifier should be the caption string in 
+	 * the window or the wizard.  
+	 * ie: only StringIdentifierType is allowed for now.
+	 * &lt;p&gt;
+	 * Returns IRobotConst.SUCCESS or IRobotConst.FAILURE
+	 */
+	public int setCurrentContext(IObjectIdentifier identifier);
+	
+	/**
+	 * Sets the current context to the IWorkbenchWindow with  
+	 * the given caption, and gives it focus.
+	 * &lt;p&gt;
+	 * Returns IRobotConst.SUCCESS or IRobotConst.FAILURE
+	 */
+	public int setCurrentContext(String windowCaption);
+	
+	
+	/**
+	 * Returns the current context.
+	 * &lt;p&gt; 
+	 * Will return instances of Object types allowed in
+	 * setCurrentContext(), or null if command failed.  
+	 */
+	public Object getCurrentContext();
+	
+	
+	
+	//*******************************//
+	// Eclipse UI/JFace interface    //
+	//*******************************//
+	
+	/**
+	 * Selects a menu item, or a sequence of menu items. 
+	 * &lt;p&gt;
+	 * eg: Perspective-&gt;Open-&gt;Other... 
+	 * The menuSequence should be the name of the menu
+	 * items in sequence, separated by &quot;-&gt;&quot;. 
+	 * &lt;p&gt;
+	 * Returns IRobotConst.SUCCESS or IRobotConst.FAILURE
+	 */
+	public int selectMenuItem(String menuSequence);
+		
+	
+	
+	//*******************************//
+	// Eclipse SWT interface         //
+	//*******************************//
+
+	/**
+	 * Finds the list of Widgets of the given type in the  
+	 * current context. 
+	 * &lt;p&gt;
+	 * Returns null if command failed, or non found.
+	 */
+	public Widget[] findWidget(int type);
+	
+	/**
+	 * selects the given Widget. 
+	 * &lt;p&gt;
+	 * Returns IRobotConst.SUCCESS or IRobotConst.FAILURE
+	 */
+	public int selectWidget(Widget widget);
+	
+	/**
+	 * selects the given Widget. 
+	 * &lt;p&gt;
+	 * Returns IRobotConst.SUCCESS or IRobotConst.FAILURE
+	 */
+	public int selectWidget(IObjectIdentifier identifier);
+	
+	
+	
+	/**
+	 * Returns the Control that has focus. 
+	 */
+	public Control getFocusControl();
+	// ps: Display.getCurrent.getFocusControl();
+	
+	
+}
+
+
+
+********************************
+A UI Testcase using the above might look like:
+**********************************
+
+package org.eclipse.robot.examples;
+
+/*
+ * (c) Copyright IBM Corp. 2000, 2001.
+ * All Rights Reserved.
+ */
+
+import org.eclipse.robot.*;
+
+/**
+ * From a clean Eclipse UI, this sample performs the following: &lt;br&gt;
+ * ------------------------------------------------------------- &lt;br&gt;
+ * 1. Open Help pespective. &lt;br&gt;
+ * 2. Detach Help View. &lt;br&gt;
+ * 3. Press F1. &lt;br&gt;
+ * 4. Close Eclipse. &lt;br&gt;
+ * &lt;br&gt;
+ * &lt;a HREF=&quot;RobotExample1.txt&quot;&gt;Source for example&lt;/a&gt; 
+ * &lt;br&gt;
+ */
+
+public class RobotExample1 {
+
+	public static void main(String[] args) {
+		try {
+			EclipseRobot robot = new EclipseRobot();
+
+			robot.openPerspective
+(&quot;org.eclipse.help.internal.ui.HelpPerspective&quot;, true);
+
+			robot.setCurrentContext(&quot;Help - Eclipse Project SDK&quot;);
+
+			robot.detachView
+(&quot;org.eclipse.help.internal.ui.EmbeddedHelpView&quot;);
+
+			robot.setCurrentContext(&quot;Help - Eclipse Project SDK&quot;);
+			
+			// for now AWT constants are used because of dependency 
+on 
+			// java.awt.Robot. If Eclipse provides similar class, 
+then 
+			// dependency is removed.
+			robot.keyPress(java.awt.event.KeyEvent.VK_F1);
+			robot.keyRelease(java.awt.event.KeyEvent.VK_F1);
+
+			robot.selectMenuItem(&quot;File-&gt;Exit&quot;);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+}
+
+
+***********************
+Another one:
+***********************
+
+package org.eclipse.robot.examples;
+
+/*
+ * (c) Copyright IBM Corp. 2000, 2001.
+ * All Rights Reserved.
+ */
+
+import org.eclipse.robot.*;
+
+/**
+ * From a clean Eclipse UI, this sample creates a new File under a 
+ * Project called testingProject.&lt;br&gt;
+ * -----------------------------------------------------------------&lt;br&gt;
+ * 1. Open the new Resource wizard. &lt;br&gt;
+ * 2. Select Simple, and File. &lt;br&gt;
+ * 3. click Next. &lt;br&gt;
+ * 4. Select Folder &quot;testingProject&quot;. &lt;br&gt;
+ * 5. Type file name, and click Finish. &lt;br&gt;
+ * 6. Close Eclipse. &lt;br&gt;
+ * &lt;br&gt;
+ * &lt;A HREF=&quot;RobotExample2.txt&quot;&gt;Source for example&lt;/A&gt; &lt;br&gt;
+ */
+
+public class RobotExample2 implements IRobotConst {
+
+	public static void main(String[] args) {
+		try {
+			EclipseRobot robot = new EclipseRobot();
+
+			robot.setCurrentContext(&quot;Resource - Eclipse Project 
+SDK&quot;);
+
+			robot.selectMenuItem(&quot;File-&gt;New-&gt;Others...&quot;);
+
+			// default is window
+			robot.setCurrentContext(&quot;New&quot;);
+			
+			// Select item &quot;Simple&quot; from tree
+			ObjectIdentifier objectIdentifier = new ObjectIdentifier
+(TREE,
+									
+	TEXT_RECOGNITION,
+									
+	&quot;SIMPLE&quot;);				 			
+			robot.selectWidget(objectIdentifier);
+			
+			// Select item &quot;File&quot; from List
+			// this is the long way of doing it!
+			objectIdentifier = new ObjectIdentifier(LIST);
+			objectIdentifier.setRecognitionMethods(new int[] 
+{TEXT_RECOGNITION}); 
+			objectIdentifier.setIdentifiers(new String[] {&quot;FILE&quot;});	
+			 			
+			robot.selectWidget(objectIdentifier);
+			
+			// Select &quot;Next &gt;&quot; button
+			objectIdentifier = new ObjectIdentifier(BUTTON,
+									
+	TEXT_RECOGNITION,
+									
+	&quot;NEXT &gt;&quot;);				 			
+			robot.selectWidget(objectIdentifier);
+			
+			// Select item &quot;testingProject&quot; from tree
+			objectIdentifier = new ObjectIdentifier(TREE,
+									
+	TEXT_RECOGNITION,
+									
+	&quot;testingProject&quot;);				 			
+			robot.selectWidget(objectIdentifier);
+			
+			// Select text area with label 
+			objectIdentifier = new ObjectIdentifier(BUTTON,
+									
+	TEXT_RECOGNITION,
+									
+	&quot;File name:&quot;);				 			
+			robot.selectWidget(objectIdentifier);
+			
+			robot.typeString(&quot;newFileName&quot;);
+			
+			// Select &quot;Finish&quot; button
+			objectIdentifier = new ObjectIdentifier(BUTTON,
+									
+	TEXT_RECOGNITION,
+									
+	&quot;Finish&quot;);				 			
+			robot.selectWidget(objectIdentifier);
+
+			robot.selectMenuItem(&quot;File-&gt;Exit&quot;);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+ 
+
+ 
+
+
+
+Im taking the liberty of attaching the</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=15025#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mike Wilson</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Mike_Wilson&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Mike_Wilson&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2002-05-02 09:20:53 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I understand the kinds of capabilities you are looking for. There is no plan 
+to implement this for R2.0, but we do want to look at providing something 
+along these lines at some point.
+
+The challenge, of course, is doing this in a way which doesn't require a lot 
+of extra state to be maintained in the widgets or drastic changes in the 
+underlying event model. SWT is so close to the o/s that typically platform 
+specific scripting facilities will work, and hooking into these is likely the 
+direction we would take at the SWT level.
+
+Another interesting alternative would be to generalize the mechanisms already 
+found in Eclipse for invoking commands, activating windows, etc. and based on 
+these add &quot;scriptable&quot; u/i support to Eclipse. This would allow Eclipse to be 
+driven by a 'bot without requiring low-level platform specific hacks in SWT.
+
+Feel free to continue your investigation of this area, and talk to us about it 
+on the platform-swt-dev mailing list. We're happy to provide insites, but 
+unable to contribute to the effort, at least until R2.0 ships.
+</pre>
+    </div>
+
+    <div id="c2" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=15025#c2">Comment 2</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Veronika Irvine</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veronika_irvine&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veronika_irvine&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2002-09-11 14:06:59 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Moving from Later.</pre>
+    </div>
+
+    <div id="c3" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=15025#c3">Comment 3</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tom Roche</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tlroche&#64;us.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tlroche&#64;us.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2002-12-22 19:57:14 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I have made a complementary request (#64) in the WebSphere Studio
+Feature Request Database
+
+<a href="https://www7b.software.ibm.com/webapp/wsdd/studioServlet3">https://www7b.software.ibm.com/webapp/wsdd/studioServlet3</a>
+
+Unfortunately I can't seem to link directly, but the text is:
+
+<span class="quote">&gt; Developers (esp those using methodologies like XP) and testers need to
+&gt; be able to automate unit tests for GUIs. AWT frameworks exist for
+&gt; this, e.g. Abbot</span >
+
+<span class="quote">&gt; <a href="http://abbot.sourceforge.net/">http://abbot.sourceforge.net/</a></span >
+
+<span class="quote">&gt; but they rely on java.awt.Robot and the AWT event model. SWT needs to
+&gt; provide similar functionality.</span ></pre>
+    </div>
+
+    <div id="c4" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=15025#c4">Comment 4</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Timothy Wall</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=twall&#64;users.sourceforge.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=twall&#64;users.sourceforge.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2003-01-07 10:57:44 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The only dependency Robot has on AWT is the waitForIdle function, which posts a 
+Runnable to the AWT event queue and waits for it to get run (which isn't really a wait for 
+idle, BTW, but rather a &quot;wait for the current end of queue&quot;).
+
+You probably don't want to depend on the robot's autoWaitForIdle anyway, so you just 
+need a waitForIdle equivalent for SWT.
+
+Other than that, I'm not sure what glitches you might be talking about since you don't 
+indicate what specific problems you had with Robot.</pre>
+    </div>
+
+    <div id="c5" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=15025#c5">Comment 5</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mazen Faraj</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mfaraj&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mfaraj&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2003-01-07 11:29:15 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Unfortunately I have to answer this from memory!! :( I was looking for my code 
+and the only code I have left is what I have posted here! The problems I had 
+where, like you said with Robor.waitForIdle() and also with Robot.keyPress() 
+keyRelease(). I had to use awt constants (like you see in the sample below) 
+instead of SWT constants to generate the right event in the native OS input 
+queue. and not only that, I could have sworn that not all awt constants would 
+work with SWT, ie: the ket would not be pressed. For example, to simulate 
+pressing F1 I had to use: robot.keyPress(java.awt.event.KeyEvent.VK_F1); which 
+actually worked, butr confusing to say the least to an SWT developer. Others 
+constants would simply not work.
+
+hope this helps...</pre>
+    </div>
+
+    <div id="c6" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=15025#c6">Comment 6</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tom Roche</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tlroche&#64;us.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tlroche&#64;us.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2003-05-30 16:26:03 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Despite its name, java.awt.Robot appears to be not very AWT-
+specific. (Note that this is not merely my judgement: it was the
+conclusion of a long thread on java-gui-testing.) Extending
+j.a.Robot for SWT appears to involve only
+
++ providing an SWT-compatible waitForIdle(). This is somewhat
+  misnamed: it's really wait for the end of the queue,&quot; which it
+  hacks by posting a Runnable to the AWT EventQueue and waiting for it
+  to get run. This functionality is required for automation, since one
+  needs to know when one or more events has completed.
+
++ extending its automation methods (e.g. keyPress(int),
+  mousePress(int)) to take SWT codes instead of AWT ones.
+
+Also please note the advantages that an SWT-compatible extension of
+j.a.Robot would provide:
+
+* it would be useful for UI automation and scripting, e.g. for
+
+<a class="bz_bug_link 
+          bz_status_NEW "
+   title="NEW - [Workbench] Add Eclipse automation"
+   href="show_bug.cgi?id=37680">https://bugs.eclipse.org/bugs/show_bug.cgi?id=37680</a>
+<span class="quote">&gt; [Plan Item] Add Eclipse automation</span >
+
+* it would allow one to leverage much existing GUI test automation
+  tooling.
+
+  Re &quot;helpwanted&quot;: A group within WebSphere Studio is currently
+  attempting to extend an AWT/Swing-based tool to provide whitebox,
+  JUnit-integrated testing for SWT/JFace UIs. We would be delighted to
+  work with you to extend java.awt.Robot for SWT.
+</pre>
+    </div>
+
+    <div id="c7" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=15025#c7">Comment 7</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steve Northover</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=snorthov&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=snorthov&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2003-06-17 17:43:45 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Programmatically clicking on, typing in, and focusing on Widgets"
+   href="show_bug.cgi?id=38438">Bug 38438</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c8" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=15025#c8">Comment 8</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mazen Faraj</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mfaraj&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mfaraj&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2003-09-18 14:34:44 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Just as FYI for this feature... Thomas L.R., you mentioned that you have SWT 
+specific robot apis. And I had an email with you in regards to abstracting that 
+into a higher level set of APIs that are Eclipse aware, and not just SWT aware. 
+You mentioned it is on your list, and great to know. Another idea just pop-ped 
+to mind.
+I just spent some time getting my area into JUnit testing, and what I just 
+realized is that I can actually automate most of our *UI* testcases with the 
+JUnit pde plugin that it out there. Its the &quot;JUnit Plugin test&quot; that will be 
+part of the Eclipse 3.0 release. 
+
+I actually wrote a JUnit testcase that will launche Eclipse, open my 
+perspective, launch our project creation wizard, populate the pages, and 
+then &quot;Finish&quot; the wizard. !
+thats exactly what you want in Robot, no? The only difference here is that you 
+are not really generating &quot;true&quot; UI events on the OS event queue. But who 
+cares! :-) most of the code was tested with such a testcase.
+So I guess what I am saying is that maybe a good place for effort would be to 
+extend the JUnit PDE plugin to include &quot;utility&quot; methods at a hight level that 
+would open a perspective, launch a wizard, launch a view&quot;...etc. ie: high level 
+Eclipse methods that would help when you are doing plugin testcases that have 
+UI in them. 
+
+just FYI.
+
+Mazen Faraj.
+
+
+  </pre>
+    </div>
+
+    <div id="c9" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=15025#c9">Comment 9</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tom Roche</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tlroche&#64;us.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tlroche&#64;us.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2003-09-18 21:01:33 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text"><a href="mailto:mfaraj&#64;ca.ibm.com">mfaraj&#64;ca.ibm.com</a>  2003-09-18 14:34 -------
+<span class="quote">&gt; I can actually automate most of our *UI* testcases with the JUnit
+&gt; pde plugin that it out there. Its the &quot;JUnit Plugin test&quot; that will
+&gt; be part of the Eclipse 3.0 release.</span >
+
+Yes, we use pde.junit as well as the Test Collector in WSAD, and also
+Run&gt;JUnit for standalone SWT UIs.
+
+<span class="quote">&gt; I actually wrote a JUnit testcase that will launche Eclipse, open my
+&gt; perspective, launch our project creation wizard, populate the pages,
+&gt; and then &quot;Finish&quot; the wizard. ! thats exactly what you want in
+&gt; Robot, no? </span >
+
+I also want the ability to test the state of widgets, but that's a
+separate topic.
+
+<span class="quote">&gt; The only difference here is that you are not really generating
+&gt; &quot;true&quot; UI events on the OS event queue. But who cares! :-)</span >
+
+Umm ... anyone who wants accurate testing cares :-)
+
+The problem with your approach is, fake testing is not testing. Think
+about what most folks try to do now: they try to have good MVC, such
+that
+
+* most event-related handling takes place in a model 
+
+* the UI is relatively &quot;thin&quot;
+
+They then say, &quot;since all my UI does is call these methods, all I need
+to do is test these methods.&quot; Unfortunately, one finds oneself close
+to DCUT, or with an urgent APAR, and one diddles the UI to quickly fix
+the problem. And guess what: the testcases still pass !-) Yet
+regression still occurs ... because no real testing is getting done.
+
+Your approach also doesn't protect you from breakage by others.
+Suppose you extend another wizard to create your own, and the other
+group changes their event handling. A fake test won't catch this,
+because a fake test doesn't test event handling: instead it generates
+outcomes based on the events you _believe_ will occur.
+
+One must generate events in order to thoroughly test a UI. Everything
+else, no matter how well intentioned, is fake, because it only
+tests your beliefs regarding how your code works. Fake testing is better
+than no testing, but it's no substitute for real testing.
+
+<span class="quote">&gt; So I guess what I am saying is that maybe a good place for effort
+&gt; would be to extend the JUnit PDE plugin to include &quot;utility&quot; methods
+&gt; at a hight level that would open a perspective, launch a wizard,
+&gt; launch a view&quot;...etc. ie: high level Eclipse methods that would help
+&gt; when you are doing plugin testcases that have UI in them.</span >
+
+Here we are in complete agreement. What you are describing are
+&quot;fixtures&quot;:
+
+<a href="http://junit.sourceforge.net/doc/cookbook/cookbook.htm">http://junit.sourceforge.net/doc/cookbook/cookbook.htm</a>
+<span class="quote">&gt; Tests need to run against the background of a known set of objects.
+&gt; This set of objects is called a test fixture. When you are writing
+&gt; tests you will often find that you spend more time writing the code
+&gt; to set up the fixture than you do in actually testing values.</span >
+
+We absolutely need code that helps one setup a known set of objects:
+not only workbench artifacts as you describe (e.g. a perspective, a
+set of view or editor pages), but also resource artifacts (e.g. a web
+project, a faces-config.xml, database tables). Arthur Ryman posted
+ws-dev recently about the need for groups to develop and maintain such
+fixture code for use in testing; I concur heartily.
+</pre>
+    </div>
+
+    <div id="c10" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=15025#c10">Comment 10</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tom Roche</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tlroche&#64;us.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tlroche&#64;us.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2003-09-19 01:55:02 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text"><a href="mailto:steve_northover&#64;ca.ibm.com">steve_northover&#64;ca.ibm.com</a>  2003-09-17 11:15 -------
+<span class="quote">&gt; We have done no work on this item because it was deferred from the
+&gt; Eclipse 3.0 plan. Eclipse had no requirement for this and Eclipse
+&gt; drives SWT.</span >
+
+<span class="quote">&gt; Does it work on every platform? </span >
+
+We have not tested this, but it should run on any platform that
+supports Sun's JDK.
+
+<span class="quote">&gt; Does it use AWT robot?</span >
+
+It uses java.awt.Robot, but this could be worked around. What I mean:
+
+The fundamental problem of automation is, how to get events into the
+native queue. abbotforswt tries to be a thin layer over some of the
+lower levels of Abbot, which uses awt.Robot. awt.Robot uses a
+RobotPeer
+
+<span class="quote">&gt; /**
+&gt;  * RobotPeer defines an interface whereby toolkits support automated
+&gt;  * testing by allowing native input events to be generated from Java</span >
+&lt;snip&gt;
+<span class="quote">&gt;  */
+&gt; public interface RobotPeer
+&gt; {
+&gt;     public void mouseMove(int x, int y);
+&gt;     public void mousePress(int buttons);
+&gt;     public void mouseRelease(int buttons);</span >
+
+<span class="quote">&gt;     public void keyPress(int keycode);
+&gt;     public void keyRelease(int keycode);</span >
+
+<span class="quote">&gt;     public int getRGBPixel(int x, int y);
+&gt;     public int [] getRGBPixels(Rectangle bounds);
+&gt; }</span >
+
+(a pretty-basic automation interface, though I'd factor out the
+screen-capture stuff), and uses its SunToolkit as a factory for the
+implementation.
+
+How to do this with other JDKs (e.g. Apple, Blackdown, Hursley, J9)?
+If they also provide &quot;toolkits [that] support automated testing,&quot; and
+therefore an interface like the above and a factory for its
+implementation, a foo.Robot for each other toolkit would be
+straightforward (and might already exist). If they do not, that would
+seem to be a defect, and its rectification would seem a legitimate
+request.
+</pre>
+    </div>
+
+    <div id="c11" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=15025#c11">Comment 11</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tom Roche</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tlroche&#64;us.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tlroche&#64;us.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2003-09-19 11:54:37 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">-------- Original Message --------
+Subject: Re: [IBM JDK] automation support?
+Date: Fri, 19 Sep 2003 09:39:57 +0100
+From: Neil Masson &lt;<a href="mailto:nmasson&#64;hursley.ibm.com">nmasson&#64;hursley.ibm.com</a>&gt;
+Reply-To: <a href="mailto:nmasson&#64;nospam.hursley.ibm.com">nmasson&#64;nospam.hursley.ibm.com</a>
+Organization: IBM
+Newsgroups: forums.software.java
+References: &lt;bke3fb$qcf$<a href="mailto:1&#64;w3pilot2b.pok.ibm.com">1&#64;w3pilot2b.pok.ibm.com</a>&gt;
+
+Tom, 
+
+java.awt.Robot and java.awt.AwtPermission are part of the J2SE
+spec and so all compliant JDKs will have these classes and those
+on which they rely.  IBM's JDKs are no exception.  Indeed they
+have the same implementation using java.awt.peer.RobotPeer.
+</pre>
+    </div>
+
+    <div id="c12" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=15025#c12">Comment 12</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mazen Faraj</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mfaraj&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mfaraj&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2003-09-19 11:58:33 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Thomas, you are absolutely right. Being able to generate events directly on the 
+native queue hence replicating a true user action is important to have a &quot;real&quot; 
+testcase. BUT, you can do both, a bottom up approach AND a top down approach. 
+You can be finishing up the ABBOT apis, at the SWT level. Some other team can 
+be coding the re-usable JUnit Eclipse fixtures, without the event model apis. 
+Both teams meet half way. The fixtures can be then modified to instead of 
+having something like wizard.performFinish() (which is what I do today), they 
+would have abbotEclipse.closeWizard(myWizard), which will generate a mouse 
+click on the Finish button of the passed wizard. 
+Im not aware of Arthur's request (Im not in that group), but it sounds like an 
+even higher level layer on top of the Eclipse fixture layer. A layer that 
+understands a Web Project, as opposed to a project.   
+Just a thought... :) 
+
+Mazen Faraj.
+
+
+  </pre>
+    </div>
+
+    <div id="c13" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=15025#c13">Comment 13</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tom Roche</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tlroche&#64;us.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tlroche&#64;us.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2003-09-19 12:15:43 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">-------- Original Message --------
+Subject: Re: [IBM JDK] security model?
+Date: Fri, 19 Sep 2003 10:41:17 -0400
+From: Richard L. Kulp &lt;<a href="mailto:richkulp&#64;NO--SPAM.us.ibm.com">richkulp&#64;NO--SPAM.us.ibm.com</a>&gt;
+Organization: IBM
+Newsgroups: forums.software.java
+
+I can't swear to it, but IBM typically doesn't reinvent such things.
+Under the covers they probably use the sun security model. In fact I
+just looked at the IBM jre that we ship with WSAD and it doesn't have
+its own security manager, it uses Sun's.
+
+-------- Original Message --------
+Subject: Re: [IBM JDK] security model?
+Date: Fri, 19 Sep 2003 10:52:11 -0400
+From: Richard L. Kulp &lt;<a href="mailto:richkulp&#64;NO--SPAM.us.ibm.com">richkulp&#64;NO--SPAM.us.ibm.com</a>&gt;
+Organization: IBM
+Newsgroups: forums.software.java
+
+In addition, AWTPermission isn't a Sun class, it is a java.awt class,
+so all of the SecurityManagers should know about it. Though they may
+decide to deny permission by default. That is their choice.</pre>
+    </div>
+
+    <div id="c14" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=15025#c14">Comment 14</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tom Roche</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tlroche&#64;us.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tlroche&#64;us.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2003-09-19 13:10:47 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Mazen: it appears we again have &quot;a meeting of the minds&quot; :-)
+
+Mazen Faraj  2003-09-19 11:58 -------
+<span class="quote">&gt; You can be finishing up the ABBOT apis, at the SWT level. </span >
+
+Actually, AFAICS the only work that remains &quot;at the SWT level&quot; is to
+have a consistent location-finding API for all Widget's, rather than
+only those extending Control. See
+
+<a class="bz_bug_link 
+          bz_status_NEW "
+   title="NEW - Locating Widgets in display coordinates for automated whitebox testing"
+   href="show_bug.cgi?id=38436">https://bugs.eclipse.org/bugs/show_bug.cgi?id=38436</a>
+
+Fortunately the non-Control Widget's are _relatively_ few and minor.
+What we're working on now are workbench extensions, such as you 
+mention: for wizards, editors, views, perspectives, etc.
+
+<span class="quote">&gt; Some other team can be coding the re-usable JUnit Eclipse fixtures,
+&gt; without the event model apis. Both teams meet half way.</span >
+
+Correct. In fact, the fixtures need not have any JUnit-specific
+content: they need only be callable from setUp(). I will cc: you
+regarding current efforts in this direction.
+
+<span class="quote">&gt; The fixtures can be then modified to instead of having something
+&gt; like wizard.performFinish() (which is what I do today), they would
+&gt; have abbotEclipse.closeWizard(myWizard), which will generate a mouse
+&gt; click on the Finish button of the passed wizard.</span >
+
+Actually, we do better than that: we actually click on the Finish
+button! I have a working test case that does exactly that :-) 
+
+But 2 quibbles:
+
+* Again, IMHO &quot;real&quot; testing doesn't _tell_ the Wizard what to do; it
+  just mimics what the user does. (Only faster and more repeatably :-)
+
+* What you're describing would take place in a testcase, not a fixture.
+</pre>
+    </div>
+
+    <div id="c15" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=15025#c15">Comment 15</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tom Roche</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tlroche&#64;us.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tlroche&#64;us.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2003-09-25 13:57:56 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Nick Edgar 09/17/2003 11:07 PM
+<span class="quote">&gt; it looks like the current implementation of java.awt.Robot would
+&gt; bring in more stuff than we would like. It refers to AWT-specific
+&gt; classes (GraphicsDevice, AWTPermission) and VM-vendor-specific
+&gt; classes (RobotPeer, SunToolkit). These classes may not exist on
+&gt; non-Sun VMs (e.g. IBM Hursley or J9).</span >
+
+Fortunately, no. IBM JDK is J2SE-compliant, and uses the same
+implementation as the Sun VM. I have also been told that &quot;J9 [as] the
+default runtime for WSAD 5.1 ... uses the IBM J2SE class library.&quot;
+(The WSDD J9 is apparently different). One holdout is Jikes: it is not
+yet J2SE compliant. They are seeking compliance, but use the GNU
+Classpath libraries, which are not yet AWT-complete.
+</pre>
+    </div>
+
+    <div id="c16" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=15025#c16">Comment 16</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tom Roche</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tlroche&#64;us.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tlroche&#64;us.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2003-10-15 18:52:29 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Kevin Dale has removed all Abbot dependencies from abbotforswt's &quot;base
+Robot&quot; (i.e. our SWTized equivalent of java.awt.Robot). Thus it should
+be suitable for donation to Eclipse, if desired. The code is in our
+CVS; feel free to inspect. Unfortunately
+
+* non-IBMers: the code is presently not directly available to you.
+  However
+
+· we are seeking approval to open-source abbotforswt
+
+· we may be able to provide pre-OSS-approval licensing to you: please
+  post me if you are interested.
+
+* IBMers: lawyers got upset the last time I mentioned how to get to
+  the internal CVS on a public forum, even though
+
+· the repository is inside the firewall
+
+· the repository provider is a project that has been discussed
+  publicly
+
+  So if you don't know how to get to our CVS but you would like to,
+  please post me.
+
+TIA, Tom Roche &lt;<a href="mailto:tlroche&#64;us.ibm.com">tlroche&#64;us.ibm.com</a>&gt; abbotforswt admin
+</pre>
+    </div>
+
+    <div id="c17" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=15025#c17">Comment 17</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tom Roche</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tlroche&#64;us.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tlroche&#64;us.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-01-12 11:55:12 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Please note that
+
+* Abbot
+
+<a href="http://sourceforge.net/projects/abbot">http://sourceforge.net/projects/abbot</a>
+
+  is available under CPL.
+
+* abbotforswt has received all preliminary approvals to OSS (to
+  Abbot), and goes for final approval 27 Jan 04.
+
+* a binary plugin for Abbot (AWT/Swing) 0.11.0 is available &#64;
+
+<a href="http://prdownloads.sourceforge.net/abbot/abbot-0.11.0-eclipse.zip?download">http://prdownloads.sourceforge.net/abbot/abbot-0.11.0-eclipse.zip?download</a>
+
+<a href="https://w3.opensource.ibm.com/frs/viewRelease.php?release_id=545&amp;group_id=1023">https://w3.opensource.ibm.com/frs/viewRelease.php?release_id=545&amp;group_id=1023</a>
+
+* a binary plugin for abbotforswt (containing our SWT-ized Robot) is &#64; 
+
+<a href="https://w3.opensource.ibm.com/frs/viewRelease.php?release_id=545&amp;group_id=1023">https://w3.opensource.ibm.com/frs/viewRelease.php?release_id=545&amp;group_id=1023</a>
+
+  It prereqs the Abbot plugin.
+
+* EA users report success with abbotforswt on both Windows and Linux.
+  (Abbot is widely used on many platforms.)
+</pre>
+    </div>
+
+    <div id="c18" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=15025#c18">Comment 18</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tom Roche</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tlroche&#64;us.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tlroche&#64;us.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-02-19 13:32:57 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text"><a href="mailto:steve_northover&#64;ca.ibm.com">steve_northover&#64;ca.ibm.com</a>  2004-02-19 12:43
+<span class="quote">&gt;&gt; Is [21083] the same as 15025?</span >
+
+<a href="mailto:David_Whiteman&#64;us.ibm.com">David_Whiteman&#64;us.ibm.com</a>  2004-02-19 12:50
+<span class="quote">&gt; Sort of... </span >
+
+Not. abbotforswt 
+
+<a href="https://w3.opensource.ibm.com/projects/abbotforswt/">https://w3.opensource.ibm.com/projects/abbotforswt/</a>
+
+already has a working SWTized Robot; its remaining defect involves
+difficulty finding non-Control Widget's
+
+<a class="bz_bug_link 
+          bz_status_NEW "
+   title="NEW - Locating Widgets in display coordinates for automated whitebox testing"
+   href="show_bug.cgi?id=38436">https://bugs.eclipse.org/bugs/show_bug.cgi?id=38436</a>
+
+e.g. for driving cascading menus. (IIRC non-Control Widget's can
+usually be found by walking the hierarchy, but that always harms
+performance, esp when driving busy environments like a runtime
+workbench.)
+
+<span class="quote">&gt; In other words, doing the work for <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - implement java.awt.Robot for SWT"
+   href="show_bug.cgi?id=15025">bug 15025</a> would involve adding
+&gt; support for posting key and mouse events to the OS (as <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Posting key and mouse events to widgets (BBAWT)"
+   href="show_bug.cgi?id=21083">bug 21083</a>
+&gt; describes)</span >
+
+abbotforswt's Robot already does post key and mouse events, using a
+java.awt.Robot. We have working, JUnit-driven demos and test cases.
+
+HTH, Tom Roche, Rational Developer Model2 Tooling, abbotforswt admin
+</pre>
+    </div>
+
+    <div id="c19" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=15025#c19">Comment 19</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Christophe Cornu</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=christophe.cornu+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=christophe.cornu+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-03-23 18:37:18 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Available in v&gt;20040323: Display.post(Event e)
+
+Special thanks to Sebastian Peleato from University of Waterloo for 
+contributing this new API.
+
+Please see the following snippet to see how to generate system events under 
+SWT.
+<a href="http://dev.eclipse.org/viewcvs/index.cgi/%7Echeckout%7E/platform-swt">http://dev.eclipse.org/viewcvs/index.cgi/%7Echeckout%7E/platform-swt</a>-
+home/snippits/snippet142.html</pre>
+    </div>
+
+    <div id="c20" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=15025#c20">Comment 20</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Christophe Cornu</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=christophe.cornu+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=christophe.cornu+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-03-23 18:37:51 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">marking as fixed v&gt;20040323</pre>
+    </div>
+
+    <div id="c21" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=15025#c21">Comment 21</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steve Northover</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=snorthov&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=snorthov&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-10 15:13:48 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Posting key and mouse events to widgets (BBAWT)"
+   href="show_bug.cgi?id=21083">Bug 21083</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=15025">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=15025">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=15025">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=15025&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=15025" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>

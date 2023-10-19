@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>21162 &ndash; Bug in current line highlighting</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "21162 – Bug in current line highlighting",
+                             "show_bug.cgi?id=21162" );
+        document.title = "21162 – Bug in current line highlighting";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "21162 – Bug in current line highlighting", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_RESOLVED
+                 bz_product_JDT
+                 bz_component_Text
+                 bz_bug_21162 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;21162</span>
+
+        <span id="subtitle" class="subheader">Bug in current line highlighting</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2002-09-12 05:54:49 EDT</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=21162&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=21162" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2002-09-12 05:54:49">
+  <input type="hidden" name="id" value="21162">
+  <input type="hidden" name="token" value="1629851867-UOQv7iE0hoHf2P5NmAQWPF_-F13jBferw_cvmQ0NSZw">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=21162"><b>Bug&nbsp;21162</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">Bug in current line highlighting</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span>Bug in current line highlighting
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      'Bug in current line highlighting' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">RESOLVED
+          FIXED
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >JDT
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >Eclipse Project
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=JDT"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >Text
+
+  (<a href="buglist.cgi?component=Text&amp;product=JDT&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>2.0 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">PC
+        Windows 2000
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P3
+       normal<span id="votes_container">
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=21162#vote_21162">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>--- &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">Kai-Uwe Maetzel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=kai-uwe_maetzel&#64;ch.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=kai-uwe_maetzel&#64;ch.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard">
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'jdt-text-inbox\x40eclipse.org',
+        '');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+
+  </td>
+  </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2002-07-01 07:36 EDT by <span class="vcard"><span class="fn">Konstantin Scheglov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Konstantin.Scheglov&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Konstantin.Scheglov&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2002-09-12 05:54 EDT
+      (<a href="show_activity.cgi?id=21162">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>0 
+          users
+        <div id="cc_edit_area">
+          <br>
+        </div>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" >
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <a href="attachment.cgi?bugid=21162&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=21162&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=21162#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Konstantin Scheglov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Konstantin.Scheglov&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Konstantin.Scheglov&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2002-07-01 07:36:49 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I very often saw something like image in UUE.
+  Today I found how to reproduce this.
+  Open editor with this text (it uses tab's):
+package ru.nlmk.test.table;
+public class ttt {
+	public static void main(String[] args) {
+	}
+}
+  Place cursor on beginning on line 2 or 3 and press Ctrl+Shift+F
+  Then move cursor up or down.
+
+
+section 1 of uuencode 5.25 of file eclipse.gif    by R.E.M.
+
+begin 644 eclipse.gif
+M1TE&amp;.#EAN0%(`/&lt;```0&quot;!-32S'P&quot;5.3JY!P6'/S^_```_0``?V7&lt;``#L```2
+M````````F```+&#64;``X0`#=P!O```Y``#A``!W``!.$0!O`0!T```&#64;``YA-``&#64;
+M-`!F,0!I(`!L&gt;`!E(``&#64;-P``,CP`(.L`&gt;!(`(```,&#64;!L-`#L(``20&#64;``4#,O
+M4&quot;D#`/CZ`'=W```&#64;E&#64;#L%Q,2````$$`8`&amp;H``!,```````&quot;H.`#S!0!&gt;ZP``
+M`JP1`.T!`!(``````QT`$2(``4H````#`&amp;8XI``%!`#K&quot;0`&quot;`,266.T7[1(`
+M$&#64;`0`)BC7^W1.1+EX0!W=X)^&gt;+)*JDSA8`!W`.ZT$?\$`?\+`/\````1```!
+M`````````SX`;R$`.4H`X0`#=R0X`/(%`!+K```&quot;`!(``````````````,2N
+M`.T&quot;`!(``````)&#64;``.T``!(````````1M``![0``$&#64;```%]E+Q5C`^EL^G=I
+M=TMP0YQS.&#64;!E`````)!D&amp;&quot;8``/&#64;+`'&lt;``/]P&gt;/\XJO\`8/\``*B,$&gt;OL`1(2
+M`````/&lt;GM!!;!.GA&quot;W=W``&quot;H%`#S`!-&gt;```````1```!`````````-&#64;`!VL`
+M`!&#64;````#`!8X```%``#K$\`&quot;`$&#64;``&amp;H``!,```````&quot;\``#L```2`````'[N
+M```3``#I`,!W`````````````````/\`./\``/\`VO\``/]($O]J`/\3`/\`
+M``!?_P`5_P#I_P!W_P`F$&#64;`4``#I``!W``#&lt;)`#L\&#64;`2$&#64;````!&gt;```5`!/I
+M``!W`&amp;0`Y```[0``$&#64;``````:&amp;H`]A,`20```/A?Q`L5[&gt;GI$G=W`!9+&#64;P&quot;&lt;
+ML&#64;``3,````'&#64;^.SM[1(2$&#64;````&quot;(7P$5%0#IZ0!W=TPX2NL.[Q)-$&#64;```&amp;`\
+M[/L._Q)-_P``?V!&gt;./L5[Q+I$&#64;!W`*?&lt;`)WL`/L2`'&lt;``)``7R8`%?&#64;`Z7&lt;`
+M=__L`/_!`/],`/\``(&#64;`/.PP`!(`V&#64;```/H&lt;L`/MX.D217&lt;`````.```[Q,`
+M$&#64;`````1.``![P``$&#64;```&quot;'Y!`$```$`+`````&quot;Y`4&#64;`!PC_``,('$A08(&amp;#
+M&quot;!,J7,BPH&lt;.'$&quot;-*G$BQHL6+&amp;#-JW,BQH\&gt;/($-R+$&#64;R&#64;,B3*%.J7,FRI&lt;N7
+M,&amp;-2+%DPI(&quot;;,E&lt;&quot;`!!Q9\Z0/AD&amp;_4FTJ-&amp;B-`F*Q'D4J$2&gt;%*%JE-IS(E6%
+M5YMJW&lt;IU8]*!2P5T[9A5:,6R9Z-:=8AVK-NW;[\:O$F7:8&amp;Z8A'BS7M7+%V]
+M=1/NS;OWX4Z&gt;01.W+&gt;!S*$*JAQDGA.I8:.3'AZ5FUGS9&lt;&amp;?&amp;GS=CQ9IY--S3
+MJ%W*-=D7\$*F=ENWCBV8,%_8?&amp;6SI7Q0,\3$IA]+]BVYZN315XD_-2R\&gt;&gt;_C
+MT%-+GYYR]4&amp;[N`/K5J&#64;=L';LM&#64;LS_P^^N+CYY\&lt;1&quot;R_OO/=FRI7/_UXH&amp;KW]
+M\^_94]_/7Z)UW3B!=UUNM&lt;4F((&quot;V6925&lt;&#64;TQ*)]ZG.GWX&amp;^0J16=&gt;16V)V%_
+M'';8T'\&quot;'FA&#64;&#64;&#64;&lt;B^%UNM-&amp;G(FCSW3&gt;A&gt;NCIQ]N+Y+EH5G$9XG=A&lt;A[VZ&quot;-#
+M(.+EW8E$#AA&gt;=ZX9^==NG['H&amp;&amp;2-*7998TYR=B%FDY7F7I/QE?5D9(C5!UIG
+M8MKXXYG2!7E4BFBV:9R;&lt;)YF'9(O&quot;1GGG7CF2=U_&gt;O;IYY^`1L1GH(06:BB&lt;
+M&#64;U*TY&amp;MLLNG1HF?&amp;=^BDA2:J*(&amp;UY&gt;2H2E[&gt;N!:EH$YJZ42;;JJ2J2AUNN*G
+MH;8:Z)SB_?^UJ'A)#LF=G0[1.N&quot;MD-*JJV5?!BOAAJX6VZ.:N\I6XH&#64;,,5LK
+MHYD^&gt;VNRNSK+EJ=7MFCLMG&lt;BJVR&quot;U%H;+;41F4J;KY#VA6I[[)II&amp;;?PQNDM
+M;N'&gt;AB*FVZTK[;2UIIBNNF]F*Y^V\19\K%SU5KOLO&lt;TRO.^SXHK(L+&#64;W9FCQ
+M&lt;&#64;9GW&amp;&amp;02!8VV)#&#64;=?&lt;KHR+C^K&amp;ZL^+J&amp;7T+#JOQR_QY&quot;W-+Q,YL&lt;TZPZGLS
+M1Y+N[/-/JPT&#64;]-!$%VWTT403&#64;/323#?M]--01RWUU%17;?756&amp;&gt;M]=9&lt;=^TU
+MU4%_+;328I=M]MEHIZWVVFRW[3;388M-MM1T(5VWT3&gt;]777&gt;;_/_C;??7`,&#64;
+MM&gt;!#;W8UX58?IG?3B$.]T^)5Q_WUW'0+L#3&#64;:V/&gt;M.:0/\TYVXTW/&#64;#BHJ-=
+M^NB/=WXZTJMWWK3D7E,&gt;]&gt;&lt;#T&amp;ZV[7^[/C7NIA/=&gt;NMB_^XZ\$43K[O1L'=-
+MP&amp;!&quot;UWUW[7&#64;5C7E=TD?/]%Y#6]\\]=ESO_WTVA\]F.70&gt;^_]]\\?K7CHBA&gt;&gt;
+MNM&quot;/OP]_\:RWC[K&#64;[]N/^O[N9U;XTL;S'_SB1SK#W4]^\WN:\8Y'M.1Q36E^
+MXYL$R0&gt;][A&amp;-&lt;X#+(`5S9\'M76^#G]/&#64;!3?(P0F.\(0=K&quot;#3\#&lt;Z]='/=X0+
+MG=$,F,#BQ=!W-DR&#64;#/_'NL'!&lt;'X[%)T0_QW'P*&#64;Y&lt;&amp;L0I*`)5&lt;A$$7+0&#64;[-+
+M'Q1'&gt;+X0&#64;I&quot;$FR/?$J?(Q&quot;9BD7XL'*#^6HC#&amp;I(1&#64;#Q\X0S5&gt;,,TGG&amp;-C!.&#64;
+M&amp;=]8P-4%&lt;(%%%-H1M9;$#FXQ&#64;E&lt;47R&quot;IEC[PI;&quot;+*.2BYY[G1&quot;X&quot;DG$M;.,&lt;
+MAVA&amp;XI'.A9A,HR3IB,85EG&amp;2GW0?')V&amp;QR+N,6M]A&amp;+&gt;&amp;*G$058OD8B$Y2/_
+M&amp;$A#'A)WYG-E%Q_IR3#NT(UG_&quot;4H=1C*8EY2C/(3GB?=6#H#4A*8G&lt;SCZ^1B
+MMB16,7K,0Q\&#64;&lt;WD^07:SD-CKWA6Y*46[D3&quot;&lt;Y6-E^'*(OQBN#YGN;*&lt;P#RC$
+M.B93&#64;.M#(&quot;=[&amp;/_'^-&amp;3G_\LYC*E&quot;3=JEBV5!$VH0M56RMY!\Z%;6V`I&amp;WJ\
+M4V)M&gt;&gt;5&lt;J$8WFC6*=DV.8K2A1U&lt;X1H`Z;J2+L^C5?L;2EG9%I59SJ4QG&quot;C2#
+MBLT]-,VI3D\&quot;TZH);*=`#:I_;/JUGPKUJ$A%2$^I9M2D.A6H2YU:4Y]*U9E&amp;
+M56JDJ:I6=WK5J$UUJV&quot;U65&gt;A]M6PFC5C8WU:6&lt;_*5FZEU6EK;:M&lt;6[6:`)0-
+MIW/-*UH1IM&gt;^AG54?&#64;WL4?_3,\$:5J:#JMEA%VNPQ#+VL2YU+&amp;0GNS/)4O:R
+M+TM483'+V5!9MK.&#64;-=9G0TM:4(VVM*BM%%_=E=K6ZHFPBG6M;#T$V-DFVK9;
+EJ[VM;O%4V]WZ]F!?^:UPV]3;X1HW3;D]KG+WE-SE.O&lt;T`0$`.P$`
+`
+end
+sum -r/size 54413/3306 section (from &quot;begin&quot; to &quot;end&quot;)
+sum -r/size 4143/2377 entire input file</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=21162#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Kai-Uwe Maetzel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=kai-uwe_maetzel&#64;ch.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=kai-uwe_maetzel&#64;ch.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2002-09-12 04:36:40 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">This concrete scenario works with the current build.</pre>
+    </div>
+
+    <div id="c2" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=21162#c2">Comment 2</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Konstantin Scheglov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Konstantin.Scheglov&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Konstantin.Scheglov&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2002-09-12 05:54:49 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">But I still can reproduce it on eclipse-SDK-I20020911-win32.zip 
+Press reformat (Ctrl+Shift+F), then place cursor on beginning of any line with 
+tabs and press Ctrl+Shift+F again. Then move cursor up or down. All tabs have 
+highlighting (lite green).
+
+package ru.nlmk.test.lazyTable;
+import org.eclipse.swt.*;
+import org.eclipse.swt.layout.*;
+import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.widgets.*;
+public class LazyTable {
+	public static void main(String[] args) {
+		final Display display = new Display();
+		final Shell shell = new Shell(display);
+		shell.setSize(200, 200);
+		shell.open();
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch())
+				display.sleep();
+		}
+		display.dispose();
+	}
+}
+</pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=21162">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=21162">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=21162">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=21162&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=21162" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>

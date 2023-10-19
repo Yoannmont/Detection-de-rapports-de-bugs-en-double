@@ -1,0 +1,2649 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>185925 &ndash; [usability][gsoc] Make RSE IFileService a provider for Platform/Team synchronization APIs</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "185925 – [usability][gsoc] Make RSE IFileService a provider for Platform\/Team synchronization APIs",
+                             "show_bug.cgi?id=185925" );
+        document.title = "185925 – [usability][gsoc] Make RSE IFileService a provider for Platform\/Team synchronization APIs";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "185925 – [usability][gsoc] Make RSE IFileService a provider for Platform\/Team synchronization APIs", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_RESOLVED
+                 bz_product_Target_Management
+                 bz_component_RSE
+                 bz_bug_185925 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;185925</span>
+
+        <span id="subtitle" class="subheader">[usability][gsoc] Make RSE IFileService a provider for Platform/Team synchronization APIs</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2011-05-26 06:08:05 EDT</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=185925&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=185925" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2011-05-26 06:08:05">
+  <input type="hidden" name="id" value="185925">
+  <input type="hidden" name="token" value="1629864603-QG3KHWDKie5vFi-SEwziYngsxnpEbMLLLOWYFa8zdcA">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=185925"><b>Bug&nbsp;185925</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">[usability][gsoc] Make RSE IFileService a provider for Platform/Team synchronization APIs</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span><span title="[usability][gsoc] Make RSE IFileService a provider for Platform/Team synchronization APIs">[usability][gsoc] Make RSE IFileService a provider for Platform/Team synchron...
+        </span>
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      '[usability][gsoc] Make RSE IFileService a provider for Platform\/Team synchronization APIs' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">RESOLVED
+          FIXED
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >Target Management
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >Tools
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=Target Management"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >RSE
+
+  (<a href="buglist.cgi?component=RSE&amp;product=Target%20Management&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>2.0 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">All
+        All
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P3
+       enhancement<span id="votes_container">
+      with
+      <a href="page.cgi?id=voting/bug.html&amp;bug_id=185925">1 
+            vote</a>
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=185925#vote_185925">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>3.1 M5 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'tm.rse-inbox\x40eclipse.org',
+        'ddykstal.eclipse\x40gmail.com');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >helpwanted
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          <tr>
+    <th class="field_label">
+      <label>Duplicates (2)</label>:
+    </th>
+    <td class="field_value">
+      <span id="duplicates"><a class="bz_bug_link 
+          bz_status_CLOSED  bz_closed"
+   title="CLOSED DUPLICATE - Integrate (imports) into Synchronization View"
+   href="show_bug.cgi?id=202904">202904</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Remote project synchronization"
+   href="show_bug.cgi?id=248556">248556</a> 
+      </span>
+      (<a href="buglist.cgi?bug_id=202904,248556">view as bug list</a>)
+    </td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+<a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED WONTFIX - [importexport][gsoc] Add a timestamp when export last happened into the *.rexpfd file on export"
+   href="show_bug.cgi?id=228373">228373</a> 
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+<a class="bz_bug_link 
+          bz_status_NEW "
+   title="NEW - [gsoc] Migrate Platform Team/Extras functionality to RSE (FTP, sync, WebDav)"
+   href="show_bug.cgi?id=185926">185926</a> <a class="bz_bug_link 
+          bz_status_ASSIGNED "
+   title="ASSIGNED - [usability] Support remote folder compares"
+   href="show_bug.cgi?id=203001">203001</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [import/export] fix various bugs with the synchronization support"
+   href="show_bug.cgi?id=272708">272708</a> 
+  </td>
+  </tr>
+
+    <tr>
+      <th>&nbsp;</th>
+
+      <td id="show_dependency_tree_or_graph">
+        Show dependency <a href="showdependencytree.cgi?id=185925&amp;hide_resolved=1">tree</a>
+
+      </td>
+    </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2007-05-08 05:48 EDT by <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2011-05-26 06:08 EDT
+      (<a href="show_activity.cgi?id=185925">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>19 
+          users
+          <span id="cc_edit_area_showhide_container" class="bz_default_hidden">
+            (<a href="#" id="cc_edit_area_showhide">show</a>)
+          </span>
+        <div id="cc_edit_area">
+          <br>
+            <select id="cc" multiple="multiple" size="5" >
+                <option value="0RUBn0">0RUBn0</option>
+                <option value="assaf.almaz">assaf.almaz</option>
+                <option value="caniszczyk">caniszczyk</option>
+                <option value="dmcknigh">dmcknigh</option>
+                <option value="ganoro">ganoro</option>
+                <option value="john.arthorne">john.arthorne</option>
+                <option value="kjdoyle">kjdoyle</option>
+                <option value="kungla">kungla</option>
+                <option value="marijn">marijn</option>
+                <option value="markkropf">markkropf</option>
+                <option value="mik.kersten">mik.kersten</option>
+                <option value="miyamoto.takuya">miyamoto.takuya</option>
+                <option value="nboldt">nboldt</option>
+                <option value="os-dev">os-dev</option>
+                <option value="Szymon.Brandys">Szymon.Brandys</option>
+                <option value="thatnitind">thatnitind</option>
+                <option value="tomasz.zarna">tomasz.zarna</option>
+                <option value="valentam">valentam</option>
+                <option value="wrobel">wrobel</option>
+            </select>
+        </div>
+          <script type="text/javascript">
+            hideEditableField( 'cc_edit_area_showhide_container', 
+                               'cc_edit_area', 
+                               'cc_edit_area_showhide', 
+                               '', 
+                               '');  
+          </script>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" >
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+      <tr id="a1" class="bz_contenttype_application_vnd.oasis.opendocument.text">
+        <td>
+            <a href="attachment.cgi?id=86907"
+               title="View the content of the attachment">
+          <b>C-Requirements for TM Sync View</b></a>
+
+          <span class="bz_attach_extra_info">
+              (14.13 KB,
+                application/vnd.oasis.opendocument.text)
+
+            <br>
+            <a href="#attach_86907"
+               title="Go to the comment associated with the attachment">2008-01-15 00:37 EST</a>,
+
+            <span class="vcard"><span class="fn">Jason Craig</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=os-dev&#64;jacraig.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=os-dev&#64;jacraig.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=86907&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a2" class="bz_contenttype_application_zip bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=107408"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">mid-term deliverable</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (115.30 KB,
+                application/zip)
+
+            <br>
+            <a href="#attach_107408"
+               title="Go to the comment associated with the attachment">2008-07-14 22:57 EDT</a>,
+
+            <span class="vcard"><span class="fn">Takuya Miyamoto</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=miyamoto.takuya&#64;lab.ime.cmc.osaka-u.ac.jp" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=miyamoto.takuya&#64;lab.ime.cmc.osaka-u.ac.jp" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=107408&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a3" class="bz_contenttype_text_plain bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=107488"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">demo script for mid-term deliverable</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (3.98 KB,
+                text/plain)
+
+            <br>
+            <a href="#attach_107488"
+               title="Go to the comment associated with the attachment">2008-07-15 12:38 EDT</a>,
+
+            <span class="vcard"><span class="fn">Takuya Miyamoto</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=miyamoto.takuya&#64;lab.ime.cmc.osaka-u.ac.jp" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=miyamoto.takuya&#64;lab.ime.cmc.osaka-u.ac.jp" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=107488&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a4" class="bz_contenttype_application_octet-stream">
+        <td>
+            <a href="attachment.cgi?id=107797"
+               title="View the content of the attachment">
+          <b>excutable mid-term deliverable</b></a>
+
+          <span class="bz_attach_extra_info">
+              (133.54 KB,
+                application/octet-stream)
+
+            <br>
+            <a href="#attach_107797"
+               title="Go to the comment associated with the attachment">2008-07-18 00:02 EDT</a>,
+
+            <span class="vcard"><span class="fn">Takuya Miyamoto</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=miyamoto.takuya&#64;lab.ime.cmc.osaka-u.ac.jp" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=miyamoto.takuya&#64;lab.ime.cmc.osaka-u.ac.jp" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+                  <span title="Martin Oberhuber">mober.at+eclipse</span>:
+                iplog+
+                <br>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=107797&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a5" class="bz_contenttype_text_plain">
+        <td>
+            <a href="attachment.cgi?id=110113"
+               title="View the content of the attachment">
+          <b>Demo script </b></a>
+
+          <span class="bz_attach_extra_info">
+              (4.79 KB,
+                text/plain)
+
+            <br>
+            <a href="#attach_110113"
+               title="Go to the comment associated with the attachment">2008-08-15 13:56 EDT</a>,
+
+            <span class="vcard"><span class="fn">Takuya Miyamoto</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=miyamoto.takuya&#64;lab.ime.cmc.osaka-u.ac.jp" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=miyamoto.takuya&#64;lab.ime.cmc.osaka-u.ac.jp" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=110113&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a6" class="bz_contenttype_application_zip">
+        <td>
+            <a href="attachment.cgi?id=113458"
+               title="View the content of the attachment">
+          <b>Snapshot of plugins at end of SOC</b></a>
+
+          <span class="bz_attach_extra_info">
+              (478.92 KB,
+                application/zip)
+
+            <br>
+            <a href="#attach_113458"
+               title="Go to the comment associated with the attachment">2008-09-25 10:14 EDT</a>,
+
+            <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=113458&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a7" class="bz_contenttype_application_octet-stream">
+        <td>
+            <a href="attachment.cgi?id=113460"
+               title="View the content of the attachment">
+          <b>Project set for anonymous (read-only) access to sourceforge</b></a>
+
+          <span class="bz_attach_extra_info">
+              (1.07 KB,
+                application/octet-stream)
+
+            <br>
+            <a href="#attach_113460"
+               title="Go to the comment associated with the attachment">2008-09-25 10:16 EDT</a>,
+
+            <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=113460&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a8" class="bz_contenttype_application_octet-stream">
+        <td>
+            <a href="attachment.cgi?id=113461"
+               title="View the content of the attachment">
+          <b>Project set for sourceforge committer (write) access</b></a>
+
+          <span class="bz_attach_extra_info">
+              (1.02 KB,
+                application/octet-stream)
+
+            <br>
+            <a href="#attach_113461"
+               title="Go to the comment associated with the attachment">2008-09-25 10:16 EDT</a>,
+
+            <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=113461&amp;action=edit">Details</a>
+        </td>
+      </tr>
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <span class="bz_attach_view_hide">
+            <a href="#a0" onclick="return toggle_display(this);">Show
+              Obsolete</a> (2)
+            <a id="view_all" href="attachment.cgi?bugid=185925&amp;action=viewall&amp;hide_obsolete=1">View All</a>
+        </span>
+        <a href="attachment.cgi?bugid=185925&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=185925&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-05-08 05:48:55 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The Platform/Team Target Management component including its FTP and WebDAV connectors is being discontinued as of Eclipse 3.3:
+<a href="http://dev.eclipse.org/mhonarc/lists/cross-project-issues-dev/msg01040.html">http://dev.eclipse.org/mhonarc/lists/cross-project-issues-dev/msg01040.html</a>
+
+Target Management / RSE is the logical successor of this functionality.
+
+We should therefore create a bridge from RSE IFileService to the Platform/Team synchronization APIs, such that the synchronization functionality previously offered by Platform/Team becomes available through RSE. This synchronization framework is appreciated by the community:
+<a href="http://dev.eclipse.org/mhonarc/lists/platform-team-dev/msg00229.html">http://dev.eclipse.org/mhonarc/lists/platform-team-dev/msg00229.html</a>
+
+Creating the bridge will likely happen after TM 2.0; community help would be appreciated. See also <a class="bz_bug_link 
+          bz_status_NEW "
+   title="NEW - Add Platform/Team WebDAV connector to RSE"
+   href="show_bug.cgi?id=185921">bug #185921</a>.</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-09-11 08:19:42 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_CLOSED  bz_closed"
+   title="CLOSED DUPLICATE - Integrate (imports) into Synchronization View"
+   href="show_bug.cgi?id=202904">Bug 202904</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c2" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c2">Comment 2</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-09-12 07:42:17 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_ASSIGNED "
+   title="ASSIGNED - [usability] Support remote folder compares"
+   href="show_bug.cgi?id=203001">Bug 203001</a> also asked for synchronization of remote folder structures.
+
+In terms of UI, I could imagine that in the RSE System View, user selects any folder and chooses right-click &gt; Synchronize with... A dialog would allow picking the other folder to synchronize with.
+
+Given that information (source and destination), the Synchronization Perspective should open to do the actual sync. RSE IFileService would simply be the provider giving the input.
+
+The current Platform/Team Extras also provides File&gt;Import and File&gt;Export wizards which make use of the Synchronization APIs. RSE currently provides these through importexport wizard without using synchronization. 
+
+One advantage of the RSE solution is that the import/export settings can be stored to a file for later re-use; one disadvantage is that it does dumb copy instead of synchronization. I believe that ideally, RSE importexport should also use the Team/Synchronization Framework.
+
+</pre>
+    </div>
+
+    <div id="c3" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c3">Comment 3</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jason Craig</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=os-dev&#64;jacraig.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=os-dev&#64;jacraig.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-01-02 16:23:07 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">What's the status here?  Synchronization is a feature I want badly enough to help with it's migration/development.  Somewhere along the way the FTP/WebDAV synchronization provided Platform/Team Target Management went from decrepit to broken, and I am kind of at a loss for the functionality.
+
+Thanks for the updates.</pre>
+    </div>
+
+    <div id="c4" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c4">Comment 4</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Valter Kungla</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=kungla&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=kungla&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-01-09 04:57:01 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=185925#c3">comment #3</a>)
+<span class="quote">&gt; What's the status here?  Synchronization is a feature I want badly enough to
+&gt; help with it's migration/development.  Somewhere along the way the FTP/WebDAV
+&gt; synchronization provided Platform/Team Target Management went from decrepit to
+&gt; broken, and I am kind of at a loss for the functionality.
+&gt; 
+&gt; Thanks for the updates.
+&gt; </span >
+
+Same here:
+<a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED WONTFIX - FTP error DataConnection.CannotOpenInput"
+   href="show_bug.cgi?id=214467">https://bugs.eclipse.org/bugs/show_bug.cgi?id=214467</a>
+
+Did you find any workaround for this or using external tools for synchronize?
+
+
+I hope this functionality comes back soon - thank you </pre>
+    </div>
+
+    <div id="c5" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c5">Comment 5</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-01-09 12:48:57 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Thanks for offering help, Jason.
+
+I guess current status of this bug is that everybody wants it, but nobody has looked into how to actually get it done so far. Any help is appreciated. I'd propose to start with a description of requirements and proposed user experience, then look at APIs and how to get it done.</pre>
+    </div>
+
+    <div id="c6" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c6">Comment 6</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jason Craig</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=os-dev&#64;jacraig.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=os-dev&#64;jacraig.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-01-09 15:02:26 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Valter:
+	As far as external tools, I've coped in several different ways.  I have converted some projects to a CVS store and used Eclipse's excellent CVS functionality to synchronize them.  Most web applications, however, are not worth the trouble of trying to CVS them, and this is the context in which I most frequently used FTP synchronization.  Now, I mostly use the RSE to open files I wish to edit, and let the RSE save them remotely so there is no more local copy.  Slower and less convenient, but it does keep the resource in sync.
+
+Martin:
+	I delved a bit into the Team/Target API when I was looking for the NullPointerException that eventually killed my usage of the old Team synchronization, so I at least have a generalized view of it.  I can't promise too much because I don't want to overextend myself, but I will work on some requirements and proposed user experience.  Is there a location these documents should be posted?  Here?
+
+Thanks!</pre>
+    </div>
+
+    <div id="c7" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c7">Comment 7</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-01-10 07:28:49 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Yes, please attach any related documents on this bug. You might also find the discussions about remote folder compare interesting on <a class="bz_bug_link 
+          bz_status_ASSIGNED "
+   title="ASSIGNED - [usability] Support remote folder compares"
+   href="show_bug.cgi?id=203001">bug 203001</a>, since they are related to the Platform/Team APIs.</pre>
+    </div>
+
+    <div id="c8" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c8">Comment 8</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jason Craig</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=os-dev&#64;jacraig.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=os-dev&#64;jacraig.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-01-15 00:37:42 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=86907" name="attach_86907" title="C-Requirements for TM Sync View">attachment 86907</a> <a href="attachment.cgi?id=86907&amp;action=edit" title="C-Requirements for TM Sync View">[details]</a></span>
+C-Requirements for TM Sync View
+
+Here's a first draft of some C-requirements.  I'll work on some D-requirements too if you would like, and I'll get on the user experience too.  Either let me know or post any changes that need to be made.</pre>
+    </div>
+
+    <div id="c9" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c9">Comment 9</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-01-22 14:01:34 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Thanks for your requirements doc. It looks to me like if the current RSE Import/Export wizard already provides everything as requested for initial synchronization, so it's only missing on incremental synchronization afterwards.
+
+In order to facilitate that, it looks like the following is missing:
+  * Remember timestamp of the last synchronization
+  * Integrate with Team/Synchronize view, based on RSE import/export settings
+
+Here are some other comments:
+
+1. It seems to me that the act of importing/exporting/synchronizing with
+   a remote file system is not specific to RSE, but could also be implemented
+   through any registered EFS provider. That would make the whole thing 
+   more versatile. I wonder if the Platform team ever thought about that?
+   Even synchronization between two directories on the same local system
+   could be provided through that.
+   I'd assume that it should be relatively easy to re-write the current RSE
+   import/export wizards such that not RSE but EFS is used as the underlying
+   transport. DaveM can you confirm?
+
+2. I do not like the idea of allowing an RSE Filter as the remote endpoint.
+   For synchronization, directory structures should match on the local and
+   remote side. Therefore, only folders should be allowed; if filtering is
+   desired, that should be set up in the import/export wizard (and ONLY there).
+
+3. When a project / folder is already shared with a CM system, I assume that
+   we'd still want our &quot;folder synchronization&quot; to work. Therefore, we cannot
+   use Team &gt; Synchronize for that.
+   What would you think about providing the &quot;Synchronize&quot; operation in the 
+   context menu of the *.rexp file that RSE can create storing the settings
+   of a particular synchronization? - That would even allow multiple different
+   synchronizations (to different hosts for instance) of the same project
+   or folder.
+   Or would the feature be too hidden if implemented like that? What other
+   ways could we use to give the user access to the actual synchronize 
+   operation?
+
+4. Regarding some other small points from your requirements:
+   * Time difference between local and remote system -- couldn't that be
+     computed automatically? E.g. when the first file is transferred, compare
+     the local timestamp with the remote one?
+   * Is it really sufficient to always do a dumb copy-all-overwrite on 
+     the initial import/export? Or do we need to be smarter, e.g. for a
+     case where a previous workspace with existing sync info has been lost?
+   * For &quot;ignored resources&quot; I think that we should ONLY take the settings
+     from the import/export wizard. The wizard could have a checkbox for
+     &quot;Also use filter from Preferences/Team&quot; to make that explicit.</pre>
+    </div>
+
+    <div id="c10" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c10">Comment 10</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Assaf Almaz</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=assaf.almaz&#64;zend.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=assaf.almaz&#64;zend.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-23 10:21:14 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(1) Are you planning to decorate the local files that are modified (relative to tehe time you made synchronization)?
+If the answer is yes, than you will have all kind of problems with projects that are already shared with CVS/SVN (they also contain a decoration for modified files, so using 2 decorations becomes confusing for the end-user)
+
+(2) what is the behavior when i check-out my project from CVS and then
+I create a &quot;connection&quot; between the shared project (in eclipse) and a remote location? Do you perform any operation on the remote location? 
+The remote location might contain the files, and you can't know which version of the files (if you are based only on the timestamps) so you start with an &quot;unstable&quot; state. 
+
+</pre>
+    </div>
+
+    <div id="c11" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c11">Comment 11</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-23 10:41:35 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=185925#c10">comment #10</a>)
+Here's just my thoughts, until Takuya gets up to speed on this:
+
+(1) Decorations can be selected by users (Window &gt; Preferences &gt; General &gt;
+    Appearance &gt; Label Decorations). I see no problem with multiple decorations
+    if the user wants to have them. They might be disabled by default though.
+
+(2) Initial synchronization cannot be incremental. What you'd see is just 
+    like what you see in a Compare/Merge tool. Depending on how far Takuya
+    want to go, I could even imagine creating an MD5 hash for each file
+    locally and remote, and treat those the same that have same size and
+    hash. The hash algorithm could even be pluggable.
+
+I don't think that the initial implementation will have label decorators -- it will work more like the &quot;old&quot; FTP-WebDAV plugin from
+   <a href="http://archive.eclipse.org/eclipse/downloads/drops/R-3.2.2-200702121330/download.php?dropFile=eclipse-FTP-WebDAV-3.2.2.zip">http://archive.eclipse.org/eclipse/downloads/drops/R-3.2.2-200702121330/download.php?dropFile=eclipse-FTP-WebDAV-3.2.2.zip</a>
+
+with its description on
+
+<a href="http://dev.eclipse.org/viewcvs/index.cgi/platform-vcm-home/plugins/target/target-project-sets/readme.html?view=co">http://dev.eclipse.org/viewcvs/index.cgi/platform-vcm-home/plugins/target/target-project-sets/readme.html?view=co</a>
+
+and its CVS Team Project Set (*.psf) on
+
+<a href="http://dev.eclipse.org/viewcvs/index.cgi/platform-vcm-home/plugins/target/target-project-sets/all-target.psf?view=co">http://dev.eclipse.org/viewcvs/index.cgi/platform-vcm-home/plugins/target/target-project-sets/all-target.psf?view=co</a>
+
+</pre>
+    </div>
+
+    <div id="c12" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c12">Comment 12</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-23 11:09:46 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Some good Platform docs for this are on 
+<a href="http://help.eclipse.org/help33/index.jsp?topic=/org.eclipse.platform.doc.isv/guide/team_synchronize_beyond_basics.htm">http://help.eclipse.org/help33/index.jsp?topic=/org.eclipse.platform.doc.isv/guide/team_synchronize_beyond_basics.htm</a></pre>
+    </div>
+
+    <div id="c13" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c13">Comment 13</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-23 11:30:23 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Great to hear that there will be a Summer of Code student on this.  I'm still using the Team/Extras features in order to have things show up in the Synchronize view, and would be happy to be an early adopter of this effort.</pre>
+    </div>
+
+    <div id="c14" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c14">Comment 14</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-07-07 07:50:58 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">For everybody's information, with the old Platform Team/Extras plugin, the Synchronize Perspective can be used for FTP or WebDAV synchronizations as follows:
+
+  1. Switch to Synchronize perspective
+  2. In the Synchronize view, use the top-left drop-down and hit “Synchronize…”
+  3. If you have the Team/Extras stuff installed you will see FTP and WebDav
+     under “Available synchronizations”, so just select that.
+  4. Click through the wizard and you should be all set.
+
+Trying that out, leaves one important question to answer:
+
+  * How to treat Linked Resources in the RSE Synchronization Provider?
+
+It turns out that FTP from Team/Extras does handle linked resource folders in the workspace as real directories on the remote. Other providers like CVS always ignore linked resources. What should the RSE provider do?
+
+(A) Handling Linked Resources like Folders does provide some added versatility, since it allows for masking or redirecting parts of the remote tree in the workspace. Also, plain &quot;Workspace&quot; synchronizations can be extended to &quot;outside the workspace&quot; resources by means of linked resources.
+
+(B) On the other hand, liked resources can change the file system structure and requires special handling of workspace resources compared to non-workspace resources. This means more potential confusion, and requirement for a special implementation just to handle workspace resources, where otherwise everything could be treated as EFS IFileStore.
+
+Does anybody have an opinion in favor of (A) handling linked resources as folders versus (B) ignoring linked resources during synchronize?</pre>
+    </div>
+
+    <div id="c15" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c15">Comment 15</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-07-07 08:17:39 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">On second thought, there is a third option:
+
+(C) In the synchronize wizard, allow the user to specify how linked resources
+    should be handled (ignore, or map to folder on export; ignore, or map to
+    redirection on import).
+
+Given that we want to separate the UI part of synchronize from a non-UI API, it looks like a pragmatic approach is to specify the API such that it can handle &quot;Workspace Resources&quot; as well as &quot;File System Resources&quot;, and such that it allows for an option to ignore or follow Linked Resources.
+
+Once that API is specified, an initial implementation could be done to always ignore the linked resources, but such that the API is open for later extension that is capable of observing (following) linked resources.
+
+One drawback of allowing Workspace Resources in the synchronize API is, that an additional independent API is required for allowing remote-to-remote folder comparisons that do not involve the workspace (as per <a class="bz_bug_link 
+          bz_status_ASSIGNED "
+   title="ASSIGNED - [usability] Support remote folder compares"
+   href="show_bug.cgi?id=203001">bug 203001</a>). In the end, the synchronize API should be simpler than the current RSE RemoteFileTransferUtility. An API could look like this:
+
+
+interface RSESynchronizer {
+  public void synchronize(IContainer source, IFileStore target, 
+      IFileSystemFilter filter, Calendar lastSyncDate, int options);
+
+  public void synchronize(IFileStore source, IFileStore target,
+      IFileSystemFilter filter, Calendar lastSyncDate, int options);
+}
+
+
+Where options would include values such as
+  
+  SYNC_MODE_OVERRIDE_SOURCE = 1; /** &quot;Import&quot;: Override source with destin. */
+  SYNC_MODE_OVERRIDE_DEST = 2; /** &quot;Export&quot;: Override destin. with source */
+  SYNC_MODE_OVERRIDE_OLDER = 3; /** Override older files with newer ones */
+  SYNC_MODE_DELETE_MISSING = 4; /** Delete missing files */  
+  SYNC_MODE_FOLLOW_LINKS = 8; /** Follow linked resources */
+  SYNC_MODE_UI_REVIEW = 16;  /** Review sync in UI */
+
+which are similar to the command-line options that tools like rsync provide. In order to avoid the somewhat ugly distinction between IContainer vs. IFileStore (vs. probably other formats of virtual file systems), we could also abstract the concept of file system container and provide a hierarchy of implementations like this:
+
+interface IFileSystemContainer
+   class WorkspaceFileSystemWithoutLinkedResources
+   class WorkspaceFileSystemWithLinkedResources
+   class EFSFileSystemContainer
+   class RSEVirtualFileSystemContainer
+
+this would allow yet more flexible extension of the synchronize implementation in the future, allowing e.g. to synchronize ZIP file contents with file systems.</pre>
+    </div>
+
+    <div id="c16" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c16">Comment 16</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Takuya Miyamoto</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=miyamoto.takuya&#64;lab.ime.cmc.osaka-u.ac.jp" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=miyamoto.takuya&#64;lab.ime.cmc.osaka-u.ac.jp" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-07-14 22:57:26 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=107408" name="attach_107408" title="mid-term deliverable">attachment 107408</a> <a href="attachment.cgi?id=107408&amp;action=edit" title="mid-term deliverable">[details]</a></span>
+mid-term deliverable
+
+This is the mid-term deliverable of GSoC. If you are interested in this, feel free to try it. About how to use, please refer to the other demo script file.</pre>
+    </div>
+
+    <div id="c17" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c17">Comment 17</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Takuya Miyamoto</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=miyamoto.takuya&#64;lab.ime.cmc.osaka-u.ac.jp" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=miyamoto.takuya&#64;lab.ime.cmc.osaka-u.ac.jp" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-07-15 12:38:53 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=107488" name="attach_107488" title="demo script for mid-term deliverable">attachment 107488</a> <a href="attachment.cgi?id=107488&amp;action=edit" title="demo script for mid-term deliverable">[details]</a></span>
+demo script for mid-term deliverable</pre>
+    </div>
+
+    <div id="c18" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c18">Comment 18</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Takuya Miyamoto</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=miyamoto.takuya&#64;lab.ime.cmc.osaka-u.ac.jp" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=miyamoto.takuya&#64;lab.ime.cmc.osaka-u.ac.jp" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-07-18 00:02:52 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=107797" name="attach_107797" title="excutable mid-term deliverable">attachment 107797</a> <a href="attachment.cgi?id=107797&amp;action=edit" title="excutable mid-term deliverable">[details]</a></span>
+excutable mid-term deliverable
+
+I also attached demo script for mid-term deliverable I've already attached.
+If you would like to test, you need some preparations.
+* Eclipse 3.4.0
+* Target Management (RSE) 3.0
+* Remote host
+* Dstore (rseserver) or SSH
+
+* Eclipse 3.4.0
+I develope and test in Eclipse 3.4.0, and please use it.
+You can find Eclipse 3.4.0 in the page (<a href="http://www.eclipse.org/downloads/">http://www.eclipse.org/downloads/</a>).
+
+* Target Management (RSE) 3.0 plugin
+My project use TM (RSE) 3.0, so you need to get the plugin.
+You can install the TM 3.0 plugin from
+update site (<a href="http://download.eclipse.org/dsdp/tm/updates/3.0/">http://download.eclipse.org/dsdp/tm/updates/3.0/</a>)
+or
+zip (<a href="http://download.eclipse.org/dsdp/tm/downloads/drops/R-3.0-200806202130/">http://download.eclipse.org/dsdp/tm/downloads/drops/R-3.0-200806202130/</a>)
+More detail about RSE, please visit <a href="http://www.eclipse.org/dsdp/tm/">http://www.eclipse.org/dsdp/tm/</a>
+
+* Remote host
+RSE manage resources between local and remote host transparently.
+So, you need to have remote host.
+VirtualBox is ok. 
+As the demo script, I tested in VirtualBox.
+
+* Dstore(rseserrver) or SSH
+I use the dstore or SSH as the protocol in RSE.
+If you have already ssh server, you don't need to anything about this.
+If you would like to use dsotre, you can get from here(<a href="http://download.eclipse.org/dsdp/tm/downloads/drops/R-3.0-200806202130/index.php">http://download.eclipse.org/dsdp/tm/downloads/drops/R-3.0-200806202130/index.php</a>)
+Please download the rseserver-3.0-(your platform)
+
+
+Installing the mid-term deliverable.
+For installation, you simply download my mid-term deliverable named as &quot;org.eclipse.rse.synchronize_0.1.0.jar&quot;.
+and put it in the plugin directory of your eclipse.
+
+Then, you need to restart Eclipse and enjoy it.
+In the demo script,  I use dstore as protocol.
+If you use ssh, please read the document substituting ssh for dstore</pre>
+    </div>
+
+    <div id="c19" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c19">Comment 19</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mark Kropf</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=markkropf&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=markkropf&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-07-22 23:52:29 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Nice work Takuya Miyamoto!
+
+I'm unable to find your instructions for using this with SSH, and so far the RSE FTP does not appear to function with this. Could you direct me to the document on making this function via SSH.
+
+Also, does this duplicate work already done in the Team Synchronization perspective? It would seem like a natural solution to include this as a provider listed in the Team Sync view.
+
+Thanks for your hard work</pre>
+    </div>
+
+    <div id="c20" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c20">Comment 20</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Takuya Miyamoto</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=miyamoto.takuya&#64;lab.ime.cmc.osaka-u.ac.jp" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=miyamoto.takuya&#64;lab.ime.cmc.osaka-u.ac.jp" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-07-24 06:04:33 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=185925#c19">comment #19</a>)
+Thank you for your comment, Mark!
+ 
+<span class="quote">&gt; I'm unable to find your instructions for using this with SSH, and so far the
+&gt; RSE FTP does not appear to function with this. Could you direct me to the
+&gt; document on making this function via SSH.</span >
+
+If you would like to use with ssh, you need to make ssh connection in RSE.
+After that, you can use on the ssh connection in the Remote System Explorer as the same to dstore in my demo script. And, please use the &quot;excutable mid-term deliverable&quot;. I took a mistake to attache &quot;mid-term deliverable&quot; that contains only source code so it doesn't work.
+ 
+<span class="quote">&gt; Also, does this duplicate work already done in the Team Synchronization
+&gt; perspective? It would seem like a natural solution to include this as a
+&gt; provider listed in the Team Sync view.</span >
+
+I see. I didn't think such function.
+I consider it.
+
+Thanks.</pre>
+    </div>
+
+    <div id="c21" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c21">Comment 21</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-07-24 11:22:18 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=185925#c20">comment #20</a>)
+<span class="quote">&gt; &gt; Also, does this duplicate work already done in the Team Synchronization</span >
+
+Just to clarify, the RSE Synchronize Wizard does open the Team Synchronization perspective in order to perform the actual UI related tasks of synchronization, so it is integrated.
+
+What's missing currently, is to make RSE a synchronize provider that's exposed in the UI: Under Window &gt; Open Perspective &gt; Team Synchronization, select the &quot;Synchronize&quot; view and click the little dropdown arrow beside the synchronize icon in the view-local toolbar.
+
+With the RSE synchronize plugin installed, it should list a &quot;Synchronize Remote Resources (RSE)&quot; provider but it's not. The relevant extension is currently not active in plugin.xml, it looks like the &quot;org.eclipse.team.ui.synchronizeWizards&quot; extension point must be implemented.
+
+</pre>
+    </div>
+
+    <div id="c22" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c22">Comment 22</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-08-04 18:53:44 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Martin: when this is ready for beta testing let me know, as I'd be happy to update my workspace to use it.</pre>
+    </div>
+
+    <div id="c23" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c23">Comment 23</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Takuya Miyamoto</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=miyamoto.takuya&#64;lab.ime.cmc.osaka-u.ac.jp" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=miyamoto.takuya&#64;lab.ime.cmc.osaka-u.ac.jp" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-08-15 13:56:37 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=110113" name="attach_110113" title="Demo script">attachment 110113</a> <a href="attachment.cgi?id=110113&amp;action=edit" title="Demo script">[details]</a></span>
+Demo script 
+
+Now, update site is available.
+<a href="http://eclipse-incub.sourceforge.net/updates-soc/rse-sync/">http://eclipse-incub.sourceforge.net/updates-soc/rse-sync/</a>
+
+Additionally, I attached demo script for it.
+It explains how to install and use in detail.
+If you would like to test it, please read my demo script at the beginning.
+Feel free to add your comment on this Bugzilla or Wiki (<a href="http://wiki.eclipse.org/Platform/Team_Synchronization_on_top_of_RSE">http://wiki.eclipse.org/Platform/Team_Synchronization_on_top_of_RSE</a>).</pre>
+    </div>
+
+    <div id="c24" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c24">Comment 24</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-09-25 10:14:08 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=113458" name="attach_113458" title="Snapshot of plugins at end of SOC">attachment 113458</a> <a href="attachment.cgi?id=113458&amp;action=edit" title="Snapshot of plugins at end of SOC">[details]</a></span>
+Snapshot of plugins at end of SOC
+
+Summer of code is over, and an alpha version of the plugin is available. See 
+
+   <a href="http://wiki.eclipse.org/Platform/Team_Synchronization_on_top_of_RSE#Current_Status">http://wiki.eclipse.org/Platform/Team_Synchronization_on_top_of_RSE#Current_Status</a>
+
+for the current status, what works or not, and how to continue. We do intend to continue work on the plugin, and we appreciate community feedback, ideas and patches. The code is currently hosted on Sourceforge, and I'll attach team project sets for getting going. See the Wiki mentioned above for more details.</pre>
+    </div>
+
+    <div id="c25" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c25">Comment 25</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-09-25 10:16:08 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=113460" name="attach_113460" title="Project set for anonymous (read-only) access to sourceforge">attachment 113460</a> <a href="attachment.cgi?id=113460&amp;action=edit" title="Project set for anonymous (read-only) access to sourceforge">[details]</a></span>
+Project set for anonymous (read-only) access to sourceforge
+
+For anonymous (read-only) access to the projects on sourceforge, save attached *.psf file to a local disk, then File &gt; Import &gt; Team &gt; Project Set.</pre>
+    </div>
+
+    <div id="c26" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c26">Comment 26</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-09-25 10:16:55 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=113461" name="attach_113461" title="Project set for sourceforge committer (write) access">attachment 113461</a> <a href="attachment.cgi?id=113461&amp;action=edit" title="Project set for sourceforge committer (write) access">[details]</a></span>
+Project set for sourceforge committer (write) access
+
+For sourceforge committer (write) access to the projects on CVS, save attached *.psf file to a local disk, then File &gt; Import &gt; Team &gt; Project Set.</pre>
+    </div>
+
+    <div id="c27" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c27">Comment 27</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-09-25 10:31:44 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Remote project synchronization"
+   href="show_bug.cgi?id=248556">Bug 248556</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c28" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c28">Comment 28</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-09-25 10:47:40 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I filed IPZilla <a href="https://dev.eclipse.org/ipzilla/show_bug.cgi?id=2714">https://dev.eclipse.org/ipzilla/show_bug.cgi?id=2714</a> asking for a legal review to get the code moved into the main Eclipse.org Repository.
+
+DaveM: The idea of the plugin is to add an additional &quot;review&quot; checkbox to the existing import/export wizard. When this checkbox is ticked, the Team/Synchronization perspective will open for review. If not, the old mechanism is used.
+
+If we merge this into the current rse importexport plugin, we'll add a dependency from importexport to 
+  org.eclipse.team.core,
+  org.eclipse.team.ui,
+  org.eclipse.compare
+which is not currently there. Do you think that this is in order, or should we investigate means to keep the Team dependency out of importexport? The compare dependency should not be an issue, since rse.files.ui already depends on compare.</pre>
+    </div>
+
+    <div id="c29" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c29">Comment 29</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-09-25 10:49:56 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Again, Community contributions to this are very welcome. I don't think there's too much missing to make this really fly. See the <span class=""><a href="attachment.cgi?id=110113" name="attach_110113" title="Demo script">attachment 110113</a> <a href="attachment.cgi?id=110113&amp;action=edit" title="Demo script">[details]</a></span> demo script for how it works.
+
+The main issue to fix will be getting the diff state right and the menu items in the synchronize view right. Comparing the plugin source against the old FTP/WebDAV implementation should help getting this fixed (see <a href="show_bug.cgi?id=185925#c11">comment 11</a> for how to get that).</pre>
+    </div>
+
+    <div id="c30" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c30">Comment 30</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">David McKnight</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=dmcknigh&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=dmcknigh&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-09-25 10:57:42 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=185925#c28">comment #28</a>)
+<span class="quote">&gt; I filed IPZilla <a href="https://dev.eclipse.org/ipzilla/show_bug.cgi?id=2714">https://dev.eclipse.org/ipzilla/show_bug.cgi?id=2714</a> asking for
+&gt; a legal review to get the code moved into the main Eclipse.org Repository.
+&gt; 
+&gt; DaveM: The idea of the plugin is to add an additional &quot;review&quot; checkbox to the
+&gt; existing import/export wizard. When this checkbox is ticked, the
+&gt; Team/Synchronization perspective will open for review. If not, the old
+&gt; mechanism is used.
+&gt; 
+&gt; If we merge this into the current rse importexport plugin, we'll add a
+&gt; dependency from importexport to 
+&gt;   org.eclipse.team.core,
+&gt;   org.eclipse.team.ui,
+&gt;   org.eclipse.compare
+&gt; which is not currently there. Do you think that this is in order, or should we
+&gt; investigate means to keep the Team dependency out of importexport? The compare
+&gt; dependency should not be an issue, since rse.files.ui already depends on
+&gt; compare.
+&gt; </span >
+
+
+As you say, RSE already brings in org.eclipse.compare with it's files.ui plugin and I don't think the team stuff is too heavy weight, so I'm in favour of bringing this stuff in to enhance import/export.
+
+</pre>
+    </div>
+
+    <div id="c31" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c31">Comment 31</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Takuya Miyamoto</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=miyamoto.takuya&#64;lab.ime.cmc.osaka-u.ac.jp" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=miyamoto.takuya&#64;lab.ime.cmc.osaka-u.ac.jp" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-10-14 08:42:13 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Legal Message: I, Takuya Miyamoto, declare that I developed attached code from
+scratch, without referencing any 3rd party materials except material licensed under
+the EPL. {I am authorized by my employer to make this contribution under the EPL.} </pre>
+    </div>
+
+    <div id="c32" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c32">Comment 32</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">sparrow Mising name</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=wrobel&#64;wsb-nlu.edu.pl" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=wrobel&#64;wsb-nlu.edu.pl" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-10-14 09:03:58 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=185925#c0">comment #0</a>)
+<span class="quote">&gt; The Platform/Team Target Management component including its FTP and WebDAV
+&gt; connectors is being discontinued as of Eclipse 3.3:
+&gt; <a href="http://dev.eclipse.org/mhonarc/lists/cross-project-issues-dev/msg01040.html">http://dev.eclipse.org/mhonarc/lists/cross-project-issues-dev/msg01040.html</a>
+&gt; 
+&gt; Target Management / RSE is the logical successor of this functionality.
+&gt; 
+&gt; We should therefore create a bridge from RSE IFileService to the Platform/Team
+&gt; synchronization APIs, such that the synchronization functionality previously
+&gt; offered by Platform/Team becomes available through RSE. This synchronization
+&gt; framework is appreciated by the community:
+&gt; <a href="http://dev.eclipse.org/mhonarc/lists/platform-team-dev/msg00229.html">http://dev.eclipse.org/mhonarc/lists/platform-team-dev/msg00229.html</a>
+&gt; 
+&gt; Creating the bridge will likely happen after TM 2.0; community help would be
+&gt; appreciated. See also <a class="bz_bug_link 
+          bz_status_NEW "
+   title="NEW - Add Platform/Team WebDAV connector to RSE"
+   href="show_bug.cgi?id=185921">bug #185921</a>.
+&gt; </span >
+
+Did you see an SFTP plugin for eclipse...
+<a href="http://www.jcraft.com/eclipse-sftp/">http://www.jcraft.com/eclipse-sftp/</a></pre>
+    </div>
+
+    <div id="c33" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c33">Comment 33</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Takuya Miyamoto</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=miyamoto.takuya&#64;lab.ime.cmc.osaka-u.ac.jp" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=miyamoto.takuya&#64;lab.ime.cmc.osaka-u.ac.jp" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-10-27 03:39:55 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I confirm that I am not employed and own the Copyright of the code that I wrote.</pre>
+    </div>
+
+    <div id="c34" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c34">Comment 34</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-11-12 11:10:10 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Got IPZilla approval, will merge into RSE 3.1M4.</pre>
+    </div>
+
+    <div id="c35" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c35">Comment 35</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-02-08 18:56:15 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The initial summer-of-code contribution is now merged into RSE HEAD (3.1M5)
+
+It is now in the org.eclipse.rse.importexport plugin, with testcases in the
+org.eclipse.rse.tests plugin. The status of the contribution is still &quot;alpha&quot;, not yet ready for general use. For details, see the Wiki page on 
+   <a href="http://wiki.eclipse.org/RSESync/Status_and_Ideas">http://wiki.eclipse.org/RSESync/Status_and_Ideas</a>
+
+I'm still closing this bug since the original contribution is in. We'll use separate bugs to track remaining issues.
+
+(In reply to <a href="show_bug.cgi?id=185925#c32">comment #32</a>)
+<span class="quote">&gt; Did you see an SFTP plugin for eclipse...
+&gt; <a href="http://www.jcraft.com/eclipse-sftp/">http://www.jcraft.com/eclipse-sftp/</a></span >
+
+The SFTP team provider leverages the &quot;org.eclipse.target&quot; infrastructure that used to be part of the Team/Extras download. This infrastructure has been deprecated and removed from Eclipse downloads in the Europa (Eclipse 3.3) time frame. It does continue to work, but it's unsure for how long. Therefore, we're going with the RSE infrastructure for this now, and may be looking at EFS / e4 Resources in the future.
+</pre>
+    </div>
+
+    <div id="c36" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c36">Comment 36</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Chris Aniszczyk</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=caniszczyk&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=caniszczyk&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-02-08 19:11:42 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=185925#c35">comment #35</a>)
+<span class="quote">&gt; The initial summer-of-code contribution is now merged into RSE HEAD (3.1M5)</span >
+
+Martin, it would be great for you to blog about this GSOC success when the time is right.
+
+I've been trying to get more projects to post ideas...
+     <a href="http://wiki.eclipse.org/Google_Summer_of_Code_2009_Ideas">http://wiki.eclipse.org/Google_Summer_of_Code_2009_Ideas</a></pre>
+    </div>
+
+    <div id="c37" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=185925#c37">Comment 37</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2011-05-26 06:08:05 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Comment on <span class=""><a href="attachment.cgi?id=107797" name="attach_107797" title="excutable mid-term deliverable">attachment 107797</a> <a href="attachment.cgi?id=107797&amp;action=edit" title="excutable mid-term deliverable">[details]</a></span>
+excutable mid-term deliverable
+
+Marking iplog+ to give credit to the contributor. The full IP Review is on <a href="https://dev.eclipse.org/ipzilla/show_bug.cgi?id=2714">https://dev.eclipse.org/ipzilla/show_bug.cgi?id=2714</a></pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=185925">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=185925">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=185925">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=185925&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=185925" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,1659 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>70557 &ndash; Deadlock in PluginModelManager</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "70557 – Deadlock in PluginModelManager",
+                             "show_bug.cgi?id=70557" );
+        document.title = "70557 – Deadlock in PluginModelManager";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "70557 – Deadlock in PluginModelManager", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_RESOLVED
+                 bz_product_PDE
+                 bz_component_UI
+                 bz_bug_70557 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;70557</span>
+
+        <span id="subtitle" class="subheader">Deadlock in PluginModelManager</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2004-12-06 14:27:20 EST</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=70557&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=70557" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2004-12-06 14:27:20">
+  <input type="hidden" name="id" value="70557">
+  <input type="hidden" name="token" value="1629862814-kb2v41p64f6VDX7Nhj3e18LRkUh-yq3eC0Ytqr4zl8I">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=70557"><b>Bug&nbsp;70557</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">Deadlock in PluginModelManager</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span>Deadlock in PluginModelManager
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      'Deadlock in PluginModelManager' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">RESOLVED
+          FIXED
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >PDE
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >Eclipse Project
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=PDE"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >UI
+
+  (<a href="buglist.cgi?component=UI&amp;product=PDE&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>3.0 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">PC
+        Windows XP
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P3
+       major<span id="votes_container">
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=70557#vote_70557">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>3.1 M4 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">PDE-UI-Inbox</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pde-ui-inbox&#64;eclipse.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pde-ui-inbox&#64;eclipse.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard">
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'pde-ui-inbox\x40eclipse.org',
+        '');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          <tr>
+    <th class="field_label">
+      <label>Duplicates (1)</label>:
+    </th>
+    <td class="field_value">
+      <span id="duplicates"><a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Eclipse froze"
+   href="show_bug.cgi?id=80292">80292</a> 
+      </span>
+      (<a href="buglist.cgi?bug_id=80292">view as bug list</a>)
+    </td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+
+  </td>
+  </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2004-07-21 12:44 EDT by <span class="vcard"><span class="fn">Dani Megert</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=daniel_megert&#64;ch.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=daniel_megert&#64;ch.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2004-12-06 14:27 EST
+      (<a href="show_activity.cgi?id=70557">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>2 
+          users
+          <span id="cc_edit_area_showhide_container" class="bz_default_hidden">
+            (<a href="#" id="cc_edit_area_showhide">show</a>)
+          </span>
+        <div id="cc_edit_area">
+          <br>
+            <select id="cc" multiple="multiple" size="5" >
+                <option value="david">david</option>
+                <option value="panagiotis.korros">panagiotis.korros</option>
+            </select>
+        </div>
+          <script type="text/javascript">
+            hideEditableField( 'cc_edit_area_showhide_container', 
+                               'cc_edit_area', 
+                               'cc_edit_area_showhide', 
+                               '', 
+                               '');  
+          </script>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" >
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+      <tr id="a1" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=16193"
+               title="View the content of the attachment">
+          <b>Patch to fix</b></a>
+
+          <span class="bz_attach_extra_info">
+              (967 bytes,
+                patch)
+
+            <br>
+            <a href="#attach_16193"
+               title="Go to the comment associated with the attachment">2004-11-28 23:37 EST</a>,
+
+            <span class="vcard"><span class="fn">David Saff</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=david&#64;saff.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=david&#64;saff.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=16193&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=16193&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <span class="bz_attach_view_hide">
+            <a id="view_all" href="attachment.cgi?bugid=70557&amp;action=viewall">View All</a>
+        </span>
+        <a href="attachment.cgi?bugid=70557&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=70557&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=70557#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Dani Megert</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=daniel_megert&#64;ch.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=daniel_megert&#64;ch.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-07-21 12:44:21 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">R3.0
+
+I started my workspace and then a JUnit plug-in test.
+
+C:\eclipse\drops\R3.0&gt;C:\JavaSDKs\jdk1.4.2_03\bin\java -showversion -Xms50M
+-Xmx350M -Dosgi.checkConfiguration=true -verify -cp startup.jar
+org.eclipse.core.launcher.Main -update -application org.ecli
+pse.ui.ide.workbench -keyring c:\eclipse\.keyring -showlocation -data
+c:\eclipse\workspaces\BuildMeister_3_0_m\plugins
+java version &quot;1.4.2_03&quot;
+Java(TM) 2 Runtime Environment, Standard Edition (build 1.4.2_03-b02)
+Java HotSpot(TM) Client VM (build 1.4.2_03-b02, mixed mode)
+
+Full thread dump Java HotSpot(TM) Client VM (1.4.2_03-b02 mixed mode):
+
+&quot;Worker-7&quot; prio=5 tid=0x03116d60 nid=0x900 in Object.wait() [40ff000..40ffd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x11d0b9f8&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.sleep(WorkerPool.java:166)
+        - locked &lt;0x11d0b9f8&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.startJob(WorkerPool.java:193)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:59)
+
+&quot;Worker-6&quot; prio=5 tid=0x02e43910 nid=0xbe0 in Object.wait() [40bf000..40bfd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x11d0b9f8&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.sleep(WorkerPool.java:166)
+        - locked &lt;0x11d0b9f8&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.startJob(WorkerPool.java:193)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:59)
+
+&quot;All Types Caching&quot; prio=4 tid=0x02e6ed40 nid=0x670 waiting for monitor entry
+[407f000..407fd8c]
+        at
+org.eclipse.pde.internal.core.WorkspaceModelManager.initializeWorkspaceModels(WorkspaceModelManager.java:438)
+        - waiting to lock &lt;0x13b5baa8&gt; (a
+org.eclipse.pde.internal.core.WorkspaceModelManager)
+        at
+org.eclipse.pde.internal.core.WorkspaceModelManager.getAllModels(WorkspaceModelManager.java:333)
+        at
+org.eclipse.pde.internal.core.PluginModelManager.initializeTable(PluginModelManager.java:411)
+        - locked &lt;0x13b5cc40&gt; (a org.eclipse.pde.internal.core.PluginModelManager)
+        at
+org.eclipse.pde.internal.core.PluginModelManager.getEntryTable(PluginModelManager.java:425)
+        at
+org.eclipse.pde.internal.core.PluginModelManager.findEntry(PluginModelManager.java:135)
+        at
+org.eclipse.pde.internal.core.RequiredPluginsInitializer.initialize(RequiredPluginsInitializer.java:36)
+        at
+org.eclipse.jdt.internal.core.JavaModelManager.initializeContainer(JavaModelManager.java:1261)
+        at
+org.eclipse.jdt.internal.core.JavaModelManager.initializeAllContainers(JavaModelManager.java:1226)
+        at
+org.eclipse.jdt.internal.core.JavaModelManager.getClasspathContainer(JavaModelManager.java:833)
+        at org.eclipse.jdt.core.JavaCore.getClasspathContainer(JavaCore.java:1184)
+        at
+org.eclipse.jdt.internal.core.JavaProject.getResolvedClasspath(JavaProject.java:1888)
+        at
+org.eclipse.jdt.internal.core.JavaProject.getResolvedClasspath(JavaProject.java:1798)
+        at
+org.eclipse.jdt.internal.core.search.JavaSearchScope.add(JavaSearchScope.java:78)
+        at
+org.eclipse.jdt.internal.core.search.JavaWorkspaceScope.initialize(JavaWorkspaceScope.java:80)
+        at
+org.eclipse.jdt.internal.core.search.JavaSearchScope.&lt;init&gt;(JavaSearchScope.java:52)
+        at
+org.eclipse.jdt.internal.core.search.JavaWorkspaceScope.&lt;init&gt;(JavaWorkspaceScope.java:31)
+        at
+org.eclipse.jdt.core.search.SearchEngine.createWorkspaceScope(SearchEngine.java:423)
+        at
+org.eclipse.jdt.internal.corext.util.AllTypesCache.search(AllTypesCache.java:531)
+        at
+org.eclipse.jdt.internal.corext.util.AllTypesCache$TypeCacher.doSearchTypes(AllTypesCache.java:197)
+        at
+org.eclipse.jdt.internal.corext.util.AllTypesCache$TypeCacher.run(AllTypesCache.java:166)
+
+&quot;Worker-5&quot; prio=5 tid=0x02e4b2b0 nid=0x1e8 in Object.wait() [403f000..403fd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x11d0b9f8&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.sleep(WorkerPool.java:166)
+        - locked &lt;0x11d0b9f8&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.startJob(WorkerPool.java:193)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:59)
+
+&quot;Java indexing&quot; daemon prio=4 tid=0x03074460 nid=0xff0 in Object.wait()
+[3d5f000..3d5fd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x137ccc90&gt; (a
+org.eclipse.jdt.internal.core.search.indexing.IndexManager)
+        at java.lang.Object.wait(Object.java:429)
+        at
+org.eclipse.jdt.internal.core.search.processing.JobManager.run(JobManager.java:338)
+        - locked &lt;0x137ccc90&gt; (a
+org.eclipse.jdt.internal.core.search.indexing.IndexManager)
+        at java.lang.Thread.run(Thread.java:534)
+
+&quot;Worker-1&quot; prio=5 tid=0x030580b0 nid=0xae0 runnable [3dff000..3dffd8c]
+        at java.io.WinNTFileSystem.getBooleanAttributes(Native Method)
+        at java.io.File.exists(File.java:680)
+        at
+org.eclipse.core.internal.localstore.FileSystemResourceManager.read(FileSystemResourceManager.java:498)
+        at org.eclipse.core.internal.resources.File.getContents(File.java:257)
+        at
+org.eclipse.pde.internal.core.WorkspaceModelManager.loadModel(WorkspaceModelManager.java:560)
+        at
+org.eclipse.pde.internal.core.WorkspaceModelManager.createFeatureModel(WorkspaceModelManager.java:478)
+        at
+org.eclipse.pde.internal.core.WorkspaceModelManager.addWorkspaceModel(WorkspaceModelManager.java:603)
+        at
+org.eclipse.pde.internal.core.WorkspaceModelManager.initializeWorkspaceModels(WorkspaceModelManager.java:461)
+        - locked &lt;0x13b5baa8&gt; (a
+org.eclipse.pde.internal.core.WorkspaceModelManager)
+        at
+org.eclipse.pde.internal.core.WorkspaceModelManager.getAllModels(WorkspaceModelManager.java:333)
+        at
+org.eclipse.pde.internal.ui.launcher.LauncherUtils.getAffectedProjects(LauncherUtils.java:321)
+        at
+org.eclipse.pde.internal.ui.launcher.JUnitLaunchConfiguration.getBuildOrder(JUnitLaunchConfiguration.java:434)
+        at
+org.eclipse.debug.core.model.LaunchConfigurationDelegate.buildForLaunch(LaunchConfigurationDelegate.java:79)
+        at
+org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:550)
+        at
+org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:788)
+        at org.eclipse.debug.internal.ui.DebugUIPlugin$6.run(DebugUIPlugin.java:955)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:66)
+
+&quot;Reference Cleaner - 2&quot; prio=7 tid=0x02e35d20 nid=0xb08 in Object.wait()
+[3c3f000..3c3fd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x12ed5d10&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:111)
+        - locked &lt;0x12ed5d10&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:127)
+        at
+org.eclipse.jface.action.ActionContributionItem$ImageCache$ReferenceCleanerThread.run(ActionContributionItem.java:207)
+
+&quot;Reference Cleaner - 1&quot; prio=7 tid=0x00a4bbf8 nid=0x6d4 in Object.wait()
+[3bff000..3bffd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x12ed5d80&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:111)
+        - locked &lt;0x12ed5d80&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:127)
+        at
+org.eclipse.jface.action.ActionContributionItem$ImageCache$ReferenceCleanerThread.run(ActionContributionItem.java:207)
+
+&quot;Start Level Event Dispatcher&quot; daemon prio=5 tid=0x02def948 nid=0xe30 in
+Object.wait() [302f000..302fd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x11b734c8&gt; (a
+org.eclipse.osgi.framework.eventmgr.EventThread)
+        at java.lang.Object.wait(Object.java:429)
+        at
+org.eclipse.osgi.framework.eventmgr.EventThread.getNextEvent(EventThread.java:162)
+        - locked &lt;0x11b734c8&gt; (a org.eclipse.osgi.framework.eventmgr.EventThread)
+        at org.eclipse.osgi.framework.eventmgr.EventThread.run(EventThread.java:100)
+
+&quot;Framework Event Dispatcher&quot; daemon prio=5 tid=0x02dee860 nid=0xeec in
+Object.wait() [2fef000..2fefd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x11b73a30&gt; (a
+org.eclipse.osgi.framework.eventmgr.EventThread)
+        at java.lang.Object.wait(Object.java:429)
+        at
+org.eclipse.osgi.framework.eventmgr.EventThread.getNextEvent(EventThread.java:162)
+        - locked &lt;0x11b73a30&gt; (a org.eclipse.osgi.framework.eventmgr.EventThread)
+        at org.eclipse.osgi.framework.eventmgr.EventThread.run(EventThread.java:100)
+
+&quot;Signal Dispatcher&quot; daemon prio=10 tid=0x00a208f0 nid=0x8b8 waiting on condition
+[0..0]
+
+&quot;Finalizer&quot; daemon prio=9 tid=0x0003f610 nid=0x104 in Object.wait()
+[2caf000..2cafd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x11b13ed0&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:111)
+        - locked &lt;0x11b13ed0&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:127)
+        at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:159)
+
+&quot;Reference Handler&quot; daemon prio=10 tid=0x0003f9b0 nid=0xe64 in Object.wait()
+[2c6f000..2c6fd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x11b13c80&gt; (a java.lang.ref.Reference$Lock)
+        at java.lang.Object.wait(Object.java:429)
+        at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:115)
+        - locked &lt;0x11b13c80&gt; (a java.lang.ref.Reference$Lock)
+
+&quot;main&quot; prio=7 tid=0x00035300 nid=0xabc runnable [7f000..7fc3c]
+        at org.eclipse.swt.internal.win32.OS.WaitMessage(Native Method)
+        at org.eclipse.swt.widgets.Display.sleep(Display.java:3076)
+        at
+org.eclipse.ui.application.WorkbenchAdvisor.eventLoopIdle(WorkbenchAdvisor.java:344)
+        at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:1378)
+        at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:1348)
+        at
+org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:254)
+        at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:141)
+        at org.eclipse.ui.internal.ide.IDEApplication.run(IDEApplication.java:96)
+        at
+org.eclipse.core.internal.runtime.PlatformActivator$1.run(PlatformActivator.java:335)
+        at
+org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:273)
+        at
+org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:129)
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at
+sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+        at
+sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+        at java.lang.reflect.Method.invoke(Method.java:324)
+        at org.eclipse.core.launcher.Main.basicRun(Main.java:183)
+        at org.eclipse.core.launcher.Main.run(Main.java:644)
+        at org.eclipse.core.launcher.Main.main(Main.java:628)
+
+&quot;VM Thread&quot; prio=5 tid=0x009bdd80 nid=0x338 runnable
+
+&quot;VM Periodic Task Thread&quot; prio=10 tid=0x00a019c0 nid=0xcf8 waiting on condition
+&quot;Suspend Checker Thread&quot; prio=10 tid=0x00a038a0 nid=0x99c runnable
+Full thread dump Java HotSpot(TM) Client VM (1.4.2_03-b02 mixed mode):
+
+&quot;Worker-6&quot; prio=5 tid=0x02e43910 nid=0xbe0 in Object.wait() [40bf000..40bfd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x11d0b9f8&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.sleep(WorkerPool.java:166)
+        - locked &lt;0x11d0b9f8&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.startJob(WorkerPool.java:193)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:59)
+
+&quot;All Types Caching&quot; prio=4 tid=0x02e6ed40 nid=0x670 waiting for monitor entry
+[407f000..407fd8c]
+        at
+org.eclipse.pde.internal.core.WorkspaceModelManager.initializeWorkspaceModels(WorkspaceModelManager.java:438)
+        - waiting to lock &lt;0x13b5baa8&gt; (a
+org.eclipse.pde.internal.core.WorkspaceModelManager)
+        at
+org.eclipse.pde.internal.core.WorkspaceModelManager.getAllModels(WorkspaceModelManager.java:333)
+        at
+org.eclipse.pde.internal.core.PluginModelManager.initializeTable(PluginModelManager.java:411)
+        - locked &lt;0x13b5cc40&gt; (a org.eclipse.pde.internal.core.PluginModelManager)
+        at
+org.eclipse.pde.internal.core.PluginModelManager.getEntryTable(PluginModelManager.java:425)
+        at
+org.eclipse.pde.internal.core.PluginModelManager.findEntry(PluginModelManager.java:135)
+        at
+org.eclipse.pde.internal.core.RequiredPluginsInitializer.initialize(RequiredPluginsInitializer.java:36)
+        at
+org.eclipse.jdt.internal.core.JavaModelManager.initializeContainer(JavaModelManager.java:1261)
+        at
+org.eclipse.jdt.internal.core.JavaModelManager.initializeAllContainers(JavaModelManager.java:1226)
+        at
+org.eclipse.jdt.internal.core.JavaModelManager.getClasspathContainer(JavaModelManager.java:833)
+        at org.eclipse.jdt.core.JavaCore.getClasspathContainer(JavaCore.java:1184)
+        at
+org.eclipse.jdt.internal.core.JavaProject.getResolvedClasspath(JavaProject.java:1888)
+        at
+org.eclipse.jdt.internal.core.JavaProject.getResolvedClasspath(JavaProject.java:1798)
+        at
+org.eclipse.jdt.internal.core.search.JavaSearchScope.add(JavaSearchScope.java:78)
+        at
+org.eclipse.jdt.internal.core.search.JavaWorkspaceScope.initialize(JavaWorkspaceScope.java:80)
+        at
+org.eclipse.jdt.internal.core.search.JavaSearchScope.&lt;init&gt;(JavaSearchScope.java:52)
+        at
+org.eclipse.jdt.internal.core.search.JavaWorkspaceScope.&lt;init&gt;(JavaWorkspaceScope.java:31)
+        at
+org.eclipse.jdt.core.search.SearchEngine.createWorkspaceScope(SearchEngine.java:423)
+        at
+org.eclipse.jdt.internal.corext.util.AllTypesCache.search(AllTypesCache.java:531)
+        at
+org.eclipse.jdt.internal.corext.util.AllTypesCache$TypeCacher.doSearchTypes(AllTypesCache.java:197)
+        at
+org.eclipse.jdt.internal.corext.util.AllTypesCache$TypeCacher.run(AllTypesCache.java:166)
+
+&quot;Java indexing&quot; daemon prio=4 tid=0x03074460 nid=0xff0 in Object.wait()
+[3d5f000..3d5fd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x137ccc90&gt; (a
+org.eclipse.jdt.internal.core.search.indexing.IndexManager)
+        at java.lang.Object.wait(Object.java:429)
+        at
+org.eclipse.jdt.internal.core.search.processing.JobManager.run(JobManager.java:338)
+        - locked &lt;0x137ccc90&gt; (a
+org.eclipse.jdt.internal.core.search.indexing.IndexManager)
+        at java.lang.Thread.run(Thread.java:534)
+
+&quot;Worker-1&quot; prio=5 tid=0x030580b0 nid=0xae0 waiting for monitor entry
+[3dff000..3dffd8c]
+        at
+org.eclipse.pde.internal.core.PluginModelManager.initializeTable(PluginModelManager.java:407)
+        - waiting to lock &lt;0x13b5cc40&gt; (a
+org.eclipse.pde.internal.core.PluginModelManager)
+        at
+org.eclipse.pde.internal.core.PluginModelManager.getEntryTable(PluginModelManager.java:425)
+        at
+org.eclipse.pde.internal.core.PluginModelManager.findEntry(PluginModelManager.java:153)
+        at
+org.eclipse.pde.internal.core.PluginModelManager.findModel(PluginModelManager.java:157)
+        at
+org.eclipse.pde.internal.core.PluginModelManager.findPluginModel(PluginModelManager.java:166)
+        at org.eclipse.pde.internal.core.PDECore.findPlugin(PDECore.java:291)
+        at
+org.eclipse.pde.internal.core.feature.FeatureImport.parse(FeatureImport.java:115)
+        at
+org.eclipse.pde.internal.core.feature.Feature.parseRequires(Feature.java:229)
+        at org.eclipse.pde.internal.core.feature.Feature.parse(Feature.java:192)
+        at
+org.eclipse.pde.internal.core.feature.AbstractFeatureModel.processDocument(AbstractFeatureModel.java:91)
+        at
+org.eclipse.pde.internal.core.feature.AbstractFeatureModel.load(AbstractFeatureModel.java:67)
+        at
+org.eclipse.pde.internal.core.WorkspaceModelManager.loadModel(WorkspaceModelManager.java:574)
+        at
+org.eclipse.pde.internal.core.WorkspaceModelManager.createFeatureModel(WorkspaceModelManager.java:478)
+        at
+org.eclipse.pde.internal.core.WorkspaceModelManager.addWorkspaceModel(WorkspaceModelManager.java:603)
+        at
+org.eclipse.pde.internal.core.WorkspaceModelManager.initializeWorkspaceModels(WorkspaceModelManager.java:461)
+        - locked &lt;0x13b5baa8&gt; (a
+org.eclipse.pde.internal.core.WorkspaceModelManager)
+        at
+org.eclipse.pde.internal.core.WorkspaceModelManager.getAllModels(WorkspaceModelManager.java:333)
+        at
+org.eclipse.pde.internal.ui.launcher.LauncherUtils.getAffectedProjects(LauncherUtils.java:321)
+        at
+org.eclipse.pde.internal.ui.launcher.JUnitLaunchConfiguration.getBuildOrder(JUnitLaunchConfiguration.java:434)
+        at
+org.eclipse.debug.core.model.LaunchConfigurationDelegate.buildForLaunch(LaunchConfigurationDelegate.java:79)
+        at
+org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:550)
+        at
+org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:788)
+        at org.eclipse.debug.internal.ui.DebugUIPlugin$6.run(DebugUIPlugin.java:955)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:66)
+
+&quot;Reference Cleaner - 2&quot; prio=7 tid=0x02e35d20 nid=0xb08 in Object.wait()
+[3c3f000..3c3fd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x12ed5d10&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:111)
+        - locked &lt;0x12ed5d10&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:127)
+        at
+org.eclipse.jface.action.ActionContributionItem$ImageCache$ReferenceCleanerThread.run(ActionContributionItem.java:207)
+
+&quot;Reference Cleaner - 1&quot; prio=7 tid=0x00a4bbf8 nid=0x6d4 in Object.wait()
+[3bff000..3bffd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x12ed5d80&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:111)
+        - locked &lt;0x12ed5d80&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:127)
+        at
+org.eclipse.jface.action.ActionContributionItem$ImageCache$ReferenceCleanerThread.run(ActionContributionItem.java:207)
+
+&quot;Start Level Event Dispatcher&quot; daemon prio=5 tid=0x02def948 nid=0xe30 in
+Object.wait() [302f000..302fd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x11b734c8&gt; (a
+org.eclipse.osgi.framework.eventmgr.EventThread)
+        at java.lang.Object.wait(Object.java:429)
+        at
+org.eclipse.osgi.framework.eventmgr.EventThread.getNextEvent(EventThread.java:162)
+        - locked &lt;0x11b734c8&gt; (a org.eclipse.osgi.framework.eventmgr.EventThread)
+        at org.eclipse.osgi.framework.eventmgr.EventThread.run(EventThread.java:100)
+
+&quot;Framework Event Dispatcher&quot; daemon prio=5 tid=0x02dee860 nid=0xeec in
+Object.wait() [2fef000..2fefd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x11b73a30&gt; (a
+org.eclipse.osgi.framework.eventmgr.EventThread)
+        at java.lang.Object.wait(Object.java:429)
+        at
+org.eclipse.osgi.framework.eventmgr.EventThread.getNextEvent(EventThread.java:162)
+        - locked &lt;0x11b73a30&gt; (a org.eclipse.osgi.framework.eventmgr.EventThread)
+        at org.eclipse.osgi.framework.eventmgr.EventThread.run(EventThread.java:100)
+
+&quot;Signal Dispatcher&quot; daemon prio=10 tid=0x00a208f0 nid=0x8b8 waiting on condition
+[0..0]
+
+&quot;Finalizer&quot; daemon prio=9 tid=0x0003f610 nid=0x104 in Object.wait()
+[2caf000..2cafd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x11b13ed0&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:111)
+        - locked &lt;0x11b13ed0&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:127)
+        at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:159)
+
+&quot;Reference Handler&quot; daemon prio=10 tid=0x0003f9b0 nid=0xe64 in Object.wait()
+[2c6f000..2c6fd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x11b13c80&gt; (a java.lang.ref.Reference$Lock)
+        at java.lang.Object.wait(Object.java:429)
+        at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:115)
+        - locked &lt;0x11b13c80&gt; (a java.lang.ref.Reference$Lock)
+
+&quot;main&quot; prio=7 tid=0x00035300 nid=0xabc runnable [7f000..7fc3c]
+        at org.eclipse.swt.internal.win32.OS.WaitMessage(Native Method)
+        at org.eclipse.swt.widgets.Display.sleep(Display.java:3076)
+        at
+org.eclipse.ui.application.WorkbenchAdvisor.eventLoopIdle(WorkbenchAdvisor.java:344)
+        at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:1378)
+        at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:1348)
+        at
+org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:254)
+        at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:141)
+        at org.eclipse.ui.internal.ide.IDEApplication.run(IDEApplication.java:96)
+        at
+org.eclipse.core.internal.runtime.PlatformActivator$1.run(PlatformActivator.java:335)
+        at
+org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:273)
+        at
+org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:129)
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at
+sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+        at
+sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+        at java.lang.reflect.Method.invoke(Method.java:324)
+        at org.eclipse.core.launcher.Main.basicRun(Main.java:183)
+        at org.eclipse.core.launcher.Main.run(Main.java:644)
+        at org.eclipse.core.launcher.Main.main(Main.java:628)
+
+&quot;VM Thread&quot; prio=5 tid=0x009bdd80 nid=0x338 runnable
+
+&quot;VM Periodic Task Thread&quot; prio=10 tid=0x00a019c0 nid=0xcf8 waiting on condition
+&quot;Suspend Checker Thread&quot; prio=10 tid=0x00a038a0 nid=0x99c runnable
+
+Found one Java-level deadlock:
+=============================
+&quot;All Types Caching&quot;:
+  waiting to lock monitor 0x009c14dc (object 0x13b5baa8, a
+org.eclipse.pde.internal.core.WorkspaceModelManager),
+  which is held by &quot;Worker-1&quot;
+&quot;Worker-1&quot;:
+  waiting to lock monitor 0x009c167c (object 0x13b5cc40, a
+org.eclipse.pde.internal.core.PluginModelManager),
+  which is held by &quot;All Types Caching&quot;
+
+Java stack information for the threads listed above:
+===================================================
+&quot;All Types Caching&quot;:
+        at
+org.eclipse.pde.internal.core.WorkspaceModelManager.initializeWorkspaceModels(WorkspaceModelManager.java:438)
+        - waiting to lock &lt;0x13b5baa8&gt; (a
+org.eclipse.pde.internal.core.WorkspaceModelManager)
+        at
+org.eclipse.pde.internal.core.WorkspaceModelManager.getAllModels(WorkspaceModelManager.java:333)
+        at
+org.eclipse.pde.internal.core.PluginModelManager.initializeTable(PluginModelManager.java:411)
+        - locked &lt;0x13b5cc40&gt; (a org.eclipse.pde.internal.core.PluginModelManager)
+        at
+org.eclipse.pde.internal.core.PluginModelManager.getEntryTable(PluginModelManager.java:425)
+        at
+org.eclipse.pde.internal.core.PluginModelManager.findEntry(PluginModelManager.java:135)
+        at
+org.eclipse.pde.internal.core.RequiredPluginsInitializer.initialize(RequiredPluginsInitializer.java:36)
+        at
+org.eclipse.jdt.internal.core.JavaModelManager.initializeContainer(JavaModelManager.java:1261)
+        at
+org.eclipse.jdt.internal.core.JavaModelManager.initializeAllContainers(JavaModelManager.java:1226)
+        at
+org.eclipse.jdt.internal.core.JavaModelManager.getClasspathContainer(JavaModelManager.java:833)
+        at org.eclipse.jdt.core.JavaCore.getClasspathContainer(JavaCore.java:1184)
+        at
+org.eclipse.jdt.internal.core.JavaProject.getResolvedClasspath(JavaProject.java:1888)
+        at
+org.eclipse.jdt.internal.core.JavaProject.getResolvedClasspath(JavaProject.java:1798)
+        at
+org.eclipse.jdt.internal.core.search.JavaSearchScope.add(JavaSearchScope.java:78)
+        at
+org.eclipse.jdt.internal.core.search.JavaWorkspaceScope.initialize(JavaWorkspaceScope.java:80)
+        at
+org.eclipse.jdt.internal.core.search.JavaSearchScope.&lt;init&gt;(JavaSearchScope.java:52)
+        at
+org.eclipse.jdt.internal.core.search.JavaWorkspaceScope.&lt;init&gt;(JavaWorkspaceScope.java:31)
+        at
+org.eclipse.jdt.core.search.SearchEngine.createWorkspaceScope(SearchEngine.java:423)
+        at
+org.eclipse.jdt.internal.corext.util.AllTypesCache.search(AllTypesCache.java:531)
+        at
+org.eclipse.jdt.internal.corext.util.AllTypesCache$TypeCacher.doSearchTypes(AllTypesCache.java:197)
+        at
+org.eclipse.jdt.internal.corext.util.AllTypesCache$TypeCacher.run(AllTypesCache.java:166)
+&quot;Worker-1&quot;:
+        at
+org.eclipse.pde.internal.core.PluginModelManager.initializeTable(PluginModelManager.java:407)
+        - waiting to lock &lt;0x13b5cc40&gt; (a
+org.eclipse.pde.internal.core.PluginModelManager)
+        at
+org.eclipse.pde.internal.core.PluginModelManager.getEntryTable(PluginModelManager.java:425)
+        at
+org.eclipse.pde.internal.core.PluginModelManager.findEntry(PluginModelManager.java:153)
+        at
+org.eclipse.pde.internal.core.PluginModelManager.findModel(PluginModelManager.java:157)
+        at
+org.eclipse.pde.internal.core.PluginModelManager.findPluginModel(PluginModelManager.java:166)
+        at org.eclipse.pde.internal.core.PDECore.findPlugin(PDECore.java:291)
+        at
+org.eclipse.pde.internal.core.feature.FeatureImport.parse(FeatureImport.java:115)
+        at
+org.eclipse.pde.internal.core.feature.Feature.parseRequires(Feature.java:229)
+        at org.eclipse.pde.internal.core.feature.Feature.parse(Feature.java:192)
+        at
+org.eclipse.pde.internal.core.feature.AbstractFeatureModel.processDocument(AbstractFeatureModel.java:91)
+        at
+org.eclipse.pde.internal.core.feature.AbstractFeatureModel.load(AbstractFeatureModel.java:67)
+        at
+org.eclipse.pde.internal.core.WorkspaceModelManager.loadModel(WorkspaceModelManager.java:574)
+        at
+org.eclipse.pde.internal.core.WorkspaceModelManager.createFeatureModel(WorkspaceModelManager.java:478)
+        at
+org.eclipse.pde.internal.core.WorkspaceModelManager.addWorkspaceModel(WorkspaceModelManager.java:603)
+        at
+org.eclipse.pde.internal.core.WorkspaceModelManager.initializeWorkspaceModels(WorkspaceModelManager.java:461)
+        - locked &lt;0x13b5baa8&gt; (a
+org.eclipse.pde.internal.core.WorkspaceModelManager)
+        at
+org.eclipse.pde.internal.core.WorkspaceModelManager.getAllModels(WorkspaceModelManager.java:333)
+        at
+org.eclipse.pde.internal.ui.launcher.LauncherUtils.getAffectedProjects(LauncherUtils.java:321)
+        at
+org.eclipse.pde.internal.ui.launcher.JUnitLaunchConfiguration.getBuildOrder(JUnitLaunchConfiguration.java:434)
+        at
+org.eclipse.debug.core.model.LaunchConfigurationDelegate.buildForLaunch(LaunchConfigurationDelegate.java:79)
+        at
+org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:550)
+        at
+org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:788)
+        at org.eclipse.debug.internal.ui.DebugUIPlugin$6.run(DebugUIPlugin.java:955)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:66)
+
+Found 1 deadlock.</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=70557#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">David Saff</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=david&#64;saff.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=david&#64;saff.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-11-28 23:37:27 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=16193&amp;action=diff" name="attach_16193" title="Patch to fix">attachment 16193</a> <a href="attachment.cgi?id=16193&amp;action=edit" title="Patch to fix">[details]</a></span>
+Patch to fix
+
+This patch changes WorkspaceModelManager.getFeatureModels to obtain the lock on
+PDECore.getDefault.getModelManager() first, which is the same order that the
+JavaBuilder appears to obtain the locks.  This fixes the bug for me.</pre>
+    </div>
+
+    <div id="c2" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=70557#c2">Comment 2</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Wassim Melhem</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=wassim.melhem&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=wassim.melhem&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-11-29 17:15:59 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Patch looks good.  For the long term, we might need to revisit how/when to 
+initialize the features.  But for now, this is good.</pre>
+    </div>
+
+    <div id="c3" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=70557#c3">Comment 3</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Wassim Melhem</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=wassim.melhem&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=wassim.melhem&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-11-29 17:16:16 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">applied patch.  thank you.</pre>
+    </div>
+
+    <div id="c4" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=70557#c4">Comment 4</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Wassim Melhem</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=wassim.melhem&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=wassim.melhem&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-11-29 17:31:35 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">although it's good in its own right, I'm not sure the suggested solution 
+addresses the particular deadlock that is subject of this bug report.
+
+getFeatureModels() does not play a part in this deadlock.
+
+Here we have one thread that has the lock on 
+PluginModelManager.initializeTable and waiting to acquire the lock on 
+WorkspaceModelManager.initializeAllModels,
+
+while another thread holding the lock to the latter and trying to acquire the 
+lock to the former.</pre>
+    </div>
+
+    <div id="c5" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=70557#c5">Comment 5</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Wassim Melhem</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=wassim.melhem&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=wassim.melhem&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-11-29 18:16:01 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Fixed.  Avoided deadlock situation by having the FeatureImport.parse() not 
+prematurely query the plugin model manager for a plugin.</pre>
+    </div>
+
+    <div id="c6" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=70557#c6">Comment 6</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Wassim Melhem</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=wassim.melhem&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=wassim.melhem&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-12-06 14:27:20 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Eclipse froze"
+   href="show_bug.cgi?id=80292">Bug 80292</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=70557">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=70557">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=70557">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=70557&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=70557" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>

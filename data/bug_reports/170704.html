@@ -1,0 +1,1969 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>170704 &ndash; [compiler][null][enh] separate &quot;null dereference&quot; and &quot;null reference&quot; compiler options</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "170704 – [compiler][null][enh] separate \"null dereference\" and \"null reference\" compiler options",
+                             "show_bug.cgi?id=170704" );
+        document.title = "170704 – [compiler][null][enh] separate \"null dereference\" and \"null reference\" compiler options";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "170704 – [compiler][null][enh] separate \"null dereference\" and \"null reference\" compiler options", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_VERIFIED
+                 bz_product_JDT
+                 bz_component_Core
+                 bz_bug_170704 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;170704</span>
+
+        <span id="subtitle" class="subheader">[compiler][null][enh] separate &quot;null dereference&quot; and &quot;null reference&quot; compiler options</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2012-06-23 09:29:42 EDT</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=170704&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=170704" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2012-06-23 09:29:42">
+  <input type="hidden" name="id" value="170704">
+  <input type="hidden" name="token" value="1629869388-PR182G4XHQrncazRqT2LTzRzrpYz5O-Ab8s5SxgThNE">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=170704"><b>Bug&nbsp;170704</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">[compiler][null][enh] separate &quot;null dereference&quot; and &quot;null reference&quot; compiler options</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span><span title="[compiler][null][enh] separate &quot;null dereference&quot; and &quot;null reference&quot; compiler options">[compiler][null][enh] separate &quot;null dereference&quot; and &quot;null reference&quot; compil...
+        </span>
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      '[compiler][null][enh] separate \"null dereference\" and \"null reference\" compiler options' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">VERIFIED
+          FIXED
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >JDT
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >Eclipse Project
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=JDT"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >Core
+
+  (<a href="buglist.cgi?component=Core&amp;product=JDT&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>3.3 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">All
+        All
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P3
+       major<span id="votes_container">
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=170704#vote_170704">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>3.3 M6 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">Maxime Daniel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=maxime_daniel&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=maxime_daniel&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard">
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'jdt-core-inbox\x40eclipse.org',
+        '');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          <tr>
+    <th class="field_label">
+      <label>Duplicates (2)</label>:
+    </th>
+    <td class="field_value">
+      <span id="duplicates"><a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - [compiler][null][enh] Add ability for setting severity level of different null-references problems"
+   href="show_bug.cgi?id=138009">138009</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - [compiler][null] the filtering of problems of different severities should be controlled by different settings"
+   href="show_bug.cgi?id=155769">155769</a> 
+      </span>
+      (<a href="buglist.cgi?bug_id=138009,155769">view as bug list</a>)
+    </td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+
+  </td>
+  </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2007-01-16 17:44 EST by <span class="vcard"><span class="fn">Perry James</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=perry&#64;dsrg.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=perry&#64;dsrg.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2012-06-23 09:29 EDT
+      (<a href="show_activity.cgi?id=170704">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>7 
+          users
+          <span id="cc_edit_area_showhide_container" class="bz_default_hidden">
+            (<a href="#" id="cc_edit_area_showhide">show</a>)
+          </span>
+        <div id="cc_edit_area">
+          <br>
+            <select id="cc" multiple="multiple" size="5" >
+                <option value="chalin">chalin</option>
+                <option value="daniel_megert">daniel_megert</option>
+                <option value="lauzon">lauzon</option>
+                <option value="m8r-eehfmm">m8r-eehfmm</option>
+                <option value="markus.kell.r">markus.kell.r</option>
+                <option value="martinae">martinae</option>
+                <option value="philippe_mulet">philippe_mulet</option>
+            </select>
+        </div>
+          <script type="text/javascript">
+            hideEditableField( 'cc_edit_area_showhide_container', 
+                               'cc_edit_area', 
+                               'cc_edit_area_showhide', 
+                               '', 
+                               '');  
+          </script>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" >
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+      <tr id="a1" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=56990"
+               title="View the content of the attachment">
+          <b>patch for jdt.core</b></a>
+
+          <span class="bz_attach_extra_info">
+              (20.47 KB,
+                patch)
+
+            <br>
+            <a href="#attach_56990"
+               title="Go to the comment associated with the attachment">2007-01-16 17:46 EST</a>,
+
+            <span class="vcard"><span class="fn">Perry James</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=perry&#64;dsrg.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=perry&#64;dsrg.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=56990&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=56990&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a2" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=56991"
+               title="View the content of the attachment">
+          <b>patch for jdt.ui</b></a>
+
+          <span class="bz_attach_extra_info">
+              (4.03 KB,
+                patch)
+
+            <br>
+            <a href="#attach_56991"
+               title="Go to the comment associated with the attachment">2007-01-16 17:47 EST</a>,
+
+            <span class="vcard"><span class="fn">Perry James</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=perry&#64;dsrg.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=perry&#64;dsrg.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=56991&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=56991&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a3" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=56992"
+               title="View the content of the attachment">
+          <b>patch for jdt.tests.compiler</b></a>
+
+          <span class="bz_attach_extra_info">
+              (1.20 KB,
+                patch)
+
+            <br>
+            <a href="#attach_56992"
+               title="Go to the comment associated with the attachment">2007-01-16 17:48 EST</a>,
+
+            <span class="vcard"><span class="fn">Perry James</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=perry&#64;dsrg.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=perry&#64;dsrg.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=56992&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=56992&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a4" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=58555"
+               title="View the content of the attachment">
+          <b>Suggested fix + test cases</b></a>
+
+          <span class="bz_attach_extra_info">
+              (37.88 KB,
+                patch)
+
+            <br>
+            <a href="#attach_58555"
+               title="Go to the comment associated with the attachment">2007-02-08 09:12 EST</a>,
+
+            <span class="vcard"><span class="fn">Maxime Daniel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=maxime_daniel&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=maxime_daniel&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=58555&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=58555&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <span class="bz_attach_view_hide">
+            <a id="view_all" href="attachment.cgi?bugid=170704&amp;action=viewall">View All</a>
+        </span>
+        <a href="attachment.cgi?bugid=170704&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=170704&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170704#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Perry James</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=perry&#64;dsrg.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=perry&#64;dsrg.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-16 17:44:48 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The JDT Core currently has a single compiler option (Null reference) to control the error/warning/ignore setting of both
+
+   1. the potential programming problem of null dereferences and
+   2. the unnecessary code of some checks against null. 
+
+This is unfortunate because one generally wants to have the former reported as errors and the latter as warnings (or even ignored because many are false positives).</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170704#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Perry James</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=perry&#64;dsrg.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=perry&#64;dsrg.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-16 17:46:43 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=56990&amp;action=diff" name="attach_56990" title="patch for jdt.core">attachment 56990</a> <a href="attachment.cgi?id=56990&amp;action=edit" title="patch for jdt.core">[details]</a></span>
+patch for jdt.core
+
+The attached patches address this issue by splitting the &quot;Null reference&quot; compiler option into two:
+* Null dereference
+* Null reference
+
+All unit tests in org.eclipse.jdt.core.tests.RunJDTCoreTests (project org.eclipse.jdt.core.tests.model) pass both before and after all 3 patches are applied to CVS HEAD.  A discussion of the changes follows.
+
+project org.eclipse.jdt.core:
+  org.eclipse.jdt.internal.compiler.batch.Main.java:
+    added handling for the warning token &quot;nullDereference&quot;
+    modified handling of the &quot;null&quot; warning token to enable both null references and dereferences
+  org.eclipse.jdt.core.compiler.IProblem.java:
+    added 2 new entries for null dereferences.  '''Can the values 417 &amp; 418 be used?'''
+  org.eclipse.jdt.internal.compiler.ast.Expression.java:
+    in method checkNPE:
+      added parameter isDereference, which is passed to flowContext.recordUsingNullReference
+      provided a version of checkNPE with the original signature that passes false for isDereference
+  org.eclipse.jdt.internal.compiler.ast.ArrayReference.java:
+                                        FieldReference.java:
+                                        ForeachStatement.java:
+                                        MessageSend.java:
+                                        QualifiedNameReference.java:
+    replaced calls to the original checkNPE method with calls to the new one with true passed for isDereference
+  org.eclipse.jdt.internal.compiler.flow.FlowContext.java:
+                                         FinallyFlowContext.java:
+                                         LoopingFlowContext.java:
+    in method recordUsingNullReference:
+      added parameter isDereference
+      in the case where checkType is MayNull, the only one possible when called from checkNPE
+      the method called on the problem reporter is called with the new isDereference parameter
+  org.eclipse.jdt.internal.compiler.impl.CompilerOptions.java:
+    added new String constant for &quot;report null dereference&quot;
+    added new long constant, bit 51.  Can this one be used?
+    added null dereferences to the get &amp; set map methods
+    added null dereferences to the value returned by the method warningOptionNames
+    added handling of new warning token to methods warningTokenFromIrritant &amp; warningTokenToIrritant
+    added null dereferences to warningTokens
+  org.eclipse.jdt.internal.compiler.problem.ProblemReporter.java:
+    added entries for null dereference to the method getIrritant &amp; getProblemCategory
+    for methods localVariableCanOnlyBeNull &amp; localVariableMayBeNull
+      added parameter isDereference
+      the problem (and thus the severity) are determined by isDereference
+      added version of methods with original signatures that pass false for isDereference
+  org.eclipse.jdt.internal.compiler.problem.messages.properties:
+    entries added for the two new IProblems
+
+project org.eclipse.jdt.ui:
+  ProblemSeverities.java:
+    added a Key for  for Null Dereferences
+    added a Label and ComboBox for Null Dereferences
+  PreferencesMessages.properties
+  PreferencesMessages.java:
+    added entries for Null Dereferences
+
+
+project org.eclipse.jdt.core.tests.compiler:
+  NullReferenceTest.java :
+    added the NullDereference option to the value returned by getCompilerOptions() .</pre>
+    </div>
+
+    <div id="c2" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170704#c2">Comment 2</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Perry James</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=perry&#64;dsrg.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=perry&#64;dsrg.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-16 17:47:10 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=56991&amp;action=diff" name="attach_56991" title="patch for jdt.ui">attachment 56991</a> <a href="attachment.cgi?id=56991&amp;action=edit" title="patch for jdt.ui">[details]</a></span>
+patch for jdt.ui</pre>
+    </div>
+
+    <div id="c3" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170704#c3">Comment 3</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Perry James</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=perry&#64;dsrg.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=perry&#64;dsrg.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-16 17:48:02 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=56992&amp;action=diff" name="attach_56992" title="patch for jdt.tests.compiler">attachment 56992</a> <a href="attachment.cgi?id=56992&amp;action=edit" title="patch for jdt.tests.compiler">[details]</a></span>
+patch for jdt.tests.compiler
+
+3 of 3 patches</pre>
+    </div>
+
+    <div id="c4" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170704#c4">Comment 4</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Perry James</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=perry&#64;dsrg.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=perry&#64;dsrg.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-20 12:41:39 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Severity changed to major. The current compiler option is practically unusable as it stands because too many false positives are being reported: e.g. in org.eclipse.jdt.core v_731 alone, there are over 300 false positives. As a consequence, it seems that the compiler option is generally set to Ignore. This is unfortunate because the feature can be useful at detecting potential null dereferences. The given patches help take a step in the direction of gaining control / reducing the false positives.
+</pre>
+    </div>
+
+    <div id="c5" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170704#c5">Comment 5</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Maxime Daniel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=maxime_daniel&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=maxime_daniel&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-22 02:22:44 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">See also <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - [compiler][null][enh] Add ability for setting severity level of different null-references problems"
+   href="show_bug.cgi?id=138009">bug 138009</a> that asks for the separation of tunings on slightly different criteria (for one part, the same as here; for the other part, a separation of the cases in which we are certain of the null value).
+This would leave us with a matrix which would track level of certainty on one of its axis, and dereference vs reference on the other axis - not making any comment on the proper way to cope with this, yet.</pre>
+    </div>
+
+    <div id="c6" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170704#c6">Comment 6</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Maxime Daniel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=maxime_daniel&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=maxime_daniel&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-24 04:15:04 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">If I try to start from the UI, what about adding two check boxes under the 'Null reference:' heading in the preferences:
+- 'Check potential null values'; would raise the warning level of 'may be null' messages up to the one chosen for the whole category if true, else would ignore them and only retain 'can only be (non) null' ones;
+- 'Check comparisons to null'; would raise the warning level of messages raised upon 'a == null' cases to the one chosen for the whole category if true, else would ignore them and only check null dereferences.
+
+This is less complete than the same design with three levels for each of the categories above, but seems to cover the most interesting combinations. It also clearly subordinates all null checks to a single main option and minimizes UI and conceptual clutter.</pre>
+    </div>
+
+    <div id="c7" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170704#c7">Comment 7</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Patrice Chalin</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=chalin&#64;ksu.edu" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=chalin&#64;ksu.edu" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-25 14:29:18 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=170704#c6">comment #6</a>)
+
+Interesting proposal which may indeed reduced clutter and offer some 
+flexibility. Just to be sure, can you confirm that the following is 
+correct: if the compiler option is set to Error, and the two check 
+boxes are unchecked, then only null dereferences (exp.field or exp.m()) 
+in which exp was known to be null (by flow analysis (FA)) would be reported as an error, all other cases would be ignored.  Right?
+
+As currently implemented, FA also checks the case where null is being 
+cast to a type; would reporting of this error also be controlled by the 
+'Check comparisons to null' check box?  Might it make sense to have a 
+separate check box -- particularly since the JLS allows casts of null to 
+any type?
+
+In fact, instead of an 'Check comparisons to null' being disabled implying that dereference errors are reported, why not have multiple check boxes named with the checks they enable:
+  'Check dereferences'
+  'Check comparisons to null'
+and possibly
+  'Check null casts'</pre>
+    </div>
+
+    <div id="c8" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170704#c8">Comment 8</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Maxime Daniel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=maxime_daniel&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=maxime_daniel&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-26 02:19:33 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=170704#c7">comment #7</a>)
+<span class="quote">&gt; (In reply to <a href="show_bug.cgi?id=170704#c6">comment #6</a>)
+&gt; 
+&gt; Interesting proposal which may indeed reduced clutter and offer some 
+&gt; flexibility. Just to be sure, can you confirm that the following is 
+&gt; correct: if the compiler option is set to Error, and the two check 
+&gt; boxes are unchecked, then only null dereferences (exp.field or exp.m()) 
+&gt; in which exp was known to be null (by flow analysis (FA)) would be reported as
+&gt; an error, all other cases would be ignored.  Right?</span >
+Right.
+<span class="quote">&gt; 
+&gt; As currently implemented, FA also checks the case where null is being 
+&gt; cast to a type; would reporting of this error also be controlled by the 
+&gt; 'Check comparisons to null' check box?  Might it make sense to have a 
+&gt; separate check box -- particularly since the JLS allows casts of null to 
+&gt; any type?</span >
+I would avoid adding yet another case, to keep some balance with the other options (I mean, options that are not in the real of null reference analysis). Then it would make sense to associate casts the same error level as comparisons.
+<span class="quote">&gt; 
+&gt; In fact, instead of an 'Check comparisons to null' being disabled implying that
+&gt; dereference errors are reported, why not have multiple check boxes named with
+&gt; the checks they enable:
+&gt;   'Check dereferences'
+&gt;   'Check comparisons to null'
+&gt; and possibly
+&gt;   'Check null casts'
+&gt; </span >
+I would consider that 'Check deferences' is always on by default. This is the main point of our null analysis indeed. And as I write above, I feel that making the separate case of casts stand by itself is a bit overkill.
+
+Anyway, the UI will be Martin's team call. Thinking a bit more about this yesterday, I thought I should have the complete options ready at the compiler level (that is, Ignore, Warning, Error for null analysis as a whole, for null comparisons, and for potential null values), probably caping the two later by the former one. Then having check boxes or drop down lists in the UI would be a call about simplicity and overall UI balance vs completeness.</pre>
+    </div>
+
+    <div id="c9" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170704#c9">Comment 9</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Maxime Daniel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=maxime_daniel&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=maxime_daniel&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-29 08:42:11 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Discussed the topic with Philippe today, and we came up with the following proposals:
+
+a) add checkboxes to the existing UI as follows; the main advantage is that we
+   do not break any caller, since the existing option will behave as it did 
+   before (provided that checkboxes are checked by default):
+    Null reference: &lt;E/W/I drop down&gt;
+    	Potential null values &lt;checkbox&gt;
+    	Redundant null checks &lt;checkbox&gt;
+   note that any attempt to replace the checkboxes with drop downs is likely to
+   introduce breaking changes since this would add first class options and we do
+   not correlate such options by ourselves (that is, users who would want to 
+   get the same errors on the same code through the programmatic interface 
+   would have to set all three options instead of the original one only);
+b) separate more agressively the null reference vs null check concerns into
+   two specific options:
+    Potential programming problems
+    	Null reference: &lt;E/W/I&gt;
+    		Include potential nulls: &lt;E/W/I&gt;
+    Unnecessary code
+    	Redundant null checks: &lt;E/W/I&gt;
+   this breaks existing users who would rely on a single option to activate
+   all checks, but Philippe argues that since the default was Ignore so far, we
+   should not be causing too much grief; also, Include potential nulls should be
+   capped by Null reference in the user interface (especially, having Null
+   reference set to Ignore should disable the Include potential nulls control).
+   Note that the redundant null checks are normally not needed on potential null
+   values, hence there is no sub-choice for that case. The main advantage of 
+   that solution would be to enable the following scenario:
+            Null reference: Error
+    		Include potential nulls: Warning
+   which could especially make sense when combined with 
+   SuppressWarnings(&quot;null&quot;).
+
+I will fup with JDT UI to see what they believe is best.
+
+On another topic, while we do complain when a variable that is known to be null is used within an instanceof test, we do not complain on casts per se. And complaining on:
+X x = null;
+if (x instanceof Y) { // x can only be null
+  // do something
+}
+is definitely very close to complaining on:
+X x = null;
+if (x != null ) { // x can only be null
+  if (x instanceof Y) {
+    // do something
+  }
+}
+which is equivalent at runtime (x being null, x instanceof Y will answer false).
+So I would stick to the idea that instanceof related checks are in the realm of redundant null checks, and that no option is needed to address them 
+specifically.
+</pre>
+    </div>
+
+    <div id="c10" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170704#c10">Comment 10</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Maxime Daniel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=maxime_daniel&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=maxime_daniel&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-29 09:12:01 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Another case that we would place under the redundant checks option, even if it is not a check per se:
+if (x == null) {
+  x = null; // x can only be null
+}</pre>
+    </div>
+
+    <div id="c11" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170704#c11">Comment 11</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Markus Keller</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=markus.kell.r&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=markus.kell.r&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-29 11:59:32 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I think (b) is superior, since it allows the user to configure different severities for definite and potential problems. And I agree with Philippe that it should not be a problem if we &quot;break&quot; old workspaces (you still get new functionality for it!).
+
+I see a problem in the UI: It feels wrong to have the (non-potential) &quot;Null reference&quot; node below &quot;Potential programming problems&quot;. I don't have a good solution yet, but maybe we should add a new top-level node like this:
+    &quot;Problems with 'null'&quot;
+        Null reference: &lt;E/W/I&gt;
+            Include potential nulls: &lt;E/W/I&gt;
+        Redundant null checks: &lt;E/W/I&gt;
+</pre>
+    </div>
+
+    <div id="c12" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170704#c12">Comment 12</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Maxime Daniel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=maxime_daniel&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=maxime_daniel&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-30 04:18:50 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - [compiler][null][enh] Add ability for setting severity level of different null-references problems"
+   href="show_bug.cgi?id=138009">Bug 138009</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c13" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170704#c13">Comment 13</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Philipe Mulet</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=philippe_mulet&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=philippe_mulet&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-30 06:22:10 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Re: backward compatibility issues with using new options
+One concern is for tools generating source code (e.g. EMF), I think they usually rely on defaults (Ignore) so we may be on the safe side there.
+
+Now, thoughts for the future... if we have these options, it feels like definite null refs should be flagged as warnings... but this needs to be assessed for source codegen tools (though likely would indicate a bug in the tool).</pre>
+    </div>
+
+    <div id="c14" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170704#c14">Comment 14</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Patrice Chalin</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=chalin&#64;ksu.edu" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=chalin&#64;ksu.edu" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-31 11:42:23 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Regarding <a href="show_bug.cgi?id=170704#c9">comment #9</a>: among (a) and (b) our group is in favor of (b). 
+Regarding <a href="show_bug.cgi?id=170704#c11">comment #11</a>:
+
+<span class="quote">&gt; I see a problem in the UI: It feels wrong to have the (non-potential) 
+&gt; &quot;Null reference&quot; node below &quot;Potential programming problems&quot;. ...</span >
+
+I agree. Given (b):
+
+<span class="quote">&gt;  Potential programming problems
+&gt;    Null reference: &lt;E/W/I&gt;
+&gt;      Include potential nulls: &lt;E/W/I&gt;</span >
+
+it seems peculiar to have a sub-subcategory named &quot;include potentials...&quot; under the general category of &quot;Potential programming problems&quot;.
+
+One could consider introducing a top level &quot;REAL programming problems&quot; but genuine errors should be (and are usually) unconditionally reported. One conceptually cleaner solution that fits in with the current top-level categorization is to have:
+(c)
+
+  Potential programming problems
+    Null reference: &lt;E/W/I&gt;
+  Unnecessary code
+    Redundant null checks: &lt;E/W/I&gt;
+
+where &quot;Null reference&quot; would be understood to mean &quot;Include potential nulls&quot; (because it is under the &quot;Potential programming problems&quot; category).  That would leave us with the compiler always reporting &quot;Null dereferences&quot; as a warning (error?) -- if needed, suppressed with &#64;SuppressWarnings. NPEs are such a common programming fault, I cannot see why someone would want a null dereference to be silently ignored by the compiler if the compiler analysis determined that the receiver expression _is_ known to be null (even in the case of autogenerated code -- the only case that I can see this happening would be in dead or unreachable code, but then it should be annotated as such).
+
+(d) Yet another alternative which avoids the possible inconsistency in terminology:
+
+  Potential programming problems
+    Null reference: &lt;E/[W]/I&gt;
+      Include &quot;maybe null&quot;: &lt;E/W/[I]&gt;
+  Unnecessary code
+    Redundant null checks: &lt;E/W/[I]&gt;</pre>
+    </div>
+
+    <div id="c15" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170704#c15">Comment 15</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Patrice Chalin</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=chalin&#64;ksu.edu" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=chalin&#64;ksu.edu" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-31 11:44:14 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">One last thing about terminology, just to be clear: by &quot;Null reference&quot; do you mean 'checks of null dereferences' through expressions of the form exp.* and exp[*]?  To me &quot;reference&quot; means 'to refer to' and hence &quot;a == null&quot; is an expression in which there is reference to null. In contrast, &quot;dereference&quot; means an explicit attempt to 'follow a pointer' in an attempt to access an object or value.  Maybe I have my terminology wrong, but at least Wikipedia agrees with me -- <a href="http://en.wikipedia.org/wiki/Dereference">http://en.wikipedia.org/wiki/Dereference</a> ;-).  Hence, I would recommend renaming &quot;Null reference&quot; to &quot;Null dereference&quot;.</pre>
+    </div>
+
+    <div id="c16" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170704#c16">Comment 16</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Maxime Daniel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=maxime_daniel&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=maxime_daniel&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-01 00:30:41 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">You are right that what we would track for 'Null reference' would now be null dereferences. In the existing code, it used to cover the whole null-related series of errors, hence was a rather good name. Now that we want to separate concerns, a more precise name would be welcome. Changing the option name would compell us to deprecate its former value though, which is a call I'll leave to Philippe, especially since we are a bit late in the 3.3 cycle. Even if we decided to keep the option name as it is today, the UI team may still consider adopting the better 'Null dereference' terminology in the UI.
+Regarding a change of the default from I to W for null dereferences (but not for potential null dereferences), we are debating about it. My own position would be that we know a few cases that look odd, even if the code could make the situation clearer, and that we'd need to give it a try on a few key code sets before making our decision. I'll do some tests in the large once I have the code ready.</pre>
+    </div>
+
+    <div id="c17" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170704#c17">Comment 17</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Maxime Daniel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=maxime_daniel&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=maxime_daniel&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-08 07:17:40 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">A full source workspace build using only null dereferences option raised only three errors, which look correct (that is, the code is wrong). I opened <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - Potential NPEs in source code"
+   href="show_bug.cgi?id=173432">bug 173432</a> against the affected component.
+I will build a core jar against HEAD and ask other interested parties to make a few tests before we discuss further the opportunity to activate the null dereference warning by default.</pre>
+    </div>
+
+    <div id="c18" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170704#c18">Comment 18</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Maxime Daniel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=maxime_daniel&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=maxime_daniel&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-08 08:09:08 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I have a jdt core plugin at hand that will only associate the null ref preference of the UI to the null dereference check (basically because we reuse the existing option for null dereference, and the UI does not position the two newer options yet). Users interested in testing this against their code to tell us whether activating the warning on null dereference by default would hurt them or not, please speak up.
+I'll attach the matching patch here as well as soon as the tests terminate on my machine.</pre>
+    </div>
+
+    <div id="c19" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170704#c19">Comment 19</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Maxime Daniel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=maxime_daniel&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=maxime_daniel&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-08 09:12:22 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=58555&amp;action=diff" name="attach_58555" title="Suggested fix + test cases">attachment 58555</a> <a href="attachment.cgi?id=58555&amp;action=edit" title="Suggested fix + test cases">[details]</a></span>
+Suggested fix + test cases
+
+This patch only addresses changes in JDT Core. Do not release without a matching JDT UI contribution (else the null checks and potential nulls won't get reported ever, since the corresponding options won't get set by the UI).</pre>
+    </div>
+
+    <div id="c20" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170704#c20">Comment 20</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Aeschlimann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=martinae&#64;microsoft.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=martinae&#64;microsoft.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-22 04:49:49 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Suggested fix looks good to me. Please open a bug against JDT/UI when this is released so that we add the UI.</pre>
+    </div>
+
+    <div id="c21" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170704#c21">Comment 21</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Philipe Mulet</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=philippe_mulet&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=philippe_mulet&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-23 12:30:35 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">+1</pre>
+    </div>
+
+    <div id="c22" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170704#c22">Comment 22</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Maxime Daniel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=maxime_daniel&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=maxime_daniel&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-26 03:53:17 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Released for 3.3 M6.</pre>
+    </div>
+
+    <div id="c23" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170704#c23">Comment 23</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eric Jodet</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eric_jodet&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eric_jodet&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-03-20 06:53:28 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Verified for 3.3 M6 using build I20070319-1335</pre>
+    </div>
+
+    <div id="c24" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=170704#c24">Comment 24</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Stephan Herrmann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=stephan.herrmann&#64;berlin.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=stephan.herrmann&#64;berlin.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2012-06-23 09:29:42 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - [compiler][null] the filtering of problems of different severities should be controlled by different settings"
+   href="show_bug.cgi?id=155769">Bug 155769</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=170704">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=170704">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=170704">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=170704&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=170704" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>

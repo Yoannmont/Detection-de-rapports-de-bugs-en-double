@@ -1,0 +1,3885 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>105554 &ndash; cyclic symbolic link causes java.lang.OutOfMemoryError: Java heap space</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "105554 – cyclic symbolic link causes java.lang.OutOfMemoryError: Java heap space",
+                             "show_bug.cgi?id=105554" );
+        document.title = "105554 – cyclic symbolic link causes java.lang.OutOfMemoryError: Java heap space";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "105554 – cyclic symbolic link causes java.lang.OutOfMemoryError: Java heap space", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_VERIFIED
+                 bz_product_Platform
+                 bz_component_Resources
+                 bz_bug_105554 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;105554</span>
+
+        <span id="subtitle" class="subheader">cyclic symbolic link causes java.lang.OutOfMemoryError: Java heap space</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2018-07-30 09:03:30 EDT</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=105554&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=105554" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2018-07-30 09:03:30">
+  <input type="hidden" name="id" value="105554">
+  <input type="hidden" name="token" value="1629876342-aVFb-PVdxbFu4FR5KRajYgvncarZf4vxTijzuRYOgxQ">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=105554"><b>Bug&nbsp;105554</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">cyclic symbolic link causes java.lang.OutOfMemoryError: Java heap space</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span>cyclic symbolic link causes java.lang.OutOfMemoryError: Java heap space
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      'cyclic symbolic link causes java.lang.OutOfMemoryError: Java heap space' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">VERIFIED
+          FIXED
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >Platform
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >Eclipse Project
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=Platform"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >Resources
+
+  (<a href="buglist.cgi?component=Resources&amp;product=Platform&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>3.3 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">All
+        Unix All
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P3
+       normal<span id="votes_container">
+      with
+      <a href="page.cgi?id=voting/bug.html&amp;bug_id=105554">9 
+            votes</a>
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=105554#vote_105554">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>3.3 M7 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard">
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'platform-resources-inbox\x40eclipse.org',
+        '');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >greatbug
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          <tr>
+    <th class="field_label">
+      <label>Duplicates (6)</label>:
+    </th>
+    <td class="field_value">
+      <span id="duplicates"><a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Eclipse does not check for symlinks on Unix."
+   href="show_bug.cgi?id=131461">131461</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Crash while starting up because of symbolic link"
+   href="show_bug.cgi?id=145200">145200</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - If I have a link file like this : &quot;ln -s ../ src&quot; in my project , Eclipse will easily lead to out of memory while refesh the project ."
+   href="show_bug.cgi?id=161014">161014</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - If I have a link file like this : &quot;ln -s ../ src&quot; in my project , Eclipse will easily lead to out of memory while refesh the project ."
+   href="show_bug.cgi?id=161015">161015</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - fail to load project which contains cycle link path"
+   href="show_bug.cgi?id=172160">172160</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - [Directory parsing] Cyclically linked directories cause Eclipse to hang and then to crash with an out-of-memory exception"
+   href="show_bug.cgi?id=215047">215047</a> 
+      </span>
+      (<a href="buglist.cgi?bug_id=131461,145200,161014,161015,172160,215047">view as bug list</a>)
+    </td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+<a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - Contribute symlink-enabled liblocalfile for Linux x86_64"
+   href="show_bug.cgi?id=184433">184433</a> 
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+<a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - OutOfMemoryError during Project Refresh due to cyclic symbolic links"
+   href="show_bug.cgi?id=232426">232426</a> 
+  </td>
+  </tr>
+
+    <tr>
+      <th>&nbsp;</th>
+
+      <td id="show_dependency_tree_or_graph">
+        Show dependency <a href="showdependencytree.cgi?id=105554&amp;hide_resolved=1">tree</a>
+
+      </td>
+    </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2005-07-29 03:07 EDT by <span class="vcard"><span class="fn">Hironori Komaba</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=sportacandy&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=sportacandy&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2018-07-30 09:03 EDT
+      (<a href="show_activity.cgi?id=105554">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>15 
+          users
+          <span id="cc_edit_area_showhide_container" class="bz_default_hidden">
+            (<a href="#" id="cc_edit_area_showhide">show</a>)
+          </span>
+        <div id="cc_edit_area">
+          <br>
+            <select id="cc" multiple="multiple" size="5" >
+                <option value="austin_zhang">austin_zhang</option>
+                <option value="David.Biesack">David.Biesack</option>
+                <option value="eclipse.bsquare">eclipse.bsquare</option>
+                <option value="eclipse">eclipse</option>
+                <option value="hashproduct+eclipse">hashproduct+eclipse</option>
+                <option value="hydrophobia">hydrophobia</option>
+                <option value="loskutov">loskutov</option>
+                <option value="mark_belanger">mark_belanger</option>
+                <option value="martin.gutschelhofer">martin.gutschelhofer</option>
+                <option value="mayxu77">mayxu77</option>
+                <option value="mober.at+eclipse">mober.at+eclipse</option>
+                <option value="oscarrr110">oscarrr110</option>
+                <option value="rudolf.zimmel">rudolf.zimmel</option>
+                <option value="tlb">tlb</option>
+                <option value="wbprio">wbprio</option>
+            </select>
+        </div>
+          <script type="text/javascript">
+            hideEditableField( 'cc_edit_area_showhide_container', 
+                               'cc_edit_area', 
+                               'cc_edit_area_showhide', 
+                               '', 
+                               '');  
+          </script>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" ><ul class="bug_urls">
+          <li><img src="//dev.eclipse.org/images/bugs-16x16.png"> <a class="bz_bug_link 
+          bz_status_CLOSED  bz_closed"
+   title="CLOSED WONTFIX - UnifiedTree misses linked directories in some cases"
+   href="show_bug.cgi?id=537449">537449</a>
+          </li>
+          <li><img src="//dev.eclipse.org/images/bugs-16x16.png"> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - JUnit tests for recursive symlinks"
+   href="show_bug.cgi?id=185247">185247</a>
+          </li></ul>
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+      <tr id="a1" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=40924"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">One way to solve the endless loop during refresh for recursive symlinks</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (10.19 KB,
+                patch)
+
+            <br>
+            <a href="#attach_40924"
+               title="Go to the comment associated with the attachment">2006-05-10 08:27 EDT</a>,
+
+            <span class="vcard"><span class="fn">Max Weninger</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=max.weninger&#64;windriver.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=max.weninger&#64;windriver.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=40924&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=40924&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a2" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=48520"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Updated patch</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (19.61 KB,
+                patch)
+
+            <br>
+            <a href="#attach_48520"
+               title="Go to the comment associated with the attachment">2006-08-23 16:04 EDT</a>,
+
+            <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=48520&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=48520&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a3" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=48580"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Updated patch</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (11.56 KB,
+                patch)
+
+            <br>
+            <a href="#attach_48580"
+               title="Go to the comment associated with the attachment">2006-08-24 09:38 EDT</a>,
+
+            <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=48580&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=48580&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a4" class="bz_contenttype_application_octet-stream bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=50494"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">recursive symlink example</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (16.51 KB,
+                application/octet-stream)
+
+            <br>
+            <a href="#attach_50494"
+               title="Go to the comment associated with the attachment">2006-09-19 13:54 EDT</a>,
+
+            <span class="vcard"><span class="fn">Max Weninger</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=max.weninger&#64;windriver.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=max.weninger&#64;windriver.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=50494&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a5" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=52979"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Updated my way to handle recursive symlinks</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (10.57 KB,
+                patch)
+
+            <br>
+            <a href="#attach_52979"
+               title="Go to the comment associated with the attachment">2006-10-31 07:32 EST</a>,
+
+            <span class="vcard"><span class="fn">Max Weninger</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=max.weninger&#64;windriver.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=max.weninger&#64;windriver.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=52979&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=52979&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a6" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=58388"
+               title="View the content of the attachment">
+          <b>Performance test</b></a>
+
+          <span class="bz_attach_extra_info">
+              (4.79 KB,
+                patch)
+
+            <br>
+            <a href="#attach_58388"
+               title="Go to the comment associated with the attachment">2007-02-06 18:13 EST</a>,
+
+            <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=58388&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=58388&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a7" class="bz_contenttype_application_x-compressed">
+        <td>
+            <a href="attachment.cgi?id=65204"
+               title="View the content of the attachment">
+          <b>Test projects for symbolic links. These break Eclipse 3.3M6!!</b></a>
+
+          <span class="bz_attach_extra_info">
+              (19.83 KB,
+                application/x-compressed)
+
+            <br>
+            <a href="#attach_65204"
+               title="Go to the comment associated with the attachment">2007-04-27 08:58 EDT</a>,
+
+            <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=65204&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a8" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=65205"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Patch fixing all recursive symbolic link issues in UnifiedTree</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (21.00 KB,
+                patch)
+
+            <br>
+            <a href="#attach_65205"
+               title="Go to the comment associated with the attachment">2007-04-27 09:20 EDT</a>,
+
+            <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+                  <span title="John Arthorne">john.arthorne</span>:
+                iplog+
+                <br>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=65205&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=65205&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a9" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=65390"
+               title="View the content of the attachment">
+          <b>Minor tweaks, code formatting, etc</b></a>
+
+          <span class="bz_attach_extra_info">
+              (21.53 KB,
+                patch)
+
+            <br>
+            <a href="#attach_65390"
+               title="Go to the comment associated with the attachment">2007-04-30 10:31 EDT</a>,
+
+            <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=65390&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=65390&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a10" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=65775"
+               title="View the content of the attachment">
+          <b>Patch adding performance counters (development-time only)</b></a>
+
+          <span class="bz_attach_extra_info">
+              (3.30 KB,
+                patch)
+
+            <br>
+            <a href="#attach_65775"
+               title="Go to the comment associated with the attachment">2007-05-03 10:48 EDT</a>,
+
+            <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=65775&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=65775&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a11" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=65778"
+               title="View the content of the attachment">
+          <b>Patch adding a UI Preference for suppressLinkedDuplicates</b></a>
+
+          <span class="bz_attach_extra_info">
+              (8.88 KB,
+                patch)
+
+            <br>
+            <a href="#attach_65778"
+               title="Go to the comment associated with the attachment">2007-05-03 10:52 EDT</a>,
+
+            <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=65778&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=65778&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <span class="bz_attach_view_hide">
+            <a href="#a0" onclick="return toggle_display(this);">Show
+              Obsolete</a> (6)
+            <a id="view_all" href="attachment.cgi?bugid=105554&amp;action=viewall&amp;hide_obsolete=1">View All</a>
+        </span>
+        <a href="attachment.cgi?bugid=105554&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=105554&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Hironori Komaba</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=sportacandy&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=sportacandy&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-07-29 03:07:42 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">An Eclipse project contains symbolic links as its child resources.
+If such symbolic link points to its ancestor directory, when the workspace
+refreshing is invoked (by pressing F5 key in the resource navigator, for 
+example), Eclipse is killed by 'java.lang.OutOfMemoryError: Java heap space'.
+
+This is caused by the infinite loop execution of
+  FileSystemResourceManager.refreshResource() --&gt; UnifiedTree.accept()</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Rafael Chaves</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse&#64;abstratt.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse&#64;abstratt.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-08-01 15:38:12 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">See also <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED WORKSFORME - problems with projects having recursive links on linux"
+   href="show_bug.cgi?id=42438">bug 42438</a>.</pre>
+    </div>
+
+    <div id="c2" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c2">Comment 2</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Udo Rader</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=udo.rader&#64;bestsolution.at" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=udo.rader&#64;bestsolution.at" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-08-24 03:54:01 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">This is even worse when having &quot;automatic refresh&quot; in action. A real
+showstopper, IMHO.</pre>
+    </div>
+
+    <div id="c3" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c3">Comment 3</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-08-24 10:34:12 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Having cycles in your file system is a show-stopper - if it hurts, don't do it.</pre>
+    </div>
+
+    <div id="c4" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c4">Comment 4</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Udo Rader</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=udo.rader&#64;bestsolution.at" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=udo.rader&#64;bestsolution.at" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-08-25 15:15:27 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Hmm, various other applications deal quite happily with it. A symlink that
+points to the containing directory is fine with all *nix filesystems and that's
+why one can do it.
+
+If an application does not deal with all normal situations a file system can be
+in, then the application is buggy.
+
+From my endusers point of view eclipse lacks appropriate deadlock prevention
+when dealing with the filesystem.</pre>
+    </div>
+
+    <div id="c5" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c5">Comment 5</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">James Sleeman</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=james&#64;gogo.co.nz" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=james&#64;gogo.co.nz" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-08-31 23:55:01 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=105554#c3">comment #3</a>)
+<span class="quote">&gt; Having cycles in your file system is a show-stopper - if it hurts, don't do it.</span >
+
+having cycles in your file system is a perfectly normal and acceptable practice.
+ Applications should use realpath to canonicalize directories and ensure there
+is no recursion before enumerating thier contents.
+
+I found this report because I tried adding a project containing a cyclic link,
+it was unsuccessful while other IDEs and editors have no issue with cyclicity.
+
+</pre>
+    </div>
+
+    <div id="c6" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c6">Comment 6</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Max Weninger</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=max.weninger&#64;windriver.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=max.weninger&#64;windriver.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-10-05 07:36:38 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=105554#c5">comment #5</a>)
+<span class="quote">&gt; (In reply to <a href="show_bug.cgi?id=105554#c3">comment #3</a>)
+&gt; &gt; Having cycles in your file system is a show-stopper - if it hurts, don't do it.
+&gt; 
+&gt; having cycles in your file system is a perfectly normal and acceptable practice.
+&gt;  Applications should use realpath to canonicalize directories and ensure there
+&gt; is no recursion before enumerating thier contents.</span >
+
+I can only agree! You will find such symlinks on nearly any linux system e.g. in
+/usr/include. Without starting a discussion if this practice is good or not the
+fact is that eclipse will have to handle such situations.
+
+BTW: it is not an &quot;infinite loop&quot; it will stop after 40 iterations but this
+also too much :-)
+
+We will use a fix by changing the native stat impl for linux systems in 
+libcore_3_1_0.so. There we check if the path is a link to &quot;.&quot; and if yes
+this path will be skipped.
+
+If you are interessted we can provide the patch.
+
+But of course the real fix would be to check the path for such situations 
+in the java part with calls like getCannonicalPath.</pre>
+    </div>
+
+    <div id="c7" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c7">Comment 7</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-10-05 09:40:35 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Sorry, my <a href="show_bug.cgi?id=105554#c3">comment #3</a> was a bit harsh - I think I was just reacting to the
+comment that the bug was a show-stopper (<a href="show_bug.cgi?id=105554#c2">comment #2</a>), which seemed odd because
+after four years of Eclipse being around this was the first bug on the subject.
+
+I agree it is a bug, and it should be fixed.  The suggested fix in <a href="show_bug.cgi?id=105554#c6">comment #6</a>
+seems insufficient, since a sym-link to the parent would presumably also create
+such a loop.</pre>
+    </div>
+
+    <div id="c8" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c8">Comment 8</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Max Weninger</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=max.weninger&#64;windriver.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=max.weninger&#64;windriver.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-10-05 14:26:14 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=105554#c7">comment #7</a>)
+<span class="quote">&gt; I agree it is a bug, and it should be fixed.  The suggested fix in <a href="show_bug.cgi?id=105554#c6">comment #6</a>
+&gt; seems insufficient, since a sym-link to the parent would presumably also create
+&gt; such a loop.</span >
+
+Sure it does only fix a special problem that eclipse currently has.
+But &quot;real&quot; symlink loops are not the normal case
+and are normally the result of an error of the user or the system setup.
+
+As where links to &quot;.&quot; are pretty &quot;normal&quot; and are IMHO not real &quot;loops&quot;.
+
+But the best fix would be of course in the resource layer :-)</pre>
+    </div>
+
+    <div id="c9" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c9">Comment 9</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Max Weninger</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=max.weninger&#64;windriver.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=max.weninger&#64;windriver.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-10-06 07:59:47 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">This does not really belong to this bug but the reason is the same
+The &quot;import from file system&quot; wizard has also some problems
+when importing sources which contain symlinks to &quot;.&quot;
+
+It will create 40 iterations of the folder structure 
+as real folders before stopping.
+
+Should I create a separate bugzille entry for this?</pre>
+    </div>
+
+    <div id="c10" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c10">Comment 10</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Max Weninger</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=max.weninger&#64;windriver.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=max.weninger&#64;windriver.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-10-06 09:48:30 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=105554#c9">comment #9</a>)
+<span class="quote">&gt; This does not really belong to this bug but the reason is the same
+&gt; The &quot;import from file system&quot; wizard has also some problems
+&gt; when importing sources which contain symlinks to &quot;.&quot;
+&gt; 
+&gt; It will create 40 iterations of the folder structure 
+&gt; as real folders before stopping.</span >
+
+A fix would be possible in FileSystemStructureProvider
+getChildren() with getCannonicalFile a link to the current folder
+could be detected and ignored.
+
+But this is also just symptom fixing.
+
+The best solution for any recursive file system structure traversal 
+would be to collect the possible folders in front, check them for
+loops etc. and iterate just over the &quot;cleanuped&quot; list.
+
+</pre>
+    </div>
+
+    <div id="c11" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c11">Comment 11</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mark Belanger</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mark_belanger&#64;ltx.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mark_belanger&#64;ltx.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-11-09 17:46:05 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I'd like to reiterate that this is a real showstopper if
+you are trying to import filesystems that contain such
+links</pre>
+    </div>
+
+    <div id="c12" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c12">Comment 12</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Oli Bye</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=oli.eclipse&#64;mail-filter.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=oli.eclipse&#64;mail-filter.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-02-01 07:00:43 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">This problem isn't only restricted to UNIX.
+
+For example I'm using Eclipse CDT on Windows against a project in a ClearCase dynamic view hosted on Solaris.
+
+It's a serious obstacle to the take up of Eclipse on our team. Mainly because it occurs when people first try Eclipse, giving them a very bad first impression.
+
+I'm aware that this is a more complex problem. I don't think getCanonicalFile will help us here as the information about link being a link is only available at the ClearCase level. I don't think it's even exposed at the SMB level.
+
+A great compromise would be if I could get the resource manager to just exclude certain names when it does the refresh. It isn't enough to just exclude at the C/C++ Project Paths-&gt;Source Tab-&gt;Exclusion Filter level.</pre>
+    </div>
+
+    <div id="c13" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c13">Comment 13</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-03-13 10:13:57 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Eclipse does not check for symlinks on Unix."
+   href="show_bug.cgi?id=131461">Bug 131461</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c14" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c14">Comment 14</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Matt McCutchen</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=hashproduct+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=hashproduct+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-03-15 18:15:19 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I would very much like it if Eclipse's resources layer would handle all symlinks in an intelligent fashion.  I'm writing a plugin, and I wanted to make it remember a path in the workspace in the form of a symlink, but I realized this would confuse the resource system if the path went up.
+
+When Eclipse's filesystem scanner finds a symlink, it could report the symlink as a linked resource; that would fix the bug if Eclipse already has logic that avoids cycles of linked resources.</pre>
+    </div>
+
+    <div id="c15" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c15">Comment 15</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Max Weninger</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=max.weninger&#64;windriver.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=max.weninger&#64;windriver.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-05-10 08:27:48 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=40924&amp;action=diff" name="attach_40924" title="One way to solve the endless loop during refresh for recursive symlinks">attachment 40924</a> <a href="attachment.cgi?id=40924&amp;action=edit" title="One way to solve the endless loop during refresh for recursive symlinks">[details]</a></span>
+One way to solve the endless loop during refresh for recursive symlinks
+
+This is a patch against 3.2RC3
+It is a change in RefreshLocalVisitor which remembers folders
+that have already been visited in the refresh operation.
+File.getCanonicalPath is used to get the unique path.
+
+The rest of the change is adding a checkbox in the
+workspace preferences to enable this check.
+The default value is false.
+
+This does NOT fix the same problem in the file system
+import wizard but a similair approach can be used there too</pre>
+    </div>
+
+    <div id="c16" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c16">Comment 16</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-06-05 11:41:42 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Crash while starting up because of symbolic link"
+   href="show_bug.cgi?id=145200">Bug 145200</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c17" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c17">Comment 17</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">David Biesack</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=David.Biesack&#64;sas.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=David.Biesack&#64;sas.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-07-24 09:32:59 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">This bug also manifests itself in apparent infinite loops running batch audits of codebases with symbolic links in them. Instantiation's CodePro AnalytiX uses the Eclipse compiler to parse the code. Symbolic links get expanded and reexpanded in the bin directory of the temporary audit workspace. For example, if your source folder has org/eclipse and that folder has a symlink resources -&gt; ../.. then you will see org/eclipse/orgeclipse/org/eclipse/org/eclipse ... created in the bin directory. I did not verify if this stops after N levels, however, but the operation did appear to be looping.</pre>
+    </div>
+
+    <div id="c18" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c18">Comment 18</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Max Weninger</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=max.weninger&#64;windriver.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=max.weninger&#64;windriver.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-08-02 04:27:26 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Will this patch be considered for 3.2.1?</pre>
+    </div>
+
+    <div id="c19" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c19">Comment 19</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-08-23 16:04:56 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=48520&amp;action=diff" name="attach_48520" title="Updated patch">attachment 48520</a> <a href="attachment.cgi?id=48520&amp;action=edit" title="Updated patch">[details]</a></span>
+Updated patch
+
+This is an update on the patch in <a href="show_bug.cgi?id=105554#c15">comment #15</a>.  I haven't tested it yet - just posting here as a work in progress.  This patch moves the recursive check out of RefreshLocalVisitor and into UnifiedTree.  If you fix only the refresh local case, you'll still get the infinite loop for other clients of the UnifiedTree (this is a tree that simutaneously does a breadth-first traversal of the local file system and the resource tree). I also believe the previous patch would have scaled poorly to workspaces with thousands of folders (not uncommon).</pre>
+    </div>
+
+    <div id="c20" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c20">Comment 20</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Max Weninger</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=max.weninger&#64;windriver.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=max.weninger&#64;windriver.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-08-24 07:56:29 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Great that there is progress on this problem.
+I am really not an expert with this aerea of the code 
+so I am glad to learn from you :-)
+
+If you like I can test it as soon you say it makes sense</pre>
+    </div>
+
+    <div id="c21" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c21">Comment 21</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-08-24 09:38:47 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=48580&amp;action=diff" name="attach_48580" title="Updated patch">attachment 48580</a> <a href="attachment.cgi?id=48580&amp;action=edit" title="Updated patch">[details]</a></span>
+Updated patch
+
+The previous patch didn't catch all cases.  I have been testing this latest patch and it seems to work well.  If anyone else wants to give it a try it would be good to hear your feedback.</pre>
+    </div>
+
+    <div id="c22" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c22">Comment 22</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Max Weninger</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=max.weninger&#64;windriver.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=max.weninger&#64;windriver.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-08-28 08:03:33 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Tested it today:
+
+Applied patch against 3.2
+
+-Use &quot;Import archive wizard&quot; to import a tgz which contains recursive symlinks in an existing project 
+ 
+-&gt; works (recursive symlinks are ignored)
+
+-Extract same tgz on cmdline in an existing simple project and use refresh 
+
+-&gt; hangs until out of memory as before
+
+</pre>
+    </div>
+
+    <div id="c23" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c23">Comment 23</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Max Weninger</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=max.weninger&#64;windriver.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=max.weninger&#64;windriver.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-09-19 10:33:41 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I just looked again at your patch.
+
+It is not enough just to check the parent&lt;-&gt;child relation
+because recursive symlinks can spawn more then one 
+directory level.
+
+And that will not be discovered from this patch
+</pre>
+    </div>
+
+    <div id="c24" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c24">Comment 24</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-09-19 12:23:21 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Can you give a concrete example where it doesn't work?  If you have a link at /a/b/c that links to /a, then the prefix check should still work. A simple failing example to test against would be helpful.</pre>
+    </div>
+
+    <div id="c25" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c25">Comment 25</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Max Weninger</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=max.weninger&#64;windriver.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=max.weninger&#64;windriver.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-09-19 13:54:23 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=50494" name="attach_50494" title="recursive symlink example">attachment 50494</a> <a href="attachment.cgi?id=50494&amp;action=edit" title="recursive symlink example">[details]</a></span>
+recursive symlink example</pre>
+    </div>
+
+    <div id="c26" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c26">Comment 26</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Max Weninger</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=max.weninger&#64;windriver.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=max.weninger&#64;windriver.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-09-19 13:55:44 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Of course you must extract the archive on a unix/linux host :-)</pre>
+    </div>
+
+    <div id="c27" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c27">Comment 27</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Anton Leherbauer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=aleherb+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=aleherb+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-10-16 11:05:15 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - If I have a link file like this : &quot;ln -s ../ src&quot; in my project , Eclipse will easily lead to out of memory while refesh the project ."
+   href="show_bug.cgi?id=161015">Bug 161015</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c28" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c28">Comment 28</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-10-16 11:59:11 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - If I have a link file like this : &quot;ln -s ../ src&quot; in my project , Eclipse will easily lead to out of memory while refesh the project ."
+   href="show_bug.cgi?id=161014">Bug 161014</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c29" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c29">Comment 29</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Max Weninger</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=max.weninger&#64;windriver.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=max.weninger&#64;windriver.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-10-31 07:32:52 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=52979&amp;action=diff" name="attach_52979" title="Updated my way to handle recursive symlinks">attachment 52979</a> <a href="attachment.cgi?id=52979&amp;action=edit" title="Updated my way to handle recursive symlinks">[details]</a></span>
+Updated my way to handle recursive symlinks
+
+Bugfix to included already existing folders in the visited list</pre>
+    </div>
+
+    <div id="c30" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c30">Comment 30</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-30 10:00:52 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">This is certainly a hard problem, especially when the recursive link is in a ClearCase view accessed on Windows (<a href="show_bug.cgi?id=105554#c12">Comment #12</a>). File.getCanonicalPath() fails in this case. The only possible solution I can see is when the getChildren() call computes a hash code of the child list (including child basenames, length, access time, attributes from EFS/IFileInfo), and in case exactly the same children are found again break the recursion (with a visited list as in <a href="show_bug.cgi?id=105554#c29">Comment #29</a>). Such an approach would be a bit similar to the way how cddb identifies audio CD's by computing a hash code from the TOC, length of the songs etc and it seems to work reasonably well.
+
+For the more common case where symbolic links can be really identified as symbolic links by the underlying file system, EFS now has API to identify them when the native file library is loaded (<a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - API: Add symbolic links to EFS / IFileInfo APIs"
+   href="show_bug.cgi?id=170317">bug 170317</a>: EFS.ATTRIBUTE_SYMLINK, currently implemented on Linux only).
+
+I think that if a solution is desired that avoids cyclic links in all possible cases, there is no way around a visited list since the recursion may involve any number of symbolic links. A-&gt;. is just the simplest case, A.b-&gt;B with B.a-&gt;A is the mutually recursive case, A.b-&gt;B, B.c-&gt;C, C.a-&gt;A involves three folders and so on -- one can dream up recursion involving any number of links / folders involved.
+
+I think the solution from <a href="show_bug.cgi?id=105554#c29">comment #29</a> is close to perfect, just given that it fails for the ClearCase case (and java.io.File.getCanonicalPath() may be expensive), a solution including a hashCode of child infos might be worth a thought. A simple solution could involve an ArrayList as follows:
+
+static class UniqueResourceId {
+  private String names;
+  private long modTime;
+  private int type;
+  public UniqueResourceId (String name, long modTime, int type) {
+     this.name=name; this.modTime=modTime; this.type=type;
+  }
+  public boolean equals(Object other) {
+    if (other instanceof UniqueResourceId) {
+      UniqueResourceId o = (UniqueResourceId)other;
+      return modTime==o.modTime &amp;&amp; type == o.type &amp;&amp; name.equals(o.name);
+    }
+    return false;
+  }
+  public int hashCode() {
+    return name.hashCode(); //just hash the name
+  }
+}
+static class FreezableArrayList extends ArrayList {
+    private boolean frozen=false;
+    private int hashCode;
+    public void freeze() {
+        this.hashCode=super.hashCode();
+        frozen=true;
+    }
+    public int hashCode() {
+        if(frozen) return this.hashCode;
+        return super.hashCode();
+    }
+}
+Object computeUniqueFolderId(IContainer folder) {
+    IResource[] children = folder.members();
+    FreezableArrayList uuid = new FreezableArrayList(children.length);
+    for(int i=0; i&lt;children.length; i++) {
+        IResource c=children[i];
+        uuid.add(new UniqueResourceId(c.getName(), 
+             c.getLocalTimeStamp(), c.getType());
+    }
+    uuid.freeze();
+    return uuid;
+}
+</pre>
+    </div>
+
+    <div id="c31" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c31">Comment 31</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">MayXu</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mayxu77&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mayxu77&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-30 22:13:16 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I update a little base the attachement of <a href="show_bug.cgi?id=105554#c29">Comment #29</a> in 
+order to resolve the relative link
+RefreshLocalVisitor.java checkFolder method
+
+String s = p.toFile().getCanonicalPath();
+String s1 = p.toFile().getPath();
+if (s1.length() &gt; s.length() &amp;&amp; s1.startsWith(s))
+{
+	return false;
+}
+else if(!fVisitedList.contains(s)){
+	fVisitedList.add(s);
+} else {
+	return false;
+}</pre>
+    </div>
+
+    <div id="c32" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c32">Comment 32</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-31 06:39:00 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=105554#c31">comment #31</a>)
+Ah, you are taking a shortcut in case the symbolic link just points up in the folder hierarchy e.g.  myself-&gt;.  or  parent-&gt;.. 
+
+Was your intention just performance optimization or something else? I think your code doesn't correctly cover the prefix case where you sit in a folder
+  /path/to/folder
+and it contains a symbolic link
+  parallel -&gt; ../fol
+which points to the folder
+  /path/to/fol
+
+Your code wouldn't refresh /path/to/fol. I believe this could be fixed by appending File.separatorChar to the canonicalPath before doing your prefix check.
+
+With respect to my previous proposal in <a href="show_bug.cgi?id=105554#c30">comment #30</a>, an even better return value for the method computing the unique identifier would be (since direct access to elements is no more needed for the UID):
+
+static class UIDFromList {
+    private int hashCode;
+    private List list;
+    public UIDFromList(List l) { 
+        this.list=l; this.hashCode=l.hashCode();
+    }
+    public int hashCode() {
+        return this.hashCode;
+    }
+    public boolean equals(Object other) {
+        if (other instanceof UIDFromList) {
+            return this.list.equals(((UIDFromList)other).list);
+        }
+        return false;
+    }
+}
+</pre>
+    </div>
+
+    <div id="c33" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c33">Comment 33</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-05 17:15:42 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I have two criteria for a solution to this bug:
+
+1) Must have trivial or no performance impact when no symbolic links are present.
+2) Must be solved in UnifiedTree, rather than in RefreshLocalVisitor. As mentioned earlier, all the current patches put the fix in RefreshLocalVisitor. However, if some other visitor walks over the UnifiedTree in this case, they will hit the same infinite recursion (DeleteVisitor and CopyVisitor being prominent examples).
+
+I think now that we have native symlink support in EFS, there is an opportunity to satisfy 1). I.e., we can detect symlinks at trivial cost since the attribute will be fetched anyway as part of the IFileStore#fetchInfo call.  Off the top of my head here's a possible solution:
+
+- UnifiedTreeNode has a &quot;visited&quot; field, which is a Set of IFileStores visited already.  By default this field is &quot;null&quot;, so it adds trivial extra cost for non-symlink case.
+- When we go to fetch children of a node in the tree (UnifiedTree.addChildren), check if it is a sym link. If it is, we initialize the visited field with a new Set.  If the visited field is non-null, add the current node's file store to the visited set before proceeding to add children.
+- As we create child nodes, check if it is already in the visited set. If so, don't create a node for that child.
+- For each child node that is created, pass along the visited set (or null) from the parent.
+
+With such a solution I believe we could throw away the UI portion of this patch - no need to add a preference if the performance is good in the normal case.  
+
+The only problem this doesn't solve is the case where the symbolic link is not detectable via the IFileStore native (ClearCase on Windows mounting a Linux drive, for example).  I don't think we should be hung up on this solving problem right now.. I would much rather solve the majority case of plain symlinks on *nix/Vista machines. It would then be possible to solve the CC problem via a specialized IFileStore implementation, for example, that knows how to detect symlinks for that case.
+
+If someone wants to take a crack this, be my guest.  If not, I'll try to find time to code this up in the 3.3 M6 period.</pre>
+    </div>
+
+    <div id="c34" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c34">Comment 34</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-05 18:10:25 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Do you know of an existing unit test to check the performance impact (and probably also memory consumption) of this? 
+Unchanged M5, and the existing patch could be the cornerstones of a performance check.</pre>
+    </div>
+
+    <div id="c35" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c35">Comment 35</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-06 18:13:03 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=58388&amp;action=diff" name="attach_58388" title="Performance test">attachment 58388</a> <a href="attachment.cgi?id=58388&amp;action=edit" title="Performance test">[details]</a></span>
+Performance test
+
+This patch adds a performance test for refreshing a large project.  Tweak the suite() method to enable only the single refresh test.  I'll release this after M5 so we have a baseline.</pre>
+    </div>
+
+    <div id="c36" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c36">Comment 36</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Philipe Mulet</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=philippe_mulet&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=philippe_mulet&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-04-24 10:56:01 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - fail to load project which contains cycle link path"
+   href="show_bug.cgi?id=172160">Bug 172160</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c37" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c37">Comment 37</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-04-24 12:13:08 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=105554#c33">comment #33</a>)
+<span class="quote">&gt; If someone wants to take a crack this, be my guest.  If not, I'll try to find
+&gt; time to code this up in the 3.3 M6 period.</span >
+
+With M7 close, is it realistic that you find time for this? Or until what time would you accept a good patch? - Max Weninger has submitted two patches already which are actually part of our product based on Eclipse, but have not been accepted into the Platform...
+
+<span class="quote">&gt; I think now that we have native symlink support in EFS, there is an 
+&gt; opportunity to satisfy 1). I.e., we can detect symlinks at trivial cost </span >
+
+yes.
+
+<span class="quote">&gt; If the visited field is non-null, add the current node's file store to
+&gt; the visited set before proceeding to add children.
+&gt; - As we create child nodes, check if it is already in the visited set.</span >
+
+I think we need to put java.io.File#getCanonicalPath() into the &quot;visited&quot; Set, and also check for the canonical path of each folder when drilling further down, since the path we get from the IFileStore will be deeper and deeper even if the symbolic link points to itself.
+Since getting the canonical path is typically expensive (and needs to be done for every folder drilling down, as soon as we stepped over a symbolic link), I still think it's a better idea to compute a hash code from each folder's children and attributes - as proposed in <a href="show_bug.cgi?id=105554#c32">comment #32</a>. Then, we need to get the canonical path only if the hashcodes are the same.
+
+<span class="quote">&gt; The only problem this doesn't solve is the case where the symbolic link is not
+&gt; detectable via the IFileStore native</span >
+
+Yes - but in such a situation also getCanonicalPath() does not help. I agree that it is OK to live with this limitation for now.
+</pre>
+    </div>
+
+    <div id="c38" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c38">Comment 38</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-04-24 13:59:51 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Yes, it's unlikely I'll get to this in 3.3.</pre>
+    </div>
+
+    <div id="c39" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c39">Comment 39</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-04-26 05:25:43 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I'm working on this now and will try to come up with a good patch.</pre>
+    </div>
+
+    <div id="c40" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c40">Comment 40</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-04-27 08:58:58 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=65204" name="attach_65204" title="Test projects for symbolic links. These break Eclipse 3.3M6!!">attachment 65204</a> <a href="attachment.cgi?id=65204&amp;action=edit" title="Test projects for symbolic links. These break Eclipse 3.3M6!!">[details]</a></span>
+Test projects for symbolic links. These break Eclipse 3.3M6!!
+
+Attached archive contains test projects for all possible cases of symbolic links I could think of. It also includes the &quot;udev&quot; real-world example from <span class="bz_obsolete"><a href="attachment.cgi?id=50494" name="attach_50494" title="recursive symlink example">attachment 50494</a> <a href="attachment.cgi?id=50494&amp;action=edit" title="recursive symlink example">[details]</a></span> (and obsoletes it). These are the projects I've tested my implementation against.
+
+There are 6 test projects, which can be imported into Eclipse (extract the archive on a UNIX platform, then choose File &gt; Import &gt; Existing Projects into Workspace). Two other folder hierarchies are also needed to test recursive symbolic links pointing outside the projects known to the workspace.
+
+Attention: DO NOT IMPORT test1..test5 INTO ECLIPSE 3.3M6 or earlier. It will fail with an OutOfMemoryError during refresh, since these test cases all contain recursive symbolic links. Also, DO NOT import these projects on a platform that supports symbolic links but where Eclipse does not know about them (currently MacOS X, HP-UX, AIX, Linux x86-64, or an SMB mounted share on Windows).
+
+test6 is a special project: it does not contain recursive symbolic links and should thus work on any Eclipse installation. This test is there to check for a specific small shortcoming of the implementation (to be attached next).
+
+Legal Message: I, Martin Oberhuber, declare that I developed attached code from scratch, without referencing any 3rd party materials except material licensed under the EPL. I am authorized by my employer, Wind River Systems Inc., to make this contribution under the EPL.</pre>
+    </div>
+
+    <div id="c41" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c41">Comment 41</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-04-27 09:20:52 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=65205&amp;action=diff" name="attach_65205" title="Patch fixing all recursive symbolic link issues in UnifiedTree">attachment 65205</a> <a href="attachment.cgi?id=65205&amp;action=edit" title="Patch fixing all recursive symbolic link issues in UnifiedTree">[details]</a></span>
+Patch fixing all recursive symbolic link issues in UnifiedTree
+
+Attached patch fixes all problems shown by all known symbolic link test cases as of the attachment to <a href="show_bug.cgi?id=105554#c40">comment #40</a>.
+
+It follows the rules established by John in <a href="show_bug.cgi?id=105554#c33">comment #33</a>:
+* Entire fix is in UnifiedTree
+* Special handling ONLY for symlinks pointing to folders (as detected by EFS)
+  Thus there is guaranteed trivial extra cost, and no change of behavior in
+  the non symlink case.
+
+Because EFS symlink detection is used, this fix only works when a liblocalfile native library fragment is installed that supports detecting symbolic links. Currently, this is the case for Linux-x86, Linux-PPC, and Solaris-SPARC. Other platforms are not affected by this fix and will still break. Re-compiling the liblocalfile for other UNIX platforms is trivial, though; MaxOS X may be harder since it has a different code base.
+
+The fix detects also mutually recursive symbolic links (a-&gt;b, b-&gt;c, c-&gt;a) by maintaining a history of symbolic link parents during traversal of the tree. Because this history is not stored after traversal is done, and because traversal is done in a breadth-first-search manner, the fix has two &quot;strange&quot; effects:
+
+1.) In case of mutually recursive a symbolic links, refreshing on level 0 has
+    a different result than refreshing on lower levels - lower levels reveal
+    one level more of the recursive link loop, while refreshing on level 0
+    reveals only the first one. This can be shown by refreshing on various 
+    levels in project test1.
+
+2.) There is one specific case where even non-recursive symbolic links show
+    fewer duplicate resources now, than it was before the fix. Look at test6
+    from the attachment to <a href="show_bug.cgi?id=105554#c40">comment #40</a> for details.
+
+Both these &quot;strange&quot; results appear in very rare scenarios, so I think these are acceptable taking the benefit of the fix into account. Fixing them would require a lot more effort, most probably including things like keeping track of previous locations while following links and keeping this history in sync with workspace changes; resource tree lookups during tree traversal; deferring symbolic link evaluation in the BFS queue until all non-symbolic-links are evaluated.
+
+Summing up, the patch has the following properties:
+  * it works with a symlink-enabled EFS provider only.
+  * with EFS enabled on localstore, it fixes all known recursion issues.
+  * recursive symbolic links are completely hidden from the resource tree.
+  * it NEVER leads to missing unique resources that would otherwise be shown.
+  * it MAY suppress duplicate resources under very unlikely conditions only.
+  * in case of recursive links only, it MAY lead to different results
+    during refresh, depending on where a query was started, with the
+    difference being that dupliates are either shown or hidden.
+
+When a recursive symbolic link is detected, it is completely hidden (as if it would not exist). I think that this is a potential enhancement for the future -- displaying symbolic links like linked resources in the resource tree, and handling them accordingly.
+
+The patch includes a testcase for the new utility class (PrefixPool) but no automated test for the various symbolic link scenarios. I think that converting the tgz archive of the test projects into automated tests should not be too hard, the test cases could simply count the number of resources after a full refresh; I was just not sure how to best add this. Of course, the test could only run on EFS-symlink-enabled-platforms.
+
+Because the code apparently does no work in the non-symlink-case, I also did not check the performance test.</pre>
+    </div>
+
+    <div id="c42" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c42">Comment 42</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-04-27 09:22:47 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=105554#c41">comment #41</a>)
+Legal Message: I, Martin Oberhuber, declare that I developed attached code from
+scratch, without referencing any 3rd party materials except material licensed
+under the EPL. I am authorized by my employer, Wind River Systems Inc., to make
+this contribution under the EPL.
+
+</pre>
+    </div>
+
+    <div id="c43" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c43">Comment 43</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-04-27 09:48:06 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Thanks Martin. Targetting to review and release for M7 unless I find problems. Also marking this as a &quot;greatbug&quot; because of <a href="show_bug.cgi?id=105554#c40">comment #40</a> and <a href="show_bug.cgi?id=105554#c41">comment #41</a>, which is an exemplary example of a contribution, including detailed documentation and test cases.</pre>
+    </div>
+
+    <div id="c44" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c44">Comment 44</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-04-27 17:48:12 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Some questions:
+
+1) Why are the parentPath and childPath both inserted into pathPrefixHistory on each iteration? Won't we eventually find all loops if we only insert the childPath? I must be missing something, but this seems like we have double the necessary number of calls to File.getCanonicalPath.
+
+2) suppressLinkedDuplicates field is always false. Can we just remove this field and leave in the TODO comment about potential future changes?
+
+3) My regex understanding is probably rusty, but the pattern &quot;\\.[./]*&quot; seems incorrect.  To me this reads &quot;dot, followed by any sequence of either characters or front slashes&quot;.   Won't this match a folder name that starts with a dot, such as &quot;.metadata&quot;? Is this intended to be parent references (../), or current references (./) ?
+
+4) In initLinkHistoriesIfNeeded, it adds both the root resource's location, and the location of the root resource's project. I think this doesn't account for linked resources in the workspace. Example:
+
+ - Project /P1 has location /home/johna/p1
+ - Linked folder /P1/Folder has location /home/johna/folder
+ - Child folder /P1/Folder/SymLink is a symbolic link /home/johna/folder/SymLink to /home/johna/p1.
+
+-&gt; This isn't a cyclic symbolic link chain, since the symlink does not point to a parent of the symlink.
+
+I think rather than adding the project location, this code should add the location of the nearest linked resource, or the project location if not nested within a linked resource.  If you agree, I can fix this up because I have code elsewhere the computes the &quot;file system root&quot; for a given resource that can be used here. Or even simpler, it might just work with adding the root resource's location, and eventually via traversal we will catch any loops that lead back to the root resource.</pre>
+    </div>
+
+    <div id="c45" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c45">Comment 45</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-04-27 17:50:32 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">By the way, despite my comments I am optimistic we can solve this in M7. I agree this has no impact on non-symlink cases, and even if we don't catch all possibilities right away, we'll be better off than the existing behaviour.</pre>
+    </div>
+
+    <div id="c46" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c46">Comment 46</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-04-27 19:09:40 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=105554#c44">comment #44</a>)
+Let me answer the simple ones first:
+
+<span class="quote">&gt; 2) suppressLinkedDuplicates field is always false. Can we just remove this
+&gt; field and leave in the TODO comment about potential future changes?</span >
+
+Sure, you are right. Initially, I thought the intention of this were clearer
+with the extra field, and would allow for programmtic modification of the behavior. But now I think that suppressing duplicate resources
+is typically problematic since not backward compatible so the field should
+be removed keeping only a short comment.
+
+<span class="quote">&gt; 3) the pattern &quot;\\.[./]*&quot; seems incorrect.</span >
+No, this is correct. Inside the character class [] every character stands for
+itself and you don't need to quote. [\\./] would also match a String like
+&quot;..\../..&quot; which may be interesting when considering symbolic links on Vista,
+though so if you feel better I'm absolutely fine with such a change (anticipating that some 3rd party would write an EFS provider that supports symlinks on vista).
+
+Now for the harder ones:
+
+<span class="quote">&gt; 1) Why are the parentPath and childPath both inserted into pathPrefixHistory?
+&gt; Won't we eventually find all loops if we only insert the childPath?</span >
+This is a tricky question, and I'd like to sleep over it :-) My initial concern with this is, that the childPath is currently NOT inserted into the pathPrefixHistory since a link is only recursive if it walks back to where it came from at some point. I think you'd 
+
+ * get more false positives by adding the child path, since when two folders
+   a-&gt;/link  and b-&gt;/link  point to the same resource (which is not recursive
+   per se) the second occurrence would necessarily be treated as &quot;recursive&quot;
+   and thus suppressed. Right now, this happens much more rarely (only if a
+   b1/b2-&gt;/link points to a link that is a prefix of a path that has a link
+   parent at a higher level).
+
+I guess your thinking is that if it's really a loop, it doesn't matter whether
+the loop is detected sooner or later and the loop must come across the same 
+place at some time. That's certainly true, but the problem is that we are doing a breadth-first search and not a depth-first search... and I cannot see how we could remember the history of previous links on a resource &quot;tree&quot; (though this would be a good thing).
+
+If we could switch from BFS to DFS when a symbolic link is encountered, and clear the link history when this happens, this would be the best solution (and also fix all the other &quot;strange&quot; issues!!). Can we do that? I think I'm not familiar enough with the queue and how inserting works, but this might be an option...
+
+At any rate, remember that the getCanonicalPath() only happens for symbolic links so it does not impact the non-symlink-case, AND the solution is also better than all previously proposed patches which did getCanonicalPath() for every folder (and not just symlinks). Your suggestion would only be a linear (*2) improvement for the symlink case and I think that's not worth the risk mentioned above.
+
+If we cannot switch from BFS to DFS, I suggest keeping it as-is for now and probably shooting for other improvements in the future. I see room for improvements by trying to do more interpretation on the link target (trying to resolve it internally and do without any getCanonicalPath() at all) in the future, with getCanonicalPath() as a very last resort only later. This would also work better on remote file systems. But it seems harder and less robust so I'd prefer thinking about this later.
+
+<span class="quote">&gt; 4) In initLinkHistoriesIfNeeded, it adds both the root resource's location,
+&gt; and the location of the root resource's project. I think this doesn't account
+&gt; for linked resources in the workspace. Example:
+&gt; -&gt; This isn't a cyclic symbolic link chain, since the symlink does not point
+&gt;    to a parent of the symlink.</span >
+
+right, and I think this is essentially the BFS versus DFS issue again.
+Adding better or more &quot;file system roots&quot; as you suggest is certainly a good think and cannot hurt, I think. I'm afraid though, that because of the BFS
+the positive effect is probably smaller than you expect.
+
+Currently, the &quot;spanning filesystem locations&quot; are remembered in separate PrefixPool just in order to ensure that a link pointing to a prefix of a previously found link root is NOT suppressed if it is outside a file system &quot;root&quot;. So, adding more file system &quot;roots&quot; would lead to suppressing MORE
+symbolic links and thus producing more false positives, I think.
+
+The whole &quot;spanning filesystem location&quot; chack would be unnecessary if we were doing DFS, so let me reiterate again that if we could switch this would be the best solution.
+
+<span class="quote">&gt; Or even simpler, it might just work with adding the root resource's
+&gt; location, and eventually via traversal we will catch any loops that lead back
+&gt; to the root resource.</span >
+
+I think you are right, following my arguments above it is better to not add the project root to the spanning filesystem check. It means probably creating more duplicate resources, but also certainly suppressing less false positives.
+
+Thanks for your thorough review. It's good knowing that 4 eyes are watching this! I left out linked resources since I don't know enough how to deal with them. Your example above (and probably more) should definitely be added to the test cases. Also, I did not test what happens with the DeleteVisitor and CopyVisitor you mentioned in <a href="show_bug.cgi?id=105554#c33">comment #33</a> since I did not know how to invoke them.</pre>
+    </div>
+
+    <div id="c47" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c47">Comment 47</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Matt McCutchen</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=hashproduct+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=hashproduct+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-04-27 20:08:09 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">This bug doesn't apply to DeleteVisitor because DeleteVisitor deletes symlinks rather than following them; see <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [resources] delete traverses unix symbolic links to directories"
+   href="show_bug.cgi?id=44106">bug 44106</a>.  However, it might still be good to check that any fix for this bug doesn't break DeleteVisitor.</pre>
+    </div>
+
+    <div id="c48" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c48">Comment 48</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-04-29 08:49:13 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=105554#c47">comment #47</a>)
+<span class="quote">&gt; This bug doesn't apply to DeleteVisitor because DeleteVisitor deletes symlinks</span >
+Interesting... how does it know it's a symlink and not just a folder?
+
+</pre>
+    </div>
+
+    <div id="c49" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c49">Comment 49</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Matt McCutchen</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=hashproduct+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=hashproduct+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-04-29 10:54:08 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=105554#c48">comment #48</a>)
+<span class="quote">&gt; Interesting... how does it know it's a symlink and not just a folder?</span >
+
+DeleteVisitor calls on the filesystem implementation (in the case of the local filesystem, LocalFile) to do the delete.  LocalFile.internalDelete attempts a nonrecursive java.io.File.delete, which can delete anything except a real nonempty directory.  internalDelete only recurses if that first attempt fails, so it avoids deleting through symlinks.  There's a separate issue when local history is being kept; see <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - Deleting symlink to folder in Package Explorer deletes files inside"
+   href="show_bug.cgi?id=174492">bug 174492</a>.
+
+(In reply to <a href="show_bug.cgi?id=105554#c46">comment #46</a>)
+<span class="quote">&gt; Also, I did not test what happens with the DeleteVisitor and
+&gt; CopyVisitor you mentioned in <a href="show_bug.cgi?id=105554#c33">comment #33</a> since I did not know how to invoke
+&gt; them.</span >
+
+You can invoke them simply by deleting and copying folders using the Navigator.</pre>
+    </div>
+
+    <div id="c50" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c50">Comment 50</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-04-30 01:28:31 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Ah, that's smart... thanks for the info! Does the DeleteVisitor then need to use the UnifiedTree after all? Or does it delete using the FileSystem implementation and then use the UnifiedTree to see whether any resources remain that could not be deleted?</pre>
+    </div>
+
+    <div id="c51" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c51">Comment 51</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-04-30 04:06:37 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=105554#c46">comment #46</a>)
+<span class="quote">&gt; (In reply to <a href="show_bug.cgi?id=105554#c44">comment #44</a>)
+&gt; &gt; 1) Why are the parentPath and childPath both inserted into 
+&gt; &gt;    pathPrefixHistory? Won't we eventually find all loops if we only
+&gt; &gt;    insert the childPath?</span >
+
+Based on your suggestion of reducing the number of canonical path queries, I made some experiments with a modified algorithm that was more optimistic: 
+  - follow any symbolic links until getting to a place seen before
+  - only check the &quot;seen before&quot; at junctions where links fork off
+It turned out that this algorithm worked well for the synthetic cases, but failed for the real world test4_udev test case. 
+
+In the udev case, the link cycle is very long (up to 10 nodes), and while following the cycle the tree grows very fast in breadth because many children fork off. Because of that, detecting the link cycle just one level later leads to exponential growth in the number of nodes -- leading to 30 levels, 84000 nodes and 14000 canonical path queries in 25 seconds execution time on my PC. The current patch refreshes the same tree in &lt; 2 seconds because it detects cycles more eagerly.
+
+What I conclude from this experiment, is that it is essential to detect the link cycle as early as possible, i.e. at the time the symbolic link forks off. This is exactly what the current patch does. It seems, that &quot;eventually get to... again later&quot; is just not good enough.
+
+I think a really good solution to the symbolic link refresh problem requires correctly modeling symbolic links as links in the resource tree. This does not only give better visual feedback to users, but also always suppress duplicate resources during traversal (since clients will be able to see those resources by following the link in the resource model). I'm not sure if explicit new API for symbolic links is required (as requested by <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - API: Add symbolic links to ResourceAttributes API"
+   href="show_bug.cgi?id=44107">bug 44107</a>) or the existing &quot;linked resource&quot; notion could be used.
+
+Anyways, it looks like adding symbolic links to the resource model is out of scope for Eclipse 3.3, so I think the algorithm of the current patch is the best we can do for now. There is room for minor improvements:
+ - remember the previous parent path so the canonical path for the parent
+   is not computed again unnecessarily;
+ - compute the parent canonical path ourselves by looking at the non-symlinked
+   path segment between the current node and a previously computed canonical
+   path for a parent higher up in the tree
+ - defer computation of symlink children until all non-symlinks are computed
+But none of these would change the structure of the algorithm, or change its efficiency by orders of magnitude.
+
+<span class="quote">&gt; &gt; 4) In initLinkHistoriesIfNeeded, it adds both the root resource's location,
+&gt; &gt; and the location of the root resource's project. I think this doesn't 
+&gt; &gt; account for linked resources in the workspace.</span >
+
+Please disregard my previous comment about more roots adding more false positives. I think this is not true. The more &quot;spanning file system tree roots&quot; are known upfront, the better - so adding tree roots brought in through linked
+resources would be a good thing provided that they are in the same EFS file
+system.
+
+But I still think that the positive effect of this would be very small, since the current patch computes the spanning tree root lazily when the first symbolic link points to it. So I'd recommend not adding linked resource roots for now, but keeping the project root (since this is the most common known spanning tree root).
+
+ONE LAST IMPORTANT NOTE: On second thought, I'm afraid that we cannot contribute the test4_udev files under the EPL, since this file system comes from an embedded linux product (most probably GPL but not sure). Please keep this test on bugzilla only for now and do not commit it as automated test case. All other tests are written by myself and contributed under the EPL.</pre>
+    </div>
+
+    <div id="c52" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c52">Comment 52</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-04-30 10:31:44 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=65390&amp;action=diff" name="attach_65390" title="Minor tweaks, code formatting, etc">attachment 65390</a> <a href="attachment.cgi?id=65390&amp;action=edit" title="Minor tweaks, code formatting, etc">[details]</a></span>
+Minor tweaks, code formatting, etc
+
+This is an entirely cosmetic change from Martin's patch 65205. Just attaching it here so I can test it out on other machines.</pre>
+    </div>
+
+    <div id="c53" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c53">Comment 53</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-04-30 11:37:17 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">In my testing on a slow Linux box, I found that test4 doesn't complete. It just seems to refresh forever.  This is because the job that performs background refresh (RefreshJob), will time-out after two seconds, and switch to only refreshing two levels of the tree at a time. See <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - Slow project creation due to stating many files"
+   href="show_bug.cgi?id=74392#c22">bug 74392 comment 22</a> for summary, and UnifiedTree.accept method with int argument.  Since it only refreshes two levels at once, it doesn't catch recursive link structures that span more than two levels.  It looks like solving this will require persisting the prefix history in RefreshJob until the refresh request queue is empty. I'm going to release the current patch anyway because this is no worse than the previous behaviour.</pre>
+    </div>
+
+    <div id="c54" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c54">Comment 54</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-04-30 11:58:17 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Patch released for 1pm EDT integration build. I'll leave this open for now to sort out remaining details.</pre>
+    </div>
+
+    <div id="c55" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c55">Comment 55</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-04-30 14:34:16 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=105554#c53">comment #53</a>)
+<span class="quote">&gt; In my testing on a slow Linux box, I found that test4 doesn't complete.</span >
+
+I guess the simplest fix for this would be to set suppressLinkedDuplicates = true. Perhaps this should be a UI preference after all. Code for a UI Preference is still attached to <a href="show_bug.cgi?id=105554#c21">comment #21</a>, I think this could be re-used.
+
+The other option would be if there were no Preference, but isRecursiveLink would always act as if suppressLinkedDuplicates were true; but the suppressed links would be put into a queue for later checking after all other resources from the queue are handled (at that time we can see more easily if they are recursive).
+
+Or, always act as if suppressLinkedDuplicates were true, but inside isRecursiveLink register the link pointing to a duplicate resource as a linked resouces. This would be the best solution from a user's perspective - but I don't understand the nature and lifecycle of linked resources enough to implement it...
+</pre>
+    </div>
+
+    <div id="c56" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c56">Comment 56</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-04-30 15:38:11 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text"><span class="quote">&gt; I guess the simplest fix for this would be to set suppressLinkedDuplicates = 
+&gt; true.</span >
+
+Unless I'm missing something, I don't think suppressLinkedDuplicates is relevant here.  The problem is that certain calls to UnifiedTree.accept only perform refresh of a fixed number of levels in the tree.  If the cycle is not detected within that span, then it will go undetected because we throw away the path/prefix history across invocations of the accept method.</pre>
+    </div>
+
+    <div id="c57" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c57">Comment 57</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-05-01 00:34:39 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=105554#c56">comment #56</a>)
+<span class="quote">&gt; I don't think suppressLinkedDuplicates is relevant here.</span >
+
+It is relevant. Becuase if it is set, any symbolic link that points to a resource inside the same project is suppressed. So you need much less contextual information - knowing the &quot;spanning file system roots&quot; is sufficient, and these are set before the rest of the algorithm runs. Even when looking at a SINGLE level, all symbolic links that remin in the same project (which is all of them in the test4_udev case) will be suppressed.
+
+Only in the test cases that produce symbolic link loops by pointing to resource trees outside the project, it will take more than 1 level to detect the loop.
+</pre>
+    </div>
+
+    <div id="c58" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c58">Comment 58</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-05-01 03:57:07 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Excuse me if this is ignorant, but what if symbolic links were treated as just another form of persistence for linked Resources?
+
+Linked resources have the important property that they mask the underlying file system resource, so this would shield us from potentially recursive symbolic links. Much code deals with linked resources already in exactly the manner needed for symbolic links.
+
+Because they look the same for the user, it should be possible to keep the changes needed all inside the resources plugin:
+  - a boolean bit with each linked resource indicating whether it has
+    persistence in .project or is backed by the file system (as symlink)
+  - Read&amp;write of .project file to ignore the links backed by the file system
+  - Different handling of delete for links backed by the file system
+  - UnifiedTree to create/update links backed by the file system
+
+This would mean no API change, correct visual feedback for symbolic links, simple handling, no more problems with any recursive links ever, correct
+representation of the file system even if links introduce duplicates.
+
+Or am I missing any important obstacles?</pre>
+    </div>
+
+    <div id="c59" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c59">Comment 59</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-05-02 15:37:08 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Re <a href="show_bug.cgi?id=105554#c58">comment #58</a>: It's an interesting thought exercise, but linked resources are fairly different from sym-links. Linked resources are a pointer from the resource tree to the file system tree - it spans across two different &quot;layers&quot;. Thus, there is no such thing as a cycle introduced by a linked resource - there is no link from the file system back up to the resource tree in order to incur a cycle. A given linked resource is only associated with one file system location. A resource corresponding to a symlink has two applicable resources - the location of the link, and the location of the target of the link. It's not clear how this would be treated in the API, for example, what the return value of IResource.getLocation() would be.
+
+Also,  I don't see how the property of linked resources masking filesystem resources would help here.  A linked resource represented as a symbolic link could not mask the symbolic link. If the symbolic link was modified to point to a different file, we would have to update the linked resource as well.</pre>
+    </div>
+
+    <div id="c60" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c60">Comment 60</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-05-02 18:15:12 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Marking fixed for M7.  I have opened <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - JUnit tests for recursive symlinks"
+   href="show_bug.cgi?id=185247">bug 185247</a> for adding JUnit tests to cover the scenarios described in <a href="show_bug.cgi?id=105554#c40">comment #40</a>.</pre>
+    </div>
+
+    <div id="c61" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c61">Comment 61</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-05-03 10:48:19 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=65775&amp;action=diff" name="attach_65775" title="Patch adding performance counters (development-time only)">attachment 65775</a> <a href="attachment.cgi?id=65775&amp;action=edit" title="Patch adding performance counters (development-time only)">[details]</a></span>
+Patch adding performance counters (development-time only)
+
+I'm still slightly concerned about the problems on a slow Linux box that you described in <a href="show_bug.cgi?id=105554#c53">comment #53</a>. Could these have been due to the unexpectedly missing symlink-enabled library for x86_64 (<a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - Contribute symlink-enabled liblocalfile for Linux x86_64"
+   href="show_bug.cgi?id=184433#c19">bug 184433 comment 19</a>)?
+
+I tested with some performance counters (attached) and got the following results for the test4_complex_udev testcase:
+
+* #nodes in file system according to &quot;find&quot;: 440 (13 levels)
+* #nodes found by RefreshLocalVisitor: 664 (14 levels) in 391 msec
+
+it's hard to imagine that your machine is 5 times slower than mine, going from 391 msec to 2 seconds thus hitting the timeout. FYI, regarding the previous discussion about suppressLinkedDuplicates - when suppressLinkedDuplicates is enabled, the numbers are
+
+* #nodes found with suppressLinkedDuplicates: 440 (13 levels) in 132 msec
+
+so in this case, not a single symbolic link is followed, giving exactly the number of nodes found by &quot;find&quot; and being 3 times faster; because getCanonicalPath() is called only 74 times instead of 184 times.</pre>
+    </div>
+
+    <div id="c62" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c62">Comment 62</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-05-03 10:52:21 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=65778&amp;action=diff" name="attach_65778" title="Patch adding a UI Preference for suppressLinkedDuplicates">attachment 65778</a> <a href="attachment.cgi?id=65778&amp;action=edit" title="Patch adding a UI Preference for suppressLinkedDuplicates">[details]</a></span>
+Patch adding a UI Preference for suppressLinkedDuplicates
+
+Attached patch adds a UI Preference for suppressing duplicate resources introduced by symbolic links in all cases, if anybody is interested. This is derived from John's patch in <span class="bz_obsolete"><a href="attachment.cgi?id=48580&amp;action=diff" name="attach_48580" title="Updated patch">attachment 48580</a> <a href="attachment.cgi?id=48580&amp;action=edit" title="Updated patch">[details]</a></span>, so I have not updated the Copyright headers.</pre>
+    </div>
+
+    <div id="c63" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c63">Comment 63</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-05-03 10:57:13 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I'm quite sure I had the correct library, because all of the other test cases worked fine. I'll try with this instrumented version and see what the times look like.</pre>
+    </div>
+
+    <div id="c64" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c64">Comment 64</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-05-04 05:51:16 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Verified the fix with I20070503-1400 on Linux x86_64 and Solaris 10 gtk.
+
+Created new <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Improve performance of the symbolic link recursion detection in UnifiedTree"
+   href="show_bug.cgi?id=185509">bug 185509</a> for following up with additional improvements, for addressing the issue found in <a href="show_bug.cgi?id=105554#c53">comment #53</a> on a slow Linux box.
+
+I did not carry over the (long) CC list to the new bug, so anybody interested in the follow-up please put yourself on CC of the new bug yourself.</pre>
+    </div>
+
+    <div id="c65" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c65">Comment 65</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-05-16 13:19:16 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The folk watching this bug may be interested to hear that another issue with cyclic symbolic links has been found in the &quot;Import Existing Project&quot; wizard. See <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - [Wizards] &quot;Import Existing Project&quot; loops forever with cyclic symbolic links"
+   href="show_bug.cgi?id=187318">bug #187318</a>, put yourself on CC and vote for it if you are interested.
+
+A patch has been provided for that issue, let's see if it gets accepted.</pre>
+    </div>
+
+    <div id="c66" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c66">Comment 66</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Markus Schorn</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mschorn.eclipse&#64;gmx.at" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mschorn.eclipse&#64;gmx.at" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-28 09:49:27 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - [Directory parsing] Cyclically linked directories cause Eclipse to hang and then to crash with an out-of-memory exception"
+   href="show_bug.cgi?id=215047">Bug 215047</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c67" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105554#c67">Comment 67</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Andrey Loskutov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=loskutov&#64;gmx.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=loskutov&#64;gmx.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2018-07-30 09:03:30 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to Martin Oberhuber from <a href="show_bug.cgi?id=105554#c41">comment #41</a>)
+
+<span class="quote">&gt; Because this history is not stored after traversal is done, and because
+&gt; traversal is done in a breadth-first-search manner, the fix has two
+&gt; &quot;strange&quot; effects:
+&gt; 
+&gt; 1.) In case of mutually recursive a symbolic links, refreshing on level 0 has
+&gt;     a different result than refreshing on lower levels - lower levels reveal
+&gt;     one level more of the recursive link loop, while refreshing on level 0
+&gt;     reveals only the first one. This can be shown by refreshing on various 
+&gt;     levels in project test1.
+&gt; 
+&gt; 2.) There is one specific case where even non-recursive symbolic links show
+&gt;     fewer duplicate resources now, than it was before the fix. Look at test6
+&gt;     from the attachment to <a href="show_bug.cgi?id=105554#c40">comment #40</a> for details.
+&gt; 
+&gt; Both these &quot;strange&quot; results appear in very rare scenarios, so I think these
+&gt; are acceptable taking the benefit of the fix into account.</span >
+
+Unfortunately we run into this rare scenario in <a class="bz_bug_link 
+          bz_status_CLOSED  bz_closed"
+   title="CLOSED WONTFIX - UnifiedTree misses linked directories in some cases"
+   href="show_bug.cgi?id=537449">bug 537449</a> :-(
+It is really hard to explain customer *without* recursive links in file system that Eclipse does not show random directories just because customer makes use of links.
+
+<span class="quote">&gt; Fixing them would
+&gt; require a lot more effort, most probably including things like keeping track
+&gt; of previous locations while following links and keeping this history in sync
+&gt; with workspace changes; resource tree lookups during tree traversal;
+&gt; deferring symbolic link evaluation in the BFS queue until all
+&gt; non-symbolic-links are evaluated.</span >
+
+We plan to do *something* in context of <a class="bz_bug_link 
+          bz_status_CLOSED  bz_closed"
+   title="CLOSED WONTFIX - UnifiedTree misses linked directories in some cases"
+   href="show_bug.cgi?id=537449">bug 537449</a>, and especially we plan to finally add known test cases via <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - JUnit tests for recursive symlinks"
+   href="show_bug.cgi?id=185247">bug 185247</a>.</pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=105554">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=105554">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=105554">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=105554&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=105554" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>

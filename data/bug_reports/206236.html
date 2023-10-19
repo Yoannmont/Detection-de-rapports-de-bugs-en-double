@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>206236 &ndash; Severe, Repeating OOM PermGen Crashing WITH 512M of PermGen space and 1G of VM</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "206236 – Severe, Repeating OOM PermGen Crashing WITH 512M of PermGen space and 1G of VM",
+                             "show_bug.cgi?id=206236" );
+        document.title = "206236 – Severe, Repeating OOM PermGen Crashing WITH 512M of PermGen space and 1G of VM";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "206236 – Severe, Repeating OOM PermGen Crashing WITH 512M of PermGen space and 1G of VM", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_RESOLVED
+                 bz_product_Mylyn
+                 bz_component_UI
+                 bz_bug_206236 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;206236</span>
+
+        <span id="subtitle" class="subheader">Severe, Repeating OOM PermGen Crashing WITH 512M of PermGen space and 1G of VM</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2007-10-18 17:05:17 EDT</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=206236&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=206236" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2007-10-18 17:05:17">
+  <input type="hidden" name="id" value="206236">
+  <input type="hidden" name="token" value="1629860125-L2x86gmeml5YuyGKR4KR28pa_2Ln_hJ1BTn1WdvqtO4">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=206236"><b>Bug&nbsp;206236</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">Severe, Repeating OOM PermGen Crashing WITH 512M of PermGen space and 1G of VM</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span>Severe, Repeating OOM PermGen Crashing WITH 512M of PermGen space and 1G of VM
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      'Severe, Repeating OOM PermGen Crashing WITH 512M of PermGen space and 1G of VM' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">RESOLVED
+          DUPLICATE
+            of <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - Wrong eclipse.ini configuration for PermGen size"
+   href="show_bug.cgi?id=203325">bug 203325</a>
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >Mylyn
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >Mylyn
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=Mylyn"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >UI
+
+  (<a href="buglist.cgi?component=UI&amp;product=Mylyn&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>unspecified &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">PC
+        Windows XP
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P3
+       major<span id="votes_container">
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=206236#vote_206236">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>--- &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard">
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'mylyn-inbox\x40eclipse.org',
+        '');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+
+  </td>
+  </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2007-10-13 17:16 EDT by <span class="vcard"><span class="fn">Gary Hewett</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Gary.Hewett&#64;technical-magic.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Gary.Hewett&#64;technical-magic.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2007-10-18 17:05 EDT
+      (<a href="show_activity.cgi?id=206236">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>3 
+          users
+          <span id="cc_edit_area_showhide_container" class="bz_default_hidden">
+            (<a href="#" id="cc_edit_area_showhide">show</a>)
+          </span>
+        <div id="cc_edit_area">
+          <br>
+            <select id="cc" multiple="multiple" size="5" >
+                <option value="shawn.minto">shawn.minto</option>
+                <option value="Szymon.Brandys">Szymon.Brandys</option>
+                <option value="wmitsuda">wmitsuda</option>
+            </select>
+        </div>
+          <script type="text/javascript">
+            hideEditableField( 'cc_edit_area_showhide_container', 
+                               'cc_edit_area', 
+                               'cc_edit_area_showhide', 
+                               '', 
+                               '');  
+          </script>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" >
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <a href="attachment.cgi?bugid=206236&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=206236&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=206236#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Gary Hewett</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Gary.Hewett&#64;technical-magic.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Gary.Hewett&#64;technical-magic.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-13 17:16:38 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Build ID: M20070921-1145
+
+Steps To Reproduce:
+1. Download Eclipse Classic 3.3.1
+2. Install MyLYN and Web Standard Tools (plus dependencies)
+3. Set Eclipse.ini 
+
+-showsplash
+org.eclipse.platform
+--launcher.XXMaxPermSize
+512m
+-vmargs
+-Xms40m
+-Xmx1024m
+
+Run on Sun's Java 
+java version &quot;1.6.0_03&quot;
+Java(TM) SE Runtime Environment (build 1.6.0_03-b05)
+Java HotSpot(TM) Client VM (build 1.6.0_03-b05, mixed mode, sharing)
+
+Workbench is 173 meg with 1655 Folders and 13,860 Files of which about 1049 are java class files. 
+
+The rest is unpredictable. I frequently get this on boot:
+
+
+Error
+Sat Oct 13 16:45:15 EDT 2007
+Exception launching the Eclipse Platform:
+
+java.lang.OutOfMemoryError: PermGen space
+
+With NO STACK TRACE WHATSOSEVER... When this happens I'm only a mouse click or two away from a complete workbench crash.
+
+Although I have a number of superflous logs (I don;t think they are a problem however they are avaialbel upon request I do have these culprits that might be the root cuase or at least point in the right direction. When the following occurs it's only a matter of minutes before a complete crash follows. 
+
+I've seen this particular issue mentioned in a newsgroup as &quot;unpredictable&quot; and no resolution found. 
+
+Current crashing anywhere from 5 minutes to 2 hours apart.
+
+
+
+More information:
+eclipse.buildId=M20070921-1145
+java.version=1.6.0_03
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+Command-line arguments:  -os win32 -ws win32 -arch x86
+
+Error
+Sat Oct 13 16:44:51 EDT 2007
+Unhandled event loop exception
+
+java.lang.OutOfMemoryError: PermGen space
+at java.lang.ClassLoader.defineClass1(Native Method)
+at java.lang.ClassLoader.defineClass(Unknown Source)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.defineClass(DefaultClassLoader.java:161)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.defineClass(ClasspathManager.java:501)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findClassImpl(ClasspathManager.java:471)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClassImpl(ClasspathManager.java:430)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:413)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:189)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findLocalClass(BundleLoader.java:340)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClassInternal(BundleLoader.java:408)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:369)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:357)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:83)
+at java.lang.ClassLoader.loadClass(Unknown Source)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.loadClass(BundleLoader.java:289)
+at org.eclipse.osgi.framework.internal.core.BundleHost.loadClass(BundleHost.java:227)
+at org.eclipse.osgi.framework.internal.core.AbstractBundle.loadClass(AbstractBundle.java:1269)
+at org.eclipse.core.internal.registry.osgi.RegistryStrategyOSGI.createExecutableExtension(RegistryStrategyOSGI.java:160)
+at org.eclipse.core.internal.registry.ExtensionRegistry.createExecutableExtension(ExtensionRegistry.java:788)
+at org.eclipse.core.internal.registry.ConfigurationElement.createExecutableExtension(ConfigurationElement.java:243)
+at org.eclipse.core.internal.registry.ConfigurationElementHandle.createExecutableExtension(ConfigurationElementHandle.java:51)
+at org.eclipse.ui.internal.ide.registry.MarkerHelpRegistry.hasResolution(MarkerHelpRegistry.java:178)
+at org.eclipse.ui.internal.ide.registry.MarkerHelpRegistry.hasResolutions(MarkerHelpRegistry.java:154)
+at org.eclipse.ui.views.markers.internal.ActionResolveMarker.selectionChanged(ActionResolveMarker.java:148)
+at org.eclipse.ui.actions.SelectionProviderAction.selectionChanged(SelectionProviderAction.java:143)
+at org.eclipse.jface.viewers.Viewer$2.run(Viewer.java:162)
+at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+at org.eclipse.core.runtime.Platform.run(Platform.java:857)
+at org.eclipse.ui.internal.JFaceUtil$1.run(JFaceUtil.java:46)
+at org.eclipse.jface.util.SafeRunnable.run(SafeRunnable.java:199)
+at org.eclipse.jface.viewers.Viewer.fireSelectionChanged(Viewer.java:160)
+at org.eclipse.jface.viewers.StructuredViewer.updateSelection(StructuredViewer.java:2047)
+
+eclipse.buildId=M20070921-1145
+java.version=1.6.0_03
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+Command-line arguments:  -os win32 -ws win32 -arch x86
+
+Error
+Sat Oct 13 16:45:01 EDT 2007
+Unhandled event loop exception
+
+org.eclipse.swt.SWTException: Failed to execute runnable (java.lang.OutOfMemoryError: PermGen space)
+at org.eclipse.swt.SWT.error(SWT.java:3563)
+at org.eclipse.swt.SWT.error(SWT.java:3481)
+at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:126)
+at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3659)
+at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3296)
+at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:2389)
+at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2353)
+at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2219)
+at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:466)
+at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:289)
+at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:461)
+at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:106)
+at null
+at null
+at null
+at null
+at null
+at null
+at null
+at null
+at null
+at null
+at null
+at null
+Caused by: java.lang.OutOfMemoryError: PermGen space
+at java.lang.Class.getDeclaredMethods0(Native Method)
+at java.lang.Class.privateGetDeclaredMethods(Unknown Source)
+at java.lang.Class.getDeclaredMethod(Unknown Source)
+at org.eclipse.mylyn.internal.ide.ui.actions.FocusProblemsListAction.getViewers(FocusProblemsListAction.java:39)
+at org.eclipse.mylyn.context.ui.AbstractFocusViewAction$1.preShutdown(AbstractFocusViewAction.java:86)
+at org.eclipse.ui.internal.Workbench$7.run(Workbench.java:706)
+at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+at org.eclipse.core.runtime.Platform.run(Platform.java:857)
+at org.eclipse.ui.internal.JFaceUtil$1.run(JFaceUtil.java:46)
+at org.eclipse.jface.util.SafeRunnable.run(SafeRunnable.java:199)
+at org.eclipse.ui.internal.Workbench.firePreShutdown(Workbench.java:704)
+at org.eclipse.ui.internal.Workbench.busyClose(Workbench.java:844)
+at org.eclipse.ui.internal.Workbench.access$15(Workbench.java:834)
+at org.eclipse.ui.internal.Workbench$22.run(Workbench.java:1078)
+at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:67)
+at org.eclipse.ui.internal.Workbench.close(Workbench.java:1076)
+at org.eclipse.ui.internal.WorkbenchConfigurer.emergencyClose(WorkbenchConfigurer.java:165)
+at org.eclipse.ui.internal.ide.IDEWorkbenchErrorHandler.closeWorkbench(IDEWorkbenchErrorHandler.java:236)
+at org.eclipse.ui.internal.ide.IDEWorkbenchErrorHandler.handleException(IDEWorkbenchErrorHandler.java:140)
+at org.eclipse.ui.internal.ide.IDEWorkbenchErrorHandler.access$0(IDEWorkbenchErrorHandler.java:131)
+at org.eclipse.ui.internal.ide.IDEWorkbenchErrorHandler$1.runInUIThread(IDEWorkbenchErrorHandler.java:106)
+at org.eclipse.ui.progress.UIJob$1.run(UIJob.java:94)
+at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:123)
+at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3659)
+at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3296)
+at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:2389)
+at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2353)
+at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2219)
+at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:466)
+at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:289)
+at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:461)</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=206236#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Szymon Brandys</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Szymon.Brandys&#64;pl.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Szymon.Brandys&#64;pl.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-15 03:45:48 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I'm guessing this is a Mylyn problem.</pre>
+    </div>
+
+    <div id="c2" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=206236#c2">Comment 2</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Gary Hewett</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Gary.Hewett&#64;technical-magic.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Gary.Hewett&#64;technical-magic.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-15 07:36:01 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I have disabled all of the MyLYN components and will run in this mode for a while to verify your theory.</pre>
+    </div>
+
+    <div id="c3" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=206236#c3">Comment 3</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eugene Kuleshov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ekuleshov&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ekuleshov&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-15 13:18:27 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Before blaming Mylyn it would be nice if you could open up jconsole and check what is the actual permgen size is used.
+
+In fact, there is a regression bug in Eclipse 3.3.1, so it is not using parameter --launcher.XXMaxPermSize. See <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - Wrong eclipse.ini configuration for PermGen size"
+   href="show_bug.cgi?id=203325">bug 203325</a>
+In a mean time you could use the following setting instead of that.
+
+-vmargs
+-XX:MaxPermSize=120m</pre>
+    </div>
+
+    <div id="c4" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=206236#c4">Comment 4</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-15 23:21:08 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">As far as we know, Mylyn is only related to PermGen errors in that it requires the loading of additional classes.  In this scenario I'm guessing that you're either seeing the problem that Eugene described, or that the VM is not accepting a PermSize of 512M given how much physical memory you have.  I have updated the Mylyn FAQ entry on this with additional steps that you can take to resolve the problem.  If you see Mylyn implicated in any way please feel free to reopen.
+
+<a href="http://wiki.eclipse.org/index.php/Mylyn_FAQ#I_am_seeing_java.lang.OutOfMemoryError:_PermGen_space_errors.2C_what.27s_wrong.3F">http://wiki.eclipse.org/index.php/Mylyn_FAQ#I_am_seeing_java.lang.OutOfMemoryError:_PermGen_space_errors.2C_what.27s_wrong.3F</a>
+
+Eugene: fyi, I recently learned that the setting needs to be a power of two otherwise it will silently fall to the standard size (32M).  Added that note to the FAQ as well.</pre>
+    </div>
+
+    <div id="c5" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=206236#c5">Comment 5</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Willian Mitsuda</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=wmitsuda&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=wmitsuda&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-16 00:47:59 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">According to the version, error message and configuration, I could say there is a 99% probability this is a dup of <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - Wrong eclipse.ini configuration for PermGen size"
+   href="show_bug.cgi?id=203325">bug#203325</a>.
+
+I saw a lot of people having this problem (myself included) and blaming Eclipse for letting this bug pass through the release.</pre>
+    </div>
+
+    <div id="c6" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=206236#c6">Comment 6</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eugene Kuleshov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ekuleshov&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ekuleshov&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-16 01:11:19 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=206236#c4">comment #4</a>)
+<span class="quote">&gt; Eugene: fyi, I recently learned that the setting needs to be a power of two
+&gt; otherwise it will silently fall to the standard size (32M).  Added that note to
+&gt; the FAQ as well.</span >
+
+Out of curiosity, where did you learned that? My recollection is that it need to not exceed some threshold derived from the physical memory size but there is none about the value.</pre>
+    </div>
+
+    <div id="c7" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=206236#c7">Comment 7</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Gary Hewett</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Gary.Hewett&#64;technical-magic.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Gary.Hewett&#64;technical-magic.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-16 09:20:30 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Having read the bug log I concur with the strong possibility of this being a dupe of <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - Wrong eclipse.ini configuration for PermGen size"
+   href="show_bug.cgi?id=203325">bug#203325</a> as suggested. I'm closing this as such so as not to waste anyone limited resources.
+
+I'm not a newbie to programming in general as I make my living with code. Yes I &quot;sell&quot; my soul to corporations so I know that doesn't count as real programming to with a lot of you so in this context I'll consider myself &quot;joe avegae user&quot; of the Eclipse product. 
+
+Joe averages' opinion of the product plummeted over this issue for several reasons.  #1 I did not find the original bug and I DID do my homework first looking for it. #2 the product crashes hard when you hit this bug in an my case had several &quot;rewinds&quot; of code edits that I had to refigure out. As I do a LOT of refactoring AND I had a major release on the way out the door the confidence in my code started waning. I can't delay a release once a commitment is made - it must be delivered and it must work. Having a crashing editor was EXTREMELY STRESSFUL on top of an extremely stressful situation at the best of times.
+
+IDE crashes are the reason I wrote in a brain dead simple text editor for about 10 years. Based on this experience I seriously considered moving back.  
+
+My vote is also for option 3 (<a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - Wrong eclipse.ini configuration for PermGen size"
+   href="show_bug.cgi?id=203325">bug#203325</a>) - make the default downloads for the basic product stable in as many situations as possible. Failing to do that will result in a LOT of wasted resources at your end dealing with people like me.
+
+PS: Is there any pay-for consulting available for Eclipse? A way to get answers faster when needed in a commercial context? Don't get me wrong - you guys do wonders and Eclipse is an ncredible product when it's stable, however there are times when people need an answer faster than can be achieved through the community process.
+
+PPS: To the webmaster here - Joe user typically does stupid things in data entry - like cutting and pasting <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - Wrong eclipse.ini configuration for PermGen size"
+   href="show_bug.cgi?id=203325">bug#203325</a> in the duplicate bug box. How about a simple data scrubber that strips all but numerical characters out of the entered data so the request goes still though? (Pet peeve - just like web sites that can't understand Visa card numbers with spaces in them - man you guys need to deal with my users and see how much data scrubbing I have to do!)
+
+*** This bug has been marked as a duplicate of <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - Wrong eclipse.ini configuration for PermGen size"
+   href="show_bug.cgi?id=203325">bug 203325</a> ***</pre>
+    </div>
+
+    <div id="c8" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=206236#c8">Comment 8</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eugene Kuleshov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ekuleshov&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ekuleshov&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-16 12:57:41 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Gary, please submit a separate bug reports for any improvements you could think of.</pre>
+    </div>
+
+    <div id="c9" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=206236#c9">Comment 9</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-16 23:23:23 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Gary: sorry if <a href="show_bug.cgi?id=206236#c8">comment#8</a> sounded a bit dismissive, it probably wasn't intentional.
+
+In terms of Mylyn support, note that there is no &quot;us and them&quot; with open vs. closed source developers.  In fact, for the 3.0 cycle of Mylyn we are trying to incorporate as much newcomer feedback as possible because the tool has evolved around open source early adopters and is now being used by far more people.  
+
+Yes, bug <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - Wrong eclipse.ini configuration for PermGen size"
+   href="show_bug.cgi?id=203325">bug#203325</a> is the kind of bug that's very problematic and can make the entire Platform seem unstable.  I ask that you post these comments, less the P.S.'s, on bug <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - Wrong eclipse.ini configuration for PermGen size"
+   href="show_bug.cgi?id=203325">bug#203325</a> so that others can get your fresh perspective on this, which will help them prioritize the resolution.  Once you comment there I can also back up your opinion because I agree, but it would be good to first have an outsider's input.
+
+Regarding for-pay consulting and support for Eclipse, feel free to contact me directly about this and I can point you at some commercial resources that I have encountered, but I don't have a balanced enough sense of all available to list them here without bias.  
+
+Regarding the data entry issue, you have two options: either file a new bug report on Mylyn requesting that our rich Bugzilla editor support this, or file a bug against Community requesting that the Web UI support it.</pre>
+    </div>
+
+    <div id="c10" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=206236#c10">Comment 10</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eugene Kuleshov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ekuleshov&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ekuleshov&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-17 11:32:47 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=206236#c9">comment #9</a>)
+<span class="quote">&gt; Gary: sorry if <a href="show_bug.cgi?id=206236#c8">comment#8</a> sounded a bit dismissive, it probably wasn't
+&gt; intentional.</span >
+
+Sorry if it sounded dismissive. I meant to say that we really need a separate bug reports to be able to track enhancement requests. That is part of the workflow and allow us to use task context.</pre>
+    </div>
+
+    <div id="c11" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=206236#c11">Comment 11</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-17 13:40:52 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Agreed that additional enhancement requests should be tracked in new bugs, and in general we prefer users creating .
+
+(In reply to <a href="show_bug.cgi?id=206236#c6">comment #6</a>)
+<span class="quote">&gt; Out of curiosity, where did you learned that? My recollection is that it need to
+&gt; not exceed some threshold derived from the physical memory size but there is
+&gt; none about the value.</span >
+
+Shawn Minto told me that he read this on a post on the apache mailing lists, where someone's setting was not being accepted, and defaulting to 32M, when they weren't using a power of 2.  I'm not sure what VM they were using and on a quick search could not find evidence of this.  I have updated the FAQ entry accordingly to indicate that it &quot;may need to be&quot;, not &quot;must be&quot; be a power of 2: <a href="http://wiki.eclipse.org/Mylyn_FAQ#Why_am_seeing_java.lang.OutOfMemoryError:_PermGen_space_errors.3F">http://wiki.eclipse.org/Mylyn_FAQ#Why_am_seeing_java.lang.OutOfMemoryError:_PermGen_space_errors.3F</a></pre>
+    </div>
+
+    <div id="c12" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=206236#c12">Comment 12</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Gary Hewett</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Gary.Hewett&#64;technical-magic.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Gary.Hewett&#64;technical-magic.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-17 14:07:35 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Thank you everyone for the chatter on this issue. I'm learning how the community works :)
+
+I will take it upon myself to test the power of 2 theory. Consider it my tiny contribution to the community. It will take a few days to come back with any definitive results. 
+
+Someone pointed me towards JConsole and I thank them for that. Nice to see EXACTLY what is happening instead of guessing. Took me a few more unexpected crashes before I figured out exactly WHICH session I should have been watching and then it took me more than a few attempts to actually get the ini file to accept what I was feeding it. The current winning version of my eclipse.in is here for what it is worth.
+
+-showsplash
+org.eclipse.platform
+-vmargs
+-Xms40m
+-Xmx1024m
+-XX:MaxPermSize=128M
+
+Although several people have mentioned that the -XX:MaxPermSize=128M must come AFTER the -vmargs tag (and yes I can confirm it must) this sample makes it easier to see this for those us us blessed with inductive (versus deductive) reasoning skills.
+
+The above ini file is working with Suns JVM:
+
+java version &quot;1.6.0_03&quot;
+Java(TM) SE Runtime Environment (build 1.6.0_03-b05)
+Java HotSpot(TM) Client VM (build 1.6.0_03-b05, mixed mode, sharing)
+
+I have been crash free since I got the setting *correct*.
+
+It would also be very nice to have eclipse ratify those settings upon boot and/or at least report in the workspace log that an expected or asked for setting was not realised. Do NOT hold up getting the suggested patch out now for that nicety however.</pre>
+    </div>
+
+    <div id="c13" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=206236#c13">Comment 13</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-17 19:39:09 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Gary: since this is a Mylyn bug you will need to post your comments on <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - Wrong eclipse.ini configuration for PermGen size"
+   href="show_bug.cgi?id=203325">bug 203325</a> for them to be noticed by people who can address them.  Mylyn does try to provide relevant support information like this in its FAQ, so if you could take a look at the following entry, and make sure that it is clear to someone in your shoes, that would be great: <a href="http://wiki.eclipse.org/index.php/Mylyn_FAQ#Why_am_seeing_java.lang.OutOfMemoryError:_PermGen_space_errors.3F">http://wiki.eclipse.org/index.php/Mylyn_FAQ#Why_am_seeing_java.lang.OutOfMemoryError:_PermGen_space_errors.3F</a></pre>
+    </div>
+
+    <div id="c14" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=206236#c14">Comment 14</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Gary Hewett</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Gary.Hewett&#64;technical-magic.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Gary.Hewett&#64;technical-magic.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-18 09:48:19 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">2B or not 2B a power of 2 - eh?
+
+-XX:MaxPermSize=131M
+
+To date my minuscule sample of my testings indicate that this is NOT an issue to be concerned with. 
+
+Eclipse's motility is fine using the above value :)
+
+I've been gradually incrementing the value by 1M on each restart (which for me used to be a week or more apart before this bug blew me out of the water). With each launch I connected with JConsole and confirmed that the values do increase, although there is some minor rounding of the values going on it is small enough to be statistically irrelevant.
+
+Workspace appears to run fine in *real world usage mode* with these non-power-of-2-values. 
+
+This is only empirical evidence and by no means a definitive answer and I do not (yet) have any idea of where a top end might be and technically it would only apply to the exact version of the JVM (build 1.6.0_03-b05) I am working with now I do expect this would apply to at least any 1.6 Java build.
+
+</pre>
+    </div>
+
+    <div id="c15" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=206236#c15">Comment 15</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-18 17:05:17 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Gary: thanks, that's a useful data point.  If we find evidence that the Sun 1.5 VM works without powers of 2 as well I'll remove the corresponding cautionary statement from the FAQ.</pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=206236">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=206236">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=206236">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=206236&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=206236" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>

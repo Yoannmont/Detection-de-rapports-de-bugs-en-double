@@ -1,0 +1,4070 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>44915 &ndash; Clipboard getAvailableTypes runs the event loop on GTK</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "44915 – Clipboard getAvailableTypes runs the event loop on GTK",
+                             "show_bug.cgi?id=44915" );
+        document.title = "44915 – Clipboard getAvailableTypes runs the event loop on GTK";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "44915 – Clipboard getAvailableTypes runs the event loop on GTK", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_RESOLVED
+                 bz_product_Platform
+                 bz_component_SWT
+                 bz_bug_44915 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;44915</span>
+
+        <span id="subtitle" class="subheader">Clipboard getAvailableTypes runs the event loop on GTK</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2008-06-03 14:11:35 EDT</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=44915&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=44915" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2008-06-03 14:11:35">
+  <input type="hidden" name="id" value="44915">
+  <input type="hidden" name="token" value="1629876414-3pgpky0rLtMQdsUGZQDadsiCVvysOWoAINIelOuxWtI">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=44915"><b>Bug&nbsp;44915</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">Clipboard getAvailableTypes runs the event loop on GTK</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span>Clipboard getAvailableTypes runs the event loop on GTK
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      'Clipboard getAvailableTypes runs the event loop on GTK' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">RESOLVED
+          WONTFIX
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >Platform
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >Eclipse Project
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=Platform"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >SWT
+
+  (<a href="buglist.cgi?component=SWT&amp;product=Platform&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>3.0 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">PC
+        Linux-GTK
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P3
+       major<span id="votes_container">
+      with
+      <a href="page.cgi?id=voting/bug.html&amp;bug_id=44915">3 
+            votes</a>
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=44915#vote_44915">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>3.0 RC4 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">Veronika Irvine</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veronika_irvine&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veronika_irvine&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard">
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'platform-swt-inbox\x40eclipse.org',
+        '');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          <tr>
+    <th class="field_label">
+      <label>Duplicates (11)</label>:
+    </th>
+    <td class="field_value">
+      <span id="duplicates"><a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Random crashing in gdk_window_get_origin"
+   href="show_bug.cgi?id=40740">40740</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - SWT-GTK hangs while reading from clipboard (on start-up)"
+   href="show_bug.cgi?id=43005">43005</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Crashes on Task Column Resize"
+   href="show_bug.cgi?id=43995">43995</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Crash while changing package name"
+   href="show_bug.cgi?id=44606">44606</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Opening Java perspective causes an error to occur"
+   href="show_bug.cgi?id=44817">44817</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - eclipse keeps crashing"
+   href="show_bug.cgi?id=47271">47271</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Eclipse locks up, and needs to be hard killed"
+   href="show_bug.cgi?id=55714">55714</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Debugger hangs while suspending on breakpoint"
+   href="show_bug.cgi?id=60136">60136</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Paste Java Source into the editor break down the Eclipse"
+   href="show_bug.cgi?id=65889">65889</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Lockup opening concrete type from Variables view"
+   href="show_bug.cgi?id=71818">71818</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - eclipse debugger hangs on Mdk 10.1 CE"
+   href="show_bug.cgi?id=75161">75161</a> 
+      </span>
+      (<a href="buglist.cgi?bug_id=40740,43005,43995,44606,44817,47271,55714,60136,65889,71818,75161">view as bug list</a>)
+    </td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+
+  </td>
+  </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2003-10-15 12:17 EDT by <span class="vcard"><span class="fn">Veronika Irvine</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veronika_irvine&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veronika_irvine&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2008-06-03 14:11 EDT
+      (<a href="show_activity.cgi?id=44915">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>14 
+          users
+          <span id="cc_edit_area_showhide_container" class="bz_default_hidden">
+            (<a href="#" id="cc_edit_area_showhide">show</a>)
+          </span>
+        <div id="cc_edit_area">
+          <br>
+            <select id="cc" multiple="multiple" size="5" >
+                <option value="billy.biggs">billy.biggs</option>
+                <option value="dcorbin">dcorbin</option>
+                <option value="douglas.pollock">douglas.pollock</option>
+                <option value="eclipse">eclipse</option>
+                <option value="eclipse">eclipse</option>
+                <option value="edoardo">edoardo</option>
+                <option value="gunnar">gunnar</option>
+                <option value="jared_burns">jared_burns</option>
+                <option value="mlq.eclipse">mlq.eclipse</option>
+                <option value="mtaylor">mtaylor</option>
+                <option value="thatnitind">thatnitind</option>
+                <option value="tyang">tyang</option>
+                <option value="valentam">valentam</option>
+                <option value="zhourj">zhourj</option>
+            </select>
+        </div>
+          <script type="text/javascript">
+            hideEditableField( 'cc_edit_area_showhide_container', 
+                               'cc_edit_area', 
+                               'cc_edit_area_showhide', 
+                               '', 
+                               '');  
+          </script>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" >
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <a href="attachment.cgi?bugid=44915&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=44915&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Veronika Irvine</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veronika_irvine&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veronika_irvine&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2003-10-15 12:17:43 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Clipboard.getAvailableTypes and Clipboard.getAvailableTypeNames call 
+gtk_clipboard_wait_for_contents.  This results in the evnt loop running which 
+results in weird hangs/gps/exceptions.</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Veronika Irvine</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veronika_irvine&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veronika_irvine&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2003-10-15 12:18:16 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Random crashing in gdk_window_get_origin"
+   href="show_bug.cgi?id=40740">Bug 40740</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c2" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c2">Comment 2</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Veronika Irvine</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veronika_irvine&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veronika_irvine&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2003-10-15 12:19:01 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Opening Java perspective causes an error to occur"
+   href="show_bug.cgi?id=44817">Bug 44817</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c3" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c3">Comment 3</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tom Hofmann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse&#64;tom.hofmann.name" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse&#64;tom.hofmann.name" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2003-11-12 05:19:11 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Critical (and really a blocker) for me as I cannot debug many situations in the
+editor.
+
+Steps to reproduce:
+- Run a runtime workbench.
+- Set a breakpoint that will be triggered when pasting into a Java editor (e.g.
+in JavaIndenter ctor)
+- Paste a line in a Java Editor
+-&gt; The debug workbench starts showing a stacktrace but does not get further than
+saying &quot;pending....&quot; on all frames. 
+-&gt; Deadlock, with the main thread blocking on gtk_clipboard_wait_for_contents
+while, holding a lock that the debugger is waiting for. 
+
+I will attach the vm dump, the relevant sections:
+
+
+&quot;Worker-3&quot; prio=1 tid=0x08bdcb68 nid=0x1ae7 waiting for monitor entry
+[64325000..64325714]
+        at org.eclipse.swt.internal.gtk.OS.gdk_pixbuf_new(Native Method)
+        - waiting to lock &lt;0x5dbc85b8&gt; (a java.lang.Class)
+        at org.eclipse.swt.graphics.Image.init(Image.java:745)
+        at org.eclipse.swt.graphics.Image.&lt;init&gt;(Image.java:430)
+        at
+org.eclipse.ui.internal.progress.ProgressManager.getImage(ProgressManager.java:651)
+        at
+org.eclipse.ui.internal.progress.AnimationManager.animateLoop(AnimationManager.java:204)
+        at
+org.eclipse.ui.internal.progress.AnimationManager$3.run(AnimationManager.java:467)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:62)
+
+
+&quot;main&quot; prio=1 tid=0x08052200 nid=0x1ae7 runnable [bfffa000..bfffcdc8]
+        at
+org.eclipse.swt.internal.gtk.OS.gtk_clipboard_wait_for_contents(Native Method)
+        - locked &lt;0x5dbc85b8&gt; (a java.lang.Class)
+        at org.eclipse.swt.dnd.Clipboard._getAvailableTypes(Clipboard.java:337)
+        at org.eclipse.swt.dnd.Clipboard.getAvailableTypes(Clipboard.java:282)
+        at
+org.eclipse.jdt.internal.ui.refactoring.reorg.PasteAction.canOperateOn(PasteAction.java:126)
+        at
+org.eclipse.jdt.internal.ui.refactoring.reorg.PasteAction.selectionChanged(PasteAction.java:115)
+        at
+org.eclipse.jdt.ui.actions.SelectionDispatchAction.dispatchSelectionChanged(SelectionDispatchAction.java:184)
+        at
+org.eclipse.jdt.ui.actions.SelectionDispatchAction.update(SelectionDispatchAction.java:112)
+        at
+org.eclipse.jdt.internal.ui.refactoring.reorg.PasteAction.&lt;init&gt;(PasteAction.java:106)
+        at org.eclipse.jdt.ui.actions.CCPActionGroup.&lt;init&gt;(CCPActionGroup.java:80)
+        at org.eclipse.jdt.ui.actions.CCPActionGroup.&lt;init&gt;(CCPActionGroup.java:74)
+        at
+org.eclipse.jdt.internal.ui.javaeditor.JavaOutlinePage.createControl(JavaOutlinePage.java:1028)
+        at
+org.eclipse.ui.views.contentoutline.ContentOutline.doCreatePage(ContentOutline.java:125)
+        at org.eclipse.ui.part.PageBookView.createPage(PageBookView.java:306)
+        at org.eclipse.ui.part.PageBookView.partActivated(PageBookView.java:561)
+        at org.eclipse.ui.internal.PartListenerList$1.run(PartListenerList.java:49)
+        at
+org.eclipse.core.internal.runtime.InternalPlatform.run(InternalPlatform.java:1143)
+        at org.eclipse.core.runtime.Platform.run(Platform.java:461)
+        at
+org.eclipse.ui.internal.PartListenerList.firePartActivated(PartListenerList.java:47)
+        at
+org.eclipse.ui.internal.WorkbenchPage.firePartActivated(WorkbenchPage.java:1205)
+        at
+org.eclipse.ui.internal.WorkbenchPage.setActivePart(WorkbenchPage.java:2520)
+        at
+org.eclipse.ui.internal.WorkbenchPage.requestActivation(WorkbenchPage.java:2242)
+        at org.eclipse.ui.internal.PartPane.requestActivation(PartPane.java:334)
+        at org.eclipse.ui.internal.EditorPane.requestActivation(EditorPane.java:136)
+        at org.eclipse.ui.internal.PartPane.handleEvent(PartPane.java:314)
+        at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:82)
+        at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:962)
+        at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:986)
+        at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:967)
+        at org.eclipse.swt.widgets.Shell.setActiveControl(Shell.java:850)
+        at org.eclipse.swt.widgets.Control.sendFocusEvent(Control.java:2141)
+        at org.eclipse.swt.widgets.Control.gtk_event_after(Control.java:1680)
+        at org.eclipse.swt.widgets.Widget.windowProc(Widget.java:1218)
+        at org.eclipse.swt.widgets.Display.windowProc(Display.java:2317)
+        at org.eclipse.swt.internal.gtk.OS.gtk_main_do_event(Native Method)
+        - locked &lt;0x5dbc85b8&gt; (a java.lang.Class)
+        at org.eclipse.swt.widgets.Display.eventProc(Display.java:710)
+        at
+org.eclipse.swt.internal.gtk.OS.gtk_clipboard_wait_for_contents(Native Method)
+        - locked &lt;0x5dbc85b8&gt; (a java.lang.Class)
+        at org.eclipse.swt.dnd.Clipboard._getAvailableTypes(Clipboard.java:324)
+        at org.eclipse.swt.dnd.Clipboard.getAvailableTypes(Clipboard.java:282)
+        at
+org.eclipse.jdt.internal.ui.refactoring.reorg.PasteAction.canOperateOn(PasteAction.java:126)
+        at
+org.eclipse.jdt.internal.ui.refactoring.reorg.PasteAction.selectionChanged(PasteAction.java:115)
+        at
+org.eclipse.jdt.ui.actions.SelectionDispatchAction.dispatchSelectionChanged(SelectionDispatchAction.java:184)
+        at
+org.eclipse.jdt.ui.actions.SelectionDispatchAction.update(SelectionDispatchAction.java:112)
+        at
+org.eclipse.jdt.internal.ui.refactoring.reorg.PasteAction.&lt;init&gt;(PasteAction.java:106)
+        at org.eclipse.jdt.ui.actions.CCPActionGroup.&lt;init&gt;(CCPActionGroup.java:80)
+        at org.eclipse.jdt.ui.actions.CCPActionGroup.&lt;init&gt;(CCPActionGroup.java:74)
+        at
+org.eclipse.jdt.internal.ui.javaeditor.JavaOutlinePage.createControl(JavaOutlinePage.java:1028)
+        at
+org.eclipse.ui.views.contentoutline.ContentOutline.doCreatePage(ContentOutline.java:125)
+        at org.eclipse.ui.part.PageBookView.createPage(PageBookView.java:306)
+        at org.eclipse.ui.part.PageBookView.partActivated(PageBookView.java:561)
+        at org.eclipse.ui.part.PageBookView.showBootstrapPart(PageBookView.java:676)
+        at org.eclipse.ui.part.PageBookView.createPartControl(PageBookView.java:371)
+        at
+org.eclipse.ui.views.contentoutline.ContentOutline.createPartControl(ContentOutline.java:111)
+        at org.eclipse.ui.internal.PartPane$4.run(PartPane.java:141)
+        at
+org.eclipse.core.internal.runtime.InternalPlatform.run(InternalPlatform.java:1143)
+        at org.eclipse.core.runtime.Platform.run(Platform.java:461)
+        at org.eclipse.ui.internal.PartPane.createChildControl(PartPane.java:137)
+        at org.eclipse.ui.internal.ViewPane.createChildControl(ViewPane.java:211)
+        at org.eclipse.ui.internal.ViewFactory$2.run(ViewFactory.java:167)
+        at
+org.eclipse.core.internal.runtime.InternalPlatform.run(InternalPlatform.java:1143)
+        at org.eclipse.core.runtime.Platform.run(Platform.java:461)
+        at org.eclipse.ui.internal.ViewFactory.busyRestoreView(ViewFactory.java:98)
+        at org.eclipse.ui.internal.ViewFactory$1.run(ViewFactory.java:82)
+        at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:84)
+        at org.eclipse.ui.internal.ViewFactory.restoreView(ViewFactory.java:78)
+        at org.eclipse.ui.internal.Perspective.restoreState(Perspective.java:896)
+        at
+org.eclipse.ui.internal.WorkbenchPage.setPerspective(WorkbenchPage.java:2564)
+        at
+org.eclipse.ui.internal.WorkbenchPage.busySetPerspective(WorkbenchPage.java:649)
+        at org.eclipse.ui.internal.WorkbenchPage.access$8(WorkbenchPage.java:634)
+        at org.eclipse.ui.internal.WorkbenchPage$12.run(WorkbenchPage.java:2713)
+        at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:84)
+        at
+org.eclipse.ui.internal.WorkbenchPage.setPerspective(WorkbenchPage.java:2711)
+        at org.eclipse.ui.internal.Workbench.showPerspective(Workbench.java:1691)
+        at
+org.eclipse.debug.internal.ui.launchConfigurations.PerspectiveManager$1.run(PerspectiveManager.java:159)
+        at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+        at
+org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:102)
+        - locked &lt;0x44df4c80&gt; (a org.eclipse.swt.widgets.RunnableLock)
+        at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:1816)
+        at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:1622)
+        at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:1611)
+        at org.eclipse.ui.internal.Workbench.run(Workbench.java:1594)
+(...)</pre>
+    </div>
+
+    <div id="c4" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c4">Comment 4</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Grant Gayed</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=grant_gayed&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=grant_gayed&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2003-11-25 10:52:28 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - eclipse keeps crashing"
+   href="show_bug.cgi?id=47271">Bug 47271</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c5" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c5">Comment 5</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tom Hofmann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse&#64;tom.hofmann.name" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse&#64;tom.hofmann.name" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2003-12-01 11:02:00 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Changing severity to blocker as this keeps happening on every 3rd to 10th
+breakpoint hit, rendering the debugging functionality virtually unusable.
+
+Is there anything you can recommend as a workaround to prevent this from happening?
+
+Other findings:
+- Funny enough, a hang in eclipse also seems to hang up mozilla.
+- Its not really a freeze, just some part of the UI locks: 
+  - views and editors can still be selected
+  - text can be edited
+  - the mousewheel scrolls the scrollbar, but not the view content
+  - the main menu opens, however nothing happens upon selection
+  - no commands get executed</pre>
+    </div>
+
+    <div id="c6" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c6">Comment 6</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tom Hofmann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse&#64;tom.hofmann.name" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse&#64;tom.hofmann.name" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-01-09 12:16:23 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">found a workaround for my very frequent hangs:
+
+They happened when copy-pasting inside a debugged workbench. A breakpoint is hit
+when pasting. The master workbench accesses the clipboard when activated, and
+tries to access the application that has filled the clipboard - which is the
+debugged workbench that is currently blocked.
+
+The workaround is to copy the pasted text from a different source, e.g. a text
+editor.
+
+reducing severity.</pre>
+    </div>
+
+    <div id="c7" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c7">Comment 7</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jared Burns</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jared_burns&#64;us.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jared_burns&#64;us.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-04-02 17:18:47 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I've got this a couple times in my host while I was just debugging. It just happened to me while I 
+was clicking on stack frames in the debug view. The first frame I selected opened the editor and 
+went to the current line correctly. Then I clicked on the next frame down. The editor opened, but 
+the line wasn't displayed (no highlight, no execution marker, etc.). At this point, my workbench is 
+effectively dead with the main method stuck in the DND code as reported above (but with slightly 
+different line numbers:
+&quot;main&quot; prio=1 tid=0x0x8051f88 nid=0xa2c runnable [bfffa000..bfffd32c]
+        at org.eclipse.swt.internal.gtk.OS.gtk_clipboard_wait_for_contents(Native Method)
+        - locked &lt;0x5d6c3738&gt; (a java.lang.Class)
+        at org.eclipse.swt.dnd.Clipboard._getAvailableTypes(Clipboard.java:351)
+        at org.eclipse.swt.dnd.Clipboard.getAvailableTypes(Clipboard.java:300)
+</pre>
+    </div>
+
+    <div id="c8" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c8">Comment 8</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steve Northover</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=snorthov&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=snorthov&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-04-08 13:33:24 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Crashes on Task Column Resize"
+   href="show_bug.cgi?id=43995">Bug 43995</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c9" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c9">Comment 9</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steve Northover</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=snorthov&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=snorthov&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-04-08 13:36:56 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Eclipse locks up, and needs to be hard killed"
+   href="show_bug.cgi?id=55714">Bug 55714</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c10" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c10">Comment 10</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Grant Gayed</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=grant_gayed&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=grant_gayed&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-04-28 09:03:42 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Debugger hangs while suspending on breakpoint"
+   href="show_bug.cgi?id=60136">Bug 60136</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c11" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c11">Comment 11</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Brian Stiles</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=bstiles&#64;bstiles.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=bstiles&#64;bstiles.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-05-04 12:03:25 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">What missing information, if any, is blocking this bug from being fixed?  What
+can I or others do to help solve this problem?  (I'd really prefer to use GTK
+over Motif, but this is an show-stopper given that I cannot debug under GTK with
+this bug.)</pre>
+    </div>
+
+    <div id="c12" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c12">Comment 12</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Veronika Irvine</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veronika_irvine&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veronika_irvine&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-05-04 12:41:20 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">This bug is actively being worked on.  Unfortunately, the problem is 
+particularly nasty because it involves the event loop.  We hope to have a 
+satisfactory solution in the very near future.</pre>
+    </div>
+
+    <div id="c13" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c13">Comment 13</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Brian Stiles</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=bstiles&#64;bstiles.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=bstiles&#64;bstiles.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-05-04 13:00:02 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Excellent!  I'd be happy to test or whatever else would be useful, if anything.</pre>
+    </div>
+
+    <div id="c14" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c14">Comment 14</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Felipe Heidrich</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse.felipe&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse.felipe&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-05-05 13:18:07 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I have a reproducible case where Eclipse hangs:
+1) Have a SWT testcase which has a StyledText
+2) Set the text of the StyledText to &quot;\ucf64\ud6da\ubb4f \ud6da\ud5da\ubada&quot;
+3) Set a breakpoint at second line of StyledText#paste()
+4) Run your testcase in debug mode
+5) Select the string
+6) Ctrl+C Ctrl+V
+
+Eclipse hangs. It stills paints propertly, expand/collapse trees, Pop-up menus,
+but for mostly of it, the workbench does not respond.
+</pre>
+    </div>
+
+    <div id="c15" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c15">Comment 15</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Veronika Irvine</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veronika_irvine&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veronika_irvine&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-05-11 10:32:51 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Fixed for I20040511.</pre>
+    </div>
+
+    <div id="c16" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c16">Comment 16</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Douglas Pollock</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=douglas.pollock&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=douglas.pollock&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-05-11 10:36:22 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Out of curiousity, what was the nature of the fix? </pre>
+    </div>
+
+    <div id="c17" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c17">Comment 17</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Veronika Irvine</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veronika_irvine&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veronika_irvine&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-05-11 10:45:17 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The problem was that GTK was running the event loop until a selection event 
+was processed.  This had two negative side effects - 1) the event loop could 
+cause some other OS interaction that would result in a crash or 2)the event 
+loop could cause some other OS interaction that could actually eat the 
+selection event and the call to gtk_clipboard_wait_for_contents would never 
+return resulting in a hang.
+
+The fix was to collect all the events the OS sent and defer them until the 
+selection event came along.  The selection event is processed and then all the 
+deferred events are processed.  This strategy was also used to fix a similar 
+bug in Shell.setVisible.</pre>
+    </div>
+
+    <div id="c18" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c18">Comment 18</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Veronika Irvine</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veronika_irvine&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veronika_irvine&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-05-11 10:46:28 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - SWT-GTK hangs while reading from clipboard (on start-up)"
+   href="show_bug.cgi?id=43005">Bug 43005</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c19" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c19">Comment 19</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Veronika Irvine</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veronika_irvine&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veronika_irvine&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-05-11 10:51:23 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Crash while changing package name"
+   href="show_bug.cgi?id=44606">Bug 44606</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c20" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c20">Comment 20</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Marco Qualizza</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mlq.eclipse&#64;codedaemon.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mlq.eclipse&#64;codedaemon.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-05-11 10:55:49 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Out of curiousity, will this fix <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - NPE when commiting"
+   href="show_bug.cgi?id=61697">bug 61697</a>?</pre>
+    </div>
+
+    <div id="c21" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c21">Comment 21</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Marco Qualizza</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mlq.eclipse&#64;codedaemon.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mlq.eclipse&#64;codedaemon.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-05-11 10:56:48 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Oops, I mean <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - UI seems to become &quot;disconnected&quot; from the application"
+   href="show_bug.cgi?id=61397">bug 61397</a>.</pre>
+    </div>
+
+    <div id="c22" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c22">Comment 22</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Veronika Irvine</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veronika_irvine&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veronika_irvine&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-05-11 13:18:33 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Added my comments to <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - UI seems to become &quot;disconnected&quot; from the application"
+   href="show_bug.cgi?id=61397">bug 61397</a>.  There were several different stack traces in 
+that bug not all of which were related to this bug so I have not marked it as 
+a duplicate.</pre>
+    </div>
+
+    <div id="c23" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c23">Comment 23</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tom Hofmann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse&#64;tom.hofmann.name" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse&#64;tom.hofmann.name" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-05-17 05:20:42 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Is this in I20040514? I am just seeing this now with that build.</pre>
+    </div>
+
+    <div id="c24" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c24">Comment 24</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Veronika Irvine</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veronika_irvine&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veronika_irvine&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-05-18 07:45:43 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Tom, the fix is in I20040514.  What exactly are you seeing in this build?</pre>
+    </div>
+
+    <div id="c25" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c25">Comment 25</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tom Hofmann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse&#64;tom.hofmann.name" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse&#64;tom.hofmann.name" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-05-18 09:08:34 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Hm, I had eclipse locked (ui gone) but not dead-locked (after 5 or 10 minutes,
+it restored itself again, not sure what the trigger was). The stack of the main
+thread was similar to this (this one copied from <a href="show_bug.cgi?id=44915#c3">comment 3</a>, but it was in
+gtk_clipboard_wait_for_contents).
+
+&quot;main&quot; prio=1 tid=0x08052200 nid=0x1ae7 runnable [bfffa000..bfffcdc8]
+        at
+org.eclipse.swt.internal.gtk.OS.gtk_clipboard_wait_for_contents(Native Method)
+        - locked &lt;0x5dbc85b8&gt; (a java.lang.Class)
+        at org.eclipse.swt.dnd.Clipboard._getAvailableTypes(Clipboard.java:337)
+        at org.eclipse.swt.dnd.Clipboard.getAvailableTypes(Clipboard.java:282)</pre>
+    </div>
+
+    <div id="c26" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c26">Comment 26</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tom Hofmann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse&#64;tom.hofmann.name" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse&#64;tom.hofmann.name" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-05-21 05:52:53 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I am often seeing this while debugging. The UI will be stale and take a couple
+of minutes to restore. Additionally, the entire UI (not just eclipse, but also
+mouse handling of mozilla, KDE bar etc.) will get sluggish. A full vm dump
+during such a situation follows:
+
+Full thread dump Java HotSpot(TM) Client VM (1.4.2_04-b05 mixed mode):
+
+&quot;Worker-25&quot; prio=1 tid=0x0826f228 nid=0x6d11 in Object.wait() [5a654000..5a654854]
+        at java.lang.Object.wait(Native Method)
+        at org.eclipse.core.internal.jobs.WorkerPool.sleep(WorkerPool.java:209)
+        - locked &lt;0x45e624f0&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.startJob(WorkerPool.java:236)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:59)
+
+&quot;Worker-24&quot; prio=1 tid=0x5c1a8bc0 nid=0x6d11 in Object.wait() [5bf01000..5bf01854]
+        at java.lang.Object.wait(Native Method)
+        at org.eclipse.core.internal.jobs.WorkerPool.sleep(WorkerPool.java:209)
+        - locked &lt;0x45e624f0&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.startJob(WorkerPool.java:236)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:59)
+
+&quot;Worker-23&quot; prio=1 tid=0x5a8ce810 nid=0x6d11 in Object.wait() [5b701000..5b701854]
+        at java.lang.Object.wait(Native Method)
+        at org.eclipse.core.internal.jobs.WorkerPool.sleep(WorkerPool.java:209)
+        - locked &lt;0x45e624f0&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.startJob(WorkerPool.java:236)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:59)
+
+&quot;org.eclipse.jdt.debug: JDI Event Dispatcher&quot; prio=1 tid=0x087918e8 nid=0x6d11
+in Object.wait() [5c480000..5c480854]
+        at java.lang.Object.wait(Native Method)
+        at java.lang.Object.wait(Object.java:429)
+        at
+org.eclipse.jdi.internal.connect.PacketReceiveManager.waitForPacketAvailable(PacketReceiveManager.java:168)
+        at
+org.eclipse.jdi.internal.connect.PacketReceiveManager.getCommand(PacketReceiveManager.java:93)
+        - locked &lt;0x48e32308&gt; (a
+org.eclipse.jdi.internal.connect.PacketReceiveManager)
+        at org.eclipse.jdi.internal.MirrorImpl.getCommandVM(MirrorImpl.java:276)
+        at
+org.eclipse.jdi.internal.event.EventQueueImpl.remove(EventQueueImpl.java:63)
+        at
+org.eclipse.jdi.internal.event.EventQueueImpl.remove(EventQueueImpl.java:48)
+        at
+org.eclipse.jdt.internal.debug.core.EventDispatcher.run(EventDispatcher.java:213)
+        at java.lang.Thread.run(Thread.java:534)
+
+&quot;Packet Send Manager&quot; prio=1 tid=0x08741fd8 nid=0x6d11 in Object.wait()
+[5ba07000..5ba07854]
+        at java.lang.Object.wait(Native Method)
+        at java.lang.Object.wait(Object.java:429)
+        at
+org.eclipse.jdi.internal.connect.PacketSendManager.sendAvailablePackets(PacketSendManager.java:94)
+        - locked &lt;0x48e32450&gt; (a org.eclipse.jdi.internal.connect.PacketSendManager)
+        at
+org.eclipse.jdi.internal.connect.PacketSendManager.run(PacketSendManager.java:54)
+        at java.lang.Thread.run(Thread.java:534)
+
+&quot;Packet Receive Manager&quot; prio=1 tid=0x0878f370 nid=0x6d11 runnable
+[5b680000..5b680854]
+        at java.net.SocketInputStream.socketRead0(Native Method)
+        at java.net.SocketInputStream.read(SocketInputStream.java:129)
+        at java.net.SocketInputStream.read(SocketInputStream.java:182)
+        at java.io.DataInputStream.readInt(DataInputStream.java:443)
+        at org.eclipse.jdi.internal.jdwp.JdwpPacket.read(JdwpPacket.java:124)
+        at
+org.eclipse.jdi.internal.connect.PacketReceiveManager.readAvailablePacket(PacketReceiveManager.java:224)
+        at
+org.eclipse.jdi.internal.connect.PacketReceiveManager.run(PacketReceiveManager.java:70)
+        at java.lang.Thread.run(Thread.java:534)
+
+&quot;Console Polling Thread&quot; prio=1 tid=0x5a8ce9c0 nid=0x6d11
+sleeping[5aab6000..5aab6854]
+        at java.lang.Thread.sleep(Native Method)
+        at
+org.eclipse.debug.internal.ui.views.console.ConsoleDocumentPartitioner.pollAndSleep(ConsoleDocumentPartitioner.java:565)
+        at
+org.eclipse.debug.internal.ui.views.console.ConsoleDocumentPartitioner$1.run(ConsoleDocumentPartitioner.java:549)
+        at java.lang.Thread.run(Thread.java:534)
+
+&quot;Input Stream Monitor&quot; prio=1 tid=0x08791620 nid=0x6d11 in Object.wait()
+[5cfba000..5cfba854]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x48e325e0&gt; (a java.lang.Object)
+        at java.lang.Object.wait(Object.java:429)
+        at
+org.eclipse.debug.internal.core.InputStreamMonitor.writeNext(InputStreamMonitor.java:124)
+        - locked &lt;0x48e325e0&gt; (a java.lang.Object)
+        at
+org.eclipse.debug.internal.core.InputStreamMonitor.write(InputStreamMonitor.java:99)
+        at
+org.eclipse.debug.internal.core.InputStreamMonitor$1.run(InputStreamMonitor.java:75)
+        at java.lang.Thread.run(Thread.java:534)
+
+&quot;Output Stream Monitor&quot; prio=1 tid=0x08796248 nid=0x6d11 runnable
+[5d03b000..5d03b854]
+        at java.io.FileInputStream.readBytes(Native Method)
+        at java.io.FileInputStream.read(FileInputStream.java:177)
+        at
+org.eclipse.debug.internal.core.OutputStreamMonitor.read(OutputStreamMonitor.java:132)
+        at
+org.eclipse.debug.internal.core.OutputStreamMonitor.access$1(OutputStreamMonitor.java:124)
+        at
+org.eclipse.debug.internal.core.OutputStreamMonitor$1.run(OutputStreamMonitor.java:177)
+        at java.lang.Thread.run(Thread.java:534)
+
+&quot;Output Stream Monitor&quot; prio=1 tid=0x08795e30 nid=0x6d11 runnable
+[5ba88000..5ba88854]
+        at java.io.FileInputStream.readBytes(Native Method)
+        at java.io.FileInputStream.read(FileInputStream.java:194)
+        at java.io.BufferedInputStream.read1(BufferedInputStream.java:220)
+        at java.io.BufferedInputStream.read(BufferedInputStream.java:277)
+        - locked &lt;0x48e36730&gt; (a java.io.BufferedInputStream)
+        at java.io.FilterInputStream.read(FilterInputStream.java:90)
+        at
+org.eclipse.debug.internal.core.OutputStreamMonitor.read(OutputStreamMonitor.java:132)
+        at
+org.eclipse.debug.internal.core.OutputStreamMonitor.access$1(OutputStreamMonitor.java:124)
+        at
+org.eclipse.debug.internal.core.OutputStreamMonitor$1.run(OutputStreamMonitor.java:177)
+        at java.lang.Thread.run(Thread.java:534)
+
+&quot;process reaper&quot; daemon prio=1 tid=0x086597a8 nid=0x6d11 runnable
+[5bb8a000..5bb8a854]
+        at java.lang.UNIXProcess.waitForProcessExit(Native Method)
+        at java.lang.UNIXProcess.access$1500(UNIXProcess.java:20)
+        at java.lang.UNIXProcess$2.run(UNIXProcess.java:127)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=1 tid=0x5abda1b8
+nid=0x6d11 in Object.wait() [5b884000..5b884854]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:172)
+        - locked &lt;0x48db8500&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;Worker-21&quot; prio=1 tid=0x5c1b8608 nid=0x6d11 in Object.wait() [5bf82000..5bf82854]
+        at java.lang.Object.wait(Native Method)
+        at org.eclipse.core.internal.jobs.WorkerPool.sleep(WorkerPool.java:209)
+        - locked &lt;0x45e624f0&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.startJob(WorkerPool.java:236)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:59)
+
+&quot;Worker-20&quot; prio=1 tid=0x5bd2a5b8 nid=0x6d11 in Object.wait() [5b986000..5b986854]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x48e367c8&gt; (a java.lang.UNIXProcess)
+        at java.lang.Object.wait(Object.java:429)
+        at java.lang.UNIXProcess.waitFor(UNIXProcess.java:160)
+        - locked &lt;0x48e367c8&gt; (a java.lang.UNIXProcess)
+        at
+org.eclipse.debug.core.model.RuntimeProcess$ProcessMonitorJob.run(RuntimeProcess.java:362)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:66)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=1 tid=0x5ab57158
+nid=0x6d11 in Object.wait() [5b782000..5b782854]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:172)
+        - locked &lt;0x48c23d18&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=1 tid=0x5c105a20
+nid=0x6d11 in Object.wait() [5bb09000..5bb09854]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:172)
+        - locked &lt;0x48aceb08&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=1 tid=0x5c30d9c0
+nid=0x6d11 in Object.wait() [5b0e6000..5b0e6854]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:172)
+        - locked &lt;0x483d6df0&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=1 tid=0x5c00fcd0
+nid=0x6d11 in Object.wait() [5b905000..5b905854]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:172)
+        - locked &lt;0x48145790&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=1 tid=0x5bde5130
+nid=0x6d11 in Object.wait() [5d0bc000..5d0bc854]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:172)
+        - locked &lt;0x480f1cb8&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=1 tid=0x5af11b40
+nid=0x6d11 in Object.wait() [5b803000..5b803854]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:172)
+        - locked &lt;0x48087498&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=1 tid=0x5abd2250
+nid=0x6d11 in Object.wait() [5bc0b000..5bc0b854]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:172)
+        - locked &lt;0x47aca100&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;Thread-4&quot; prio=1 tid=0x0848d9b0 nid=0x6d11 runnable [5ceb8000..5ceb8854]
+        at java.net.SocketInputStream.socketRead0(Native Method)
+        at java.net.SocketInputStream.read(SocketInputStream.java:129)
+        at com.jcraft.jsch.IO.getByte(Unknown Source)
+        at com.jcraft.jsch.Session.read(Unknown Source)
+        at com.jcraft.jsch.Session.run(Unknown Source)
+        at java.lang.Thread.run(Thread.java:534)
+
+&quot;Java indexing&quot; daemon prio=1 tid=0x599fee10 nid=0x6d11 in Object.wait()
+[5a5d3000..5a5d3854]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x4648aa18&gt; (a
+org.eclipse.jdt.internal.core.search.indexing.IndexManager)
+        at java.lang.Object.wait(Object.java:429)
+        at
+org.eclipse.jdt.internal.core.search.processing.JobManager.run(JobManager.java:344)
+        - locked &lt;0x4648aa18&gt; (a
+org.eclipse.jdt.internal.core.search.indexing.IndexManager)
+        at java.lang.Thread.run(Thread.java:534)
+
+&quot;Thread-1&quot; prio=1 tid=0x599438e0 nid=0x6d11 in Object.wait() [59b1d000..59b1d854]
+        at java.lang.Object.wait(Native Method)
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:111)
+        - locked &lt;0x4648aaa0&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:127)
+        at
+org.eclipse.jface.action.ActionContributionItem$ImageCache$ReferenceCleanerThread.run(ActionContributionItem.java:196)
+
+&quot;Thread-0&quot; prio=1 tid=0x59943648 nid=0x6d11 in Object.wait() [58c33000..58c33854]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x4648ab10&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:111)
+        - locked &lt;0x4648ab10&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:127)
+        at
+org.eclipse.jface.action.ActionContributionItem$ImageCache$ReferenceCleanerThread.run(ActionContributionItem.java:196)
+
+&quot;Start Level Event Dispatcher&quot; daemon prio=1 tid=0x58483b78 nid=0x6d11 in
+Object.wait() [58b9d000..58b9d854]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x45a70060&gt; (a
+org.eclipse.osgi.framework.eventmgr.EventThread)
+        at java.lang.Object.wait(Object.java:429)
+        at
+org.eclipse.osgi.framework.eventmgr.EventThread.getNextEvent(EventThread.java:162)
+        - locked &lt;0x45a70060&gt; (a org.eclipse.osgi.framework.eventmgr.EventThread)
+        at org.eclipse.osgi.framework.eventmgr.EventThread.run(EventThread.java:100)
+
+&quot;Framework Event Dispatcher&quot; daemon prio=1 tid=0x58429dc0 nid=0x6d11 in
+Object.wait() [58b1c000..58b1c854]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x45a70240&gt; (a
+org.eclipse.osgi.framework.eventmgr.EventThread)
+        at java.lang.Object.wait(Object.java:429)
+        at
+org.eclipse.osgi.framework.eventmgr.EventThread.getNextEvent(EventThread.java:162)
+        - locked &lt;0x45a70240&gt; (a org.eclipse.osgi.framework.eventmgr.EventThread)
+        at org.eclipse.osgi.framework.eventmgr.EventThread.run(EventThread.java:100)
+
+&quot;Signal Dispatcher&quot; daemon prio=1 tid=0x58403438 nid=0x6d11 waiting on condition
+[0..0]
+
+&quot;Finalizer&quot; daemon prio=1 tid=0x08088710 nid=0x6d11 in Object.wait()
+[583f5000..583f5854]
+        at java.lang.Object.wait(Native Method)
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:111)
+        - locked &lt;0x45a70368&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:127)
+        at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:159)
+
+&quot;Reference Handler&quot; daemon prio=1 tid=0x08087b20 nid=0x6d11 in Object.wait()
+[58374000..58374854]
+        at java.lang.Object.wait(Native Method)
+        at java.lang.Object.wait(Object.java:429)
+        at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:115)
+        - locked &lt;0x45a700b0&gt; (a java.lang.ref.Reference$Lock)
+
+&quot;main&quot; prio=1 tid=0x08052350 nid=0x6d11 runnable [bfffa000..bfffc338]
+        at
+org.eclipse.swt.internal.gtk.OS.gtk_clipboard_wait_for_contents(Native Method)
+        - locked &lt;0x54561db0&gt; (a java.lang.Class)
+        at
+org.eclipse.swt.dnd.Clipboard.gtk_clipboard_wait_for_contents(Clipboard.java:385)
+        at org.eclipse.swt.dnd.Clipboard.getContents(Clipboard.java:191)
+        at
+org.eclipse.jdt.internal.ui.javaeditor.ClipboardOperationAction.doPasteWithImportsOperation(ClipboardOperationAction.java:388)
+        at
+org.eclipse.jdt.internal.ui.javaeditor.ClipboardOperationAction.internalDoOperation(ClipboardOperationAction.java:244)
+        at
+org.eclipse.jdt.internal.ui.javaeditor.ClipboardOperationAction$1.run(ClipboardOperationAction.java:224)
+        at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:69)
+        at
+org.eclipse.jdt.internal.ui.javaeditor.ClipboardOperationAction.run(ClipboardOperationAction.java:222)
+        at org.eclipse.jface.action.Action.runWithEvent(Action.java:881)
+        at org.eclipse.ui.commands.ActionHandler.execute(ActionHandler.java:141)
+        at org.eclipse.ui.internal.commands.Command.execute(Command.java:132)
+        at
+org.eclipse.ui.internal.keys.WorkbenchKeyboard.executeCommand(WorkbenchKeyboard.java:469)
+        at
+org.eclipse.ui.internal.keys.WorkbenchKeyboard.press(WorkbenchKeyboard.java:887)
+        at
+org.eclipse.ui.internal.keys.WorkbenchKeyboard.processKeyEvent(WorkbenchKeyboard.java:928)
+        at
+org.eclipse.ui.internal.keys.WorkbenchKeyboard.filterKeySequenceBindings(WorkbenchKeyboard.java:546)
+        at
+org.eclipse.ui.internal.keys.WorkbenchKeyboard.access$2(WorkbenchKeyboard.java:494)
+        at
+org.eclipse.ui.internal.keys.WorkbenchKeyboard$1.handleEvent(WorkbenchKeyboard.java:259)
+        at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:82)
+        at org.eclipse.swt.widgets.Display.filterEvent(Display.java:992)
+        at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:943)
+        at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:968)
+        at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:953)
+        at org.eclipse.swt.widgets.Control.sendKeyEvent(Control.java:2293)
+        at org.eclipse.swt.widgets.Control.gtk_key_press_event(Control.java:1793)
+        at org.eclipse.swt.widgets.Composite.gtk_key_press_event(Composite.java:448)
+        at org.eclipse.swt.widgets.Widget.windowProc(Widget.java:1194)
+        at org.eclipse.swt.widgets.Display.windowProc(Display.java:3040)
+        at org.eclipse.swt.internal.gtk.OS.gtk_main_do_event(Native Method)
+        at org.eclipse.swt.widgets.Display.eventProc(Display.java:839)
+        at org.eclipse.swt.internal.gtk.OS.gtk_main_iteration(Native Method)
+        at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:2252)
+        at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:1363)
+        at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:1334)
+        at
+org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:253)
+        at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:141)
+        at org.eclipse.ui.internal.ide.IDEApplication.run(IDEApplication.java:97)
+        at
+org.eclipse.core.internal.runtime.PlatformActivator$1.run(PlatformActivator.java:307)
+        at
+org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:256)
+        at
+org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:127)
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at
+sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+        at
+sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+        at java.lang.reflect.Method.invoke(Method.java:324)
+        at org.eclipse.core.launcher.Main.basicRun(Main.java:185)
+        at org.eclipse.core.launcher.Main.run(Main.java:638)
+        at org.eclipse.core.launcher.Main.main(Main.java:622)
+
+&quot;VM Thread&quot; prio=1 tid=0x08086800 nid=0x6d11 runnable
+
+&quot;VM Periodic Task Thread&quot; prio=1 tid=0x58405ca0 nid=0x6d11 waiting on condition
+&quot;Suspend Checker Thread&quot; prio=1 tid=0x58402b20 nid=0x6d11 runnable
+</pre>
+    </div>
+
+    <div id="c27" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c27">Comment 27</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Douglas Pollock</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=douglas.pollock&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=douglas.pollock&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-05-21 08:42:19 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I've seen this too.  I don't have stack traces, but I'll try to get them next 
+time I see this.  Long pauses in the user interface while doing things like 
+opening editors. 
+ 
+If it weren't so late and wasn't unsure that the pauses I'm seeing are caused 
+by this, I would say that this is a stop-ship for M9.  I'm seeing pauses 
+upwards of one minute while opening editors; this happens frequently, but not 
+consistently. </pre>
+    </div>
+
+    <div id="c28" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c28">Comment 28</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Douglas Pollock</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=douglas.pollock&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=douglas.pollock&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-05-21 10:30:37 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">During on my many lock-ups.... 
+ 
+ 
+Full thread dump Java HotSpot(TM) Client VM (1.4.2_04-b05 mixed mode): 
+ 
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=1 tid=0x08496548 
+nid=0x7405 in Object.wait() [47603000..4760389c] 
+        at java.lang.Object.wait(Native Method) 
+        at 
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:172) 
+        - locked &lt;0x52c8da98&gt; (a 
+org.eclipse.jface.text.reconciler.DirtyRegionQueue) 
+ 
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=1 tid=0x089f0010 
+nid=0x7405 in Object.wait() [47480000..4748089c] 
+        at java.lang.Object.wait(Native Method) 
+        at 
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:172) 
+        - locked &lt;0x5286e970&gt; (a 
+org.eclipse.jface.text.reconciler.DirtyRegionQueue) 
+ 
+&quot;Worker-18&quot; prio=1 tid=0x46ce2cc8 nid=0x7405 in Object.wait() 
+[44a8a000..44a8a89c] 
+        at java.lang.Object.wait(Native Method) 
+        - waiting on &lt;0x50b90368&gt; (a org.eclipse.core.internal.jobs.WorkerPool) 
+        at org.eclipse.core.internal.jobs.WorkerPool.sleep(WorkerPool.java:209) 
+        - locked &lt;0x50b90368&gt; (a org.eclipse.core.internal.jobs.WorkerPool) 
+        at 
+org.eclipse.core.internal.jobs.WorkerPool.startJob(WorkerPool.java:236) 
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:59) 
+ 
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=1 tid=0x0891be88 
+nid=0x7405 in Object.wait() [46128000..4612889c] 
+        at java.lang.Object.wait(Native Method) 
+        at 
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:172) 
+        - locked &lt;0x5276dca0&gt; (a 
+org.eclipse.jface.text.reconciler.DirtyRegionQueue) 
+ 
+&quot;Java indexing&quot; daemon prio=1 tid=0x08700d00 nid=0x7405 in Object.wait() 
+[461a9000..461a989c] 
+        at java.lang.Object.wait(Native Method) 
+        at java.lang.Object.wait(Object.java:429) 
+        at 
+org.eclipse.jdt.internal.core.search.processing.JobManager.run(JobManager.java:344) 
+        - locked &lt;0x51844e70&gt; (a 
+org.eclipse.jdt.internal.core.search.indexing.IndexManager) 
+        at java.lang.Thread.run(Thread.java:534) 
+ 
+&quot;Thread-1&quot; prio=1 tid=0x083ecd48 nid=0x7405 in Object.wait() 
+[45a80000..45a8089c] 
+        at java.lang.Object.wait(Native Method) 
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:111) 
+        - locked &lt;0x5149a238&gt; (a java.lang.ref.ReferenceQueue$Lock) 
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:127) 
+        at 
+org.eclipse.jface.action.ActionContributionItem$ImageCache$ReferenceCleanerThread.run(ActionContributionItem.java:196) 
+ 
+&quot;Thread-0&quot; prio=1 tid=0x083eca90 nid=0x7405 in Object.wait() 
+[459ff000..459ff89c] 
+        at java.lang.Object.wait(Native Method) 
+        - waiting on &lt;0x5149a2a8&gt; (a java.lang.ref.ReferenceQueue$Lock) 
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:111) 
+        - locked &lt;0x5149a2a8&gt; (a java.lang.ref.ReferenceQueue$Lock) 
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:127) 
+        at 
+org.eclipse.jface.action.ActionContributionItem$ImageCache$ReferenceCleanerThread.run(ActionContributionItem.java:196) 
+ 
+&quot;Start Level Event Dispatcher&quot; daemon prio=1 tid=0x082444e0 nid=0x7405 in 
+Object.wait() [44c22000..44c2289c] 
+        at java.lang.Object.wait(Native Method) 
+        - waiting on &lt;0x50a295e0&gt; (a 
+org.eclipse.osgi.framework.eventmgr.EventThread) 
+        at java.lang.Object.wait(Object.java:429) 
+        at 
+org.eclipse.osgi.framework.eventmgr.EventThread.getNextEvent(EventThread.java:162) 
+        - locked &lt;0x50a295e0&gt; (a 
+org.eclipse.osgi.framework.eventmgr.EventThread) 
+        at 
+org.eclipse.osgi.framework.eventmgr.EventThread.run(EventThread.java:100) 
+ 
+&quot;Framework Event Dispatcher&quot; daemon prio=1 tid=0x08245ac0 nid=0x7405 in 
+Object.wait() [44ba1000..44ba189c] 
+        at java.lang.Object.wait(Native Method) 
+        at java.lang.Object.wait(Object.java:429) 
+        at 
+org.eclipse.osgi.framework.eventmgr.EventThread.getNextEvent(EventThread.java:162) 
+        - locked &lt;0x50a296c8&gt; (a 
+org.eclipse.osgi.framework.eventmgr.EventThread) 
+        at 
+org.eclipse.osgi.framework.eventmgr.EventThread.run(EventThread.java:100) 
+ 
+&quot;Signal Dispatcher&quot; daemon prio=1 tid=0x0808ddc0 nid=0x7405 waiting on 
+condition [0..0] 
+ 
+&quot;Finalizer&quot; daemon prio=1 tid=0x0808a618 nid=0x7405 in Object.wait() 
+[44718000..4471889c] 
+        at java.lang.Object.wait(Native Method) 
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:111) 
+        - locked &lt;0x509ba268&gt; (a java.lang.ref.ReferenceQueue$Lock) 
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:127) 
+        at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:159) 
+ 
+&quot;Reference Handler&quot; daemon prio=1 tid=0x08088b80 nid=0x7405 in Object.wait() 
+[44697000..4469789c] 
+        at java.lang.Object.wait(Native Method) 
+        at java.lang.Object.wait(Object.java:429) 
+        at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:115) 
+        - locked &lt;0x509ba2d0&gt; (a java.lang.ref.Reference$Lock) 
+ 
+&quot;main&quot; prio=1 tid=0x08052bf0 nid=0x7405 runnable [bfffc000..bfffce78] 
+        at 
+org.eclipse.swt.internal.gtk.OS.gtk_clipboard_wait_for_contents(Native Method) 
+        - locked &lt;0x5f994868&gt; (a java.lang.Class) 
+        at 
+org.eclipse.swt.dnd.Clipboard.gtk_clipboard_wait_for_contents(Clipboard.java:385) 
+        at org.eclipse.swt.dnd.Clipboard._getAvailableTypes(Clipboard.java:351) 
+        at org.eclipse.swt.dnd.Clipboard.getAvailableTypes(Clipboard.java:300) 
+        at 
+org.eclipse.jdt.internal.ui.refactoring.reorg.PasteAction.canOperateOn(PasteAction.java:129) 
+        at 
+org.eclipse.jdt.internal.ui.refactoring.reorg.PasteAction.selectionChanged(PasteAction.java:118) 
+        at 
+org.eclipse.jdt.ui.actions.SelectionDispatchAction.dispatchSelectionChanged(SelectionDispatchAction.java:200) 
+        at 
+org.eclipse.jdt.ui.actions.SelectionDispatchAction.selectionChanged(SelectionDispatchAction.java:195) 
+        at org.eclipse.jface.viewers.Viewer$2.run(Viewer.java:159) 
+        at 
+org.eclipse.core.internal.runtime.InternalPlatform.run(InternalPlatform.java:608) 
+        at org.eclipse.core.runtime.Platform.run(Platform.java:758) 
+        at 
+org.eclipse.jface.viewers.Viewer.fireSelectionChanged(Viewer.java:157) 
+        at 
+org.eclipse.jface.viewers.StructuredViewer.updateSelection(StructuredViewer.java:1388) 
+        at 
+org.eclipse.jface.viewers.StructuredViewer.handleSelect(StructuredViewer.java:694) 
+        at 
+org.eclipse.jface.viewers.StructuredViewer$4.widgetSelected(StructuredViewer.java:720) 
+        at 
+org.eclipse.jface.util.OpenStrategy.fireSelectionEvent(OpenStrategy.java:180) 
+        at org.eclipse.jface.util.OpenStrategy.access$3(OpenStrategy.java:175) 
+        at 
+org.eclipse.jface.util.OpenStrategy$1.handleEvent(OpenStrategy.java:324) 
+        at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:82) 
+        at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:944) 
+        at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:2542) 
+        at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:2253) 
+        at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:1363) 
+        at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:1334) 
+        at 
+org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:253) 
+        at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:141) 
+        at 
+org.eclipse.ui.internal.ide.IDEApplication.run(IDEApplication.java:97) 
+        at 
+org.eclipse.core.internal.runtime.PlatformActivator$1.run(PlatformActivator.java:307) 
+        at 
+org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:256) 
+        at 
+org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:127) 
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) 
+        at 
+sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39) 
+        at 
+sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25) 
+        at java.lang.reflect.Method.invoke(Method.java:324) 
+        at org.eclipse.core.launcher.Main.basicRun(Main.java:185) 
+        at org.eclipse.core.launcher.Main.run(Main.java:638) 
+        at org.eclipse.core.launcher.Main.main(Main.java:622) 
+ 
+&quot;VM Thread&quot; prio=1 tid=0x08087860 nid=0x7405 runnable 
+ 
+&quot;VM Periodic Task Thread&quot; prio=1 tid=0x080905b8 nid=0x7405 waiting on condition 
+&quot;Suspend Checker Thread&quot; prio=1 tid=0x0808d3f0 nid=0x7405 runnable 
+bash-2.05b$ </pre>
+    </div>
+
+    <div id="c29" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c29">Comment 29</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Douglas Pollock</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=douglas.pollock&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=douglas.pollock&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-05-21 11:36:53 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I put a hack in Display in the method that plays back GDK events, and then sat  
+around trying to reproduce this bug.  Eventually, I got it by switching to a  
+different desktop, fiddling around, and then switching back.  Eclipse took a  
+not insignificant amount of time to repaint.  
+  
+These four lines appeared immediately after the window repainted.  The number  
+is the number of events being replayed....  
+  
+Playing back GDK events: 1108  
+Playing back GDK events: 1095  
+Playing back GDK events: 1096  
+Playing back GDK events: 1088  </pre>
+    </div>
+
+    <div id="c30" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c30">Comment 30</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Douglas Pollock</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=douglas.pollock&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=douglas.pollock&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-05-21 11:57:42 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I just reproduce again with the hack to remove the eating of events in the 
+clipboard.  I got the following: 
+ 
+Playing back GDK events: 327 
+Playing back GDK events: 194 
+Playing back GDK events: 25 
+Playing back GDK events: 13 
+ 
+It was with the same technique of switching away and switching back to the 
+window. </pre>
+    </div>
+
+    <div id="c31" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c31">Comment 31</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Douglas Pollock</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=douglas.pollock&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=douglas.pollock&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-05-21 11:59:38 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Just a sec, maybe I didn't have the patch.  Ignore <a href="show_bug.cgi?id=44915#c30">comment #30</a> </pre>
+    </div>
+
+    <div id="c32" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c32">Comment 32</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Billy Biggs</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=billy.biggs&#64;eclipse.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=billy.biggs&#64;eclipse.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-05-21 15:29:45 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">FWIW, <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - Clipboard getAvailableTypes runs the event loop on Motif"
+   href="show_bug.cgi?id=63481">bug 63481</a> shows that Clipboard getAvailableTypes runs an event loop on
+Motif as well.</pre>
+    </div>
+
+    <div id="c33" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c33">Comment 33</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Brian Stiles</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=bstiles&#64;bstiles.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=bstiles&#64;bstiles.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-05-29 21:36:25 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I got this in M9, though I have been using M9 since it was released and this is
+the only problem of this type that I've encountered.
+
+
+Full thread dump Java HotSpot(TM) Client VM (1.4.2-b28 mixed mode):
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=1 tid=0x08b80d48
+nid=0x362f in Object.wait() [bb9ff000..bb9ff8d0]
+	at java.lang.Object.wait(Native Method)
+	at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:172)
+	- locked &lt;0x49531170&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=1 tid=0x08b25d90
+nid=0x3623 in Object.wait() [bbbff000..bbbff8d0]
+	at java.lang.Object.wait(Native Method)
+	at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:172)
+	- locked &lt;0x494062f0&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;Worker-13&quot; prio=1 tid=0x08afb740 nid=0x3525 in Object.wait() [bbdff000..bbdff8d0]
+	at java.lang.Object.wait(Native Method)
+	at org.eclipse.core.internal.jobs.WorkerPool.sleep(WorkerPool.java:209)
+	- locked &lt;0x470a49a0&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+	at org.eclipse.core.internal.jobs.WorkerPool.startJob(WorkerPool.java:236)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:59)
+
+&quot;Worker-12&quot; prio=1 tid=0x6ae9edc8 nid=0x351d in Object.wait() [bbfff000..bbfff8d0]
+	at java.lang.Object.wait(Native Method)
+	at org.eclipse.core.internal.jobs.WorkerPool.sleep(WorkerPool.java:209)
+	- locked &lt;0x470a49a0&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+	at org.eclipse.core.internal.jobs.WorkerPool.startJob(WorkerPool.java:236)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:59)
+
+&quot;org.eclipse.jdt.debug: JDI Event Dispatcher&quot; prio=1 tid=0x08a6f560 nid=0x340d
+in Object.wait() [bcdff000..bcdff8d0]
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:429)
+	at
+org.eclipse.jdi.internal.connect.PacketReceiveManager.waitForPacketAvailable(PacketReceiveManager.java:168)
+	at
+org.eclipse.jdi.internal.connect.PacketReceiveManager.getCommand(PacketReceiveManager.java:93)
+	- locked &lt;0x49185c90&gt; (a org.eclipse.jdi.internal.connect.PacketReceiveManager)
+	at org.eclipse.jdi.internal.MirrorImpl.getCommandVM(MirrorImpl.java:276)
+	at org.eclipse.jdi.internal.event.EventQueueImpl.remove(EventQueueImpl.java:63)
+	at org.eclipse.jdi.internal.event.EventQueueImpl.remove(EventQueueImpl.java:48)
+	at
+org.eclipse.jdt.internal.debug.core.EventDispatcher.run(EventDispatcher.java:213)
+	at java.lang.Thread.run(Thread.java:534)
+
+&quot;Packet Send Manager&quot; prio=1 tid=0x08a38120 nid=0x340b in Object.wait()
+[bc9ff000..bc9ff8d0]
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:429)
+	at
+org.eclipse.jdi.internal.connect.PacketSendManager.sendAvailablePackets(PacketSendManager.java:94)
+	- locked &lt;0x49185e38&gt; (a org.eclipse.jdi.internal.connect.PacketSendManager)
+	at
+org.eclipse.jdi.internal.connect.PacketSendManager.run(PacketSendManager.java:54)
+	at java.lang.Thread.run(Thread.java:534)
+
+&quot;Packet Receive Manager&quot; prio=1 tid=0x08682e40 nid=0x340a runnable
+[bcbff000..bcbff8d0]
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(SocketInputStream.java:129)
+	at java.net.SocketInputStream.read(SocketInputStream.java:182)
+	at java.io.DataInputStream.readInt(DataInputStream.java:443)
+	at org.eclipse.jdi.internal.jdwp.JdwpPacket.read(JdwpPacket.java:124)
+	at
+org.eclipse.jdi.internal.connect.PacketReceiveManager.readAvailablePacket(PacketReceiveManager.java:224)
+	at
+org.eclipse.jdi.internal.connect.PacketReceiveManager.run(PacketReceiveManager.java:70)
+	at java.lang.Thread.run(Thread.java:534)
+
+&quot;Console Polling Thread&quot; prio=1 tid=0x08a71168 nid=0x3406 waiting on condition
+[bcfff000..bcfff8d0]
+	at java.lang.Thread.sleep(Native Method)
+	at
+org.eclipse.debug.internal.ui.views.console.ConsoleDocumentPartitioner.pollAndSleep(ConsoleDocumentPartitioner.java:565)
+	at
+org.eclipse.debug.internal.ui.views.console.ConsoleDocumentPartitioner$1.run(ConsoleDocumentPartitioner.java:549)
+	at java.lang.Thread.run(Thread.java:534)
+
+&quot;Input Stream Monitor&quot; prio=1 tid=0x08a70f38 nid=0x3401 in Object.wait()
+[bd3ff000..bd3ff8d0]
+	at java.lang.Object.wait(Native Method)
+	- waiting on &lt;0x49185fc8&gt; (a java.lang.Object)
+	at java.lang.Object.wait(Object.java:429)
+	at
+org.eclipse.debug.internal.core.InputStreamMonitor.writeNext(InputStreamMonitor.java:124)
+	- locked &lt;0x49185fc8&gt; (a java.lang.Object)
+	at
+org.eclipse.debug.internal.core.InputStreamMonitor.write(InputStreamMonitor.java:99)
+	at
+org.eclipse.debug.internal.core.InputStreamMonitor$1.run(InputStreamMonitor.java:75)
+	at java.lang.Thread.run(Thread.java:534)
+
+&quot;Output Stream Monitor&quot; prio=1 tid=0x08a70dd8 nid=0x3400 runnable
+[bd5ff000..bd5ff8d0]
+	at java.io.FileInputStream.readBytes(Native Method)
+	at java.io.FileInputStream.read(FileInputStream.java:177)
+	at
+org.eclipse.debug.internal.core.OutputStreamMonitor.read(OutputStreamMonitor.java:132)
+	at
+org.eclipse.debug.internal.core.OutputStreamMonitor.access$1(OutputStreamMonitor.java:124)
+	at
+org.eclipse.debug.internal.core.OutputStreamMonitor$1.run(OutputStreamMonitor.java:177)
+	at java.lang.Thread.run(Thread.java:534)
+
+&quot;Output Stream Monitor&quot; prio=1 tid=0x08a72bf0 nid=0x33ff runnable
+[bd9ff000..bd9ff8d0]
+	at java.io.FileInputStream.readBytes(Native Method)
+	at java.io.FileInputStream.read(FileInputStream.java:194)
+	at java.io.BufferedInputStream.read1(BufferedInputStream.java:220)
+	at java.io.BufferedInputStream.read(BufferedInputStream.java:277)
+	- locked &lt;0x4918a118&gt; (a java.io.BufferedInputStream)
+	at java.io.FilterInputStream.read(FilterInputStream.java:90)
+	at
+org.eclipse.debug.internal.core.OutputStreamMonitor.read(OutputStreamMonitor.java:132)
+	at
+org.eclipse.debug.internal.core.OutputStreamMonitor.access$1(OutputStreamMonitor.java:124)
+	at
+org.eclipse.debug.internal.core.OutputStreamMonitor$1.run(OutputStreamMonitor.java:177)
+	at java.lang.Thread.run(Thread.java:534)
+
+&quot;process reaper&quot; daemon prio=1 tid=0x08a70ad0 nid=0x33fd runnable
+[be3ff000..be3ff8d0]
+	at java.lang.UNIXProcess.waitForProcessExit(Native Method)
+	at java.lang.UNIXProcess.access$1500(UNIXProcess.java:20)
+	at java.lang.UNIXProcess$2.run(UNIXProcess.java:127)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=1 tid=0x0857ef20
+nid=0x33d4 in Object.wait() [bc3ff000..bc3ff8d0]
+	at java.lang.Object.wait(Native Method)
+	at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:172)
+	- locked &lt;0x4910aca8&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;Worker-11&quot; prio=1 tid=0x08a6abf0 nid=0x33d3 in Object.wait() [bd1ff000..bd1ff8d0]
+	at java.lang.Object.wait(Native Method)
+	at org.eclipse.core.internal.jobs.WorkerPool.sleep(WorkerPool.java:209)
+	- locked &lt;0x470a49a0&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+	at org.eclipse.core.internal.jobs.WorkerPool.startJob(WorkerPool.java:236)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:59)
+
+&quot;Worker-10&quot; prio=1 tid=0x08a697d0 nid=0x33d2 in Object.wait() [be9ff000..be9ff8d0]
+	at java.lang.Object.wait(Native Method)
+	at org.eclipse.core.internal.jobs.WorkerPool.sleep(WorkerPool.java:209)
+	- locked &lt;0x470a49a0&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+	at org.eclipse.core.internal.jobs.WorkerPool.startJob(WorkerPool.java:236)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:59)
+
+&quot;Worker-9&quot; prio=1 tid=0x6a95ea48 nid=0x3216 in Object.wait() [bc5ff000..bc5ff8d0]
+	at java.lang.Object.wait(Native Method)
+	- waiting on &lt;0x4918a1b0&gt; (a java.lang.UNIXProcess)
+	at java.lang.Object.wait(Object.java:429)
+	at java.lang.UNIXProcess.waitFor(UNIXProcess.java:160)
+	- locked &lt;0x4918a1b0&gt; (a java.lang.UNIXProcess)
+	at
+org.eclipse.debug.core.model.RuntimeProcess$ProcessMonitorJob.run(RuntimeProcess.java:362)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:66)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=1 tid=0x089acfc0
+nid=0x319d in Object.wait() [bc7ff000..bc7ff8d0]
+	at java.lang.Object.wait(Native Method)
+	at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:172)
+	- locked &lt;0x48f5b7e8&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=1 tid=0x088a3e78
+nid=0x2d19 in Object.wait() [bc1ff000..bc1ff8d0]
+	at java.lang.Object.wait(Native Method)
+	- waiting on &lt;0x48ca3ad8&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+	at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:172)
+	- locked &lt;0x48ca3ad8&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=1 tid=0x0893cdd8
+nid=0x2ced in Object.wait() [bdbff000..bdbff8d0]
+	at java.lang.Object.wait(Native Method)
+	- waiting on &lt;0x48be0298&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+	at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:172)
+	- locked &lt;0x48be0298&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;Worker-3&quot; prio=1 tid=0x086af240 nid=0x2c39 in Object.wait() [bd7ff000..bd7ff8d0]
+	at java.lang.Object.wait(Native Method)
+	at org.eclipse.core.internal.jobs.WorkerPool.sleep(WorkerPool.java:209)
+	- locked &lt;0x470a49a0&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+	at org.eclipse.core.internal.jobs.WorkerPool.startJob(WorkerPool.java:236)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:59)
+
+&quot;Java indexing&quot; daemon prio=1 tid=0x084db320 nid=0x2c32 in Object.wait()
+[bddff000..bddff8d0]
+	at java.lang.Object.wait(Native Method)
+	- waiting on &lt;0x473bf1a0&gt; (a
+org.eclipse.jdt.internal.core.search.indexing.IndexManager)
+	at java.lang.Object.wait(Object.java:429)
+	at
+org.eclipse.jdt.internal.core.search.processing.JobManager.run(JobManager.java:344)
+	- locked &lt;0x473bf1a0&gt; (a
+org.eclipse.jdt.internal.core.search.indexing.IndexManager)
+	at java.lang.Thread.run(Thread.java:534)
+
+&quot;Thread-1&quot; prio=1 tid=0x081917a0 nid=0x2c31 in Object.wait() [bdfff000..bdfff8d0]
+	at java.lang.Object.wait(Native Method)
+	- waiting on &lt;0x47340798&gt; (a java.lang.ref.ReferenceQueue$Lock)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:111)
+	- locked &lt;0x47340798&gt; (a java.lang.ref.ReferenceQueue$Lock)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:127)
+	at
+org.eclipse.jface.action.ActionContributionItem$ImageCache$ReferenceCleanerThread.run(ActionContributionItem.java:196)
+
+&quot;Thread-0&quot; prio=1 tid=0x0818fbe8 nid=0x2c30 in Object.wait() [be1ff000..be1ff8d0]
+	at java.lang.Object.wait(Native Method)
+	- waiting on &lt;0x47340808&gt; (a java.lang.ref.ReferenceQueue$Lock)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:111)
+	- locked &lt;0x47340808&gt; (a java.lang.ref.ReferenceQueue$Lock)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:127)
+	at
+org.eclipse.jface.action.ActionContributionItem$ImageCache$ReferenceCleanerThread.run(ActionContributionItem.java:196)
+
+&quot;Start Level Event Dispatcher&quot; daemon prio=1 tid=0x08150ce0 nid=0x2c23 in
+Object.wait() [be5ff000..be5ff8d0]
+	at java.lang.Object.wait(Native Method)
+	- waiting on &lt;0x46f38ed8&gt; (a org.eclipse.osgi.framework.eventmgr.EventThread)
+	at java.lang.Object.wait(Object.java:429)
+	at
+org.eclipse.osgi.framework.eventmgr.EventThread.getNextEvent(EventThread.java:162)
+	- locked &lt;0x46f38ed8&gt; (a org.eclipse.osgi.framework.eventmgr.EventThread)
+	at org.eclipse.osgi.framework.eventmgr.EventThread.run(EventThread.java:100)
+
+&quot;Framework Event Dispatcher&quot; daemon prio=1 tid=0x08246300 nid=0x2c22 in
+Object.wait() [be7ff000..be7ff8d0]
+	at java.lang.Object.wait(Native Method)
+	- waiting on &lt;0x46f38f28&gt; (a org.eclipse.osgi.framework.eventmgr.EventThread)
+	at java.lang.Object.wait(Object.java:429)
+	at
+org.eclipse.osgi.framework.eventmgr.EventThread.getNextEvent(EventThread.java:162)
+	- locked &lt;0x46f38f28&gt; (a org.eclipse.osgi.framework.eventmgr.EventThread)
+	at org.eclipse.osgi.framework.eventmgr.EventThread.run(EventThread.java:100)
+
+&quot;Signal Dispatcher&quot; daemon prio=1 tid=0x0808f700 nid=0x2c1d waiting on condition
+[0..0]
+
+&quot;Finalizer&quot; daemon prio=1 tid=0x0808b210 nid=0x2c1b in Object.wait()
+[bf3ff000..bf3ff8d0]
+	at java.lang.Object.wait(Native Method)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:111)
+	- locked &lt;0x46ec7da8&gt; (a java.lang.ref.ReferenceQueue$Lock)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:127)
+	at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:159)
+
+&quot;Reference Handler&quot; daemon prio=1 tid=0x0808a658 nid=0x2c1a in Object.wait()
+[bf5ff000..bf5ff8d0]
+	at java.lang.Object.wait(Native Method)
+	- waiting on &lt;0x46ec7e10&gt; (a java.lang.ref.Reference$Lock)
+	at java.lang.Object.wait(Object.java:429)
+	at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:115)
+	- locked &lt;0x46ec7e10&gt; (a java.lang.ref.Reference$Lock)
+
+&quot;main&quot; prio=1 tid=0x08052758 nid=0x2c16 runnable [bfffc000..bfffd4b8]
+	at org.eclipse.swt.internal.gtk.OS.gtk_clipboard_wait_for_contents(Native Method)
+	- locked &lt;0x64af10e8&gt; (a java.lang.Class)
+	at
+org.eclipse.swt.dnd.Clipboard.gtk_clipboard_wait_for_contents(Clipboard.java:385)
+	at org.eclipse.swt.dnd.Clipboard._getAvailableTypes(Clipboard.java:351)
+	at org.eclipse.swt.dnd.Clipboard.getAvailableTypes(Clipboard.java:300)
+	at
+org.eclipse.jdt.internal.ui.refactoring.reorg.PasteAction.canOperateOn(PasteAction.java:129)
+	at
+org.eclipse.jdt.internal.ui.refactoring.reorg.PasteAction.selectionChanged(PasteAction.java:118)
+	at
+org.eclipse.jdt.ui.actions.SelectionDispatchAction.dispatchSelectionChanged(SelectionDispatchAction.java:200)
+	at
+org.eclipse.jdt.ui.actions.SelectionDispatchAction.selectionChanged(SelectionDispatchAction.java:195)
+	at org.eclipse.jface.viewers.Viewer$2.run(Viewer.java:159)
+	at
+org.eclipse.core.internal.runtime.InternalPlatform.run(InternalPlatform.java:608)
+	at org.eclipse.core.runtime.Platform.run(Platform.java:758)
+	at org.eclipse.jface.viewers.Viewer.fireSelectionChanged(Viewer.java:157)
+	at
+org.eclipse.jface.viewers.StructuredViewer.updateSelection(StructuredViewer.java:1388)
+	at
+org.eclipse.jface.viewers.StructuredViewer.setSelection(StructuredViewer.java:1090)
+	at
+org.eclipse.jdt.internal.ui.browsing.PackageViewerWrapper.setSelection(PackageViewerWrapper.java:137)
+	at
+org.eclipse.jdt.internal.ui.browsing.JavaBrowsingPart.setSelection(JavaBrowsingPart.java:1200)
+	at
+org.eclipse.jdt.internal.ui.browsing.JavaBrowsingPart.adjustInputAndSetSelection(JavaBrowsingPart.java:985)
+	at
+org.eclipse.jdt.internal.ui.browsing.PackagesView.adjustInputAndSetSelection(PackagesView.java:411)
+	at
+org.eclipse.jdt.internal.ui.browsing.JavaBrowsingPart.selectionChanged(JavaBrowsingPart.java:754)
+	at
+org.eclipse.ui.internal.AbstractSelectionService$4.run(AbstractSelectionService.java:172)
+	at
+org.eclipse.core.internal.runtime.InternalPlatform.run(InternalPlatform.java:608)
+	at org.eclipse.core.runtime.Platform.run(Platform.java:758)
+	at
+org.eclipse.ui.internal.AbstractSelectionService.firePostSelection(AbstractSelectionService.java:170)
+	at
+org.eclipse.ui.internal.AbstractSelectionService.partActivated(AbstractSelectionService.java:247)
+	at org.eclipse.ui.internal.WorkbenchPage.firePartActivated(WorkbenchPage.java:1340)
+	at org.eclipse.ui.internal.WorkbenchPage.setActivePart(WorkbenchPage.java:2631)
+	at org.eclipse.ui.internal.WorkbenchPage.requestActivation(WorkbenchPage.java:2326)
+	at org.eclipse.ui.internal.PartPane.requestActivation(PartPane.java:281)
+	at org.eclipse.ui.internal.PartPane.setFocus(PartPane.java:302)
+	at
+org.eclipse.ui.internal.PartStack.presentationSelectionChanged(PartStack.java:661)
+	at org.eclipse.ui.internal.PartStack.access$0(PartStack.java:644)
+	at org.eclipse.ui.internal.PartStack$1.selectPart(PartStack.java:94)
+	at
+org.eclipse.ui.internal.presentations.DefaultPartPresentation.setSelection(DefaultPartPresentation.java:1088)
+	at
+org.eclipse.ui.internal.presentations.DefaultPartPresentation$4.handleEvent(DefaultPartPresentation.java:159)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:82)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:944)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:968)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:953)
+	at org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:823)
+	at org.eclipse.swt.custom.CTabFolder.setSelection(CTabFolder.java:2936)
+	at org.eclipse.swt.custom.CTabFolder.onMouse(CTabFolder.java:1843)
+	at org.eclipse.swt.custom.CTabFolder$1.handleEvent(CTabFolder.java:288)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:82)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:944)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:2542)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:2253)
+	at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:1363)
+	at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:1334)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:253)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:141)
+	at org.eclipse.ui.internal.ide.IDEApplication.run(IDEApplication.java:97)
+	at
+org.eclipse.core.internal.runtime.PlatformActivator$1.run(PlatformActivator.java:307)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:256)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:127)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at
+sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:324)
+	at org.eclipse.core.launcher.Main.basicRun(Main.java:185)
+	at org.eclipse.core.launcher.Main.run(Main.java:638)
+	at org.eclipse.core.launcher.Main.main(Main.java:622)
+
+&quot;VM Thread&quot; prio=1 tid=0x080873f0 nid=0x2c19 runnable 
+
+&quot;VM Periodic Task Thread&quot; prio=1 tid=0x08091e48 nid=0x2c1f waiting on condition 
+&quot;Suspend Checker Thread&quot; prio=1 tid=0x0808eda8 nid=0x2c1c runnable 
+</pre>
+    </div>
+
+    <div id="c34" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c34">Comment 34</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Brian Stiles</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=bstiles&#64;bstiles.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=bstiles&#64;bstiles.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-05-31 22:30:13 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I'm now seeing this problem very, very often while debugging.  I don't know what
+accounts for the fact that I was not experiencing it at all for the time since
+M9 came out until now.
+
+What more information can I provide to help solve this problem?</pre>
+    </div>
+
+    <div id="c35" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c35">Comment 35</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Veronika Irvine</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veronika_irvine&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veronika_irvine&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-06-03 14:01:44 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I believe, with the fix to <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - hang in gtk_clipboard_wait_for_contents()"
+   href="show_bug.cgi?id=63991">bug 63991</a>, that this problem has finally been put 
+to rest.
+
+This fix will be available in I20040604.  Please give it a try and let me know 
+if you continue to have clipboard hang problems.</pre>
+    </div>
+
+    <div id="c36" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c36">Comment 36</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tom Hofmann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse&#64;tom.hofmann.name" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse&#64;tom.hofmann.name" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-06-09 07:11:19 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Just had one with I200406072000. Should I reopen this or continue in <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - hang in gtk_clipboard_wait_for_contents()"
+   href="show_bug.cgi?id=63991">bug 63991</a>?
+
+dump below.
+
+For some reason, it always seems to be the same instances accessing the
+clipboard that cause the hang: usually its refactoring.reorg.PasteAction, once
+javaeditor.ClipboardOperationAction.doPasteWithImportsOperation.
+
+Full thread dump Java HotSpot(TM) Client VM (1.4.2_04-b05 mixed mode):
+
+&quot;Worker-83&quot; prio=1 tid=0x5bb78bd0 nid=0x202e in Object.wait() [5b9f7000..5b9f7854]
+        at java.lang.Object.wait(Native Method)
+        at org.eclipse.core.internal.jobs.WorkerPool.sleep(WorkerPool.java:166)
+        - locked &lt;0x45ec66f8&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.startJob(WorkerPool.java:193)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:59)
+
+&quot;Worker-82&quot; prio=1 tid=0x5bb78840 nid=0x202e in Object.wait() [5ba78000..5ba78854]
+        at java.lang.Object.wait(Native Method)
+        at org.eclipse.core.internal.jobs.WorkerPool.sleep(WorkerPool.java:166)
+        - locked &lt;0x45ec66f8&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.startJob(WorkerPool.java:193)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:59)
+
+&quot;Worker-80&quot; prio=1 tid=0x5a60ca10 nid=0x202e in Object.wait() [5af98000..5af98854]
+        at java.lang.Object.wait(Native Method)
+        at org.eclipse.core.internal.jobs.WorkerPool.sleep(WorkerPool.java:166)
+        - locked &lt;0x45ec66f8&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.startJob(WorkerPool.java:193)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:59)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=1 tid=0x5bb17f08
+nid=0x202e runnable [5b874000..5b874854]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:172)
+        - locked &lt;0x4b3523a0&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=1 tid=0x094302c0
+nid=0x202e runnable [5b7f3000..5b7f3854]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:172)
+        - locked &lt;0x4b0767f0&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=1 tid=0x09218220
+nid=0x202e runnable [5b772000..5b772854]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:172)
+        - locked &lt;0x4a16a188&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=1 tid=0x0942b250
+nid=0x202e runnable [5a291000..5a291854]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:172)
+        - locked &lt;0x4a110610&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=1 tid=0x0926b908
+nid=0x202e runnable [5ad7c000..5ad7c854]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:172)
+        - locked &lt;0x49d97368&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=1 tid=0x092136f0
+nid=0x202e runnable [5aade000..5aade854]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:172)
+        - locked &lt;0x489ca088&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.debug: JDI Event Dispatcher&quot; prio=1 tid=0x08fd3890 nid=0x202e
+in Object.wait() [5acfb000..5acfb854]
+        at java.lang.Object.wait(Native Method)
+        at java.lang.Object.wait(Object.java:429)
+        at
+org.eclipse.jdi.internal.connect.PacketReceiveManager.waitForPacketAvailable(PacketReceiveManager.java:168)
+        at
+org.eclipse.jdi.internal.connect.PacketReceiveManager.getCommand(PacketReceiveManager.java:93)
+        - locked &lt;0x47e4a588&gt; (a
+org.eclipse.jdi.internal.connect.PacketReceiveManager)
+        at org.eclipse.jdi.internal.MirrorImpl.getCommandVM(MirrorImpl.java:276)
+        at
+org.eclipse.jdi.internal.event.EventQueueImpl.remove(EventQueueImpl.java:63)
+        at
+org.eclipse.jdi.internal.event.EventQueueImpl.remove(EventQueueImpl.java:48)
+        at
+org.eclipse.jdt.internal.debug.core.EventDispatcher.run(EventDispatcher.java:213)
+        at java.lang.Thread.run(Thread.java:534)
+
+&quot;Packet Send Manager&quot; prio=1 tid=0x090809e8 nid=0x202e in Object.wait()
+[5b670000..5b670854]
+        at java.lang.Object.wait(Native Method)
+        at java.lang.Object.wait(Object.java:429)
+        at
+org.eclipse.jdi.internal.connect.PacketSendManager.sendAvailablePackets(PacketSendManager.java:94)
+        - locked &lt;0x47e4a6d0&gt; (a org.eclipse.jdi.internal.connect.PacketSendManager)
+        at
+org.eclipse.jdi.internal.connect.PacketSendManager.run(PacketSendManager.java:54)
+        at java.lang.Thread.run(Thread.java:534)
+
+&quot;Packet Receive Manager&quot; prio=1 tid=0x0907e4d0 nid=0x202e runnable
+[5b373000..5b373854]
+        at java.net.SocketInputStream.socketRead0(Native Method)
+        at java.net.SocketInputStream.read(SocketInputStream.java:129)
+        at java.net.SocketInputStream.read(SocketInputStream.java:182)
+        at java.io.DataInputStream.readInt(DataInputStream.java:443)
+        at org.eclipse.jdi.internal.jdwp.JdwpPacket.read(JdwpPacket.java:124)
+        at
+org.eclipse.jdi.internal.connect.PacketReceiveManager.readAvailablePacket(PacketReceiveManager.java:224)
+        at
+org.eclipse.jdi.internal.connect.PacketReceiveManager.run(PacketReceiveManager.java:70)
+        at java.lang.Thread.run(Thread.java:534)
+
+&quot;Console Polling Thread&quot; prio=1 tid=0x08fd73b8 nid=0x202e
+sleeping[5b09a000..5b09a854]
+        at java.lang.Thread.sleep(Native Method)
+        at
+org.eclipse.debug.internal.ui.views.console.ConsoleDocumentPartitioner.pollAndSleep(ConsoleDocumentPartitioner.java:565)
+        at
+org.eclipse.debug.internal.ui.views.console.ConsoleDocumentPartitioner$1.run(ConsoleDocumentPartitioner.java:549)
+        at java.lang.Thread.run(Thread.java:534)
+
+&quot;Input Stream Monitor&quot; prio=1 tid=0x08f606b0 nid=0x202e in Object.wait()
+[5ae7e000..5ae7e854]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x47e4a860&gt; (a java.lang.Object)
+        at java.lang.Object.wait(Object.java:429)
+        at
+org.eclipse.debug.internal.core.InputStreamMonitor.writeNext(InputStreamMonitor.java:124)
+        - locked &lt;0x47e4a860&gt; (a java.lang.Object)
+        at
+org.eclipse.debug.internal.core.InputStreamMonitor.write(InputStreamMonitor.java:99)
+        at
+org.eclipse.debug.internal.core.InputStreamMonitor$1.run(InputStreamMonitor.java:75)
+        at java.lang.Thread.run(Thread.java:534)
+
+&quot;Output Stream Monitor&quot; prio=1 tid=0x08f60d60 nid=0x202e runnable
+[5b2f2000..5b2f2854]
+        at java.io.FileInputStream.readBytes(Native Method)
+        at java.io.FileInputStream.read(FileInputStream.java:177)
+        at
+org.eclipse.debug.internal.core.OutputStreamMonitor.read(OutputStreamMonitor.java:132)
+        at
+org.eclipse.debug.internal.core.OutputStreamMonitor.access$1(OutputStreamMonitor.java:124)
+        at
+org.eclipse.debug.internal.core.OutputStreamMonitor$1.run(OutputStreamMonitor.java:177)
+        at java.lang.Thread.run(Thread.java:534)
+
+&quot;Output Stream Monitor&quot; prio=1 tid=0x08fd5b88 nid=0x202e runnable
+[5b019000..5b019854]
+        at java.io.FileInputStream.readBytes(Native Method)
+        at java.io.FileInputStream.read(FileInputStream.java:194)
+        at java.io.BufferedInputStream.read1(BufferedInputStream.java:220)
+        at java.io.BufferedInputStream.read(BufferedInputStream.java:277)
+        - locked &lt;0x47e4e9b0&gt; (a java.io.BufferedInputStream)
+        at java.io.FilterInputStream.read(FilterInputStream.java:90)
+        at
+org.eclipse.debug.internal.core.OutputStreamMonitor.read(OutputStreamMonitor.java:132)
+        at
+org.eclipse.debug.internal.core.OutputStreamMonitor.access$1(OutputStreamMonitor.java:124)
+        at
+org.eclipse.debug.internal.core.OutputStreamMonitor$1.run(OutputStreamMonitor.java:177)
+        at java.lang.Thread.run(Thread.java:534)
+
+&quot;process reaper&quot; daemon prio=1 tid=0x08fd9ba0 nid=0x202e runnable
+[5ac7a000..5ac7a854]
+        at java.lang.UNIXProcess.waitForProcessExit(Native Method)
+        at java.lang.UNIXProcess.access$1500(UNIXProcess.java:20)
+        at java.lang.UNIXProcess$2.run(UNIXProcess.java:127)
+
+&quot;Worker-23&quot; prio=1 tid=0x5a603750 nid=0x202e in Object.wait() [5a4b3000..5a4b3854]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x47e4ea48&gt; (a java.lang.UNIXProcess)
+        at java.lang.Object.wait(Object.java:429)
+        at java.lang.UNIXProcess.waitFor(UNIXProcess.java:160)
+        - locked &lt;0x47e4ea48&gt; (a java.lang.UNIXProcess)
+        at
+org.eclipse.debug.core.model.RuntimeProcess$ProcessMonitorJob.run(RuntimeProcess.java:362)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:66)
+
+&quot;Java indexing&quot; daemon prio=1 tid=0x085b9848 nid=0x202e in Object.wait()
+[5a210000..5a210854]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x46680fc0&gt; (a
+org.eclipse.jdt.internal.core.search.indexing.IndexManager)
+        at java.lang.Object.wait(Object.java:429)
+        at
+org.eclipse.jdt.internal.core.search.processing.JobManager.run(JobManager.java:344)
+        - locked &lt;0x46680fc0&gt; (a
+org.eclipse.jdt.internal.core.search.indexing.IndexManager)
+        at java.lang.Thread.run(Thread.java:534)
+
+&quot;Reference Cleaner - 2&quot; prio=1 tid=0x080add40 nid=0x202e in Object.wait()
+[5984b000..5984b854]
+        at java.lang.Object.wait(Native Method)
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:111)
+        - locked &lt;0x46677848&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:127)
+        at
+org.eclipse.jface.action.ActionContributionItem$ImageCache$ReferenceCleanerThread.run(ActionContributionItem.java:207)
+
+&quot;Reference Cleaner - 1&quot; prio=1 tid=0x0824de90 nid=0x202e in Object.wait()
+[58b29000..58b29854]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x466778b8&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:111)
+        - locked &lt;0x466778b8&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:127)
+        at
+org.eclipse.jface.action.ActionContributionItem$ImageCache$ReferenceCleanerThread.run(ActionContributionItem.java:207)
+
+&quot;Start Level Event Dispatcher&quot; daemon prio=1 tid=0x08147140 nid=0x202e in
+Object.wait() [58a93000..58a93854]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x45a70060&gt; (a
+org.eclipse.osgi.framework.eventmgr.EventThread)
+        at java.lang.Object.wait(Object.java:429)
+        at
+org.eclipse.osgi.framework.eventmgr.EventThread.getNextEvent(EventThread.java:162)
+        - locked &lt;0x45a70060&gt; (a org.eclipse.osgi.framework.eventmgr.EventThread)
+        at org.eclipse.osgi.framework.eventmgr.EventThread.run(EventThread.java:100)
+
+&quot;Framework Event Dispatcher&quot; daemon prio=1 tid=0x0814da88 nid=0x202e in
+Object.wait() [58a12000..58a12854]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x45a70240&gt; (a
+org.eclipse.osgi.framework.eventmgr.EventThread)
+        at java.lang.Object.wait(Object.java:429)
+        at
+org.eclipse.osgi.framework.eventmgr.EventThread.getNextEvent(EventThread.java:162)
+        - locked &lt;0x45a70240&gt; (a org.eclipse.osgi.framework.eventmgr.EventThread)
+        at org.eclipse.osgi.framework.eventmgr.EventThread.run(EventThread.java:100)
+
+&quot;Signal Dispatcher&quot; daemon prio=1 tid=0x0808d308 nid=0x202e waiting on condition
+[0..0]
+
+&quot;Finalizer&quot; daemon prio=1 tid=0x080886c0 nid=0x202e in Object.wait()
+[583f5000..583f5854]
+        at java.lang.Object.wait(Native Method)
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:111)
+        - locked &lt;0x45a70368&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:127)
+        at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:159)
+
+&quot;Reference Handler&quot; daemon prio=1 tid=0x08087ad0 nid=0x202e in Object.wait()
+[58374000..58374854]
+        at java.lang.Object.wait(Native Method)
+        at java.lang.Object.wait(Object.java:429)
+        at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:115)
+        - locked &lt;0x45a700b0&gt; (a java.lang.ref.Reference$Lock)
+
+&quot;main&quot; prio=1 tid=0x080522f8 nid=0x202e runnable [bfff9000..bfffbab8]
+        at
+org.eclipse.swt.internal.gtk.OS.gtk_clipboard_wait_for_contents(Native Method)
+        - locked &lt;0x5450ce28&gt; (a java.lang.Class)
+        at
+org.eclipse.swt.dnd.Clipboard.gtk_clipboard_wait_for_contents(Clipboard.java:385)
+        at org.eclipse.swt.dnd.Clipboard._getAvailableTypes(Clipboard.java:351)
+        at org.eclipse.swt.dnd.Clipboard.getAvailableTypes(Clipboard.java:300)
+        at
+org.eclipse.jdt.internal.ui.refactoring.reorg.PasteAction.canOperateOn(PasteAction.java:129)
+        at
+org.eclipse.jdt.internal.ui.refactoring.reorg.PasteAction.selectionChanged(PasteAction.java:118)
+        at
+org.eclipse.jdt.ui.actions.SelectionDispatchAction.dispatchSelectionChanged(SelectionDispatchAction.java:200)
+        at
+org.eclipse.jdt.ui.actions.SelectionDispatchAction.selectionChanged(SelectionDispatchAction.java:195)
+        at org.eclipse.jface.viewers.Viewer$2.run(Viewer.java:159)
+        at
+org.eclipse.core.internal.runtime.InternalPlatform.run(InternalPlatform.java:615)
+        at org.eclipse.core.runtime.Platform.run(Platform.java:758)
+        at org.eclipse.jface.viewers.Viewer.fireSelectionChanged(Viewer.java:157)
+        at
+org.eclipse.jface.viewers.StructuredViewer.updateSelection(StructuredViewer.java:1388)
+        at
+org.eclipse.jface.viewers.StructuredViewer.setSelection(StructuredViewer.java:1090)
+        at
+org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart.showInput(PackageExplorerPart.java:1087)
+        at
+org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart.editorActivated(PackageExplorerPart.java:1054)
+        at
+org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart$1.partActivated(PackageExplorerPart.java:186)
+        at org.eclipse.ui.internal.PartListenerList$1.run(PartListenerList.java:49)
+        at
+org.eclipse.core.internal.runtime.InternalPlatform.run(InternalPlatform.java:615)
+        at org.eclipse.core.runtime.Platform.run(Platform.java:758)
+        at
+org.eclipse.ui.internal.PartListenerList.firePartActivated(PartListenerList.java:47)
+        at
+org.eclipse.ui.internal.WorkbenchPage.firePartActivated(WorkbenchPage.java:1357)
+        at
+org.eclipse.ui.internal.WorkbenchPage.setActivePart(WorkbenchPage.java:2663)
+        at
+org.eclipse.ui.internal.WorkbenchPage.requestActivation(WorkbenchPage.java:2358)
+        at org.eclipse.ui.internal.PartPane.requestActivation(PartPane.java:304)
+        at org.eclipse.ui.internal.EditorPane.requestActivation(EditorPane.java:127)
+        at org.eclipse.ui.internal.PartPane.handleEvent(PartPane.java:284)
+        at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:82)
+        at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:944)
+        at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:968)
+        at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:949)
+        at org.eclipse.swt.widgets.Shell.setActiveControl(Shell.java:891)
+        at org.eclipse.swt.widgets.Control.gtk_button_press_event(Control.java:1676)
+        at
+org.eclipse.swt.widgets.Composite.gtk_button_press_event(Composite.java:394)
+        at org.eclipse.swt.widgets.Widget.windowProc(Widget.java:1182)
+        at org.eclipse.swt.widgets.Display.windowProc(Display.java:3012)
+        at org.eclipse.swt.internal.gtk.OS.gtk_main_do_event(Native Method)
+        at org.eclipse.swt.widgets.Display.eventProc(Display.java:815)
+        at org.eclipse.swt.internal.gtk.OS.gtk_main_iteration(Native Method)
+        at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:2222)
+        at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:1363)
+        at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:1334)
+        at
+org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:253)
+        at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:141)
+        at org.eclipse.ui.internal.ide.IDEApplication.run(IDEApplication.java:96)
+        at
+org.eclipse.core.internal.runtime.PlatformActivator$1.run(PlatformActivator.java:334)
+        at
+org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:273)
+        at
+org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:128)
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at
+sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+        at
+sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+        at java.lang.reflect.Method.invoke(Method.java:324)
+        at org.eclipse.core.launcher.Main.basicRun(Main.java:185)
+        at org.eclipse.core.launcher.Main.run(Main.java:638)
+        at org.eclipse.core.launcher.Main.main(Main.java:622)
+
+&quot;VM Thread&quot; prio=1 tid=0x080867b0 nid=0x202e runnable
+
+&quot;VM Periodic Task Thread&quot; prio=1 tid=0x0808fb18 nid=0x202e waiting on condition
+&quot;Suspend Checker Thread&quot; prio=1 tid=0x0808c938 nid=0x202e runnable
+</pre>
+    </div>
+
+    <div id="c37" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c37">Comment 37</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Veronika Irvine</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veronika_irvine&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veronika_irvine&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-06-09 09:37:58 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Tom, I have reopened this bug report.  Can you identify any steps that 
+consistently cause this to happen?  Do you use Klipper? Do you use Gnome or 
+KDE? Do you use another application that you copy and paste back and forth 
+between it and eclipse - if so what?  Could you also try with I20040609? - we 
+put some additional event processing in this build.  Thanks.</pre>
+    </div>
+
+    <div id="c38" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c38">Comment 38</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tom Hofmann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse&#64;tom.hofmann.name" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse&#64;tom.hofmann.name" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-06-09 09:53:10 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Veronika,
+
+- No reproducible steps at all - it *seems&quot; it is usually when hitting a breakpoint
+- I am seeing this a lot less than with earlier builds
+- currently on KDE
+- While I don't actively use Klipper, it is always running
+- I copy/paste most frequently from and to these applications:
+  - gedit
+  - mozilla
+  - konsole
+  - sanity
+
+- have not tried 0609 but will report back once I have</pre>
+    </div>
+
+    <div id="c39" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c39">Comment 39</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Brian Stiles</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=bstiles&#64;bstiles.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=bstiles&#64;bstiles.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-06-09 18:32:15 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I'm using I20040607.  There seems to be no improvement.  I'm using GNOME.</pre>
+    </div>
+
+    <div id="c40" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c40">Comment 40</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tom Hofmann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse&#64;tom.hofmann.name" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse&#64;tom.hofmann.name" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-06-10 12:00:14 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">just having it with I200406091200 on this vm:
+
+java version &quot;1.4.2&quot;
+J9 - VM for the Java(TM) platform (build 2.1)
+IBM J9SE VM (build 2.1, J2RE 1.4.2 IBM J9 build 20040519 (JIT enabled))
+
+</pre>
+    </div>
+
+    <div id="c41" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c41">Comment 41</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steve Northover</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=snorthov&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=snorthov&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-06-14 14:02:31 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Paste Java Source into the editor break down the Eclipse"
+   href="show_bug.cgi?id=65889">Bug 65889</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c42" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c42">Comment 42</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Guillaume Pothier</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=gpothier&#64;free.fr" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=gpothier&#64;free.fr" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-06-16 12:14:43 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Hi, I'm also experiencing hangs with RC1 &amp; RC2.
+With RC1 I had many short hangs (&lt;1mn), and occasionally longer hangs.
+With RC2 I have very few short hangs, but quite a lot of longer hangs (about 5mn).
+I did not experience any of these with M9
+I am using KDE, Mandrake10, I have clipper activated but do not directly use it,
+I mainly use mozilla, and I never found a connection between copy paste
+operations and hangs. It sometimes happens when a breakpoint is reached.</pre>
+    </div>
+
+    <div id="c43" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c43">Comment 43</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Veronika Irvine</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veronika_irvine&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veronika_irvine&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-06-18 15:28:08 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Good News: I have been able to reproduce a scenario which will lead to a hang.
+Bad News: As far as I can see, there isn't anything we can do about it.
+
+Scenario:
+
+1) Debug eclipse (call it B) from eclipse (call it A)
+2) In B, select some text in an editor and copy it to the cipboard
+3) In A, set a breakpoint in the eclipse code. (e.g. in 
+org.eclipse.swt.widgets.Control.getBounds)
+4) Do something to B so that it hits the breakpoint (e.g resize the window).
+5) Now, either the hang will happen in A immediately or you will need to do 
+something like hit Ctrl V in an editor in A.
+
+What is happening is that B owns the clipboard and any requests to get the data 
+from the clipboard must be hadled by B.  If B is suspended because you have hit 
+a break point, then B can not process the clipboard requests.  If A requests 
+data from the clipboard while B is suspended, A will have to wait until a built 
+in timer in GTK expires before it can do anything.
+
+In addition to the above scenario, the following can cause a hang:
+
+Application A is in a tight loop requesting data from the clipboard.
+Application B that sets data on the clipboard.
+Application B exits.
+If A happened to request data from the clipboard just as B was exiting, A will 
+hang.  Apparently, calling gtk_clipboard_clear before exiting the application 
+is not sufficient to prevent this.
+
+Removing the dispatchEvents code does not make the problem go away.  Without 
+the dispatchEvents code, the OS can process some events so it may look like the 
+UI is active because scrollbars will scroll but the UI is hung because the SWT 
+events are blocked.  No selection events are received etc.
+
+To avoid getting in this state do not copy data to the clipboard from the 
+launched eclipse application.
+
+If you are frozen, eventually a GTK timer will expire and you will become 
+unstuck.
+
+I will add this item to the SWT README and enter a bug report against GTK.
+
+Note that this is not a problem on motif because we immediately flush the data 
+to the OS clipboard.
+
+</pre>
+    </div>
+
+    <div id="c44" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c44">Comment 44</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Veronika Irvine</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veronika_irvine&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veronika_irvine&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-06-24 08:13:59 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">README entry has been added.  Closing bug report.</pre>
+    </div>
+
+    <div id="c45" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c45">Comment 45</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Grant Gayed</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=grant_gayed&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=grant_gayed&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-08-23 12:30:28 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Lockup opening concrete type from Variables view"
+   href="show_bug.cgi?id=71818">Bug 71818</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c46" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c46">Comment 46</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Grant Gayed</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=grant_gayed&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=grant_gayed&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-09-30 13:08:16 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - eclipse debugger hangs on Mdk 10.1 CE"
+   href="show_bug.cgi?id=75161">Bug 75161</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c47" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c47">Comment 47</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Grant Gayed</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=grant_gayed&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=grant_gayed&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-09-30 17:28:04 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED WORKSFORME - crash on gtk_clipboard_wait_for_contents()"
+   href="show_bug.cgi?id=75421">Bug 75421</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c48" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c48">Comment 48</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Douglas Pollock</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=douglas.pollock&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=douglas.pollock&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-10-14 15:05:40 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">As a note, I've just seen this in I200410130800.  While I'm not absolutely 
+certain, I don't believe my steps include any of the scenarios below.  As far 
+as I know, there was no (intentional) clipboard interaction.  If it happens 
+again (i.e., it's becoming frequent), then I'll let you know. 
+ 
+After the timeout, the applications becomes lively again. </pre>
+    </div>
+
+    <div id="c49" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c49">Comment 49</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tom Hofmann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse&#64;tom.hofmann.name" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse&#64;tom.hofmann.name" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-02-10 05:42:23 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">This has gotten a lot worse again with the &quot;copy selection to clipboard&quot; feature
+added recently. Whenever I type into my debug target workbench triggering a
+breakpoint hit, I am there again.</pre>
+    </div>
+
+    <div id="c50" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c50">Comment 50</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Grant Gayed</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=grant_gayed&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=grant_gayed&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-06-03 14:08:13 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">.
+</pre>
+    </div>
+
+    <div id="c51" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=44915#c51">Comment 51</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Grant Gayed</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=grant_gayed&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=grant_gayed&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-06-03 14:11:35 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Closing as WONTFIX because this is an OS bug that we cannot work around.
+</pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=44915">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=44915">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=44915">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=44915&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=44915" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>

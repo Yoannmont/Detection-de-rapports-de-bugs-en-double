@@ -1,0 +1,1708 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>111443 &ndash; JVM terminated when attempting ot organise imports</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "111443 – JVM terminated when attempting ot organise imports",
+                             "show_bug.cgi?id=111443" );
+        document.title = "111443 – JVM terminated when attempting ot organise imports";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "111443 – JVM terminated when attempting ot organise imports", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_RESOLVED
+                 bz_product_JDT
+                 bz_component_Core
+                 bz_bug_111443 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;111443</span>
+
+        <span id="subtitle" class="subheader">JVM terminated when attempting ot organise imports</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2005-10-04 12:02:48 EDT</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=111443&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=111443" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2005-10-04 12:02:48">
+  <input type="hidden" name="id" value="111443">
+  <input type="hidden" name="token" value="1629866939-FkUowEDZUItbcg78dHuSeVYxuB_a-ZLI0SDVvGtGYiE">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=111443"><b>Bug&nbsp;111443</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">JVM terminated when attempting ot organise imports</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span>JVM terminated when attempting ot organise imports
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      'JVM terminated when attempting ot organise imports' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">RESOLVED
+          DUPLICATE
+            of <a class="bz_bug_link 
+          bz_status_CLOSED  bz_closed"
+   title="CLOSED WONTFIX - Segmentation Fault in 1.5.0_01 in compiler.parser.Scanner.getNextToken() AMD64"
+   href="show_bug.cgi?id=71987">bug 71987</a>
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >JDT
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >Eclipse Project
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=JDT"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >Core
+
+  (<a href="buglist.cgi?component=Core&amp;product=JDT&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>3.1.1 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">Other
+        Linux
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P3
+       normal<span id="votes_container">
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=111443#vote_111443">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>--- &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">JDT-Core-Inbox</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jdt-core-inbox&#64;eclipse.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jdt-core-inbox&#64;eclipse.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard">
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'jdt-core-inbox\x40eclipse.org',
+        '');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >vm
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+
+  </td>
+  </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2005-10-04 10:06 EDT by <span class="vcard"><span class="fn">Andy Liddle</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=agl&#64;milvus.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=agl&#64;milvus.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2005-10-04 12:02 EDT
+      (<a href="show_activity.cgi?id=111443">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>0 
+          users
+        <div id="cc_edit_area">
+          <br>
+        </div>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" >
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <a href="attachment.cgi?bugid=111443&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=111443&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=111443#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Andy Liddle</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=agl&#64;milvus.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=agl&#64;milvus.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-10-04 10:06:02 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">When running organise imports on a project the following error occurs: 
+ 
+JVM terminated. Exit code=1 
+/usr/lib64/jvm/java/bin/java 
+-Xms64M 
+-Xmx256M 
+-jar /usr/share/eclipse/startup.jar 
+-os linux 
+-ws gtk 
+-arch x86_64 
+-launcher /usr/share/eclipse/eclipse 
+-name Eclipse 
+-showsplash 600 
+-exitdata 9c8005 
+-vm /usr/lib64/jvm/java/bin/java 
+-vmargs 
+-Xms64M 
+-Xmx256M 
+-jar /usr/share/eclipse/startup.jar  
+ 
+# 
+# An unexpected error has been detected by HotSpot Virtual Machine: 
+# 
+#  Internal Error (4E4D4554484F440E435050051D), pid=30436, tid=1101875552 
+# 
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (1.5.0_03-b07 mixed mode) 
+ 
+---------------  T H R E A D  --------------- 
+ 
+Current thread (0x00002aab0e2f55e0):  JavaThread 
+&quot;ModalContext&quot; [_thread_in_Java, id=30497] 
+ 
+Stack: [0x00000000419d4000,0x0000000041ad5000),  sp=0x0000000041ad1ac0,  free 
+space=1014k 
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code) 
+V  [libjvm.so+0x5f0966] 
+V  [libjvm.so+0x2c8a66] 
+V  [libjvm.so+0x4ffb28] 
+V  [libjvm.so+0x572f09] 
+V  [libjvm.so+0x51417b] 
+V  [libjvm.so+0x511e1e] 
+ 
+ 
+---------------  P R O C E S S  --------------- 
+ 
+Java Threads: ( =&gt; current thread ) 
+=&gt;0x00002aab0e2f55e0 JavaThread &quot;ModalContext&quot; [_thread_in_Java, id=30497] 
+  0x00002aab05633ef0 JavaThread &quot;Worker-6&quot; [_thread_blocked, id=30471] 
+  0x00002aab0cfdf410 JavaThread &quot;Worker-5&quot; [_thread_blocked, id=30470] 
+  0x00002aab06042330 JavaThread &quot;Worker-4&quot; [_thread_blocked, id=30469] 
+  0x00002aab090136d0 JavaThread &quot;Worker-3&quot; [_thread_blocked, id=30468] 
+  0x00002aab0d837250 JavaThread &quot;Worker-2&quot; [_thread_blocked, id=30467] 
+  0x00002aab0d2607a0 JavaThread &quot;Worker-1&quot; [_thread_blocked, id=30466] 
+  0x00002aab0d235a90 JavaThread &quot;Java indexing&quot; daemon [_thread_blocked, 
+id=30461] 
+  0x00002aab077946b0 JavaThread &quot;Worker-0&quot; [_thread_blocked, id=30460] 
+  0x00002aab053573c0 JavaThread &quot;Start Level Event Dispatcher&quot; daemon 
+[_thread_blocked, id=30456] 
+  0x00002aab05334ea0 JavaThread &quot;Framework Event Dispatcher&quot; daemon 
+[_thread_blocked, id=30455] 
+  0x00002aab05991b70 JavaThread &quot;State Data Manager&quot; daemon [_thread_blocked, 
+id=30454] 
+  0x00002aab05302440 JavaThread &quot;Low Memory Detector&quot; daemon [_thread_blocked, 
+id=30448] 
+  0x00002aab05300a10 JavaThread &quot;CompilerThread1&quot; daemon [_thread_in_native, 
+id=30447] 
+  0x00002aab0545cc80 JavaThread &quot;CompilerThread0&quot; daemon [_thread_in_native, 
+id=30446] 
+  0x00002aab0545b780 JavaThread &quot;AdapterThread&quot; daemon [_thread_blocked, 
+id=30445] 
+  0x00002aab0545a310 JavaThread &quot;Signal Dispatcher&quot; daemon [_thread_blocked, 
+id=30444] 
+  0x00002aab05447630 JavaThread &quot;Finalizer&quot; daemon [_thread_blocked, id=30443] 
+  0x00002aab05444560 JavaThread &quot;Reference Handler&quot; daemon [_thread_blocked, 
+id=30442] 
+  0x0000000040115c80 JavaThread &quot;main&quot; [_thread_in_native, id=30436] 
+ 
+Other Threads: 
+  0x00000000401bba20 VMThread [id=30441] 
+  0x00002aab05304160 WatcherThread [id=30449] 
+ 
+VM state:not at safepoint (normal execution) 
+ 
+VM Mutex/Monitor currently owned by a thread: None 
+ 
+Heap 
+ PSYoungGen      total 78400K, used 47227K [0x00002aaaffc30000, 
+0x00002aab05180000, 0x00002aab05180000) 
+  eden space 69824K, 64% used 
+[0x00002aaaffc30000,0x00002aab0287ed58,0x00002aab04060000) 
+  from space 8576K, 21% used 
+[0x00002aab04920000,0x00002aab04af0000,0x00002aab05180000) 
+  to   space 8768K, 0% used 
+[0x00002aab04060000,0x00002aab04060000,0x00002aab048f0000) 
+ PSOldGen        total 80448K, used 14120K [0x00002aaaf5180000, 
+0x00002aaafa010000, 0x00002aaaffc30000) 
+  object space 80448K, 17% used 
+[0x00002aaaf5180000,0x00002aaaf5f4a378,0x00002aaafa010000) 
+ PSPermGen       total 58560K, used 38594K [0x00002aaaeff80000, 
+0x00002aaaf38b0000, 0x00002aaaf5180000) 
+  object space 58560K, 65% used 
+[0x00002aaaeff80000,0x00002aaaf2530a08,0x00002aaaf38b0000) 
+ 
+Dynamic libraries: 
+40000000-4000d000 r-xp 00000000 08:03 
+390295                             /usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/bin/java 
+4010c000-40110000 rwxp 0000c000 08:03 
+390295                             /usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/bin/java 
+40110000-401bc000 rwxp 40110000 00:00 0  
+401bc000-401bd000 ---p 401bc000 00:00 0  
+401bd000-402bd000 rwxp 401bd000 00:00 0  
+402bd000-402be000 ---p 402bd000 00:00 0  
+402be000-403be000 rwxp 402be000 00:00 0  
+403be000-403bf000 ---p 403be000 00:00 0  
+403bf000-404bf000 rwxp 403bf000 00:00 0  
+404bf000-404c0000 ---p 404bf000 00:00 0  
+404c0000-405c0000 rwxp 404c0000 00:00 0  
+405c0000-405c1000 ---p 405c0000 00:00 0  
+405c1000-406c1000 rwxp 405c1000 00:00 0  
+406c1000-406c4000 ---p 406c1000 00:00 0  
+406c4000-407c2000 rwxp 406c4000 00:00 0  
+407c2000-407c5000 ---p 407c2000 00:00 0  
+407c5000-408c3000 rwxp 407c5000 00:00 0  
+408c3000-408c6000 ---p 408c3000 00:00 0  
+408c6000-409c4000 rwxp 408c6000 00:00 0  
+409c4000-409c7000 ---p 409c4000 00:00 0  
+409c7000-40ac5000 rwxp 409c7000 00:00 0  
+40ac5000-40ac8000 ---p 40ac5000 00:00 0  
+40ac8000-40bc6000 rwxp 40ac8000 00:00 0  
+40bc6000-40bc9000 ---p 40bc6000 00:00 0  
+40bc9000-40cc7000 rwxp 40bc9000 00:00 0  
+40cc7000-40cca000 ---p 40cc7000 00:00 0  
+40cca000-40dc8000 rwxp 40cca000 00:00 0  
+40dc8000-40dc9000 ---p 40dc8000 00:00 0  
+40dc9000-40ec9000 rwxp 40dc9000 00:00 0  
+40ec9000-40ecc000 ---p 40ec9000 00:00 0  
+40ecc000-40fca000 rwxp 40ecc000 00:00 0  
+40fca000-40fcd000 ---p 40fca000 00:00 0  
+40fcd000-410cb000 rwxp 40fcd000 00:00 0  
+410cb000-410ce000 ---p 410cb000 00:00 0  
+410ce000-411cc000 rwxp 410ce000 00:00 0  
+411cc000-411cf000 ---p 411cc000 00:00 0  
+411cf000-412cd000 rwxp 411cf000 00:00 0  
+412cd000-412d0000 ---p 412cd000 00:00 0  
+412d0000-413ce000 rwxp 412d0000 00:00 0  
+413ce000-413d1000 ---p 413ce000 00:00 0  
+413d1000-414cf000 rwxp 413d1000 00:00 0  
+414cf000-414d2000 ---p 414cf000 00:00 0  
+414d2000-415d0000 rwxp 414d2000 00:00 0  
+415d0000-415d3000 ---p 415d0000 00:00 0  
+415d3000-416d1000 rwxp 415d3000 00:00 0  
+416d1000-416d4000 ---p 416d1000 00:00 0  
+416d4000-417d2000 rwxp 416d4000 00:00 0  
+417d2000-417d5000 ---p 417d2000 00:00 0  
+417d5000-418d3000 rwxp 417d5000 00:00 0  
+418d3000-418d6000 ---p 418d3000 00:00 0  
+418d6000-419d4000 rwxp 418d6000 00:00 0  
+419d4000-419d7000 ---p 419d4000 00:00 0  
+419d7000-41ad5000 rwxp 419d7000 00:00 0  
+2aaaaaaab000-2aaaaaac1000 r-xp 00000000 08:03 
+12562                      /lib64/ld-2.3.4.so 
+2aaaaaac1000-2aaaaaac2000 rwxp 2aaaaaac1000 00:00 0  
+2aaaaaac2000-2aaaaaaf5000 r-xp 00000000 08:03 
+15774                      /usr/lib/locale/en_GB.utf8/LC_CTYPE 
+2aaaaaaf5000-2aaaaaafb000 r-xs 00000000 08:03 
+15332                      /usr/lib64/gconv/gconv-modules.cache 
+2aaaaaafb000-2aaaaab03000 r-xs 00000000 08:03 
+384377                     /usr/share/eclipse/startup.jar 
+2aaaaab03000-2aaaaab05000 r-xs 00000000 08:03 
+507603                     /usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/lib/ext/dnsns.jar 
+2aaaaab05000-2aaaaab2b000 r-xs 00000000 08:03 
+507605                     /usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/lib/ext/sunjce_provider.jar 
+2aaaaab2b000-2aaaaab58000 r-xp 00000000 08:03 
+18139                      /usr/X11R6/lib/X11/fonts/truetype/albwi.ttf 
+2aaaaab58000-2aaaaab68000 r-xs 00000000 08:03 
+164053                     /usr/share/eclipse/plugins/org.eclipse.team.cvs.ssh2_3.1.0/cvsssh2.jar 
+2aaaaabc0000-2aaaaabc2000 rwxp 00015000 08:03 
+12562                      /lib64/ld-2.3.4.so 
+2aaaaabc2000-2aaaaabd1000 r-xp 00000000 08:03 
+457691                     /lib64/tls/libpthread.so.0 
+2aaaaabd1000-2aaaaacd1000 ---p 0000f000 08:03 
+457691                     /lib64/tls/libpthread.so.0 
+2aaaaacd1000-2aaaaacd3000 rwxp 0000f000 08:03 
+457691                     /lib64/tls/libpthread.so.0 
+2aaaaacd3000-2aaaaacd8000 rwxp 2aaaaacd3000 00:00 0  
+2aaaaacd8000-2aaaaacda000 r-xp 00000000 08:03 
+457681                     /lib64/libdl.so.2 
+2aaaaacda000-2aaaaadd9000 ---p 00002000 08:03 
+457681                     /lib64/libdl.so.2 
+2aaaaadd9000-2aaaaaddb000 rwxp 00001000 08:03 
+457681                     /lib64/libdl.so.2 
+2aaaaaddb000-2aaaaaef8000 r-xp 00000000 08:03 
+457689                     /lib64/tls/libc.so.6 
+2aaaaaef8000-2aaaaaff7000 ---p 0011d000 08:03 
+457689                     /lib64/tls/libc.so.6 
+2aaaaaff7000-2aaaaaffa000 r-xp 0011c000 08:03 
+457689                     /lib64/tls/libc.so.6 
+2aaaaaffa000-2aaaaaffd000 rwxp 0011f000 08:03 
+457689                     /lib64/tls/libc.so.6 
+2aaaaaffd000-2aaaab003000 rwxp 2aaaaaffd000 00:00 0  
+2aaaab003000-2aaaab664000 r-xp 00000000 08:03 
+507586                     /usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/lib/amd64/server/libjvm.so 
+2aaaab664000-2aaaab763000 ---p 00661000 08:03 
+507586                     /usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/lib/amd64/server/libjvm.so 
+2aaaab763000-2aaaab8d2000 rwxp 00660000 08:03 
+507586                     /usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/lib/amd64/server/libjvm.so 
+2aaaab8d2000-2aaaab900000 rwxp 2aaaab8d2000 00:00 0  
+2aaaab900000-2aaaab901000 r-xp 2aaaab900000 00:00 0  
+2aaaab901000-2aaaab902000 rwxp 2aaaab901000 00:00 0  
+2aaaab92a000-2aaaab980000 r-xp 00000000 08:03 
+457690                     /lib64/tls/libm.so.6 
+2aaaab980000-2aaaaba7f000 ---p 00056000 08:03 
+457690                     /lib64/tls/libm.so.6 
+2aaaaba7f000-2aaaaba81000 rwxp 00055000 08:03 
+457690                     /lib64/tls/libm.so.6 
+2aaaaba81000-2aaaaba8a000 r-xp 00000000 08:03 
+507582                     /usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/lib/amd64/native_threads/libhpi.so 
+2aaaaba8a000-2aaaabb89000 ---p 00009000 08:03 
+507582                     /usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/lib/amd64/native_threads/libhpi.so 
+2aaaabb89000-2aaaabb8d000 rwxp 00008000 08:03 
+507582                     /usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/lib/amd64/native_threads/libhpi.so 
+2aaaabbb7000-2aaaabbca000 r-xp 00000000 08:03 
+12574                      /lib64/libnsl.so.1 
+2aaaabbca000-2aaaabcc9000 ---p 00013000 08:03 
+12574                      /lib64/libnsl.so.1 
+2aaaabcc9000-2aaaabccb000 rwxp 00012000 08:03 
+12574                      /lib64/libnsl.so.1 
+2aaaabccb000-2aaaabccd000 rwxp 2aaaabccb000 00:00 0  
+2aaaabccd000-2aaaabd02000 r-xs 00000000 08:03 
+99405                      /var/run/nscd/passwd 
+2aaaabd02000-2aaaabd0a000 rwxs 00000000 08:03 
+524527                     /tmp/hsperfdata_agl/30436 
+2aaaabd0a000-2aaaabd17000 r-xp 00000000 08:03 
+507577                     /usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/lib/amd64/libverify.so 
+2aaaabd17000-2aaaabe16000 ---p 0000d000 08:03 
+507577                     /usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/lib/amd64/libverify.so 
+2aaaabe16000-2aaaabe19000 rwxp 0000c000 08:03 
+507577                     /usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/lib/amd64/libverify.so 
+2aaaabe19000-2aaaabe3e000 r-xp 00000000 08:03 
+507562                     /usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/lib/amd64/libjava.so 
+2aaaabe3e000-2aaaabf3d000 ---p 00025000 08:03 
+507562                     /usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/lib/amd64/libjava.so 
+2aaaabf3d000-2aaaabf43000 rwxp 00024000 08:03 
+507562                     /usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/lib/amd64/libjava.so 
+2aaaabf43000-2aaaabf59000 r-xp 00000000 08:03 
+507578                     /usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/lib/amd64/libzip.so 
+2aaaabf59000-2aaaac05b000 ---p 00016000 08:03 
+507578                     /usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/lib/amd64/libzip.so 
+2aaaac05b000-2aaaac05e000 rwxp 00018000 08:03 
+507578                     /usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/lib/amd64/libzip.so 
+2aaaac05e000-2aaaae641000 r-xs 00000000 08:03 
+507669                     /usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/lib/rt.jar 
+2aaaae641000-2aaaae6aa000 rwxp 2aaaae641000 00:00 0  
+2aaaae6aa000-2aaaae731000 r-xs 00000000 08:03 
+507652                     /usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/lib/jsse.jar 
+2aaaae731000-2aaaae745000 r-xs 00000000 08:03 
+507651                     /usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/lib/jce.jar 
+2aaaae745000-2aaaaef80000 r-xs 00000000 08:03 
+507592                     /usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/lib/charsets.jar 
+2aaaaef80000-2aaaaf1f0000 rwxp 2aaaaef80000 00:00 0  
+2aaaaf1f0000-2aaaeef80000 rwxp 2aaaaf1f0000 00:00 0  
+2aaaeef80000-2aaaeef8a000 rwxp 2aaaeef80000 00:00 0  
+2aaaeef8a000-2aaaeff80000 rwxp 2aaaeef8a000 00:00 0  
+2aaaeff80000-2aaaf38b0000 rwxp 2aaaeff80000 00:00 0  
+2aaaf38b0000-2aaaf5180000 rwxp 2aaaf38b0000 00:00 0  
+2aaaf5180000-2aaafa010000 rwxp 2aaaf5180000 00:00 0  
+2aaafa010000-2aaaffc30000 rwxp 2aaafa010000 00:00 0  
+2aaaffc30000-2aab05180000 rwxp 2aaaffc30000 00:00 0  
+2aab05180000-2aab0519d000 rwxp 2aab05180000 00:00 0  
+2aab0519d000-2aab051a9000 rwxp 2aab0519d000 00:00 0  
+2aab051a9000-2aab051d1000 rwxp 2aab051a9000 00:00 0  
+2aab051d1000-2aab051fe000 rwxp 2aab051d1000 00:00 0  
+2aab051fe000-2aab05229000 rwxp 2aab051fe000 00:00 0  
+2aab05229000-2aab05252000 rwxp 2aab05229000 00:00 0  
+2aab05252000-2aab05280000 rwxp 2aab05252000 00:00 0  
+2aab05280000-2aab0529d000 rwxp 2aab05280000 00:00 0  
+2aab0529d000-2aab052a9000 rwxp 2aab0529d000 00:00 0  
+2aab052a9000-2aab052d1000 rwxp 2aab052a9000 00:00 0  
+2aab052d1000-2aab052f2000 r-xs 00000000 08:03 
+382988                     /usr/share/eclipse/plugins/org.eclipse.ui.console_3.1.0.jar 
+2aab052f2000-2aab052f6000 r-xp 00000000 08:03 
+17577                      /opt/gnome/share/locale/en_GB/LC_MESSAGES/glib20.mo 
+2aab05300000-2aab053fa000 rwxp 2aab05300000 00:00 0  
+2aab053fa000-2aab05400000 ---p 2aab053fa000 00:00 0  
+2aab05400000-2aab05500000 rwxp 2aab05400000 00:00 0  
+2aab05500000-2aab055c4000 r-xs 00000000 08:03 
+507604                     /usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/lib/ext/localedata.jar 
+2aab055c4000-2aab056c4000 rwxp 2aab055c4000 00:00 0  
+2aab056c4000-2aab0577b000 r-xs 00000000 08:03 
+162975                     /usr/share/eclipse/plugins/org.eclipse.osgi_3.1.1.jar 
+2aab0577b000-2aab0587b000 rwxp 2aab0577b000 00:00 0  
+2aab0587b000-2aab05897000 r-xs 00000000 08:03 
+163121                     /usr/share/eclipse/plugins/org.eclipse.core.resources.compatibility_3.1.0.jar 
+2aab05900000-2aab059f8000 rwxp 2aab05900000 00:00 0  
+2aab059f8000-2aab05a00000 ---p 2aab059f8000 00:00 0  
+2aab05a00000-2aab05afa000 rwxp 2aab05a00000 00:00 0  
+2aab05afa000-2aab05b00000 ---p 2aab05afa000 00:00 0  
+2aab05b00000-2aab05c00000 rwxp 2aab05b00000 00:00 0  
+2aab05c00000-2aab05c15000 r-xp 00000000 08:03 
+507572                     /usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/lib/amd64/libnet.so 
+2aab05c15000-2aab05d14000 ---p 00015000 08:03 
+507572                     /usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/lib/amd64/libnet.so 
+2aab05d14000-2aab05d17000 rwxp 00014000 08:03 
+507572                     /usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/lib/amd64/libnet.so 
+2aab05d17000-2aab05d1e000 r-xp 00000000 08:03 
+507573                     /usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/lib/amd64/libnio.so 
+2aab05d1e000-2aab05e1d000 ---p 00007000 08:03 
+507573                     /usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/lib/amd64/libnio.so 
+2aab05e1d000-2aab05e1f000 rwxp 00006000 08:03 
+507573                     /usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/lib/amd64/libnio.so 
+2aab05e1f000-2aab05f1f000 rwxp 2aab05e1f000 00:00 0  
+2aab05f63000-2aab06063000 rwxp 2aab05f63000 00:00 0  
+2aab06063000-2aab060d2000 r-xs 00000000 08:03 
+163864                     /usr/share/eclipse/plugins/org.eclipse.core.runtime_3.1.1.jar 
+2aab060d2000-2aab060e9000 r-xs 00000000 08:03 
+163865                     /usr/share/eclipse/plugins/org.eclipse.update.configurator_3.1.0.jar 
+2aab06100000-2aab061f9000 rwxp 2aab06100000 00:00 0  
+2aab061f9000-2aab06200000 ---p 2aab061f9000 00:00 0  
+2aab06200000-2aab06300000 rwxp 2aab06200000 00:00 0  
+2aab06300000-2aab06408000 r-xs 00000000 08:03 
+383007                     /usr/share/eclipse/plugins/org.eclipse.jdt.debug.ui_3.1.1.jar 
+2aab06408000-2aab064ac000 r-xs 00000000 08:03 
+163640                     /usr/share/eclipse/plugins/org.eclipse.jface.text_3.1.1.jar 
+2aab064ac000-2aab064c2000 r-xs 00000000 08:03 
+163907                     /usr/share/eclipse/plugins/org.eclipse.ant.core_3.1.1.jar 
+2aab064c2000-2aab064c6000 r-xs 00000000 08:03 
+383000                     /usr/share/eclipse/plugins/org.eclipse.help.appserver_3.1.0.jar 
+2aab064c6000-2aab064dc000 r-xs 00000000 08:03 
+163531                     /usr/share/eclipse/plugins/org.eclipse.core.filebuffers_3.1.0.jar 
+2aab06500000-2aab065ff000 rwxp 2aab06500000 00:00 0  
+2aab065ff000-2aab06600000 ---p 2aab065ff000 00:00 0  
+2aab06600000-2aab06667000 r-xs 00000000 08:03 
+164521                     /usr/share/eclipse/plugins/org.eclipse.ui.editors_3.1.1.jar 
+2aab06691000-2aab06735000 r-xs 00000000 08:03 
+163641                     /usr/share/eclipse/plugins/org.eclipse.jface_3.1.1.jar 
+2aab06735000-2aab0673d000 r-xs 00000000 08:03 
+382982                     /usr/share/eclipse/plugins/org.eclipse.jdt_3.1.0.jar 
+2aab06763000-2aab067cd000 r-xs 00000000 08:03 
+383003                     /usr/share/eclipse/plugins/org.eclipse.ui.workbench.texteditor_3.1.1.jar 
+2aab067cd000-2aab067eb000 r-xs 00000000 08:03 
+114996                     /usr/share/eclipse/plugins/org.eclipse.ui_3.1.1.jar 
+2aab06822000-2aab06855000 r-xs 00000000 08:03 
+164049                     /usr/share/eclipse/plugins/org.eclipse.ui.forms_3.1.0.jar 
+2aab0689d000-2aab068c5000 r-xs 00000000 08:03 
+382999                     /usr/share/eclipse/plugins/org.eclipse.ui.cheatsheets_3.1.1.jar 
+2aab068c5000-2aab068f6000 r-xs 00000000 08:03 
+164047                     /usr/share/eclipse/plugins/org.eclipse.jdt.launching_3.1.0.jar 
+2aab06900000-2aab069ff000 rwxp 2aab06900000 00:00 0  
+2aab069ff000-2aab06a00000 ---p 2aab069ff000 00:00 0  
+2aab06a00000-2aab06ae8000 rwxp 2aab06a00000 00:00 0  
+2aab06ae8000-2aab06b00000 ---p 2aab06ae8000 00:00 0  
+2aab06b00000-2aab06c46000 r-xs 00000000 08:03 
+114997                     /usr/share/eclipse/plugins/org.eclipse.debug.ui_3.1.1.jar 
+2aab06c46000-2aab06c4d000 r-xs 00000000 08:03 
+383002                     /usr/share/eclipse/plugins/org.eclipse.core.variables_3.1.0.jar 
+2aab06c4d000-2aab06c87000 r-xs 00000000 08:03 
+164266                     /usr/share/eclipse/plugins/org.eclipse.debug.core_3.1.0.jar 
+2aab06ce7000-2aab06d5c000 r-xs 00000000 08:03 
+383009                     /usr/share/eclipse/plugins/org.eclipse.team.cvs.core_3.1.1.jar 
+2aab06d5c000-2aab06dcc000 r-xs 00000000 08:03 
+382987                     /usr/share/eclipse/plugins/org.eclipse.update.ui_3.1.1.jar 
+2aab06dcc000-2aab06dd9000 r-xs 00000000 08:03 
+162986                     /usr/share/eclipse/plugins/org.eclipse.core.expressions_3.1.0.jar 
+2aab06ddc000-2aab06dff000 r-xs 00000000 08:03 
+383001                     /usr/share/eclipse/plugins/org.eclipse.pde.runtime_3.1.1.jar 
+2aab06e85000-2aab06e89000 r-xs 00000000 08:03 
+164190                     /usr/share/eclipse/plugins/org.eclipse.osgi.util_3.1.1.jar 
+2aab06e89000-2aab06e8a000 r-xs 00000000 08:03 
+162987                     /usr/share/eclipse/plugins/org.eclipse.core.boot_3.1.0.jar 
+2aab06ec6000-2aab06efc000 r-xs 00000000 08:03 
+164340                     /usr/share/eclipse/plugins/org.eclipse.team.core_3.1.1.jar 
+2aab06f27000-2aab07027000 rwxp 2aab06f27000 00:00 0  
+2aab07027000-2aab0709f000 r-xs 00000000 08:03 
+163866                     /usr/share/eclipse/plugins/org.eclipse.update.core_3.1.1.jar 
+2aab0709f000-2aab070a0000 r-xs 00000000 08:03 
+163116                     /usr/share/eclipse/plugins/org.eclipse.update.core.linux_3.1.0.jar 
+2aab070a0000-2aab0713e000 r-xs 00000000 08:03 
+163459                     /usr/share/eclipse/plugins/org.eclipse.team.ui_3.1.1.jar 
+2aab0713e000-2aab072b6000 r-xs 00000000 08:03 
+163896                     /usr/share/eclipse/plugins/org.eclipse.ui.ide_3.1.1.jar 
+2aab072b6000-2aab073b6000 rwxp 2aab072b6000 00:00 0  
+2aab073b6000-2aab073c3000 r-xs 00000000 08:03 
+163805                     /usr/share/eclipse/plugins/org.eclipse.team.cvs.ssh_3.1.0.jar 
+2aab073c3000-2aab073c9000 r-xs 00000000 08:03 
+163460                     /usr/share/eclipse/plugins/org.eclipse.update.scheduler_3.1.0.jar 
+2aab073c9000-2aab073ec000 r-xs 00000000 08:03 
+383005                     /usr/share/eclipse/plugins/org.eclipse.ltk.ui.refactoring_3.1.1.jar 
+2aab073ec000-2aab073fd000 r-xs 00000000 08:03 
+164520                     /usr/share/eclipse/plugins/org.eclipse.help_3.1.0.jar 
+2aab07400000-2aab074f7000 rwxp 2aab07400000 00:00 0  
+2aab074f7000-2aab07500000 ---p 2aab074f7000 00:00 0  
+2aab07500000-2aab07510000 r-xs 00000000 08:03 
+382984                     /usr/share/eclipse/plugins/org.eclipse.ui.views_3.1.1.jar 
+2aab075c3000-2aab07621000 r-xs 00000000 08:03 
+382989                     /usr/share/eclipse/plugins/org.eclipse.search_3.1.1.jar 
+2aab07700000-2aab077fb000 rwxp 2aab07700000 00:00 0  
+2aab077fb000-2aab07800000 ---p 2aab077fb000 00:00 0  
+2aab07821000-2aab0784b000 r-xs 00000000 08:03 
+164270                     /usr/share/eclipse/plugins/org.eclipse.ui.browser_3.1.1.jar 
+2aab0784b000-2aab07941000 r-xs 00000000 08:03 
+114995                     /usr/share/eclipse/plugins/org.eclipse.ant.ui_3.1.1.jar 
+2aab07941000-2aab07952000 r-xs 00000000 08:03 
+163122                     /usr/share/eclipse/plugins/org.eclipse.core.commands_3.1.0.jar 
+2aab07952000-2aab07970000 r-xs 00000000 08:03 
+383011                     /usr/share/eclipse/plugins/org.eclipse.ui.externaltools_3.1.1.jar 
+2aab07970000-2aab07971000 r-xs 00000000 08:03 
+163118                     /usr/share/eclipse/plugins/org.eclipse.swt_3.1.0.jar 
+2aab07977000-2aab079d1000 r-xs 00000000 08:03 
+164191                     /usr/share/eclipse/plugins/org.eclipse.help.ui_3.1.1.jar 
+2aab079d1000-2aab079e6000 r-xs 00000000 08:03 
+164267                     /usr/share/eclipse/plugins/org.eclipse.core.runtime.compatibility_3.1.0.jar 
+2aab079e6000-2aab079f3000 r-xs 00000000 08:03 
+163119                     /usr/share/eclipse/plugins/org.eclipse.osgi.services_3.1.1.jar 
+2aab07a00000-2aab07aff000 rwxp 2aab07a00000 00:00 0  
+2aab07aff000-2aab07b00000 ---p 2aab07aff000 00:00 0  
+2aab07b21000-2aab07de0000 r-xs 00000000 08:03 
+164522                     /usr/share/eclipse/plugins/org.eclipse.ui.workbench_3.1.1.jar 
+2aab07de0000-2aab07e06000 r-xs 00000000 08:03 
+382986                     /usr/share/eclipse/plugins/org.eclipse.pde_3.1.0.jar 
+2aab07e06000-2aab07e4a000 r-xs 00000000 08:03 
+383008                     /usr/share/eclipse/plugins/org.eclipse.ui.intro_3.1.1.jar 
+2aab07e4a000-2aab07e61000 r-xs 00000000 08:03 
+164268                     /usr/share/eclipse/plugins/org.eclipse.ui.presentations.r21_3.1.0.jar 
+2aab07e61000-2aab081c8000 r-xs 00000000 08:03 
+383010                     /usr/share/eclipse/plugins/org.eclipse.jdt.core_3.1.1.jar 
+2aab081c8000-2aab082c8000 rwxp 2aab081c8000 00:00 0  
+2aab082c8000-2aab0833d000 r-xs 00000000 08:03 
+164519                     /usr/share/eclipse/plugins/org.eclipse.pde.core_3.1.1.jar 
+2aab0833e000-2aab0835e000 r-xs 00000000 08:03 
+163532                     /usr/share/eclipse/plugins/org.eclipse.ltk.core.refactoring_3.1.0.jar 
+2aab0835e000-2aab083f4000 r-xs 00000000 08:03 
+164271                     /usr/share/eclipse/plugins/org.eclipse.core.resources_3.1.0.jar 
+2aab083f4000-2aab083fb000 r-xs 00000000 08:03 
+162985                     /usr/share/eclipse/plugins/org.eclipse.core.resources.linux_3.1.0.jar 
+2aab083fb000-2aab08464000 r-xs 00000000 08:03 
+163495                     /usr/share/eclipse/plugins/org.eclipse.compare_3.1.1.jar 
+2aab084df000-2aab08605000 r-xs 00000000 08:03 
+382983                     /usr/share/eclipse/plugins/org.eclipse.team.cvs.ui_3.1.1.jar 
+2aab08605000-2aab08891000 r-xs 00000000 08:03 
+163117                     /usr/share/eclipse/plugins/org.eclipse.pde.ui_3.1.1.jar 
+2aab08891000-2aab088be000 r-xs 00000000 08:03 
+163806                     /usr/share/eclipse/plugins/org.eclipse.text_3.1.1.jar 
+2aab088be000-2aab08f55000 r-xs 00000000 08:03 
+164265                     /usr/share/eclipse/plugins/org.eclipse.jdt.ui_3.1.1.jar 
+2aab08f55000-2aab08f56000 r-xs 00000000 08:03 
+163898                     /usr/share/eclipse/plugins/org.eclipse.ui.workbench.compatibility_3.1.0/compatibility.jar 
+2aab08fae000-2aab090ae000 rwxp 2aab08fae000 00:00 0  
+2aab090ae000-2aab0920b000 r-xs 00000000 08:03 
+383004                     /usr/share/eclipse/plugins/org.eclipse.swt.gtk.linux.x86_64_3.1.1.jar 
+2aab0920b000-2aab09240000 r-xs 00000000 08:03 
+163867                     /usr/share/eclipse/plugins/org.eclipse.help.base_3.1.0.jar 
+2aab09240000-2aab09242000 r-xs 00000000 08:03 
+163120                     /usr/share/eclipse/plugins/org.eclipse.rcp_3.1.0.jar 
+2aab09242000-2aab09298000 r-xp 00000000 08:03 
+490183                     /home/agl/.eclipse/org.eclipse.platform_3.1.1/configuration/org.eclipse.osgi/bundles/85/1/.cp/libswt-pi-gtk-3139.so 
+2aab09298000-2aab09397000 ---p 00056000 08:03 
+490183                     /home/agl/.eclipse/org.eclipse.platform_3.1.1/configuration/org.eclipse.osgi/bundles/85/1/.cp/libswt-pi-gtk-3139.so 
+2aab09397000-2aab0939a000 rwxp 00055000 08:03 
+490183                     /home/agl/.eclipse/org.eclipse.platform_3.1.1/configuration/org.eclipse.osgi/bundles/85/1/.cp/libswt-pi-gtk-3139.so 
+2aab0939a000-2aab0939b000 rwxp 2aab0939a000 00:00 0  
+2aab0939b000-2aab0939c000 r-xp 00000000 08:03 
+13561                      /usr/lib/locale/en_GB.utf8/LC_IDENTIFICATION 
+2aab0939c000-2aab0939d000 r-xp 00000000 08:03 
+15773                      /usr/lib/locale/en_GB.utf8/LC_MEASUREMENT 
+2aab0939d000-2aab0939e000 r-xp 00000000 08:03 
+15651                      /usr/lib/locale/en_GB.utf8/LC_TELEPHONE 
+2aab0939e000-2aab0939f000 r-xp 00000000 08:03 
+375869                     /usr/lib/locale/en_GB.utf8/LC_ADDRESS 
+2aab0939f000-2aab093a0000 r-xp 00000000 08:03 
+15755                      /usr/lib/locale/en_GB.utf8/LC_NAME 
+2aab093a0000-2aab093a1000 r-xp 00000000 08:03 
+15770                      /usr/lib/locale/en_GB.utf8/LC_PAPER 
+2aab093a1000-2aab093a2000 r-xp 00000000 08:03 
+15747                      /usr/lib/locale/en_GB.utf8/LC_MESSAGES/SYS_LC_MESSAGES 
+2aab093a2000-2aab093a3000 r-xp 00000000 08:03 
+457708                     /usr/lib/locale/en_GB.utf8/LC_MONETARY 
+2aab093c5000-2aab096a6000 r-xp 00000000 08:03 
+52195                      /opt/gnome/lib64/libgtk-x11-2.0.so.0.600.4 
+2aab096a6000-2aab097a6000 ---p 002e1000 08:03 
+52195                      /opt/gnome/lib64/libgtk-x11-2.0.so.0.600.4 
+2aab097a6000-2aab097b3000 rwxp 002e1000 08:03 
+52195                      /opt/gnome/lib64/libgtk-x11-2.0.so.0.600.4 
+2aab097b3000-2aab097b7000 rwxp 2aab097b3000 00:00 0  
+2aab097b7000-2aab097bb000 r-xp 00000000 08:03 
+17562                      /opt/gnome/lib64/libgthread-2.0.so.0.600.3 
+2aab097bb000-2aab098ba000 ---p 00004000 08:03 
+17562                      /opt/gnome/lib64/libgthread-2.0.so.0.600.3 
+2aab098ba000-2aab098bb000 rwxp 00003000 08:03 
+17562                      /opt/gnome/lib64/libgthread-2.0.so.0.600.3 
+2aab098bb000-2aab098c0000 r-xp 00000000 08:03 
+18091                      /usr/X11R6/lib64/libXtst.so.6.1 
+2aab098c0000-2aab099c0000 ---p 00005000 08:03 
+18091                      /usr/X11R6/lib64/libXtst.so.6.1 
+2aab099c0000-2aab099c1000 rwxp 00005000 08:03 
+18091                      /usr/X11R6/lib64/libXtst.so.6.1 
+2aab099c1000-2aab099d6000 r-xp 00000000 08:03 
+52191                      /opt/gnome/lib64/libgdk_pixbuf-2.0.so.0.600.4 
+2aab099d6000-2aab09ad5000 ---p 00015000 08:03 
+52191                      /opt/gnome/lib64/libgdk_pixbuf-2.0.so.0.600.4 
+2aab09ad5000-2aab09ad6000 rwxp 00014000 08:03 
+52191                      /opt/gnome/lib64/libgdk_pixbuf-2.0.so.0.600.4 
+2aab09ad6000-2aab09b5c000 r-xp 00000000 08:03 
+52189                      /opt/gnome/lib64/libgdk-x11-2.0.so.0.600.4 
+2aab09b5c000-2aab09c5b000 ---p 00086000 08:03 
+52189                      /opt/gnome/lib64/libgdk-x11-2.0.so.0.600.4 
+2aab09c5b000-2aab09c60000 rwxp 00085000 08:03 
+52189                      /opt/gnome/lib64/libgdk-x11-2.0.so.0.600.4 
+2aab09c60000-2aab09c61000 rwxp 2aab09c60000 00:00 0  
+2aab09c61000-2aab09d6b000 r-xp 00000000 08:03 
+18049                      /usr/X11R6/lib64/libX11.so.6.2 
+2aab09d6b000-2aab09e6a000 ---p 0010a000 08:03 
+18049                      /usr/X11R6/lib64/libX11.so.6.2 
+2aab09e6a000-2aab09e70000 rwxp 00109000 08:03 
+18049                      /usr/X11R6/lib64/libX11.so.6.2 
+2aab09e70000-2aab09e77000 r-xp 00000000 08:03 
+45137                      /opt/gnome/lib64/libpangoxft-1.0.so.0.800.1 
+2aab09e77000-2aab09f76000 ---p 00007000 08:03 
+45137                      /opt/gnome/lib64/libpangoxft-1.0.so.0.800.1 
+2aab09f76000-2aab09f77000 rwxp 00006000 08:03 
+45137                      /opt/gnome/lib64/libpangoxft-1.0.so.0.800.1 
+2aab09f77000-2aab09f82000 r-xp 00000000 08:03 
+45135                      /opt/gnome/lib64/libpangox-1.0.so.0.800.1 
+2aab09f82000-2aab0a082000 ---p 0000b000 08:03 
+45135                      /opt/gnome/lib64/libpangox-1.0.so.0.800.1 
+2aab0a082000-2aab0a083000 rwxp 0000b000 08:03 
+45135                      /opt/gnome/lib64/libpangox-1.0.so.0.800.1 
+2aab0a083000-2aab0a0be000 r-xp 00000000 08:03 
+45131                      /opt/gnome/lib64/libpango-1.0.so.0.800.1 
+2aab0a0be000-2aab0a1be000 ---p 0003b000 08:03 
+45131                      /opt/gnome/lib64/libpango-1.0.so.0.800.1 
+2aab0a1be000-2aab0a1c5000 rwxp 0003b000 08:03 
+45131                      /opt/gnome/lib64/libpango-1.0.so.0.800.1 
+2aab0a1c5000-2aab0a1e0000 r-xp 00000000 08:03 
+18209                      /opt/gnome/lib64/libatk-1.0.so.0.901.0 
+2aab0a1e0000-2aab0a2e0000 ---p 0001b000 08:03 
+18209                      /opt/gnome/lib64/libatk-1.0.so.0.901.0 
+2aab0a2e0000-2aab0a2e3000 rwxp 0001b000 08:03 
+18209                      /opt/gnome/lib64/libatk-1.0.so.0.901.0 
+2aab0a2e3000-2aab0a31b000 r-xp 00000000 08:03 
+17560                      /opt/gnome/lib64/libgobject-2.0.so.0.600.3 
+2aab0a31b000-2aab0a41a000 ---p 00038000 08:03 
+17560                      /opt/gnome/lib64/libgobject-2.0.so.0.600.3 
+2aab0a41a000-2aab0a41c000 rwxp 00037000 08:03 
+17560                      /opt/gnome/lib64/libgobject-2.0.so.0.600.3 
+2aab0a41c000-2aab0a41f000 r-xp 00000000 08:03 
+17558                      /opt/gnome/lib64/libgmodule-2.0.so.0.600.3 
+2aab0a41f000-2aab0a51e000 ---p 00003000 08:03 
+17558                      /opt/gnome/lib64/libgmodule-2.0.so.0.600.3 
+2aab0a51e000-2aab0a51f000 rwxp 00002000 08:03 
+17558                      /opt/gnome/lib64/libgmodule-2.0.so.0.600.3 
+2aab0a51f000-2aab0a5a5000 r-xp 00000000 08:03 
+17556                      /opt/gnome/lib64/libglib-2.0.so.0.600.3 
+2aab0a5a5000-2aab0a6a4000 ---p 00086000 08:03 
+17556                      /opt/gnome/lib64/libglib-2.0.so.0.600.3 
+2aab0a6a4000-2aab0a6a6000 rwxp 00085000 08:03 
+17556                      /opt/gnome/lib64/libglib-2.0.so.0.600.3 
+2aab0a6a6000-2aab0a6b6000 r-xp 00000000 08:03 
+18064                      /usr/X11R6/lib64/libXext.so.6.4 
+2aab0a6b6000-2aab0a7b6000 ---p 00010000 08:03 
+18064                      /usr/X11R6/lib64/libXext.so.6.4 
+2aab0a7b6000-2aab0a7b7000 rwxp 00010000 08:03 
+18064                      /usr/X11R6/lib64/libXext.so.6.4 
+2aab0a7b7000-2aab0a7ba000 r-xp 00000000 08:03 
+18084                      /usr/X11R6/lib64/libXrandr.so.2.0 
+2aab0a7ba000-2aab0a8b9000 ---p 00003000 08:03 
+18084                      /usr/X11R6/lib64/libXrandr.so.2.0 
+2aab0a8b9000-2aab0a8ba000 rwxp 00002000 08:03 
+18084                      /usr/X11R6/lib64/libXrandr.so.2.0 
+2aab0a8ba000-2aab0a8c2000 r-xp 00000000 08:03 
+18073                      /usr/X11R6/lib64/libXi.so.6.0 
+2aab0a8c2000-2aab0a9c1000 ---p 00008000 08:03 
+18073                      /usr/X11R6/lib64/libXi.so.6.0 
+2aab0a9c1000-2aab0a9c2000 rwxp 00007000 08:03 
+18073                      /usr/X11R6/lib64/libXi.so.6.0 
+2aab0a9c2000-2aab0a9c4000 r-xp 00000000 08:03 
+18074                      /usr/X11R6/lib64/libXinerama.so.1.0 
+2aab0a9c4000-2aab0aac3000 ---p 00002000 08:03 
+18074                      /usr/X11R6/lib64/libXinerama.so.1.0 
+2aab0aac3000-2aab0aac4000 rwxp 00001000 08:03 
+18074                      /usr/X11R6/lib64/libXinerama.so.1.0 
+2aab0aac4000-2aab0aad8000 r-xp 00000000 08:03 
+18071                      /usr/X11R6/lib64/libXft.so.2.1.2 
+2aab0aad8000-2aab0abd7000 ---p 00014000 08:03 
+18071                      /usr/X11R6/lib64/libXft.so.2.1.2 
+2aab0abd7000-2aab0abd8000 rwxp 00013000 08:03 
+18071                      /usr/X11R6/lib64/libXft.so.2.1.2 
+2aab0abd8000-2aab0ac5a000 r-xp 00000000 08:03 
+12700                      /usr/lib64/libfreetype.so.6.3.7 
+2aab0ac5a000-2aab0ad5a000 ---p 00082000 08:03 
+12700                      /usr/lib64/libfreetype.so.6.3.7 
+2aab0ad5a000-2aab0ad67000 rwxp 00082000 08:03 
+12700                      /usr/lib64/libfreetype.so.6.3.7 
+2aab0ad67000-2aab0ad9c000 r-xp 00000000 08:03 
+16720                      /usr/lib64/libfontconfig.so.1.0.4 
+2aab0ad9c000-2aab0ae9b000 ---p 00035000 08:03 
+16720                      /usr/lib64/libfontconfig.so.1.0.4 
+2aab0ae9b000-2aab0aea3000 rwxp 00034000 08:03 
+16720                      /usr/lib64/libfontconfig.so.1.0.4 
+2aab0aea3000-2aab0aea5000 rwxp 2aab0aea3000 00:00 0  
+2aab0aea5000-2aab0aeaa000 r-xp 00000000 08:03 
+18065                      /usr/X11R6/lib64/libXfixes.so.3.0 
+2aab0aeaa000-2aab0afa9000 ---p 00005000 08:03 
+18065                      /usr/X11R6/lib64/libXfixes.so.3.0 
+2aab0afa9000-2aab0afaa000 rwxp 00004000 08:03 
+18065                      /usr/X11R6/lib64/libXfixes.so.3.0 
+2aab0afaa000-2aab0afb3000 r-xp 00000000 08:03 
+18060                      /usr/X11R6/lib64/libXcursor.so.1.0.2 
+2aab0afb3000-2aab0b0b3000 ---p 00009000 08:03 
+18060                      /usr/X11R6/lib64/libXcursor.so.1.0.2 
+2aab0b0b3000-2aab0b0b4000 rwxp 00009000 08:03 
+18060                      /usr/X11R6/lib64/libXcursor.so.1.0.2 
+2aab0b0b4000-2aab0b0bc000 r-xp 00000000 08:03 
+18086                      /usr/X11R6/lib64/libXrender.so.1.2.2 
+2aab0b0bc000-2aab0b1bc000 ---p 00008000 08:03 
+18086                      /usr/X11R6/lib64/libXrender.so.1.2.2 
+2aab0b1bc000-2aab0b1bd000 rwxp 00008000 08:03 
+18086                      /usr/X11R6/lib64/libXrender.so.1.2.2 
+2aab0b1bd000-2aab0b1e5000 r-xp 00000000 08:03 
+45133                      /opt/gnome/lib64/libpangoft2-1.0.so.0.800.1 
+2aab0b1e5000-2aab0b2e4000 ---p 00028000 08:03 
+45133                      /opt/gnome/lib64/libpangoft2-1.0.so.0.800.1 
+2aab0b2e4000-2aab0b2e6000 rwxp 00027000 08:03 
+45133                      /opt/gnome/lib64/libpangoft2-1.0.so.0.800.1 
+2aab0b2e6000-2aab0b307000 r-xp 00000000 08:03 
+12681                      /usr/lib64/libexpat.so.0.5.0 
+2aab0b307000-2aab0b406000 ---p 00021000 08:03 
+12681                      /usr/lib64/libexpat.so.0.5.0 
+2aab0b406000-2aab0b409000 rwxp 00020000 08:03 
+12681                      /usr/lib64/libexpat.so.0.5.0 
+2aab0b409000-2aab0b4e1000 r-xp 00000000 08:03 
+15775                      /usr/lib/locale/en_GB.utf8/LC_COLLATE 
+2aab0b4e1000-2aab0b4e2000 r-xp 00000000 08:03 
+15579                      /usr/lib/locale/en_GB.utf8/LC_TIME 
+2aab0b4e2000-2aab0b4e3000 r-xp 00000000 08:03 
+15758                      /usr/lib/locale/en_GB.utf8/LC_NUMERIC 
+2aab0b4e3000-2aab0b4e4000 r-xp 00000000 08:03 
+17953                      /usr/X11R6/lib/X11/locale/lib64/common/xlcUTF8Load.so.2 
+2aab0b4e4000-2aab0b5e3000 ---p 00001000 08:03 
+17953                      /usr/X11R6/lib/X11/locale/lib64/common/xlcUTF8Load.so.2 
+2aab0b5e3000-2aab0b5e4000 rwxp 00000000 08:03 
+17953                      /usr/X11R6/lib/X11/locale/lib64/common/xlcUTF8Load.so.2 
+2aab0b5e4000-2aab0b5ed000 r-xp 00000000 08:03 
+52235                      /opt/gnome/share/locale/en_GB/LC_MESSAGES/gtk20.mo 
+2aab0b5ed000-2aab0b5ef000 r-xp 00000000 08:03 
+15281                      /usr/lib64/gconv/ISO8859-1.so 
+2aab0b5ef000-2aab0b6ee000 ---p 00002000 08:03 
+15281                      /usr/lib64/gconv/ISO8859-1.so 
+2aab0b6ee000-2aab0b6f0000 rwxp 00001000 08:03 
+15281                      /usr/lib64/gconv/ISO8859-1.so 
+2aab0b6f0000-2aab0b709000 r-xp 00000000 08:03 
+52234                      /opt/gnome/share/locale/en_GB/LC_MESSAGES/gtk20-properties.mo 
+2aab0b709000-2aab0b748000 r-xp 00000000 08:03 
+490184                     /home/agl/.eclipse/org.eclipse.platform_3.1.1/configuration/org.eclipse.osgi/bundles/85/1/.cp/libswt-gtk-3139.so 
+2aab0b748000-2aab0b847000 ---p 0003f000 08:03 
+490184                     /home/agl/.eclipse/org.eclipse.platform_3.1.1/configuration/org.eclipse.osgi/bundles/85/1/.cp/libswt-gtk-3139.so 
+2aab0b847000-2aab0b84b000 rwxp 0003e000 08:03 
+490184                     /home/agl/.eclipse/org.eclipse.platform_3.1.1/configuration/org.eclipse.osgi/bundles/85/1/.cp/libswt-gtk-3139.so 
+2aab0b84b000-2aab0b84c000 rwxp 2aab0b84b000 00:00 0  
+2aab0b84c000-2aab0b86b000 r-xp 00000000 08:03 
+89188                      /opt/gnome/lib64/gtk-2.0/2.4.0/engines/libqtengine.so 
+2aab0b86b000-2aab0b96a000 ---p 0001f000 08:03 
+89188                      /opt/gnome/lib64/gtk-2.0/2.4.0/engines/libqtengine.so 
+2aab0b96a000-2aab0b96c000 rwxp 0001e000 08:03 
+89188                      /opt/gnome/lib64/gtk-2.0/2.4.0/engines/libqtengine.so 
+2aab0b96c000-2aab0c119000 r-xp 00000000 08:03 
+48806                      /usr/lib/qt3/lib64/libqt-mt.so.3.3.4 
+2aab0c119000-2aab0c218000 ---p 007ad000 08:03 
+48806                      /usr/lib/qt3/lib64/libqt-mt.so.3.3.4 
+2aab0c218000-2aab0c296000 rwxp 007ac000 08:03 
+48806                      /usr/lib/qt3/lib64/libqt-mt.so.3.3.4 
+2aab0c296000-2aab0c29b000 rwxp 2aab0c296000 00:00 0  
+2aab0c29b000-2aab0c29c000 r-xp 00000000 08:03 
+15345                      /usr/share/locale/en_GB/LC_MESSAGES/libc.mo 
+2aab0c2c5000-2aab0c2f0000 r-xp 00000000 08:03 
+17301                      /usr/lib64/libpng.so.3.1.2.8 
+2aab0c2f0000-2aab0c3f0000 ---p 0002b000 08:03 
+17301                      /usr/lib64/libpng.so.3.1.2.8 
+2aab0c3f0000-2aab0c3f1000 rwxp 0002b000 08:03 
+17301                      /usr/lib64/libpng.so.3.1.2.8 
+2aab0c3f1000-2aab0c404000 r-xp 00000000 08:03 
+58041                      /lib64/libz.so.1.2.2 
+2aab0c404000-2aab0c503000 ---p 00013000 08:03 
+58041                      /lib64/libz.so.1.2.2 
+2aab0c503000-2aab0c504000 rwxp 00012000 08:03 
+58041                      /lib64/libz.so.1.2.2 
+2aab0c504000-2aab0c50d000 r-xp 00000000 08:03 
+18046                      /usr/X11R6/lib64/libSM.so.6.0 
+2aab0c50d000-2aab0c60d000 ---p 00009000 08:03 
+18046                      /usr/X11R6/lib64/libSM.so.6.0 
+2aab0c60d000-2aab0c60e000 rwxp 00009000 08:03 
+18046                      /usr/X11R6/lib64/libSM.so.6.0 
+2aab0c60e000-2aab0c624000 r-xp 00000000 08:03 
+18044                      /usr/X11R6/lib64/libICE.so.6.3 
+2aab0c624000-2aab0c724000 ---p 00016000 08:03 
+18044                      /usr/X11R6/lib64/libICE.so.6.3 
+2aab0c724000-2aab0c725000 rwxp 00016000 08:03 
+18044                      /usr/X11R6/lib64/libICE.so.6.3 
+2aab0c725000-2aab0c729000 rwxp 2aab0c725000 00:00 0  
+2aab0c729000-2aab0c7ec000 r-xp 00000000 08:03 
+17789                      /usr/lib64/libstdc++.so.5.0.7 
+2aab0c7ec000-2aab0c8eb000 ---p 000c3000 08:03 
+17789                      /usr/lib64/libstdc++.so.5.0.7 
+2aab0c8eb000-2aab0c8f3000 rwxp 000c2000 08:03 
+17789                      /usr/lib64/libstdc++.so.5.0.7 
+2aab0c8f3000-2aab0c905000 rwxp 2aab0c8f3000 00:00 0  
+2aab0c905000-2aab0c90f000 r-xp 00000000 08:03 
+17278                      /lib64/libgcc_s.so.1 
+2aab0c90f000-2aab0ca0f000 ---p 0000a000 08:03 
+17278                      /lib64/libgcc_s.so.1 
+2aab0ca0f000-2aab0ca10000 rwxp 0000a000 08:03 
+17278                      /lib64/libgcc_s.so.1 
+2aab0ca10000-2aab0ca2f000 r-xp 00000000 08:03 
+58269                      /opt/kde3/lib64/kde3/plugins/styles/plastik.so 
+2aab0ca2f000-2aab0cb2e000 ---p 0001f000 08:03 
+58269                      /opt/kde3/lib64/kde3/plugins/styles/plastik.so 
+2aab0cb2e000-2aab0cb30000 rwxp 0001e000 08:03 
+58269                      /opt/kde3/lib64/kde3/plugins/styles/plastik.so 
+2aab0cb5a000-2aab0cb86000 r-xp 00000000 08:03 
+58314                      /opt/kde3/lib64/libkdefx.so.4.2.0 
+2aab0cb86000-2aab0cc85000 ---p 0002c000 08:03 
+58314                      /opt/kde3/lib64/libkdefx.so.4.2.0 
+2aab0cc85000-2aab0cc88000 rwxp 0002b000 08:03 
+58314                      /opt/kde3/lib64/libkdefx.so.4.2.0 
+2aab0cc88000-2aab0ccb2000 r-xp 00000000 08:03 
+18136                      /usr/X11R6/lib/X11/fonts/truetype/albw.ttf 
+2aab0ccb2000-2aab0ccb4000 r-xp 00000000 08:03 
+45142                      /opt/gnome/lib64/pango/1.4.0/modules/pango-basic-fc.so 
+2aab0ccb4000-2aab0cdb3000 ---p 00002000 08:03 
+45142                      /opt/gnome/lib64/pango/1.4.0/modules/pango-basic-fc.so 
+2aab0cdb3000-2aab0cdb4000 rwxp 00001000 08:03 
+45142                      /opt/gnome/lib64/pango/1.4.0/modules/pango-basic-fc.so 
+2aab0cdb4000-2aab0cdde000 r-xp 00000000 08:03 
+18137                      /usr/X11R6/lib/X11/fonts/truetype/albwb.ttf 
+2aab0cdde000-2aab0cde0000 r-xp 00000000 08:03 
+115124                     /home/agl/.eclipse/org.eclipse.platform_3.1.1/configuration/org.eclipse.osgi/bundles/69/1/.cp/os/linux/x86_64/libcore_3_1_0.so 
+2aab0cde0000-2aab0cedf000 ---p 00002000 08:03 
+115124                     /home/agl/.eclipse/org.eclipse.platform_3.1.1/configuration/org.eclipse.osgi/bundles/69/1/.cp/os/linux/x86_64/libcore_3_1_0.so 
+2aab0cedf000-2aab0cee0000 rwxp 00001000 08:03 
+115124                     /home/agl/.eclipse/org.eclipse.platform_3.1.1/configuration/org.eclipse.osgi/bundles/69/1/.cp/os/linux/x86_64/libcore_3_1_0.so 
+2aab0cee0000-2aab0d1e0000 rwxp 2aab0cee0000 00:00 0  
+2aab0d200000-2aab0d2f8000 rwxp 2aab0d200000 00:00 0  
+2aab0d2f8000-2aab0d300000 ---p 2aab0d2f8000 00:00 0  
+2aab0d300000-2aab0d3fe000 rwxp 2aab0d300000 00:00 0  
+2aab0d3fe000-2aab0d400000 ---p 2aab0d3fe000 00:00 0  
+2aab0d400000-2aab0d500000 rwxp 2aab0d400000 00:00 0  
+2aab0d5ad000-2aab0d8ad000 rwxp 2aab0d5ad000 00:00 0  
+2aab0d900000-2aab0da63000 rwxp 2aab0d900000 00:00 0  
+2aab0db00000-2aab0dbf1000 rwxp 2aab0db00000 00:00 0  
+2aab0dbf1000-2aab0dc00000 ---p 2aab0dbf1000 00:00 0  
+2aab0dc00000-2aab0dcc5000 rwxp 2aab0dc00000 00:00 0  
+2aab0dd00000-2aab0e300000 rwxp 2aab0dd00000 00:00 0  
+2aab0e300000-2aab0e59d000 rwxp 2aab0e300000 00:00 0  
+2aab0e59d000-2aab0e600000 ---p 2aab0e59d000 00:00 0  
+2aab0e600000-2aab0e6f0000 rwxp 2aab0e600000 00:00 0  
+2aab0e6f0000-2aab0e700000 ---p 2aab0e6f0000 00:00 0  
+2aab0e700000-2aab0e7f8000 rwxp 2aab0e700000 00:00 0  
+2aab0e7f8000-2aab0e800000 ---p 2aab0e7f8000 00:00 0  
+2aab0e800000-2aab0e90a000 rwxp 2aab0e800000 00:00 0  
+2aab0ea00000-2aab0eaff000 rwxp 2aab0ea00000 00:00 0  
+2aab0eaff000-2aab0eb00000 ---p 2aab0eaff000 00:00 0  
+2aab0eb00000-2aab0eb29000 rwxp 2aab0eb00000 00:00 0  
+2aab0eb29000-2aab0ec00000 ---p 2aab0eb29000 00:00 0  
+2aab0ec00000-2aab0ecff000 rwxp 2aab0ec00000 00:00 0  
+2aab0ecff000-2aab0ed00000 ---p 2aab0ecff000 00:00 0  
+2aab0ee00000-2aab0f000000 rwxp 2aab0ee00000 00:00 0  
+7fffffdff000-7fffffe02000 ---p 7fffffdff000 00:00 0  
+7fffffe02000-7ffffffff000 rwxp 7fffffe02000 00:00 0  
+ffffffffff600000-ffffffffffe00000 ---p 00000000 00:00 0  
+ 
+VM Arguments: 
+jvm_args: -Xms64M -Xmx256M 
+java_command: /usr/share/eclipse/startup.jar -os linux -ws gtk -arch x86_64 
+-launcher /usr/share/eclipse/eclipse -name Eclipse -showsplash 600 -exitdata 
+9c8005 -vm /usr/lib64/jvm/java/bin/java -vmargs -Xms64M -Xmx256M 
+-jar /usr/share/eclipse/startup.jar 
+ 
+Environment Variables: 
+PATH=/home/agl/bin:/usr/local/bin:/usr/bin:/usr/X11R6/bin:/bin:/usr/games:/opt/gnome/bin:/opt/kde3/bin 
+LD_LIBRARY_PATH=/usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/lib/amd64/server:/usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/lib/amd64:/usr/lib64/jvm/java-1.5.0-sun-1.5.0_03/jre/../lib/amd64:/opt/mozilla/lib64 
+SHELL=/bin/bash 
+DISPLAY=192.168.135.59:1.0 
+HOSTTYPE=x86_64 
+OSTYPE=linux 
+MACHTYPE=x86_64-suse-linux 
+ 
+ 
+---------------  S Y S T E M  --------------- 
+ 
+OS:SuSE Linux 9.3 (x86-64) 
+VERSION = 9.3 
+ 
+uname:Linux 2.6.11.4-21.9-smp #1 SMP Fri Aug 19 11:58:59 UTC 2005 x86_64 
+libc:glibc 2.3.4 NPTL 2.3.4  
+rlimit: STACK 8192k, CORE 0k, NPROC 71680, NOFILE 4096, AS infinity 
+load average:1.00 0.67 0.50 
+ 
+CPU:total 4 em64t ht 
+ 
+Memory: 4k page, physical 8198144k(2285192k free), swap 4200988k(4200988k free) 
+ 
+vm_info: Java HotSpot(TM) 64-Bit Server VM (1.5.0_03-b07) for linux-amd64, 
+built on Apr 13 2005 01:49:07 by java_re with gcc 3.2.2 (SuSE Linux)</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=111443#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Philipe Mulet</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=philippe_mulet&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=philippe_mulet&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-10-04 12:02:48 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Slightly different scenario, but still a Hotspot JIT crash under Linux AMD64.
+
+*** This bug has been marked as a duplicate of <a class="bz_bug_link 
+          bz_status_CLOSED  bz_closed"
+   title="CLOSED WONTFIX - Segmentation Fault in 1.5.0_01 in compiler.parser.Scanner.getNextToken() AMD64"
+   href="show_bug.cgi?id=71987">71987</a> ***</pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=111443">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=111443">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=111443">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=111443&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=111443" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>

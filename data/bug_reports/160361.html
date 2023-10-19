@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>160361 &ndash; JVM crash during swt native call</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "160361 – JVM crash during swt native call",
+                             "show_bug.cgi?id=160361" );
+        document.title = "160361 – JVM crash during swt native call";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "160361 – JVM crash during swt native call", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_CLOSED
+                 bz_product_Platform
+                 bz_component_SWT
+                 bz_bug_160361 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;160361</span>
+
+        <span id="subtitle" class="subheader">JVM crash during swt native call</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2006-10-11 12:50:59 EDT</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=160361&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=160361" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2006-10-11 12:50:59">
+  <input type="hidden" name="id" value="160361">
+  <input type="hidden" name="token" value="1629864741-xicsfd9g_t3vd9Xuqtpl_g7qg8I4lnrp1FA8HzC2Swk">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=160361"><b>Bug&nbsp;160361</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">JVM crash during swt native call</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span>JVM crash during swt native call
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      'JVM crash during swt native call' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">CLOSED
+          DUPLICATE
+            of <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - SWT cause JVM crash"
+   href="show_bug.cgi?id=150782">bug 150782</a>
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >Platform
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >Eclipse Project
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=Platform"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >SWT
+
+  (<a href="buglist.cgi?component=SWT&amp;product=Platform&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>3.2 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">PC
+        Windows XP
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P3
+       critical<span id="votes_container">
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=160361#vote_160361">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>--- &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">Platform-SWT-Inbox</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=platform-swt-inbox&#64;eclipse.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=platform-swt-inbox&#64;eclipse.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard">
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'platform-swt-inbox\x40eclipse.org',
+        '');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+
+  </td>
+  </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2006-10-10 14:16 EDT by <span class="vcard"><span class="fn">Spencer Stejskal</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=stejsks&#64;sosstaffing.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=stejsks&#64;sosstaffing.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2006-10-11 12:50 EDT
+      (<a href="show_activity.cgi?id=160361">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>1 
+          user
+          <span id="cc_edit_area_showhide_container" class="bz_default_hidden">
+            (<a href="#" id="cc_edit_area_showhide">show</a>)
+          </span>
+        <div id="cc_edit_area">
+          <br>
+            <select id="cc" multiple="multiple" size="5" >
+                <option value="grant_gayed">grant_gayed</option>
+            </select>
+        </div>
+          <script type="text/javascript">
+            hideEditableField( 'cc_edit_area_showhide_container', 
+                               'cc_edit_area', 
+                               'cc_edit_area_showhide', 
+                               '', 
+                               '');  
+          </script>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" >
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <a href="attachment.cgi?bugid=160361&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=160361&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160361#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Spencer Stejskal</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=stejsks&#64;sosstaffing.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=stejsks&#64;sosstaffing.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-10-10 14:16:05 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">We have a stand-alone SWT app which we deploy via Web Start.  on certain computers  the jvm will crash, i think while its repopulating a table.  I have tried this on jvm 1.5.0_08-b03 and jvm 1.5.0_06-b05 with no discernable difference.  being that this issue happens only on certain computers im convinced that it has something to do with the configuration of windows but i cant be sure.
+the report that is generated is:
+
+#
+# An unexpected error has been detected by HotSpot Virtual Machine:
+#
+#  EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x773e0da0, pid=2380, tid=2204
+#
+# Java VM: Java HotSpot(TM) Client VM (1.5.0_08-b03 mixed mode, sharing)
+# Problematic frame:
+# C  [comctl32.dll+0x10da0]
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x02f99d88):  JavaThread &quot;javawsApplicationMain&quot; [_thread_in_native, id=2204]
+
+siginfo: ExceptionCode=0xc0000005, reading address 0x00000008
+
+Registers:
+EAX=0x00000000, EBX=0x00030001, ECX=0x00000008, EDX=0x00c10002
+ESP=0x03df1394, EBP=0x03df1394, ESI=0x000f9c30, EDI=0x00000000
+EIP=0x773e0da0, EFLAGS=0x00010246
+
+Top of Stack: (sp=0x03df1394)
+0x03df1394:   03df13c0 77416f11 00000008 00000000
+0x03df13a4:   000f9c30 00000000 7742049e 00030001
+0x03df13b4:   03df13a8 00000000 00000000 03df1530
+0x03df13c4:   77420c0e 000f9c30 00000000 00000000
+0x03df13d4:   00000005 00000000 03df1598 7742049e
+0x03df13e4:   00000000 00000000 00000000 7742049e
+0x03df13f4:   03df142c 77d488d1 0055f770 00000000
+0x03df1404:   77d488da 00000000 7742049e 00000000 
+
+Instructions: (pc=0x773e0da0)
+0x773e0d90:   8b ec 8b 4d 08 85 c9 74 13 8b 45 0c 85 c0 7c 0c
+0x773e0da0:   3b 01 7d 08 8b 49 04 8b 04 81 eb 02 33 c0 5d c2 
+
+
+Stack: [0x03dc0000,0x03e00000),  sp=0x03df1394,  free space=196k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  [comctl32.dll+0x10da0]
+C  [comctl32.dll+0x46f11]
+C  [comctl32.dll+0x50c0e]
+C  [USER32.dll+0x8734]
+C  [USER32.dll+0x8816]
+C  [USER32.dll+0xc63f]
+C  [USER32.dll+0xc665]
+C  [swt-win32-3232.dll+0x1346]
+J  org.eclipse.swt.internal.win32.OS.CallWindowProcW(IIIII)I
+J  org.eclipse.swt.widgets.Table.callWindowProc(IIIIZ)I
+J  org.eclipse.swt.widgets.Table.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Table.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+V  [jvm.dll+0x86e84]
+V  [jvm.dll+0xddead]
+V  [jvm.dll+0x86d55]
+V  [jvm.dll+0x8bbc5]
+C  [swt-win32-3232.dll+0x2a831]
+C  [swt-win32-3232.dll+0x1ec5c]
+C  [USER32.dll+0x8816]
+C  [USER32.dll+0xb4c0]
+C  [USER32.dll+0xb50c]
+C  [ntdll.dll+0xeae3]
+C  [USER32.dll+0xb3f9]
+C  [USER32.dll+0xb393]
+C  [comctl32.dll+0x5058e]
+C  [USER32.dll+0x8734]
+C  [USER32.dll+0x8816]
+C  [USER32.dll+0xc63f]
+C  [USER32.dll+0xc665]
+C  [swt-win32-3232.dll+0x1346]
+J  org.eclipse.swt.internal.win32.OS.CallWindowProcW(IIIII)I
+J  org.eclipse.swt.widgets.Table.callWindowProc(IIIIZ)I
+J  org.eclipse.swt.widgets.Table.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Table.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+V  [jvm.dll+0x86e84]
+V  [jvm.dll+0xddead]
+V  [jvm.dll+0x86d55]
+V  [jvm.dll+0x8bbc5]
+C  [swt-win32-3232.dll+0x2a831]
+C  [swt-win32-3232.dll+0x1ec5c]
+C  [USER32.dll+0x8816]
+C  [USER32.dll+0xb4c0]
+C  [USER32.dll+0xb50c]
+C  [ntdll.dll+0xeae3]
+C  [USER32.dll+0xb3f9]
+C  [USER32.dll+0xb393]
+C  [swt-win32-3232.dll+0x2110]
+J  org.eclipse.swt.widgets.Scrollable.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+V  [jvm.dll+0x86e84]
+V  [jvm.dll+0xddead]
+V  [jvm.dll+0x86d55]
+V  [jvm.dll+0x8bbc5]
+C  [swt-win32-3232.dll+0x2a831]
+C  [swt-win32-3232.dll+0x1ec5c]
+C  [USER32.dll+0x8816]
+C  [USER32.dll+0xb4c0]
+C  [USER32.dll+0xb50c]
+C  [ntdll.dll+0xeae3]
+C  [USER32.dll+0xb3f9]
+C  [USER32.dll+0xb393]
+C  [swt-win32-3232.dll+0x2110]
+J  org.eclipse.swt.widgets.Scrollable.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+V  [jvm.dll+0x86e84]
+V  [jvm.dll+0xddead]
+V  [jvm.dll+0x86d55]
+V  [jvm.dll+0x8bbc5]
+C  [swt-win32-3232.dll+0x2a831]
+C  [swt-win32-3232.dll+0x1ec5c]
+C  [USER32.dll+0x8816]
+C  [USER32.dll+0xb4c0]
+C  [USER32.dll+0xb50c]
+C  [ntdll.dll+0xeae3]
+C  [USER32.dll+0xb3f9]
+C  [USER32.dll+0xb393]
+C  [swt-win32-3232.dll+0x2110]
+J  org.eclipse.swt.widgets.Scrollable.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+V  [jvm.dll+0x86e84]
+V  [jvm.dll+0xddead]
+V  [jvm.dll+0x86d55]
+V  [jvm.dll+0x8bbc5]
+...&lt;more frames&gt;...
+
+Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
+J  org.eclipse.swt.internal.win32.OS.CallWindowProcW(IIIII)I
+J  org.eclipse.swt.widgets.Table.callWindowProc(IIIIZ)I
+J  org.eclipse.swt.widgets.Table.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Table.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.CallWindowProcW(IIIII)I
+J  org.eclipse.swt.widgets.Table.callWindowProc(IIIIZ)I
+J  org.eclipse.swt.widgets.Table.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Table.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.DefWindowProcW(IIII)I
+J  org.eclipse.swt.widgets.Scrollable.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.DefWindowProcW(IIII)I
+J  org.eclipse.swt.widgets.Scrollable.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.DefWindowProcW(IIII)I
+J  org.eclipse.swt.widgets.Scrollable.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.DefWindowProcW(IIII)I
+J  org.eclipse.swt.widgets.Scrollable.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.DefWindowProcW(IIII)I
+J  org.eclipse.swt.widgets.Scrollable.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.DefWindowProcW(IIII)I
+J  org.eclipse.swt.widgets.Scrollable.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.CallWindowProcW(IIIII)I
+J  org.eclipse.swt.widgets.TabFolder.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.DefWindowProcW(IIII)I
+J  org.eclipse.swt.widgets.Scrollable.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.DefWindowProcW(IIII)I
+J  org.eclipse.swt.widgets.Scrollable.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.DefWindowProcW(IIII)I
+J  org.eclipse.swt.widgets.Scrollable.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.DefWindowProcW(IIII)I
+J  org.eclipse.swt.widgets.Scrollable.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.CallWindowProcW(IIIII)I
+J  org.eclipse.swt.widgets.TabFolder.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.DefWindowProcW(IIII)I
+J  org.eclipse.swt.widgets.Scrollable.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.DefWindowProcW(IIII)I
+J  org.eclipse.swt.widgets.Shell.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Decorations.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Shell.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.DefWindowProcW(IIII)I
+J  org.eclipse.swt.widgets.Shell.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Decorations.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Shell.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.DefWindowProcW(IIII)I
+J  org.eclipse.swt.widgets.Scrollable.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.CallWindowProcW(IIIII)I
+J  org.eclipse.swt.widgets.TabFolder.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.DefWindowProcW(IIII)I
+J  org.eclipse.swt.widgets.Scrollable.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.DefWindowProcW(IIII)I
+J  org.eclipse.swt.widgets.Scrollable.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.DefWindowProcW(IIII)I
+J  org.eclipse.swt.widgets.Scrollable.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.DefWindowProcW(IIII)I
+J  org.eclipse.swt.widgets.Scrollable.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.CallWindowProcW(IIIII)I
+J  org.eclipse.swt.widgets.TabFolder.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.DefWindowProcW(IIII)I
+J  org.eclipse.swt.widgets.Scrollable.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.DefWindowProcW(IIII)I
+J  org.eclipse.swt.widgets.Scrollable.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.DefWindowProcW(IIII)I
+J  org.eclipse.swt.widgets.Scrollable.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.DefWindowProcW(IIII)I
+J  org.eclipse.swt.widgets.Scrollable.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.CallWindowProcW(IIIII)I
+J  org.eclipse.swt.widgets.TabFolder.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.DefWindowProcW(IIII)I
+J  org.eclipse.swt.widgets.Scrollable.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.DefWindowProcW(IIII)I
+J  org.eclipse.swt.widgets.Scrollable.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.DefWindowProcW(IIII)I
+J  org.eclipse.swt.widgets.Scrollable.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.DefWindowProcW(IIII)I
+J  org.eclipse.swt.widgets.Scrollable.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.DefWindowProcW(IIII)I
+J  org.eclipse.swt.widgets.Scrollable.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~RuntimeStub::alignment_frame_return Runtime1 stub
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.DefWindowProcW(IIII)I
+J  org.eclipse.swt.widgets.Scrollable.callWindowProc(IIII)I
+J  org.eclipse.swt.widgets.Control.windowProc(IIII)I
+J  org.eclipse.swt.widgets.Display.windowProc(IIII)I
+v  ~StubRoutines::call_stub
+J  org.eclipse.swt.internal.win32.OS.CreateWindowExW(I[C[CIIIIIIIILorg/eclipse/swt/internal/win32/CREATESTRUCT;)I
+J  org.eclipse.swt.internal.win32.OS.CreateWindowEx(ILorg/eclipse/swt/internal/win32/TCHAR;Lorg/eclipse/swt/internal/win32/TCHAR;IIIIIIIILorg/eclipse/swt/internal/win32/CREATESTRUCT;)I
+J  org.eclipse.swt.widgets.Control.createHandle()V
+J  org.eclipse.swt.widgets.Composite.createHandle()V
+j  org.eclipse.swt.widgets.Group.createHandle()V+1
+J  org.eclipse.swt.widgets.Control.createWidget()V
+J  org.eclipse.swt.widgets.Scrollable.createWidget()V
+J  org.eclipse.swt.widgets.Composite.&lt;init&gt;(Lorg/eclipse/swt/widgets/Composite;I)V
+j  org.eclipse.swt.widgets.Group.&lt;init&gt;(Lorg/eclipse/swt/widgets/Composite;I)V+6
+j  com.sosstaffing.soarclient.swtwrappers.SOSGroupSWT.&lt;init&gt;(Lcom/sosstaffing/soarclient/wrappers/SOSCanvas;)V+19
+j  com.sosstaffing.soarclient.components.WidgetFactory.getGroup(Lcom/sosstaffing/soarclient/wrappers/SOSCanvas;)Lcom/sosstaffing/soarclient/wrappers/SOSGroup;+5
+j  com.sosstaffing.soarclient.components.CommentRow.&lt;init&gt;(Lcom/sosstaffing/soarclient/wrappers/SOSCanvas;ZLcom/sosstaffing/soarclient/components/CommentTable;Lcom/sosstaffing/soarclient/components/SOSConstant$SCREEN_TYPE;Ljava/lang/String;Ljava/lang/String;)V+100
+j  com.sosstaffing.soarclient.components.CommentTable.initializeRows()V+58
+j  com.sosstaffing.soarclient.components.CommentTable.clearTable()V+121
+j  com.sosstaffing.soarclient.custscreens.JobTemplateReviewScreen.fillCommentTable()V+4
+j  com.sosstaffing.soarclient.custscreens.JobTemplateReviewScreen.fillScreen(Lcom/sosstaffing/soar/model/dto/JobTemplateDTO;)V+60
+j  com.sosstaffing.soarclient.custscreens.CustomerJobTemplateScreen.populateTemplateDetailsAndSkills(Z)V+156
+j  com.sosstaffing.soarclient.custscreens.CustomerJobTemplateScreen.access$700(Lcom/sosstaffing/soarclient/custscreens/CustomerJobTemplateScreen;Z)V+2
+j  com.sosstaffing.soarclient.custscreens.CustomerJobTemplateScreen$DataAwareTableListener.widgetSelected(Lcom/sosstaffing/soarclient/wrappers/SOSSelectionEvent;)V+88
+j  com.sosstaffing.soarclient.swtwrappers.DataAwareTableSWT.selectionEventOccured(Lcom/sosstaffing/soarclient/wrappers/SOSSelectionEvent;)V+31
+j  com.sosstaffing.soarclient.swtwrappers.InnerSelectionListener.widgetSelected(Lorg/eclipse/swt/events/SelectionEvent;)V+12
+J  org.eclipse.swt.widgets.TypedListener.handleEvent(Lorg/eclipse/swt/widgets/Event;)V
+J  org.eclipse.swt.widgets.EventTable.sendEvent(Lorg/eclipse/swt/widgets/Event;)V
+J  org.eclipse.swt.widgets.Display.runDeferredEvents()Z
+J  org.eclipse.swt.widgets.Display.readAndDispatch()Z
+J  com.sosstaffing.soarclient.swtwrappers.SOSShellSWT.open()V
+v  ~OSRAdapter
+j  com.sosstaffing.soarclient.core.MainWindow.openWindow()V+49
+j  com.sosstaffing.soarclient.tests.ScreenTest.main([Ljava/lang/String;)V+8
+v  ~StubRoutines::call_stub
+j  sun.reflect.NativeMethodAccessorImpl.invoke0(Ljava/lang/reflect/Method;Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+0
+j  sun.reflect.NativeMethodAccessorImpl.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+87
+j  sun.reflect.DelegatingMethodAccessorImpl.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+6
+j  java.lang.reflect.Method.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+111
+j  com.sun.javaws.Launcher.executeApplication(Lcom/sun/javaws/jnl/LaunchDesc;Lcom/sun/javaws/LocalApplicationProperties;Ljava/lang/Class;Lcom/sun/javaws/ui/DownloadWindow;)V+191
+j  com.sun.javaws.Launcher.executeMainClass(Lcom/sun/javaws/jnl/LaunchDesc;Lcom/sun/javaws/LocalApplicationProperties;Ljava/lang/Class;Lcom/sun/javaws/ui/DownloadWindow;)V+25
+j  com.sun.javaws.Launcher.continueLaunch(Lcom/sun/javaws/LocalApplicationProperties;ZLjava/net/URL;Lcom/sun/javaws/jnl/LaunchDesc;ZZZ)V+431
+j  com.sun.javaws.Launcher.handleApplicationDesc(Lcom/sun/javaws/jnl/LaunchDesc;[Ljava/lang/String;ZZZZZ)Lcom/sun/javaws/jnl/LaunchDesc;+1264
+j  com.sun.javaws.Launcher.handleLaunchFile(Lcom/sun/javaws/jnl/LaunchDesc;[Ljava/lang/String;ZZZZ)Lcom/sun/javaws/jnl/LaunchDesc;+184
+j  com.sun.javaws.Launcher.run()V+134
+j  java.lang.Thread.run()V+11
+v  ~StubRoutines::call_stub
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( =&gt; current thread )
+  0x030b9af0 JavaThread &quot;RMI ConnectionExpiration-[10.49.0.62:4444]&quot; daemon [_thread_blocked, id=3620]
+  0x02fbbba8 JavaThread &quot;pool-44-thread-4&quot; [_thread_blocked, id=3736]
+  0x03103f80 JavaThread &quot;pool-43-thread-2&quot; [_thread_blocked, id=3524]
+  0x030dd998 JavaThread &quot;pool-41-thread-12&quot; [_thread_blocked, id=1188]
+  0x030dd588 JavaThread &quot;pool-44-thread-3&quot; [_thread_blocked, id=1948]
+  0x03121008 JavaThread &quot;pool-41-thread-11&quot; [_thread_blocked, id=2744]
+  0x030a9aa8 JavaThread &quot;pool-41-thread-10&quot; [_thread_blocked, id=3808]
+  0x030b9968 JavaThread &quot;pool-44-thread-2&quot; [_thread_blocked, id=332]
+  0x030b9c78 JavaThread &quot;pool-41-thread-9&quot; [_thread_blocked, id=3468]
+  0x030e37a8 JavaThread &quot;pool-41-thread-8&quot; [_thread_blocked, id=2348]
+  0x030e8570 JavaThread &quot;pool-41-thread-7&quot; [_thread_blocked, id=1740]
+  0x030abb28 JavaThread &quot;pool-41-thread-6&quot; [_thread_blocked, id=548]
+  0x030e8a30 JavaThread &quot;pool-43-thread-1&quot; [_thread_blocked, id=680]
+  0x030ace60 JavaThread &quot;pool-41-thread-5&quot; [_thread_blocked, id=776]
+  0x030eb2e0 JavaThread &quot;pool-41-thread-4&quot; [_thread_blocked, id=976]
+  0x030fd9c0 JavaThread &quot;pool-41-thread-3&quot; [_thread_blocked, id=4052]
+  0x030bca18 JavaThread &quot;pool-44-thread-1&quot; [_thread_blocked, id=3428]
+  0x030981e0 JavaThread &quot;pool-41-thread-2&quot; [_thread_blocked, id=3456]
+  0x03156310 JavaThread &quot;pool-41-thread-1&quot; [_thread_blocked, id=1512]
+  0x03179cd8 JavaThread &quot;RMI RenewClean-[10.49.0.62:4444]&quot; daemon [_thread_blocked, id=280]
+  0x00a22248 JavaThread &quot;GC Daemon&quot; daemon [_thread_blocked, id=1652]
+  0x02fa5cd8 JavaThread &quot;RMI RenewClean-[10.49.0.62:1098]&quot; daemon [_thread_blocked, id=2160]
+  0x00357308 JavaThread &quot;DestroyJavaVM&quot; [_thread_blocked, id=4012]
+=&gt;0x02f99d88 JavaThread &quot;javawsApplicationMain&quot; [_thread_in_native, id=2204]
+  0x00a2a258 JavaThread &quot;traceMsgQueueThread&quot; daemon [_thread_blocked, id=824]
+  0x00a226c8 JavaThread &quot;AWT-Windows&quot; daemon [_thread_in_native, id=4028]
+  0x00a130f8 JavaThread &quot;Low Memory Detector&quot; daemon [_thread_blocked, id=3768]
+  0x003559f8 JavaThread &quot;CompilerThread0&quot; daemon [_thread_blocked, id=752]
+  0x00a11200 JavaThread &quot;Signal Dispatcher&quot; daemon [_thread_blocked, id=3388]
+  0x00a0c148 JavaThread &quot;Finalizer&quot; daemon [_thread_blocked, id=2820]
+  0x00a0acd0 JavaThread &quot;Reference Handler&quot; daemon [_thread_blocked, id=2776]
+
+Other Threads:
+  0x00a08318 VMThread [id=1108]
+  0x00a144e0 WatcherThread [id=2792]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap
+ def new generation   total 2688K, used 2353K [0x08070000, 0x08350000, 0x0a7d0000)
+  eden space 2432K,  94% used [0x08070000, 0x082b11a0, 0x082d0000)
+  from space 256K,  17% used [0x08310000, 0x0831b358, 0x08350000)
+  to   space 256K,   0% used [0x082d0000, 0x082d0000, 0x08310000)
+ tenured generation   total 34352K, used 20610K [0x0a7d0000, 0x0c95c000, 0x28070000)
+   the space 34352K,  59% used [0x0a7d0000, 0x0bbf0828, 0x0bbf0a00, 0x0c95c000)
+ compacting perm gen  total 8448K, used 8329K [0x28070000, 0x288b0000, 0x2c070000)
+   the space 8448K,  98% used [0x28070000, 0x288924a0, 0x28892600, 0x288b0000)
+    ro space 8192K,  63% used [0x2c070000, 0x2c57d608, 0x2c57d800, 0x2c870000)
+    rw space 12288K,  46% used [0x2c870000, 0x2ce10608, 0x2ce10800, 0x2d470000)
+
+Dynamic libraries:
+0x00400000 - 0x0040d000 	C:\Program Files\Java\jre1.5.0_08\bin\javaw.exe
+0x7c900000 - 0x7c9b0000 	C:\WINDOWS\system32\ntdll.dll
+0x7c800000 - 0x7c8f4000 	C:\WINDOWS\system32\kernel32.dll
+0x77dd0000 - 0x77e6b000 	C:\WINDOWS\system32\ADVAPI32.dll
+0x77e70000 - 0x77f01000 	C:\WINDOWS\system32\RPCRT4.dll
+0x77d40000 - 0x77dd0000 	C:\WINDOWS\system32\USER32.dll
+0x77f10000 - 0x77f57000 	C:\WINDOWS\system32\GDI32.dll
+0x77c10000 - 0x77c68000 	C:\WINDOWS\system32\MSVCRT.dll
+0x6d6c0000 - 0x6d85b000 	C:\Program Files\Java\jre1.5.0_08\bin\client\jvm.dll
+0x76b40000 - 0x76b6d000 	C:\WINDOWS\system32\WINMM.dll
+0x6d280000 - 0x6d288000 	C:\Program Files\Java\jre1.5.0_08\bin\hpi.dll
+0x76bf0000 - 0x76bfb000 	C:\WINDOWS\system32\PSAPI.DLL
+0x6d690000 - 0x6d69c000 	C:\Program Files\Java\jre1.5.0_08\bin\verify.dll
+0x6d300000 - 0x6d31d000 	C:\Program Files\Java\jre1.5.0_08\bin\java.dll
+0x6d6b0000 - 0x6d6bf000 	C:\Program Files\Java\jre1.5.0_08\bin\zip.dll
+0x6d000000 - 0x6d169000 	C:\Program Files\Java\jre1.5.0_08\bin\awt.dll
+0x73000000 - 0x73026000 	C:\WINDOWS\system32\WINSPOOL.DRV
+0x76390000 - 0x763ad000 	C:\WINDOWS\system32\IMM32.dll
+0x774e0000 - 0x7761d000 	C:\WINDOWS\system32\ole32.dll
+0x5ad70000 - 0x5ada8000 	C:\WINDOWS\system32\uxtheme.dll
+0x73760000 - 0x737a9000 	C:\WINDOWS\system32\ddraw.dll
+0x73bc0000 - 0x73bc6000 	C:\WINDOWS\system32\DCIMAN32.dll
+0x74720000 - 0x7476b000 	C:\WINDOWS\system32\MSCTF.dll
+0x02f30000 - 0x02f53000 	C:\Program Files\ScanSoft\OmniPage15.0\OpHook15.dll
+0x77c00000 - 0x77c08000 	C:\WINDOWS\system32\VERSION.dll
+0x77120000 - 0x771ac000 	C:\WINDOWS\system32\OLEAUT32.dll
+0x6d1f0000 - 0x6d203000 	C:\Program Files\Java\jre1.5.0_08\bin\deploy.dll
+0x771b0000 - 0x77256000 	C:\WINDOWS\system32\WININET.dll
+0x77a80000 - 0x77b14000 	C:\WINDOWS\system32\CRYPT32.dll
+0x77b20000 - 0x77b32000 	C:\WINDOWS\system32\MSASN1.dll
+0x77f60000 - 0x77fd6000 	C:\WINDOWS\system32\SHLWAPI.dll
+0x77260000 - 0x77300000 	C:\WINDOWS\system32\urlmon.dll
+0x7c9c0000 - 0x7d1d5000 	C:\WINDOWS\system32\SHELL32.dll
+0x773d0000 - 0x774d2000 	C:\WINDOWS\WinSxS\x86_Microsoft.Windows.Common-Controls_6595b64144ccf1df_6.0.2600.2180_x-ww_a84f1ff9\comctl32.dll
+0x5d090000 - 0x5d127000 	C:\WINDOWS\system32\comctl32.dll
+0x6d5d0000 - 0x6d5f3000 	C:\Program Files\Java\jre1.5.0_08\bin\RegUtils.dll
+0x03340000 - 0x03606000 	C:\WINDOWS\system32\msi.dll
+0x6d4c0000 - 0x6d4d3000 	C:\Program Files\Java\jre1.5.0_08\bin\net.dll
+0x71ab0000 - 0x71ac7000 	C:\WINDOWS\system32\WS2_32.dll
+0x71aa0000 - 0x71aa8000 	C:\WINDOWS\system32\WS2HELP.dll
+0x6d4e0000 - 0x6d4e9000 	C:\Program Files\Java\jre1.5.0_08\bin\nio.dll
+0x77fe0000 - 0x77ff1000 	C:\WINDOWS\system32\Secur32.dll
+0x76ee0000 - 0x76f1c000 	C:\WINDOWS\system32\RASAPI32.DLL
+0x76e90000 - 0x76ea2000 	C:\WINDOWS\system32\rasman.dll
+0x5b860000 - 0x5b8b4000 	C:\WINDOWS\system32\NETAPI32.dll
+0x76eb0000 - 0x76edf000 	C:\WINDOWS\system32\TAPI32.dll
+0x76e80000 - 0x76e8e000 	C:\WINDOWS\system32\rtutils.dll
+0x77c70000 - 0x77c93000 	C:\WINDOWS\system32\msv1_0.dll
+0x76d60000 - 0x76d79000 	C:\WINDOWS\system32\iphlpapi.dll
+0x722b0000 - 0x722b5000 	C:\WINDOWS\system32\sensapi.dll
+0x769c0000 - 0x76a73000 	C:\WINDOWS\system32\USERENV.dll
+0x71a50000 - 0x71a8f000 	C:\WINDOWS\System32\mswsock.dll
+0x76f20000 - 0x76f47000 	C:\WINDOWS\system32\DNSAPI.dll
+0x76fb0000 - 0x76fb8000 	C:\WINDOWS\System32\winrnr.dll
+0x76f60000 - 0x76f8c000 	C:\WINDOWS\system32\WLDAP32.dll
+0x76fc0000 - 0x76fc6000 	C:\WINDOWS\system32\rasadhlp.dll
+0x662b0000 - 0x66308000 	C:\WINDOWS\system32\hnetcfg.dll
+0x71a90000 - 0x71a98000 	C:\WINDOWS\System32\wshtcpip.dll
+0x71ad0000 - 0x71ad9000 	C:\WINDOWS\system32\wsock32.dll
+0x04360000 - 0x043b2000 	C:\Documents and Settings\niederj\Application Data\Sun\Java\Deployment\cache\javaws\http\Dsoartraining.sosstaffing.com\P80\V2\DMSoar\DMjnlp\DMauto\DMswt\DMos\DMwin32\DMx86\RNswtNativeLib.jar\swt-win32-3232.dll
+0x763b0000 - 0x763f9000 	C:\WINDOWS\system32\comdlg32.dll
+0x74d90000 - 0x74dfb000 	C:\WINDOWS\system32\USP10.dll
+0x75a70000 - 0x75a91000 	C:\WINDOWS\system32\MSVFW32.dll
+0x76fd0000 - 0x7704f000 	C:\WINDOWS\system32\CLBCATQ.DLL
+0x77050000 - 0x77115000 	C:\WINDOWS\system32\COMRes.dll
+0x77760000 - 0x778cf000 	C:\WINDOWS\system32\shdocvw.dll
+0x754d0000 - 0x75550000 	C:\WINDOWS\system32\CRYPTUI.dll
+0x76c30000 - 0x76c5e000 	C:\WINDOWS\system32\WINTRUST.dll
+0x76c90000 - 0x76cb8000 	C:\WINDOWS\system32\IMAGEHLP.dll
+0x77b40000 - 0x77b62000 	C:\WINDOWS\system32\appHelp.dll
+0x75e90000 - 0x75f40000 	C:\WINDOWS\system32\SXS.DLL
+0x04b40000 - 0x04e05000 	C:\WINDOWS\system32\xpsp2res.dll
+0x04e50000 - 0x04ed8000 	C:\WINDOWS\system32\shdoclc.dll
+0x75cf0000 - 0x75d81000 	C:\WINDOWS\system32\mlang.dll
+0x02e80000 - 0x02ea8000 	C:\WINDOWS\system32\rsaenh.dll
+0x605d0000 - 0x605d9000 	C:\WINDOWS\system32\mslbui.dll
+0x77920000 - 0x77a13000 	C:\WINDOWS\system32\SETUPAPI.dll
+0x03e00000 - 0x03e14000 	C:\Program Files\Dell\QuickSet\dadkeyb.dll
+0x6d600000 - 0x6d606000 	C:\Program Files\Java\jre1.5.0_08\bin\rmi.dll
+0x76380000 - 0x76385000 	C:\WINDOWS\system32\msimg32.dll
+
+VM Arguments:
+jvm_args: -Xmx512m -Xbootclasspath/a:C:\Program Files\Java\jre1.5.0_08\lib\javaws.jar;C:\Program Files\Java\jre1.5.0_08\lib\deploy.jar -Djnlpx.home=C:\Program Files\Java\jre1.5.0_08\bin -Djnlpx.splashport=1218 -Djnlpx.jvm=&quot;C:\Program Files\Java\jre1.5.0_08\bin\javaw.exe&quot; -Djnlpx.remove=true -Djava.security.policy=file:C:\Program Files\Java\jre1.5.0_08\lib\security\javaws.policy -DtrustProxy=true -Xverify:remote -Djnlpx.heapsize=NULL,NULL -Djnlpx.vmargs=&quot; -Xmx512m&quot;
+java_command: com.sun.javaws.Main C:\DOCUME~1\niederj\LOCALS~1\Temp\javaws2
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+CLASSPATH=.;C:\Program Files\Java\jre1.5.0_08\lib\ext\QTJava.zip
+PATH=C:\Program Files\Java\jre1.5.0_08\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\Program Files\Microsoft SQL Server\80\Tools\Binn\;C:\Program Files\Symantec\pcAnywhere\;C:\Program Files\Common Files\Roxio Shared\DLLShared;C:\Program Files\QuickTime\QTSystem\;&quot;C:\Program Files\Java\jre1.5.0_08\bin&quot;
+USERNAME=niederj
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=x86 Family 6 Model 14 Stepping 8, GenuineIntel
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS: Windows XP Build 2600 Service Pack 2
+
+CPU:total 2 (cores per cpu 2, threads per core 1) family 6 model 14 stepping 8, cmov, cx8, fxsr, mmx, sse, sse2
+
+Memory: 4k page, physical 1046640k(463840k free), swap 3042584k(2549688k free)
+
+vm_info: Java HotSpot(TM) Client VM (1.5.0_08-b03) for windows-x86, built on Jul 26 2006 01:10:50 by &quot;java_re&quot; with MS VC++ 6.0</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160361#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Grant Gayed</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=grant_gayed&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=grant_gayed&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-10-11 11:53:10 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I see from your trace that you're running with 3.2, so changing version field accordingly.
+
+This is fixed in the 3.3 stream.  Marking report as a duplicate.
+
+
+*** This bug has been marked as a duplicate of <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - SWT cause JVM crash"
+   href="show_bug.cgi?id=150782">150782</a> ***</pre>
+    </div>
+
+    <div id="c2" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160361#c2">Comment 2</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Spencer Stejskal</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=stejsks&#64;sosstaffing.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=stejsks&#64;sosstaffing.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-10-11 12:50:59 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">thanks for pointing me to that bug.  I could not find it while searching around yesterday.</pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=160361">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=160361">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=160361">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=160361&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=160361" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>

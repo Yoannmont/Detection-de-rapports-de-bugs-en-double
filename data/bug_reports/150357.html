@@ -1,0 +1,2968 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>150357 &ndash; [Linux] [cairo] GC.setAdvance(true) and subsequent drawing of images fails</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "150357 – [Linux] [cairo] GC.setAdvance(true) and subsequent drawing of images fails",
+                             "show_bug.cgi?id=150357" );
+        document.title = "150357 – [Linux] [cairo] GC.setAdvance(true) and subsequent drawing of images fails";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "150357 – [Linux] [cairo] GC.setAdvance(true) and subsequent drawing of images fails", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_RESOLVED
+                 bz_product_Platform
+                 bz_component_SWT
+                 bz_bug_150357 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;150357</span>
+
+        <span id="subtitle" class="subheader">[Linux] [cairo] GC.setAdvance(true) and subsequent drawing of images fails</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2007-05-17 16:43:16 EDT</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=150357&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=150357" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2007-05-17 16:43:16">
+  <input type="hidden" name="id" value="150357">
+  <input type="hidden" name="token" value="1629872026-35yOIUeegymERfGOgGX2SuIUjjVODtWI5sYnCfPsIHw">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=150357"><b>Bug&nbsp;150357</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">[Linux] [cairo] GC.setAdvance(true) and subsequent drawing of images fails</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span>[Linux] [cairo] GC.setAdvance(true) and subsequent drawing of images fails
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      '[Linux] [cairo] GC.setAdvance(true) and subsequent drawing of images fails' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">RESOLVED
+          FIXED
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >Platform
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >Eclipse Project
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=Platform"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >SWT
+
+  (<a href="buglist.cgi?component=SWT&amp;product=Platform&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>3.2 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">PC
+        Linux-GTK
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P3
+       blocker<span id="votes_container">
+      with
+      <a href="page.cgi?id=voting/bug.html&amp;bug_id=150357">7 
+            votes</a>
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=150357#vote_150357">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>3.3 M7 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">Silenio Quarti</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Silenio_Quarti&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Silenio_Quarti&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard">
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'platform-swt-inbox\x40eclipse.org',
+        '');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          <tr>
+    <th class="field_label">
+      <label>Duplicates (4)</label>:
+    </th>
+    <td class="field_value">
+      <span id="duplicates"><a class="bz_bug_link 
+          bz_status_CLOSED  bz_closed"
+   title="CLOSED DUPLICATE - SWT cannot right work when set Antialias ON in FedoraCore 6"
+   href="show_bug.cgi?id=162514">162514</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - transform not working on recent linux releases"
+   href="show_bug.cgi?id=163069">163069</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Enabling Antialiasing causes GC.drawImage to render blank content"
+   href="show_bug.cgi?id=171170">171170</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - GC#setAdvanced(true)+gc#drawImage() not working on under Linux-GTK"
+   href="show_bug.cgi?id=174932">174932</a> 
+      </span>
+      (<a href="buglist.cgi?bug_id=162514,163069,171170,174932">view as bug list</a>)
+    </td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+
+  </td>
+  </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2006-07-12 05:17 EDT by <span class="vcard"><span class="fn">Milos Volauf</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mvo&#64;whitestein.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mvo&#64;whitestein.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2007-05-17 16:43 EDT
+      (<a href="show_activity.cgi?id=150357">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>20 
+          users
+          <span id="cc_edit_area_showhide_container" class="bz_default_hidden">
+            (<a href="#" id="cc_edit_area_showhide">show</a>)
+          </span>
+        <div id="cc_edit_area">
+          <br>
+            <select id="cc" multiple="multiple" size="5" >
+                <option value="ale">ale</option>
+                <option value="aleksander.bandelj">aleksander.bandelj</option>
+                <option value="carsten.pfeiffer">carsten.pfeiffer</option>
+                <option value="cbeth">cbeth</option>
+                <option value="cmartin_wilson">cmartin_wilson</option>
+                <option value="cyril.jaquier">cyril.jaquier</option>
+                <option value="eclipse.felipe">eclipse.felipe</option>
+                <option value="eheck">eheck</option>
+                <option value="fisakov">fisakov</option>
+                <option value="fyaoxy">fyaoxy</option>
+                <option value="giorgio.1204">giorgio.1204</option>
+                <option value="grant_gayed">grant_gayed</option>
+                <option value="mlists">mlists</option>
+                <option value="phaz.spam">phaz.spam</option>
+                <option value="philippe_mulet">philippe_mulet</option>
+                <option value="r6ajcr7dspd3ij6">r6ajcr7dspd3ij6</option>
+                <option value="rszhang">rszhang</option>
+                <option value="rwgould">rwgould</option>
+                <option value="snorthov">snorthov</option>
+                <option value="tom.schindl">tom.schindl</option>
+            </select>
+        </div>
+          <script type="text/javascript">
+            hideEditableField( 'cc_edit_area_showhide_container', 
+                               'cc_edit_area', 
+                               'cc_edit_area_showhide', 
+                               '', 
+                               '');  
+          </script>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" >
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+      <tr id="a1" class="bz_contenttype_image_png">
+        <td>
+            <a href="attachment.cgi?id=46159"
+               title="View the content of the attachment">
+          <b>Output (bug)</b></a>
+
+          <span class="bz_attach_extra_info">
+              (4.96 KB,
+                image/png)
+
+            <br>
+            <a href="#attach_46159"
+               title="Go to the comment associated with the attachment">2006-07-12 05:17 EDT</a>,
+
+            <span class="vcard"><span class="fn">Milos Volauf</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mvo&#64;whitestein.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mvo&#64;whitestein.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=46159&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a2" class="bz_contenttype_image_png">
+        <td>
+            <a href="attachment.cgi?id=46160"
+               title="View the content of the attachment">
+          <b>Expected output</b></a>
+
+          <span class="bz_attach_extra_info">
+              (6.44 KB,
+                image/png)
+
+            <br>
+            <a href="#attach_46160"
+               title="Go to the comment associated with the attachment">2006-07-12 05:18 EDT</a>,
+
+            <span class="vcard"><span class="fn">Milos Volauf</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mvo&#64;whitestein.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mvo&#64;whitestein.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=46160&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a3" class="bz_contenttype_image_png">
+        <td>
+            <a href="attachment.cgi?id=59207"
+               title="View the content of the attachment">
+          <b>Screenshot with CAIRO_EXTEND_REFLECT remove and offset=0</b></a>
+
+          <span class="bz_attach_extra_info">
+              (13.92 KB,
+                image/png)
+
+            <br>
+            <a href="#attach_59207"
+               title="Go to the comment associated with the attachment">2007-02-16 18:00 EST</a>,
+
+            <span class="vcard"><span class="fn">Silenio Quarti</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Silenio_Quarti&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Silenio_Quarti&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=59207&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a4" class="bz_contenttype_image_png">
+        <td>
+            <a href="attachment.cgi?id=60223"
+               title="View the content of the attachment">
+          <b>Screenshot with Cairo 1.3.16</b></a>
+
+          <span class="bz_attach_extra_info">
+              (98.24 KB,
+                image/png)
+
+            <br>
+            <a href="#attach_60223"
+               title="Go to the comment associated with the attachment">2007-03-03 13:29 EST</a>,
+
+            <span class="vcard"><span class="fn">Aleksander Bandelj</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=aleksander.bandelj&#64;academa.si" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=aleksander.bandelj&#64;academa.si" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=60223&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a5" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=62133"
+               title="View the content of the attachment">
+          <b>Patch for problem</b></a>
+
+          <span class="bz_attach_extra_info">
+              (9.04 KB,
+                patch)
+
+            <br>
+            <a href="#attach_62133"
+               title="Go to the comment associated with the attachment">2007-03-27 14:11 EDT</a>,
+
+            <span class="vcard"><span class="fn">Silenio Quarti</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Silenio_Quarti&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Silenio_Quarti&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=62133&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=62133&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a6" class="bz_contenttype_image_png">
+        <td>
+            <a href="attachment.cgi?id=62144"
+               title="View the content of the attachment">
+          <b>Screenshot with different versions of cairo and SWT</b></a>
+
+          <span class="bz_attach_extra_info">
+              (335.12 KB,
+                image/png)
+
+            <br>
+            <a href="#attach_62144"
+               title="Go to the comment associated with the attachment">2007-03-27 15:39 EDT</a>,
+
+            <span class="vcard"><span class="fn">Silenio Quarti</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Silenio_Quarti&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Silenio_Quarti&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=62144&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a7" class="bz_contenttype_image_png">
+        <td>
+            <a href="attachment.cgi?id=62212"
+               title="View the content of the attachment">
+          <b>screenshot with SWT 3.2 code and cairo 1.4.2</b></a>
+
+          <span class="bz_attach_extra_info">
+              (2.59 KB,
+                image/png)
+
+            <br>
+            <a href="#attach_62212"
+               title="Go to the comment associated with the attachment">2007-03-28 07:42 EDT</a>,
+
+            <span class="vcard"><span class="fn">Elfi Heck</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eheck&#64;intarsys.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eheck&#64;intarsys.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=62212&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a8" class="bz_contenttype_text_plain">
+        <td>
+            <a href="attachment.cgi?id=62254"
+               title="View the content of the attachment">
+          <b>my output of xdpyinfo &amp; xdpyinfo -ext RENDER</b></a>
+
+          <span class="bz_attach_extra_info">
+              (18.53 KB,
+                text/plain)
+
+            <br>
+            <a href="#attach_62254"
+               title="Go to the comment associated with the attachment">2007-03-28 13:28 EDT</a>,
+
+            <span class="vcard"><span class="fn">Elfi Heck</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eheck&#64;intarsys.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eheck&#64;intarsys.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=62254&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a9" class="bz_contenttype_text_plain">
+        <td>
+            <a href="attachment.cgi?id=62262"
+               title="View the content of the attachment">
+          <b>output of xdpyinfo</b></a>
+
+          <span class="bz_attach_extra_info">
+              (18.25 KB,
+                text/plain)
+
+            <br>
+            <a href="#attach_62262"
+               title="Go to the comment associated with the attachment">2007-03-28 14:15 EDT</a>,
+
+            <span class="vcard"><span class="fn">Silenio Quarti</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Silenio_Quarti&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Silenio_Quarti&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=62262&amp;action=edit">Details</a>
+        </td>
+      </tr>
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <span class="bz_attach_view_hide">
+            <a id="view_all" href="attachment.cgi?bugid=150357&amp;action=viewall">View All</a>
+        </span>
+        <a href="attachment.cgi?bugid=150357&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=150357&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Milos Volauf</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mvo&#64;whitestein.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mvo&#64;whitestein.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-07-12 05:17:17 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">After antialias is set on or off and an image is drawn, all subsequent drawing is not performed.
+
+Here is the code snippet:
+
+package org.eclipse.swt.snippets;
+
+import org.eclipse.swt.*;
+import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.events.*;
+
+public class AntialiasSnippet {
+
+	public static void main(String[] args) {
+		final Display display = new Display();
+		final Shell shell = new Shell(display);
+
+		// create a simple image ( a green rectangle)
+		final ImageData imageData = new ImageData(16, 16, 1,
+				new PaletteData(new RGB[] { new RGB(0, 128, 0) }));
+		final Image image = new Image(display, imageData);
+
+		shell.addPaintListener(new PaintListener() {
+			public void paintControl(PaintEvent event) {
+				GC gc = event.gc;
+				gc.drawText(&quot;Before gc.setAntialias(SWT.ON)&quot;, 10, 20);
+				gc.setAntialias(SWT.ON);
+				gc.drawText(&quot;After gc.setAntialias(SWT.ON)&quot;, 10, 40);
+				gc.drawImage(image, 10, 60);
+				gc.drawText(&quot;After gc.drawImage(image, 0, 0)&quot;, 10, 80);
+			}
+		});
+		shell.setBounds(10, 10, 300, 200);
+		shell.open();
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch())
+				display.sleep();
+		}
+		image.dispose();
+		display.dispose();
+	}
+}</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Milos Volauf</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mvo&#64;whitestein.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mvo&#64;whitestein.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-07-12 05:17:55 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=46159" name="attach_46159" title="Output (bug)">attachment 46159</a> <a href="attachment.cgi?id=46159&amp;action=edit" title="Output (bug)">[details]</a></span>
+Output (bug)</pre>
+    </div>
+
+    <div id="c2" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c2">Comment 2</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Milos Volauf</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mvo&#64;whitestein.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mvo&#64;whitestein.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-07-12 05:18:45 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=46160" name="attach_46160" title="Expected output">attachment 46160</a> <a href="attachment.cgi?id=46160&amp;action=edit" title="Expected output">[details]</a></span>
+Expected output</pre>
+    </div>
+
+    <div id="c3" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c3">Comment 3</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Milos Volauf</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mvo&#64;whitestein.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mvo&#64;whitestein.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-07-12 06:04:55 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The operating system is Linux Debian unstable.
+
+The bug did not happen when the library libcairo2 1.0.4-2 was installed.
+The bug appeared with the version 1.2.0-3.</pre>
+    </div>
+
+    <div id="c4" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c4">Comment 4</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Felipe Heidrich</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse.felipe&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse.felipe&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-07-19 14:01:08 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">works for me on FC5, libcairo 1.0.4
+
+We changed a lot of code in GC in these past few days, could download this week integration build and test again ? Thanks</pre>
+    </div>
+
+    <div id="c5" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c5">Comment 5</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Milos Volauf</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mvo&#64;whitestein.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mvo&#64;whitestein.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-07-20 03:46:36 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">libcairo 1.0.4 works for me.
+
+My problem is that debian distribution switched to libcairo 1.2.0-x
+and with this version the bug is repeatable (both on the PC at my office
+and at home).
+
+I tried it with eclipse-SDK-I20060711-1100-linux-gtk
+and the bug is still there.
+
+I suspect that the bug is somewhere in JNI libs that connects swt to cairo.
+Maybe if you suggest something (e.g. how to debug it or trace it), I can find some time for more exploration.</pre>
+    </div>
+
+    <div id="c6" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c6">Comment 6</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Giorgio Massussi</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=giorgio.1204&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=giorgio.1204&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-12-01 18:18:50 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I have a similar problem after switching from Ubuntu 6.06 to 6.10 (libcairo-1.2.4)</pre>
+    </div>
+
+    <div id="c7" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c7">Comment 7</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Elfi Heck</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eheck&#64;intarsys.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eheck&#64;intarsys.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-12-08 09:02:50 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I think <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - transform not working on recent linux releases"
+   href="show_bug.cgi?id=163069">bug #163069</a> is the same one as this. If it will be marked as a duplicate what is the procedure for getting its comments and attachments here?</pre>
+    </div>
+
+    <div id="c8" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c8">Comment 8</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Patrick</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=phaz.spam&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=phaz.spam&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-12-10 16:55:44 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text"><a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED WORKSFORME - Partial diagram display on GTK2"
+   href="show_bug.cgi?id=164623">bug #164623</a> is most definitely also a duplicate of this. 
+
+I ran into the problem while working on a GEF application on a updated debian distribution. On an older Ubuntu install the bug doesn't exist, and windows is fine too. So this is definitely a native library problem.
+
+</pre>
+    </div>
+
+    <div id="c9" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c9">Comment 9</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Elfi Heck</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eheck&#64;intarsys.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eheck&#64;intarsys.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-12-11 06:30:17 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Removing the &quot;Cairo.cairo_pattern_set_extend(pattern, Cairo.CAIRO_EXTEND_REFLECT);&quot; line in the GC image drawing code makes the problem go away in my application. Unfortunately I don't know what it does and why it's there in the first place.</pre>
+    </div>
+
+    <div id="c10" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c10">Comment 10</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Connie Martin-Wilson</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=cmartin_wilson&#64;us.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=cmartin_wilson&#64;us.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-07 11:40:23 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">From Wei-Lee Jamrog: 
+
+This problem is the gc.setAntialias(SWT.ON) will be set to an advanced graphices system (gc.setAdvanced(true)) that will cause the abnormal image/text display in the advanced system. the more detail is that happen because the libcair2 library (1.2.0-x version) installed on REDHAT5/GTK2. So if libcairo is degraded to the low version (e.g. version 1.0.4) we will not have the problem raised.</pre>
+    </div>
+
+    <div id="c11" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c11">Comment 11</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Elfi Heck</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eheck&#64;intarsys.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eheck&#64;intarsys.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-07 12:09:18 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">More and more distributions come with a libcairo2 version from the 1.2 series. While the Cairo people confirm that trying to use &quot;CAIRO_EXTEND_REFLECT&quot; corrupts memory, I doubt downgrading is an option (at least for most people). Using a patched SWT (with the line in question removed) for a workaround is easier because of less dependencies.</pre>
+    </div>
+
+    <div id="c12" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c12">Comment 12</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Rong Sheng Zhang</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=rszhang&#64;cn.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=rszhang&#64;cn.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-09 01:15:50 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">It's right, i also tried remove the line 
+
+Cairo.cairo_pattern_set_extend(pattern,Cairo.CAIRO_EXTEND_REFLECT);
+
+in method 
+
+void drawImage(Image srcImage,int srcX,int srcY,int srcWidth,int srcHeight,
+			int destX,int dextY,int destWidth,int destHeight,boolean simple) 
+of class GC
+
+will fix the abnormal image display on GTK2
+
+but i don't know if it impacts something wrong.
+</pre>
+    </div>
+
+    <div id="c13" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c13">Comment 13</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Silenio Quarti</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Silenio_Quarti&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Silenio_Quarti&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-09 11:28:57 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">That line was added to fix this problem:
+
+<a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - GC Transform not applied to drawImage()"
+   href="show_bug.cgi?id=103973#c4">https://bugs.eclipse.org/bugs/show_bug.cgi?id=103973#c4</a>
+
+Also reported as:
+
+<a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - Enabling advanced graphics will cause alpha gradient to be applied"
+   href="show_bug.cgi?id=101799">https://bugs.eclipse.org/bugs/show_bug.cgi?id=101799</a></pre>
+    </div>
+
+    <div id="c14" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c14">Comment 14</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Elfi Heck</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eheck&#64;intarsys.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eheck&#64;intarsys.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-09 13:03:16 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I guess most people prefer having images with blurred edges to having no images at all :-)
+But seriously, I can reproduce said effect on my computer (without that line), but it's not a serious problem for our application. And when I remove the 0.5 pixel offsets in the drawImage method too, the image comes out with crisp edges again (at least with cairo 1.2, can't check cairo 1.0 right now).</pre>
+    </div>
+
+    <div id="c15" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c15">Comment 15</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Rong Sheng Zhang</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=rszhang&#64;cn.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=rszhang&#64;cn.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-13 20:51:50 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">When we will get the fix since it is a critical?  It's better for most people work on linux if the bug will be fixed ASAP. Thanks.</pre>
+    </div>
+
+    <div id="c16" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c16">Comment 16</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steve Northover</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=snorthov&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=snorthov&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-15 16:30:40 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Silenio, do you have a fix for this one?</pre>
+    </div>
+
+    <div id="c17" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c17">Comment 17</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Silenio Quarti</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Silenio_Quarti&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Silenio_Quarti&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-16 13:42:52 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The only thing I can think right now is to stop calling:
+
+Cairo.cairo_pattern_set_extend(pattern,Cairo.CAIRO_EXTEND_REFLECT);
+
+if the version is 1.2.x or greater, but this will bring back this bug:
+
+<a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - Enabling advanced graphics will cause alpha gradient to be applied"
+   href="show_bug.cgi?id=101799">https://bugs.eclipse.org/bugs/show_bug.cgi?id=101799</a>
+
+IMHO. The bug is really in cairo. They should be notified to see if they can get it fixed.
+</pre>
+    </div>
+
+    <div id="c18" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c18">Comment 18</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Elfi Heck</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eheck&#64;intarsys.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eheck&#64;intarsys.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-16 14:14:44 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">It's a known issue with the cairo people (I've asked).
+But I don't understand why you would necessarily introduce #101799 again. I've tried and removing the EXTEND_REFLECT line gives me the image with one blurred pixel line at the edges. But this is because the image is painted at an offset of 0.5 pixels. IMHO this is wrong anyway. While lines with odd line widths might look better when painted at .5 coordinates this is not the case for images which are more akin to rectangle fills. And when the gc has a transformation applied you can never know if the offset will actually improve things without checking the transformation (for example with a scaling value of - say - 10 your offset will be 5 pixels suddenly, oops).
+As said before: removing the offset too gives me the image without the problems described in #101799. This is with cairo 1.2.4.</pre>
+    </div>
+
+    <div id="c19" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c19">Comment 19</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Silenio Quarti</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Silenio_Quarti&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Silenio_Quarti&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-16 18:00:17 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=59207" name="attach_59207" title="Screenshot with CAIRO_EXTEND_REFLECT remove and offset=0">attachment 59207</a> <a href="attachment.cgi?id=59207&amp;action=edit" title="Screenshot with CAIRO_EXTEND_REFLECT remove and offset=0">[details]</a></span>
+Screenshot with CAIRO_EXTEND_REFLECT remove and offset=0
+
+This is the screenshot of the following snippet after removing the line that sets the extent to CAIRO_EXTEND_REFLECT and making the offset equals 0. I am running cairo 1.2.6. It has the faded edges. Could you run this on your machine to if you get a different output?
+
+import org.eclipse.swt.*;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.layout.*;
+import org.eclipse.swt.widgets.*;
+
+public class PR101799 {
+public static void main (String [] args) {
+	Display display = new Display ();
+	final Image image = new Image(display, 2, 10);
+	final GC gc = new GC (image);
+	Rectangle rect = image.getBounds();
+	gc.setBackground(display.getSystemColor(SWT.COLOR_BLUE));	
+	gc.fillRectangle(rect);
+//	gc.setBackground(display.getSystemColor(SWT.COLOR_RED));
+//	rect.x = rect.width / 2;
+//	gc.fillRectangle(rect);
+	gc.dispose ();
+//	final Image image = new Image(display, &quot;tiles_test.png&quot;);
+	Shell shell = new Shell (display);
+	shell.setLayout (new FillLayout ());
+	shell.addPaintListener (new PaintListener () {
+		public void paintControl (PaintEvent e) {
+			// NOTE: turning on advanced graphics here (regardless of any
+			//       alpha value set) will cause the stretched image to have
+			//       an alpha gradient applied
+			// NOTE: this same effect can be seen by performing any function
+			//       that would enabled advanced graphics such as:
+			//           e.gc.setAlpha(0xFE);
+			//       or:
+			//           e.gc.setAntialias(SWT.ON);
+			e.gc.setAdvanced(true);
+			// NOTE: the image is stretched in both dimensions
+			Rectangle bounds = image.getBounds();
+			e.gc.drawLine(0, 0, 1000, 1000);
+			e.gc.drawImage(image, 0, 0, bounds.width, bounds.height, 10, 10, bounds.width * 40, bounds.height * 40);
+		}
+	});
+	shell.open ();
+	while (!shell.isDisposed ()) {
+		if (!display.readAndDispatch ())
+			display.sleep ();
+	}
+    image.dispose ();
+    display.dispose ();
+}
+}</pre>
+    </div>
+
+    <div id="c20" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c20">Comment 20</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Silenio Quarti</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Silenio_Quarti&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Silenio_Quarti&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-16 18:08:51 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I aggee that the 0.5 is not perfect, but I don't know any other way of getting horizontal and vertical lines that are crisp (not antialiased). I will have to investigate why the offset was added to image drawing too (I don't remember the reason right now).</pre>
+    </div>
+
+    <div id="c21" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c21">Comment 21</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Elfi Heck</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eheck&#64;intarsys.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eheck&#64;intarsys.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-20 12:15:39 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I've tried your test code on my machine. I'm not getting what your screenshot shows but the blue rectangle with a gradient to black at the edges (did you remove the clipping or at least its offset too?). And what's the difference to what I tested? I'm using SWT.LOW as interpolation. Aha.
+
+Regarding (the admittedly off topic) 0.5s with lines:
+The complex and - I *think* - correct way for getting an offset when a non-identity transformation is set would probably be: apply the transformation to start and end points - see if a horizontal or vertical line results - compute  appropriate offsets considering also the transformed line width if yes - apply the inverse transformation to results - add to original points - draw. Would definitely not make line-drawing faster.
+The more primitive way would be to check for a non-identity transformation or maybe a transformation that does something else than a translate with integer values and in that case omit the offset because the probability it will do something useful is quite low.
+</pre>
+    </div>
+
+    <div id="c22" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c22">Comment 22</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Silenio Quarti</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Silenio_Quarti&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Silenio_Quarti&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-20 15:28:59 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Enabling Antialiasing causes GC.drawImage to render blank content"
+   href="show_bug.cgi?id=171170">Bug 171170</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c23" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c23">Comment 23</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Silenio Quarti</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Silenio_Quarti&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Silenio_Quarti&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-21 11:14:45 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - GC#setAdvanced(true)+gc#drawImage() not working on under Linux-GTK"
+   href="show_bug.cgi?id=174932">Bug 174932</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c24" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c24">Comment 24</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Aleksander Bandelj</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=aleksander.bandelj&#64;academa.si" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=aleksander.bandelj&#64;academa.si" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-21 11:39:09 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I am not sure that <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - GC#setAdvanced(true)+gc#drawImage() not working on under Linux-GTK"
+   href="show_bug.cgi?id=174932">bug 174932</a> is duplicate. This bug only occurs in 3.3M5, previous releases work fine. In contrast, antialiasing is broken since cairo 1.2.0, regardless of Eclipse version. 174932 also only occurs with tabbed properties view, other views don't exhibit such behaviour. And LD_PRELOADing cairo 1.0.4 which fixes antialasing problem (and crashing JVM when printing :) has no effect on 174932.</pre>
+    </div>
+
+    <div id="c25" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c25">Comment 25</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Aleksander Bandelj</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=aleksander.bandelj&#64;academa.si" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=aleksander.bandelj&#64;academa.si" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-21 11:43:19 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">To clarify last comment: LD_PRELOAD of eclipse supplied Cairo fixes antialiasing bug. But it also segfaults printing, since first GTK version which prints also requires cairo &gt;= 1.2.0.</pre>
+    </div>
+
+    <div id="c26" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c26">Comment 26</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Thomas Schindl</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tom.schindl&#64;bestsolution.at" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tom.schindl&#64;bestsolution.at" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-21 11:50:46 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=150357#c24">comment #24</a>)
+<span class="quote">&gt; I am not sure that <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - GC#setAdvanced(true)+gc#drawImage() not working on under Linux-GTK"
+   href="show_bug.cgi?id=174932">bug 174932</a> is duplicate. This bug only occurs in 3.3M5,
+&gt; previous releases work fine. In contrast, antialiasing is broken since cairo</span >
+
+Are you sure. My test env was Eclipse 3.3M4 where I tested the snippet attached.
+
+<span class="quote">&gt; 1.2.0, regardless of Eclipse version. 174932 also only occurs with tabbed
+&gt; properties view, other views don't exhibit such behaviour. And LD_PRELOADing</span >
+
+That's also not right I don't use any tabbed properties view. It's straight SWT or am I missing the point here? Nevertheless in the attached snippet it is enough to call setAdvanced(true) to see the effect.</pre>
+    </div>
+
+    <div id="c27" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c27">Comment 27</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Silenio Quarti</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Silenio_Quarti&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Silenio_Quarti&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-21 13:00:58 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=150357#c21">comment #21</a>)
+<span class="quote">&gt; I've tried your test code on my machine. I'm not getting what your screenshot
+&gt; shows but the blue rectangle with a gradient to black at the edges (did you
+&gt; remove the clipping or at least its offset too?). And what's the difference to
+&gt; what I tested? I'm using SWT.LOW as interpolation. Aha.
+&gt; </span >
+
+The faded edges problem only happens when stretching an image with a bilinear or cubic interpolation (SWT.LOW == nearest neighbor).  So that is why you are not seeing the problem.
+
+I released code that will only set CAIRO_EXTEND_REFLECT when stretching the image, so simple image drawing should work when running with cairo 1.2.x . I am not closing this bug until a better soluction is found.</pre>
+    </div>
+
+    <div id="c28" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c28">Comment 28</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Silenio Quarti</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Silenio_Quarti&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Silenio_Quarti&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-21 13:11:31 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - transform not working on recent linux releases"
+   href="show_bug.cgi?id=163069">Bug 163069</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c29" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c29">Comment 29</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Silenio Quarti</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Silenio_Quarti&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Silenio_Quarti&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-21 13:13:46 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Changed the title to reflet the problem better. </pre>
+    </div>
+
+    <div id="c30" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c30">Comment 30</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Elfi Heck</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eheck&#64;intarsys.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eheck&#64;intarsys.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-21 13:16:37 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I've already added a bug report about the resulting black egdes when using something else than CAIRO_FILTER_FAST as interpolation method to the cairo bugtracker in the meantime. The answer so far is that CAIRO_EXTEND_PAD that was introduced in 1.2 is supposed to fix this. Only that it doesn't for me. See <a href="https://bugs.freedesktop.org/show_bug.cgi?id=10050">https://bugs.freedesktop.org/show_bug.cgi?id=10050</a></pre>
+    </div>
+
+    <div id="c31" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c31">Comment 31</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Aleksander Bandelj</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=aleksander.bandelj&#64;academa.si" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=aleksander.bandelj&#64;academa.si" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-02-21 13:45:41 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">My apologies, I confused it with <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - [tabbed properties] breaks drawing of other components on gtk"
+   href="show_bug.cgi?id=174704">bug 174704</a> which is not marked as duplicate of this one. So, please disregard my previous comments.</pre>
+    </div>
+
+    <div id="c32" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c32">Comment 32</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Aleksander Bandelj</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=aleksander.bandelj&#64;academa.si" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=aleksander.bandelj&#64;academa.si" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-03-03 13:27:25 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Cairo 1.3.16 mostly fixes this issue. From cairo changelog:
+
+  • Eliminate errors from CAIRO_EXTEND_REFLECT and CAIRO_EXTEND_PAD
+
+    In the 1.2 version of cairo any use of CAIRO_EXTEND_REFLECT or
+    CAIRO_EXTEND_PAD with a surface-based pattern resulted in an
+    error, (cairo would stop rendering). This bug has now been
+    fixed.
+
+    Now, CAIRO_EXTEND_REFLECT should work properly with surface
+    patterns.
+
+    CAIRO_EXTEND_PAD is still not working correctly, but it will now
+    simply behave as CAIRO_EXTEND_NONE rather than triggering the
+    error.
+
+Remaining issue is black image background with transparent images.</pre>
+    </div>
+
+    <div id="c33" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c33">Comment 33</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Aleksander Bandelj</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=aleksander.bandelj&#64;academa.si" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=aleksander.bandelj&#64;academa.si" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-03-03 13:29:35 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=60223" name="attach_60223" title="Screenshot with Cairo 1.3.16">attachment 60223</a> <a href="attachment.cgi?id=60223&amp;action=edit" title="Screenshot with Cairo 1.3.16">[details]</a></span>
+Screenshot with Cairo 1.3.16</pre>
+    </div>
+
+    <div id="c34" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c34">Comment 34</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Silenio Quarti</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Silenio_Quarti&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Silenio_Quarti&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-03-23 13:43:18 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Summary:
+
+1) The bug happens in cairo 1.2.x (doesn't draw) and 1.4.x (draws black edges)
+2) The bug only happens in 3.2 M6 if you are scaling images
+3) We will investigate a patch against 3.2 M6 and a fix for 3.3 that draws with faded edges</pre>
+    </div>
+
+    <div id="c35" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c35">Comment 35</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Silenio Quarti</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Silenio_Quarti&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Silenio_Quarti&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-03-27 14:11:45 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=62133&amp;action=diff" name="attach_62133" title="Patch for problem">attachment 62133</a> <a href="attachment.cgi?id=62133&amp;action=edit" title="Patch for problem">[details]</a></span>
+Patch for problem</pre>
+    </div>
+
+    <div id="c36" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c36">Comment 36</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Silenio Quarti</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Silenio_Quarti&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Silenio_Quarti&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-03-27 14:22:49 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Fixed &gt; 20070327
+
+With the attached patch, everything should work fine when running on cairo 1.4.2 and greater. For cairo versions before that, when drawing an image streched, the output will have faded edges. There is no fix for this (it is the best we can do).
+</pre>
+    </div>
+
+    <div id="c37" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c37">Comment 37</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Elfi Heck</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eheck&#64;intarsys.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eheck&#64;intarsys.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-03-27 14:52:06 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Sorry for being pedantic, but I don't understand the patch. In cairo 1.4.2 EXTEND_REFLECT has been fixed, so why is all that scaling and painting necessary? In cairo 1.0 EXTEND_REFLECT was working too. So if you're saying that people with the &quot;wrong&quot; cairo versions (which would be from 1.1.? to 1.3.? only) simply have to live with the faded edges, why don't you just check for these versions, omit the EXTEND_REFLECT in that case (because we know it's broken) and say they have to live with the black edges?
+After cairo 1.4 came out I've reset the drawImage method in my workspace to what it was in SWT 3.2 and only removed the 0.5 offsets. With that I've tested the exact code from <a href="show_bug.cgi?id=150357#c19">comment #19</a>. The image displays just perfect. If there's another test class to try, I'd gladly do so.</pre>
+    </div>
+
+    <div id="c38" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c38">Comment 38</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Silenio Quarti</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Silenio_Quarti&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Silenio_Quarti&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-03-27 15:39:26 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=62144" name="attach_62144" title="Screenshot with different versions of cairo and SWT">attachment 62144</a> <a href="attachment.cgi?id=62144&amp;action=edit" title="Screenshot with different versions of cairo and SWT">[details]</a></span>
+Screenshot with different versions of cairo and SWT
+
+This screenshot shows the output for different versions of cairo (see window title) and with two SWT versions:
+
+1) Windows on the top. SWT 3.2 with 0.5 offset removed
+2) Windows on the bottom. SWT HEAD as of now (which contains the patch plus a version check for 1.4.0 instead of 1.4.2)</pre>
+    </div>
+
+    <div id="c39" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c39">Comment 39</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Silenio Quarti</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Silenio_Quarti&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Silenio_Quarti&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-03-27 15:41:36 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I forgot to mention that the test has been changed. I uncommented the three lines that fill a red rectangle in half of the test image.</pre>
+    </div>
+
+    <div id="c40" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c40">Comment 40</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Silenio Quarti</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Silenio_Quarti&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Silenio_Quarti&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-03-27 15:54:23 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=150357#c37">comment #37</a>)
+<span class="quote">&gt; Sorry for being pedantic, but I don't understand the patch. In cairo 1.4.2
+&gt; EXTEND_REFLECT has been fixed, so why is all that scaling and painting
+&gt; necessary?</span >
+
+Cairo 1.4.2 has improved the situation. It actually draws something now, but with black edges (which are not acceptable to me).
+
+<span class="quote">&gt;In cairo 1.0 EXTEND_REFLECT was working too.</span >
+
+The first window in the screenshot shows that cairo 1.0 EXTEND_REFLECT does not work properly either. We chose to remove EXTEND_REFLECT from 1.0 as well in order to make 1.2.x and 1.0.x have the same output.
+
+<span class="quote">&gt;So if you're saying
+&gt; that people with the &quot;wrong&quot; cairo versions (which would be from 1.1.? to 1.3.?
+&gt; only) simply have to live with the faded edges, why don't you just check for
+&gt; these versions, omit the EXTEND_REFLECT in that case (because we know it's
+&gt; broken) and say they have to live with the black edges?</span >
+
+If we have to choose between black and faded edges, we will choose faded. The visual aspect of faded edges is not as bad. 
+
+<span class="quote">&gt; After cairo 1.4 came out I've reset the drawImage method in my workspace to
+&gt; what it was in SWT 3.2 and only removed the 0.5 offsets. With that I've tested
+&gt; the exact code from <a href="show_bug.cgi?id=150357#c19">comment #19</a>. The image displays just perfect. If there's
+&gt; another test class to try, I'd gladly do so.
+&gt; </span >
+
+I cannot seem to get the same results as you got. Am I am missing something? Are you sure that the GC interpolation was not set to SWT.LOW?
+
+</pre>
+    </div>
+
+    <div id="c41" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c41">Comment 41</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">B. Chen</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=cbeth&#64;us.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=cbeth&#64;us.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-03-27 17:15:56 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Does this mean the target milestone for the fix will be in 3.3M7?</pre>
+    </div>
+
+    <div id="c42" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c42">Comment 42</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steve Northover</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=snorthov&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=snorthov&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-03-27 17:25:54 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Yes, it will be in the next milestone.
+
+We tend to update the milestones as we get closer to the milestones (yes, I know this isn't great).  When we say &quot;Fixed &gt; 20070327&quot;, that means fixed in HEAD, and HEAD goes into the next milestone.</pre>
+    </div>
+
+    <div id="c43" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c43">Comment 43</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Elfi Heck</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eheck&#64;intarsys.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eheck&#64;intarsys.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-03-28 07:40:26 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=150357#c40">comment #40</a>)
+<span class="quote">&gt; I cannot seem to get the same results as you got. Am I am missing something?
+&gt; Are you sure that the GC interpolation was not set to SWT.LOW?</span >
+As I said, I tried the exact code from <a href="show_bug.cgi?id=150357#c19">comment #19</a> (copied it again to make sure).  I now uncommented the red rectangle too and I get good results using the SWT 3.2 code and cairo 1.4.2 (same as you get with HEAD). I'll attach a screenshot.
+
+</pre>
+    </div>
+
+    <div id="c44" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c44">Comment 44</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Elfi Heck</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eheck&#64;intarsys.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eheck&#64;intarsys.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-03-28 07:42:42 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=62212" name="attach_62212" title="screenshot with SWT 3.2 code and cairo 1.4.2">attachment 62212</a> <a href="attachment.cgi?id=62212&amp;action=edit" title="screenshot with SWT 3.2 code and cairo 1.4.2">[details]</a></span>
+screenshot with SWT 3.2 code and cairo 1.4.2</pre>
+    </div>
+
+    <div id="c45" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c45">Comment 45</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Silenio Quarti</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Silenio_Quarti&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Silenio_Quarti&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-03-28 12:47:25 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I guess there is something different between your set up and mine. It would be great to know what is it. Maybe we could just run the simple code (SWT 3.2 - offsets), by checking a few more things/versions, etc.
+
+Please could you add more info like, the output of &quot;xdpyinfo&quot; and &quot;xdpyinfo -ext RENDER&quot;, your linux distribution, machine and video card info, gtk version, how you got cairo 1.4.2 (compiled yourself? which flags)? Thanks!
+</pre>
+    </div>
+
+    <div id="c46" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c46">Comment 46</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Elfi Heck</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eheck&#64;intarsys.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eheck&#64;intarsys.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-03-28 13:27:26 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text"><span class="quote">&gt; Please could you add more info like, the output of &quot;xdpyinfo&quot; and &quot;xdpyinfo
+&gt; -ext RENDER&quot;, your linux distribution, machine and video card info, gtk
+&gt; version, how you got cairo 1.4.2 (compiled yourself? which flags)? Thanks!
+&gt; </span >
+Sure ...
+- xdpyinfo &amp; xdpyinfo -ext RENDER: I'll attach these as a file (separating the respective outputs with &quot;------&quot;)
+- Linux distribution: Ubuntu 6.10 (Edgy Eft)
+- Machine: AMD Athlon XP-A, 1833 MHz 2500+
+- Video card: Sapphire RADEON 9200SE
+- GTK: 2.10.6-0ubuntu3.1
+- compiled cairo 1.4.2 without special flags
+
+</pre>
+    </div>
+
+    <div id="c47" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c47">Comment 47</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Elfi Heck</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eheck&#64;intarsys.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eheck&#64;intarsys.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-03-28 13:28:20 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=62254" name="attach_62254" title="my output of xdpyinfo &amp; xdpyinfo -ext RENDER">attachment 62254</a> <a href="attachment.cgi?id=62254&amp;action=edit" title="my output of xdpyinfo &amp; xdpyinfo -ext RENDER">[details]</a></span>
+my output of xdpyinfo &amp; xdpyinfo -ext RENDER</pre>
+    </div>
+
+    <div id="c48" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c48">Comment 48</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Silenio Quarti</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Silenio_Quarti&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Silenio_Quarti&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-03-28 14:15:34 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=62262" name="attach_62262" title="output of xdpyinfo">attachment 62262</a> <a href="attachment.cgi?id=62262&amp;action=edit" title="output of xdpyinfo">[details]</a></span>
+output of xdpyinfo
+
+Here is mine:
+
+Linux: Fedora Core release 5 (Bordeaux)
+gtk: gtk2-2.8.17-1.fc5.1
+cairo 1.4.2: compile myself with no flags</pre>
+    </div>
+
+    <div id="c49" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c49">Comment 49</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Silenio Quarti</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Silenio_Quarti&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Silenio_Quarti&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-03-28 14:26:24 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_CLOSED  bz_closed"
+   title="CLOSED DUPLICATE - SWT cannot right work when set Antialias ON in FedoraCore 6"
+   href="show_bug.cgi?id=162514">Bug 162514</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c50" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150357#c50">Comment 50</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Elfi Heck</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eheck&#64;intarsys.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eheck&#64;intarsys.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-03-29 11:05:14 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text"><span class="quote">&gt; Linux: Fedora Core release 5 (Bordeaux)
+&gt; gtk: gtk2-2.8.17-1.fc5.1</span >
+I had good results too on a Fedora Core 6 VMware guest using the files compiled on the Ubuntu machine. I cannot give any details about it's setup because shortly after trying the test class my my VMware Player crashed and apparently destroyed the vm. But I know it had all the package versions that come with FC6 (no updates installed).</pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=150357">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=150357">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=150357">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=150357&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=150357" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>

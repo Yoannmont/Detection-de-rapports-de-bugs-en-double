@@ -1,0 +1,3290 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>167784 &ndash; Mylar startup issues/plugin circular references</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "167784 – Mylar startup issues\/plugin circular references",
+                             "show_bug.cgi?id=167784" );
+        document.title = "167784 – Mylar startup issues\/plugin circular references";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "167784 – Mylar startup issues\/plugin circular references", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_RESOLVED
+                 bz_product_Mylyn
+                 bz_component_Core
+                 bz_bug_167784 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;167784</span>
+
+        <span id="subtitle" class="subheader">Mylar startup issues/plugin circular references</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2007-07-18 22:11:48 EDT</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=167784&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=167784" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2007-07-18 22:11:48">
+  <input type="hidden" name="id" value="167784">
+  <input type="hidden" name="token" value="1629862700-QOpQf0KWBJ_0ehq88_0yaoNI45az8D3R0Q_VeqYG-Eo">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=167784"><b>Bug&nbsp;167784</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">Mylar startup issues/plugin circular references</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span>Mylar startup issues/plugin circular references
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      'Mylar startup issues\/plugin circular references' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">RESOLVED
+          FIXED
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >Mylyn
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >Mylyn
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=Mylyn"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >Core
+
+  (<a href="buglist.cgi?component=Core&amp;product=Mylyn&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>unspecified &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">PC
+        Windows XP
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P1
+       critical<span id="votes_container">
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=167784#vote_167784">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>1.0.1 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard">
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'mylyn-inbox\x40eclipse.org',
+        '');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          <tr>
+    <th class="field_label">
+      <label>Duplicates (5)</label>:
+    </th>
+    <td class="field_value">
+      <span id="duplicates"><a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - More startup errors after upgrading to 1.0.0 test"
+   href="show_bug.cgi?id=167320">167320</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - 1.0 Errors on Startup."
+   href="show_bug.cgi?id=167639">167639</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Error: &quot;While loading class &quot;org.eclipse.mylar.internal.tasks.ui.WorkspaceAwareContextStore&quot;, thread &quot;Worker-1&quot; timed out waiting (5000ms) for thread &quot;Worker-4&quot; to finish starting bundle &quot;org.eclipse.mylar.tasks.ui&quot;. To avoid deadlock, thread &quot;Worker-1..."
+   href="show_bug.cgi?id=168368">168368</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Error: &quot;While loading class &quot;org.apache.commons.httpclient.Credentials&quot;, thread &quot;Worker-4&quot; timed out waiting (5000ms) for thread &quot;Worker-1&quot; to finish starting bundle &quot;org.eclipse.mylar.context.core&quot;. To avoid deadlock, thread &quot;Worker-4&quot; is proceeding b..."
+   href="show_bug.cgi?id=168369">168369</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Error: &quot;While loading class &quot;org.eclipse.mylar.context.core.IMylarContextListener&quot;, thread &quot;Worker-3&quot; timed out waiting (5000ms) for thread &quot;Worker-2&quot; to finish starting bundle &quot;org.eclipse.mylar.context.core&quot;. To avoid deadlock, thread &quot;Worker-3&quot; is p..."
+   href="show_bug.cgi?id=168494">168494</a> 
+      </span>
+      (<a href="buglist.cgi?bug_id=167320,167639,168368,168369,168494">view as bug list</a>)
+    </td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+
+  </td>
+  </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2006-12-12 22:53 EST by <span class="vcard"><span class="fn">Willian Mitsuda</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=wmitsuda&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=wmitsuda&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2007-07-18 22:11 EDT
+      (<a href="show_activity.cgi?id=167784">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>4 
+          users
+          <span id="cc_edit_area_showhide_container" class="bz_default_hidden">
+            (<a href="#" id="cc_edit_area_showhide">show</a>)
+          </span>
+        <div id="cc_edit_area">
+          <br>
+            <select id="cc" multiple="multiple" size="5" >
+                <option value="bugzilla">bugzilla</option>
+                <option value="leewas">leewas</option>
+                <option value="nathan">nathan</option>
+                <option value="the.mindstorm.mailinglist">the.mindstorm.mailinglist</option>
+            </select>
+        </div>
+          <script type="text/javascript">
+            hideEditableField( 'cc_edit_area_showhide_container', 
+                               'cc_edit_area', 
+                               'cc_edit_area_showhide', 
+                               '', 
+                               '');  
+          </script>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" >
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+      <tr id="a1" class="bz_contenttype_application_octet-stream">
+        <td>
+            <a href="attachment.cgi?id=55968"
+               title="View the content of the attachment">
+          <b>mylar/context/zip</b></a>
+
+          <span class="bz_attach_extra_info">
+              (6.20 KB,
+                application/octet-stream)
+
+            <br>
+            <a href="#attach_55968"
+               title="Go to the comment associated with the attachment">2006-12-20 11:12 EST</a>,
+
+            <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=55968&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a2" class="bz_contenttype_text_plain bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=56393"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Configuration Dump</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (122.29 KB,
+                text/plain)
+
+            <br>
+            <a href="#attach_56393"
+               title="Go to the comment associated with the attachment">2007-01-04 10:07 EST</a>,
+
+            <span class="vcard"><span class="fn">Nathan Gervais</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=nathan&#64;eclipse.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=nathan&#64;eclipse.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=56393&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a3" class="bz_contenttype_application_x-zip">
+        <td>
+            <a href="attachment.cgi?id=56829"
+               title="View the content of the attachment">
+          <b>Error Messages and Config Dump</b></a>
+
+          <span class="bz_attach_extra_info">
+              (22.55 KB,
+                application/x-zip)
+
+            <br>
+            <a href="#attach_56829"
+               title="Go to the comment associated with the attachment">2007-01-12 10:06 EST</a>,
+
+            <span class="vcard"><span class="fn">Nathan Gervais</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=nathan&#64;eclipse.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=nathan&#64;eclipse.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=56829&amp;action=edit">Details</a>
+        </td>
+      </tr>
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <span class="bz_attach_view_hide">
+            <a href="#a0" onclick="return toggle_display(this);">Show
+              Obsolete</a> (1)
+            <a id="view_all" href="attachment.cgi?bugid=167784&amp;action=viewall&amp;hide_obsolete=1">View All</a>
+        </span>
+        <a href="attachment.cgi?bugid=167784&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=167784&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Willian Mitsuda</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=wmitsuda&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=wmitsuda&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-12-12 22:53:50 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Hi folks, I think I finally discovered the root cause of the dreadful startup bug (&quot;thread
+&quot;Worker-X&quot; timed out waiting (5000ms) for thread &quot;Worker-Y&quot; to finish starting bundle
+&quot;org.eclipse.mylar.tasks.ui&quot;).
+
+Warning: this is a very long bug... In fact there are
+a set of bugs working together to make this happen (or not, according to the situation;
+explanation bellow):
+
+1 - Mylar plugins are doing expensive operations on Bundle.start():
+
+I
+see that tasks.ui plugin do many heavy-weight operations like reading the tasklist (which
+involves XML parsing) on plugin start() method.
+
+This type of operation must be made
+on a background job because the platform has a timeout of 5 seconds for each plugin initialization.
+The BundleActivator.start() javadoc explicitly says that this method MUST return quickly.
+
+2
+- Mylar plugins are doing expensive operations on Display.asyncExec():
+
+Taking a quick
+look, I see that at least context.ui, tasks.ui and mylar.team invoke Display.asyncExec()
+{ [long-chain-of-method-calls] }.
+
+The problem here is that asyncExec() forces the Runnable
+to be executed on UI thread. If the Runnable takes much time to complete, this causes
+UI to freeze. Probably this is the cause of UI freeze on Eclipse initialization I see.
+
+The
+worst case here is on tasks.ui. Instead of simply wrapping a code block inside asyncExec(),
+we must track down the call stack and identify what methods requires to be executed on
+UI thread, and wrap just them with asyncExec.
+
+3 - There is a circular dependency between
+context.core and tasks.ui:
+
+This is the worst bug. Tasks UI depends on context.core
+== OK. However, there is a &quot;involuntary&quot; dependency of context core on tasks UI, because
+tasks UI provides a context store extension, so context core activation triggers tasks
+UI activation while loading context store extensions, and vice-versa.
+
+I think the easiest
+way to fix this is to move the filesystem-based context store implementation to its own
+plugin like I suggested on <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - Mylar Monitor does not work standalone"
+   href="show_bug.cgi?id=160356">bug#160356</a> (I'm suposing that the filesystem context store
+does not have any dependency on tasks UI classes).
+
+This way, this new plugin (let's
+call it &quot;context.filesystem.store&quot;) would depend only on context.core. Context core activation
+would only trigger context.filesystem.core activation. Tasks UI activation would trigger
+context.core and so on.
+
+Conclusion: there is a lot of problems contributing to make
+this bug happen sometimes.
+
+Sometimes, depending on VM classloading policy, and because
+of busy BundleActivator.start() implementations, bug (1) can be triggered causing the
+plugin init timeout.
+
+Most times, bug (2) is causing bug (3) to NOT happen. I suppose
+that asyncExec() would be masquerading the circular dependency, otherwise tasks UI would
+trigger context core activation, which would trigger tasks UI, and so on. Probably the
+&quot;trigger&quot; code would be inside a asyncExec() block, so it is scheduled to run on UI thread,
+letting the plugin complete initialization.
+
+However, on some VMs/OSs the thread policy
+can be different, making the deadlock/plugin timeout happen.
+
+Taking a quick look at
+my bug list, I can remember strong candidates for being dups of this:
+
+- <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - mylar fails to start on BEA jrockit VM"
+   href="show_bug.cgi?id=159706">bug#159706</a>
+- mylar fails to start on BEA jrockit VM
+- <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - More startup errors after upgrading to 1.0.0 test"
+   href="show_bug.cgi?id=167320">bug#167320</a> - More startup errors after upgrading
+to 1.0.0 test
+
+To investigate:
+
+- <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - 1.0 Errors on Startup."
+   href="show_bug.cgi?id=167639">bug#167639</a> - 1.0 Errors on Startup.
+- all bugs
+containing &quot;thread &quot;Worker-X&quot; timed out waiting (5000ms) for thread &quot;Worker-Y&quot; to finish
+starting bundle blablabla&quot; on stack trace.
+
+So, fixing these 3 problems would end the
+timeout problems.</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-12-12 23:08:49 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Thanks for excellent analysis Willian, I think that you got the nail on the head.  We haven't seen this problem for a while, so I'm still wondering what triggers it (e.g. large number of plug-ins activating, very slow machine or pinned CPU).  Our previous laziness improvements made it better but did not solve it (1), and without making huge changes we will still some eagerness to ensure that all externalizers are loaded.  But I will definitely plan to do (3) for 1.0.1 to address this, and hope to make some improvements on the others.</pre>
+    </div>
+
+    <div id="c2" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c2">Comment 2</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Willian Mitsuda</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=wmitsuda&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=wmitsuda&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-12-13 09:39:00 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Yes, fixing (3) is relatively low-risk and easy for 1.0.1 and would handle the worst case.
+
+We'll still probably see some (1) cases occurring, but the changes needed to fix (1) and (2) are very risk to do in a so short iteration like 1.0.1.
+
+We can revisit this on 2.x stream, since these are performance bugs too.</pre>
+    </div>
+
+    <div id="c3" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c3">Comment 3</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-12-13 17:48:36 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - 1.0 Errors on Startup."
+   href="show_bug.cgi?id=167639">Bug 167639</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c4" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c4">Comment 4</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-12-14 15:49:43 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED WONTFIX - Could not initialize class org.eclipse.mylar.internal.context.ui.ContextUiImages"
+   href="show_bug.cgi?id=168031">Bug 168031</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c5" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c5">Comment 5</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Alex Popescu</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=the.mindstorm.mailinglist&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=the.mindstorm.mailinglist&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-12-14 16:22:24 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">With the current configuration I cannot reproduce it anymore: Mylar 1.0 and Subversive 1.1.0M9a. Unfortunately due to a very serious bug in Subversive 1.1.0RC1a I cannot switch back to it (still if I get some time I will try to reproduce it).
+
+./alex
+--
+.w( the_mindstorm )p.
+</pre>
+    </div>
+
+    <div id="c6" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c6">Comment 6</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Willian Mitsuda</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=wmitsuda&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=wmitsuda&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-12-17 20:50:54 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - More startup errors after upgrading to 1.0.0 test"
+   href="show_bug.cgi?id=167320">Bug 167320</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c7" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c7">Comment 7</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Lee Wang Soo</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leewas&#64;tmax.co.kr" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leewas&#64;tmax.co.kr" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-12-17 20:57:52 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Error: &quot;While loading class &quot;org.eclipse.mylar.internal.tasks.ui.WorkspaceAwareContextStore&quot;, thread &quot;Worker-1&quot; timed out waiting (5000ms) for thread &quot;Worker-4&quot; to finish starting bundle &quot;org.eclipse.mylar.tasks.ui&quot;. To avoid deadlock, thread &quot;Worker-1..."
+   href="show_bug.cgi?id=168368">Bug 168368</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c8" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c8">Comment 8</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-12-18 22:14:25 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Error: &quot;While loading class &quot;org.apache.commons.httpclient.Credentials&quot;, thread &quot;Worker-4&quot; timed out waiting (5000ms) for thread &quot;Worker-1&quot; to finish starting bundle &quot;org.eclipse.mylar.context.core&quot;. To avoid deadlock, thread &quot;Worker-4&quot; is proceeding b..."
+   href="show_bug.cgi?id=168369">Bug 168369</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c9" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c9">Comment 9</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-12-18 23:40:07 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Error: &quot;While loading class &quot;org.eclipse.mylar.context.core.IMylarContextListener&quot;, thread &quot;Worker-3&quot; timed out waiting (5000ms) for thread &quot;Worker-2&quot; to finish starting bundle &quot;org.eclipse.mylar.context.core&quot;. To avoid deadlock, thread &quot;Worker-3&quot; is p..."
+   href="show_bug.cgi?id=168494">Bug 168494</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c10" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c10">Comment 10</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-12-19 19:11:53 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I tested various scenarios of (1) and (2) by adding a 30s sleep to both the start() and the asyncExec in the start method of the TasksUiPlugin.  Neither of those caused this failure and resulted in a very slow, but correct startup on both Sun and BEA VMs for both 3.3 and 3.2.  So I think that the underlying cause is (3), and the underlying problem is related to Platform <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - ClassCircularityError during createExecutableExtension"
+   href="show_bug.cgi?id=5875">bug 5875</a>.  I believe that our circular dependency is correct, but the circular class loading can time out as described on that bug.
+
+Willian: we can not simply move this extension point to another plug-in because the location of the context store is a preference that comes from the TasksUiPlugin.  And the Task List has to be loaded completely before any mylar.tasks.ui view or editor can show tasks, and note that the workbench restores editors on startup.  These and other issues related to walking this fine line between loading what we need eagerly (e.g. connectors) and deferring everything else to be loaded lazily is what has made this so tricky.  What I have done for 1.0.1 is to break the circularity by removing the extension point based way of specifying the context store, and instead having TasksUiPlugin.start set it explicitly in the code.  Since I can not reproduce this, I tested with a full Callisto install and did not see any problems.
+
+Nathan and others seeing this problem: could you please verify by installing the 1.0.0.v20061219-1530 build from one of the following update sites?  Make sure to use &quot;Search for new features&quot; when updating.
+
+  download.eclipse.org/technology/mylar/update-site/test/e3.2
+  download.eclipse.org/technology/mylar/update-site/test/e3.3</pre>
+    </div>
+
+    <div id="c11" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c11">Comment 11</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-12-20 11:12:09 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">If this is still happening for anyone with the builds linked above please reopen the bug.  It would be helpful if someone experiencing this bug could verify with the latest built.</pre>
+    </div>
+
+    <div id="c12" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c12">Comment 12</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-12-20 11:12:14 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=55968" name="attach_55968" title="mylar/context/zip">attachment 55968</a> <a href="attachment.cgi?id=55968&amp;action=edit" title="mylar/context/zip">[details]</a></span>
+mylar/context/zip</pre>
+    </div>
+
+    <div id="c13" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c13">Comment 13</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jason Erickson</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=bugzilla&#64;jasonerickson.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=bugzilla&#64;jasonerickson.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-12-20 21:00:18 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I updated to the developer build using the link provided.  This changed the behavior slightly.  I no longer get the errors in the error log when Eclipse is starting up.  However, as far as I can tell, I get all the same errors the first time I try to open task.
+
+The version is 1.0.0.v20061219-1530.</pre>
+    </div>
+
+    <div id="c14" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c14">Comment 14</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-12-20 21:03:55 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I'm not sure if it's possible for the same errors to happen after startup, so these might be related, or might be something else.  Could you clear your error log, restart, and then attach the full log to this bug after trying to open a task (assuming it contains errors)?  Also include a note on what kind of task you are trying to open.</pre>
+    </div>
+
+    <div id="c15" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c15">Comment 15</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Willian Mitsuda</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=wmitsuda&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=wmitsuda&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-12-25 16:49:57 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I think this is not totally fixed yet. I got this with Eclipse 3.3 M4 + Mylar 1.0.1.
+
+The result on this case was that the TaskList view wasn't loaded. The workaround is to restart Eclipse.
+
+eclipse.buildId=I20061214-1445
+java.version=1.6.0
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=pt_BR
+Command-line arguments:  -os win32 -ws win32 -arch x86
+This is a continuation of log file C:\eclipse\workspace-myprojects\.metadata\.bak_0.log
+Created Time: 2006-12-25 19:38:14.359
+
+Warning
+Mon Dec 25 19:38:14 BRST 2006
+While loading class &quot;org.eclipse.mylar.internal.tasks.ui.views.TaskProgressBar$2&quot;, thread &quot;Thread[main,6,main]&quot; timed out waiting (5000ms) for thread &quot;Thread[Worker-4,5,main]&quot; to finish starting bundle &quot;update&#64;plugins/org.eclipse.mylar.tasks.ui_1.0.1.jar [200]&quot;. To avoid deadlock, thread &quot;Thread[main,6,main]&quot; is proceeding but &quot;org.eclipse.mylar.internal.tasks.ui.views.TaskProgressBar$2&quot; may not be fully initialized.
+
+org.osgi.framework.BundleException: State change in progress for bundle &quot;update&#64;plugins/org.eclipse.mylar.tasks.ui_1.0.1.jar&quot; by thread &quot;Worker-4&quot;.
+at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1141)
+at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:258)
+at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:400)
+at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:111)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:415)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:189)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findLocalClass(BundleLoader.java:350)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClassInternal(BundleLoader.java:418)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:379)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:367)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:83)
+at java.lang.ClassLoader.loadClass(ClassLoader.java:251)
+at java.lang.ClassLoader.loadClassInternal(ClassLoader.java:319)
+at org.eclipse.mylar.internal.tasks.ui.views.TaskProgressBar.&lt;init&gt;(TaskProgressBar.java:56)
+at org.eclipse.mylar.internal.tasks.ui.views.TaskListFilteredTree.createProgressComposite(TaskListFilteredTree.java:59)
+at org.eclipse.mylar.internal.tasks.ui.views.AbstractMylarFilteredTree.createTreeControl(AbstractMylarFilteredTree.java:76)
+at org.eclipse.ui.dialogs.FilteredTree.createControl(FilteredTree.java:240)
+at org.eclipse.mylar.internal.tasks.ui.views.AbstractMylarFilteredTree.createControl(AbstractMylarFilteredTree.java:66)
+at org.eclipse.ui.dialogs.FilteredTree.init(FilteredTree.java:200)
+at org.eclipse.ui.dialogs.FilteredTree.&lt;init&gt;(FilteredTree.java:166)
+at org.eclipse.mylar.internal.tasks.ui.views.AbstractMylarFilteredTree.&lt;init&gt;(AbstractMylarFilteredTree.java:51)
+at org.eclipse.mylar.internal.tasks.ui.views.TaskListFilteredTree.&lt;init&gt;(TaskListFilteredTree.java:38)
+at org.eclipse.mylar.internal.tasks.ui.views.TaskListView.createPartControl(TaskListView.java:722)
+at org.eclipse.ui.internal.ViewReference.createPartHelper(ViewReference.java:345)
+at org.eclipse.ui.internal.ViewReference.createPart(ViewReference.java:210)
+at org.eclipse.ui.internal.WorkbenchPartReference.getPart(WorkbenchPartReference.java:566)
+at org.eclipse.ui.internal.PartPane.setVisible(PartPane.java:293)
+at org.eclipse.ui.internal.ViewPane.setVisible(ViewPane.java:524)
+at org.eclipse.ui.internal.presentations.PresentablePart.setVisible(PresentablePart.java:140)
+at org.eclipse.ui.internal.presentations.util.PresentablePartFolder.select(PresentablePartFolder.java:268)
+at org.eclipse.ui.internal.presentations.util.LeftToRightTabOrder.select(LeftToRightTabOrder.java:65)
+at org.eclipse.ui.internal.presentations.util.TabbedStackPresentation.selectPart(TabbedStackPresentation.java:394)
+at org.eclipse.ui.internal.PartStack.refreshPresentationSelection(PartStack.java:1156)
+at org.eclipse.ui.internal.PartStack.setSelection(PartStack.java:1109)
+at org.eclipse.ui.internal.PartStack.presentationSelectionChanged(PartStack.java:798)
+at org.eclipse.ui.internal.PartStack.access$1(PartStack.java:784)
+at org.eclipse.ui.internal.PartStack$1.selectPart(PartStack.java:126)
+at org.eclipse.ui.internal.presentations.util.TabbedStackPresentation$1.handleEvent(TabbedStackPresentation.java:126)
+at org.eclipse.ui.internal.presentations.util.AbstractTabFolder.fireEvent(AbstractTabFolder.java:267)
+at org.eclipse.ui.internal.presentations.util.AbstractTabFolder.fireEvent(AbstractTabFolder.java:276)
+at org.eclipse.ui.internal.presentations.defaultpresentation.DefaultTabFolder.access$1(DefaultTabFolder.java:1)
+at org.eclipse.ui.internal.presentations.defaultpresentation.DefaultTabFolder$2.handleEvent(DefaultTabFolder.java:84)
+at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:928)
+at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:952)
+at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:937)
+at org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:707)
+at org.eclipse.swt.custom.CTabFolder.setSelection(CTabFolder.java:3171)
+at org.eclipse.swt.custom.CTabFolder.onMouse(CTabFolder.java:1953)
+at org.eclipse.swt.custom.CTabFolder$1.handleEvent(CTabFolder.java:288)
+at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:928)
+at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:3465)
+at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3079)
+at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:1945)
+at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:1909)
+at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:425)
+at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+at org.eclipse.ui.internal.ide.IDEApplication.run(IDEApplication.java:95)
+at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+at java.lang.reflect.Method.invoke(Method.java:597)
+at org.eclipse.equinox.internal.app.EclipseAppContainer.callMethod(EclipseAppContainer.java:522)
+at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:147)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:104)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:74)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:354)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:170)
+at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+at java.lang.reflect.Method.invoke(Method.java:597)
+at org.eclipse.core.launcher.Main.invokeFramework(Main.java:339)
+at org.eclipse.core.launcher.Main.basicRun(Main.java:283)
+at org.eclipse.core.launcher.Main.run(Main.java:984)
+at org.eclipse.core.launcher.Main.main(Main.java:959)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+... 77 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1141)
+at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:258)
+at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:400)
+at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:111)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:415)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:189)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findLocalClass(BundleLoader.java:350)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClassInternal(BundleLoader.java:418)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:379)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:367)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:83)
+at java.lang.ClassLoader.loadClass(ClassLoader.java:251)
+at java.lang.ClassLoader.loadClassInternal(ClassLoader.java:319)
+at org.eclipse.mylar.internal.tasks.ui.views.TaskProgressBar.&lt;init&gt;(TaskProgressBar.java:56)
+at org.eclipse.mylar.internal.tasks.ui.views.TaskListFilteredTree.createProgressComposite(TaskListFilteredTree.java:59)
+at org.eclipse.mylar.internal.tasks.ui.views.AbstractMylarFilteredTree.createTreeControl(AbstractMylarFilteredTree.java:76)
+at org.eclipse.ui.dialogs.FilteredTree.createControl(FilteredTree.java:240)
+at org.eclipse.mylar.internal.tasks.ui.views.AbstractMylarFilteredTree.createControl(AbstractMylarFilteredTree.java:66)
+at org.eclipse.ui.dialogs.FilteredTree.init(FilteredTree.java:200)
+at org.eclipse.ui.dialogs.FilteredTree.&lt;init&gt;(FilteredTree.java:166)
+at org.eclipse.mylar.internal.tasks.ui.views.AbstractMylarFilteredTree.&lt;init&gt;(AbstractMylarFilteredTree.java:51)
+at org.eclipse.mylar.internal.tasks.ui.views.TaskListFilteredTree.&lt;init&gt;(TaskListFilteredTree.java:38)
+at org.eclipse.mylar.internal.tasks.ui.views.TaskListView.createPartControl(TaskListView.java:722)
+at org.eclipse.ui.internal.ViewReference.createPartHelper(ViewReference.java:345)
+at org.eclipse.ui.internal.ViewReference.createPart(ViewReference.java:210)
+at org.eclipse.ui.internal.WorkbenchPartReference.getPart(WorkbenchPartReference.java:566)
+at org.eclipse.ui.internal.PartPane.setVisible(PartPane.java:293)
+at org.eclipse.ui.internal.ViewPane.setVisible(ViewPane.java:524)
+at org.eclipse.ui.internal.presentations.PresentablePart.setVisible(PresentablePart.java:140)
+at org.eclipse.ui.internal.presentations.util.PresentablePartFolder.select(PresentablePartFolder.java:268)
+at org.eclipse.ui.internal.presentations.util.LeftToRightTabOrder.select(LeftToRightTabOrder.java:65)
+at org.eclipse.ui.internal.presentations.util.TabbedStackPresentation.selectPart(TabbedStackPresentation.java:394)
+at org.eclipse.ui.internal.PartStack.refreshPresentationSelection(PartStack.java:1156)
+at org.eclipse.ui.internal.PartStack.setSelection(PartStack.java:1109)
+at org.eclipse.ui.internal.PartStack.presentationSelectionChanged(PartStack.java:798)
+at org.eclipse.ui.internal.PartStack.access$1(PartStack.java:784)
+at org.eclipse.ui.internal.PartStack$1.selectPart(PartStack.java:126)
+at org.eclipse.ui.internal.presentations.util.TabbedStackPresentation$1.handleEvent(TabbedStackPresentation.java:126)
+at org.eclipse.ui.internal.presentations.util.AbstractTabFolder.fireEvent(AbstractTabFolder.java:267)
+at org.eclipse.ui.internal.presentations.util.AbstractTabFolder.fireEvent(AbstractTabFolder.java:276)
+at org.eclipse.ui.internal.presentations.defaultpresentation.DefaultTabFolder.access$1(DefaultTabFolder.java:1)
+at org.eclipse.ui.internal.presentations.defaultpresentation.DefaultTabFolder$2.handleEvent(DefaultTabFolder.java:84)
+at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:928)
+at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:952)
+at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:937)
+at org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:707)
+at org.eclipse.swt.custom.CTabFolder.setSelection(CTabFolder.java:3171)
+at org.eclipse.swt.custom.CTabFolder.onMouse(CTabFolder.java:1953)
+at org.eclipse.swt.custom.CTabFolder$1.handleEvent(CTabFolder.java:288)
+at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:928)
+at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:3465)
+at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3079)
+at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:1945)
+at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:1909)
+at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:425)
+at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+at org.eclipse.ui.internal.ide.IDEApplication.run(IDEApplication.java:95)
+at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+at java.lang.reflect.Method.invoke(Method.java:597)
+at org.eclipse.equinox.internal.app.EclipseAppContainer.callMethod(EclipseAppContainer.java:522)
+at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:147)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:104)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:74)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:354)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:170)
+at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+at java.lang.reflect.Method.invoke(Method.java:597)
+at org.eclipse.core.launcher.Main.invokeFramework(Main.java:339)
+at org.eclipse.core.launcher.Main.basicRun(Main.java:283)
+at org.eclipse.core.launcher.Main.run(Main.java:984)
+at org.eclipse.core.launcher.Main.main(Main.java:959)
+
+eclipse.buildId=I20061214-1445
+java.version=1.6.0
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=pt_BR
+Command-line arguments:  -os win32 -ws win32 -arch x86
+This is a continuation of log file C:\eclipse\workspace-myprojects\.metadata\.bak_0.log
+Created Time: 2006-12-25 19:38:14.359
+
+Warning
+Mon Dec 25 19:38:19 BRST 2006
+While loading class &quot;org.eclipse.mylar.internal.tasks.ui.views.TaskProgressBar$3&quot;, thread &quot;Thread[main,6,main]&quot; timed out waiting (5000ms) for thread &quot;Thread[Worker-4,5,main]&quot; to finish starting bundle &quot;update&#64;plugins/org.eclipse.mylar.tasks.ui_1.0.1.jar [200]&quot;. To avoid deadlock, thread &quot;Thread[main,6,main]&quot; is proceeding but &quot;org.eclipse.mylar.internal.tasks.ui.views.TaskProgressBar$3&quot; may not be fully initialized.
+
+org.osgi.framework.BundleException: State change in progress for bundle &quot;update&#64;plugins/org.eclipse.mylar.tasks.ui_1.0.1.jar&quot; by thread &quot;Worker-4&quot;.
+at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1141)
+at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:258)
+at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:400)
+at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:111)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:415)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:189)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findLocalClass(BundleLoader.java:350)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClassInternal(BundleLoader.java:418)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:379)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:367)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:83)
+at java.lang.ClassLoader.loadClass(ClassLoader.java:251)
+at java.lang.ClassLoader.loadClassInternal(ClassLoader.java:319)
+at org.eclipse.mylar.internal.tasks.ui.views.TaskProgressBar.&lt;init&gt;(TaskProgressBar.java:61)
+at org.eclipse.mylar.internal.tasks.ui.views.TaskListFilteredTree.createProgressComposite(TaskListFilteredTree.java:59)
+at org.eclipse.mylar.internal.tasks.ui.views.AbstractMylarFilteredTree.createTreeControl(AbstractMylarFilteredTree.java:76)
+at org.eclipse.ui.dialogs.FilteredTree.createControl(FilteredTree.java:240)
+at org.eclipse.mylar.internal.tasks.ui.views.AbstractMylarFilteredTree.createControl(AbstractMylarFilteredTree.java:66)
+at org.eclipse.ui.dialogs.FilteredTree.init(FilteredTree.java:200)
+at org.eclipse.ui.dialogs.FilteredTree.&lt;init&gt;(FilteredTree.java:166)
+at org.eclipse.mylar.internal.tasks.ui.views.AbstractMylarFilteredTree.&lt;init&gt;(AbstractMylarFilteredTree.java:51)
+at org.eclipse.mylar.internal.tasks.ui.views.TaskListFilteredTree.&lt;init&gt;(TaskListFilteredTree.java:38)
+at org.eclipse.mylar.internal.tasks.ui.views.TaskListView.createPartControl(TaskListView.java:722)
+at org.eclipse.ui.internal.ViewReference.createPartHelper(ViewReference.java:345)
+at org.eclipse.ui.internal.ViewReference.createPart(ViewReference.java:210)
+at org.eclipse.ui.internal.WorkbenchPartReference.getPart(WorkbenchPartReference.java:566)
+at org.eclipse.ui.internal.PartPane.setVisible(PartPane.java:293)
+at org.eclipse.ui.internal.ViewPane.setVisible(ViewPane.java:524)
+at org.eclipse.ui.internal.presentations.PresentablePart.setVisible(PresentablePart.java:140)
+at org.eclipse.ui.internal.presentations.util.PresentablePartFolder.select(PresentablePartFolder.java:268)
+at org.eclipse.ui.internal.presentations.util.LeftToRightTabOrder.select(LeftToRightTabOrder.java:65)
+at org.eclipse.ui.internal.presentations.util.TabbedStackPresentation.selectPart(TabbedStackPresentation.java:394)
+at org.eclipse.ui.internal.PartStack.refreshPresentationSelection(PartStack.java:1156)
+at org.eclipse.ui.internal.PartStack.setSelection(PartStack.java:1109)
+at org.eclipse.ui.internal.PartStack.presentationSelectionChanged(PartStack.java:798)
+at org.eclipse.ui.internal.PartStack.access$1(PartStack.java:784)
+at org.eclipse.ui.internal.PartStack$1.selectPart(PartStack.java:126)
+at org.eclipse.ui.internal.presentations.util.TabbedStackPresentation$1.handleEvent(TabbedStackPresentation.java:126)
+at org.eclipse.ui.internal.presentations.util.AbstractTabFolder.fireEvent(AbstractTabFolder.java:267)
+at org.eclipse.ui.internal.presentations.util.AbstractTabFolder.fireEvent(AbstractTabFolder.java:276)
+at org.eclipse.ui.internal.presentations.defaultpresentation.DefaultTabFolder.access$1(DefaultTabFolder.java:1)
+at org.eclipse.ui.internal.presentations.defaultpresentation.DefaultTabFolder$2.handleEvent(DefaultTabFolder.java:84)
+at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:928)
+at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:952)
+at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:937)
+at org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:707)
+at org.eclipse.swt.custom.CTabFolder.setSelection(CTabFolder.java:3171)
+at org.eclipse.swt.custom.CTabFolder.onMouse(CTabFolder.java:1953)
+at org.eclipse.swt.custom.CTabFolder$1.handleEvent(CTabFolder.java:288)
+at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:928)
+at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:3465)
+at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3079)
+at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:1945)
+at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:1909)
+at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:425)
+at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+at org.eclipse.ui.internal.ide.IDEApplication.run(IDEApplication.java:95)
+at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+at java.lang.reflect.Method.invoke(Method.java:597)
+at org.eclipse.equinox.internal.app.EclipseAppContainer.callMethod(EclipseAppContainer.java:522)
+at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:147)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:104)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:74)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:354)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:170)
+at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+at java.lang.reflect.Method.invoke(Method.java:597)
+at org.eclipse.core.launcher.Main.invokeFramework(Main.java:339)
+at org.eclipse.core.launcher.Main.basicRun(Main.java:283)
+at org.eclipse.core.launcher.Main.run(Main.java:984)
+at org.eclipse.core.launcher.Main.main(Main.java:959)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+... 77 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1141)
+at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:258)
+at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:400)
+at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:111)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:415)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:189)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findLocalClass(BundleLoader.java:350)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClassInternal(BundleLoader.java:418)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:379)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:367)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:83)
+at java.lang.ClassLoader.loadClass(ClassLoader.java:251)
+at java.lang.ClassLoader.loadClassInternal(ClassLoader.java:319)
+at org.eclipse.mylar.internal.tasks.ui.views.TaskProgressBar.&lt;init&gt;(TaskProgressBar.java:61)
+at org.eclipse.mylar.internal.tasks.ui.views.TaskListFilteredTree.createProgressComposite(TaskListFilteredTree.java:59)
+at org.eclipse.mylar.internal.tasks.ui.views.AbstractMylarFilteredTree.createTreeControl(AbstractMylarFilteredTree.java:76)
+at org.eclipse.ui.dialogs.FilteredTree.createControl(FilteredTree.java:240)
+at org.eclipse.mylar.internal.tasks.ui.views.AbstractMylarFilteredTree.createControl(AbstractMylarFilteredTree.java:66)
+at org.eclipse.ui.dialogs.FilteredTree.init(FilteredTree.java:200)
+at org.eclipse.ui.dialogs.FilteredTree.&lt;init&gt;(FilteredTree.java:166)
+at org.eclipse.mylar.internal.tasks.ui.views.AbstractMylarFilteredTree.&lt;init&gt;(AbstractMylarFilteredTree.java:51)
+at org.eclipse.mylar.internal.tasks.ui.views.TaskListFilteredTree.&lt;init&gt;(TaskListFilteredTree.java:38)
+at org.eclipse.mylar.internal.tasks.ui.views.TaskListView.createPartControl(TaskListView.java:722)
+at org.eclipse.ui.internal.ViewReference.createPartHelper(ViewReference.java:345)
+at org.eclipse.ui.internal.ViewReference.createPart(ViewReference.java:210)
+at org.eclipse.ui.internal.WorkbenchPartReference.getPart(WorkbenchPartReference.java:566)
+at org.eclipse.ui.internal.PartPane.setVisible(PartPane.java:293)
+at org.eclipse.ui.internal.ViewPane.setVisible(ViewPane.java:524)
+at org.eclipse.ui.internal.presentations.PresentablePart.setVisible(PresentablePart.java:140)
+at org.eclipse.ui.internal.presentations.util.PresentablePartFolder.select(PresentablePartFolder.java:268)
+at org.eclipse.ui.internal.presentations.util.LeftToRightTabOrder.select(LeftToRightTabOrder.java:65)
+at org.eclipse.ui.internal.presentations.util.TabbedStackPresentation.selectPart(TabbedStackPresentation.java:394)
+at org.eclipse.ui.internal.PartStack.refreshPresentationSelection(PartStack.java:1156)
+at org.eclipse.ui.internal.PartStack.setSelection(PartStack.java:1109)
+at org.eclipse.ui.internal.PartStack.presentationSelectionChanged(PartStack.java:798)
+at org.eclipse.ui.internal.PartStack.access$1(PartStack.java:784)
+at org.eclipse.ui.internal.PartStack$1.selectPart(PartStack.java:126)
+at org.eclipse.ui.internal.presentations.util.TabbedStackPresentation$1.handleEvent(TabbedStackPresentation.java:126)
+at org.eclipse.ui.internal.presentations.util.AbstractTabFolder.fireEvent(AbstractTabFolder.java:267)
+at org.eclipse.ui.internal.presentations.util.AbstractTabFolder.fireEvent(AbstractTabFolder.java:276)
+at org.eclipse.ui.internal.presentations.defaultpresentation.DefaultTabFolder.access$1(DefaultTabFolder.java:1)
+at org.eclipse.ui.internal.presentations.defaultpresentation.DefaultTabFolder$2.handleEvent(DefaultTabFolder.java:84)
+at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:928)
+at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:952)
+at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:937)
+at org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:707)
+at org.eclipse.swt.custom.CTabFolder.setSelection(CTabFolder.java:3171)
+at org.eclipse.swt.custom.CTabFolder.onMouse(CTabFolder.java:1953)
+at org.eclipse.swt.custom.CTabFolder$1.handleEvent(CTabFolder.java:288)
+at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:928)
+at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:3465)
+at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3079)
+at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:1945)
+at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:1909)
+at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:425)
+at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+at org.eclipse.ui.internal.ide.IDEApplication.run(IDEApplication.java:95)
+at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+at java.lang.reflect.Method.invoke(Method.java:597)
+at org.eclipse.equinox.internal.app.EclipseAppContainer.callMethod(EclipseAppContainer.java:522)
+at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:147)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:104)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:74)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:354)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:170)
+at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+at java.lang.reflect.Method.invoke(Method.java:597)
+at org.eclipse.core.launcher.Main.invokeFramework(Main.java:339)
+at org.eclipse.core.launcher.Main.basicRun(Main.java:283)
+at org.eclipse.core.launcher.Main.run(Main.java:984)
+at org.eclipse.core.launcher.Main.main(Main.java:959)
+
+eclipse.buildId=I20061214-1445
+java.version=1.6.0
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=pt_BR
+Command-line arguments:  -os win32 -ws win32 -arch x86
+This is a continuation of log file C:\eclipse\workspace-myprojects\.metadata\.bak_0.log
+Created Time: 2006-12-25 19:38:14.359
+
+Error
+Mon Dec 25 19:38:19 BRST 2006
+Unable to create view ID org.eclipse.mylar.tasks.ui.views.TaskListView: An unexpected exception was thrown.
+
+java.lang.NullPointerException
+at org.eclipse.mylar.tasks.ui.TaskListManager.getScheduledForThisWeek(TaskListManager.java:844)
+at org.eclipse.mylar.internal.tasks.ui.views.TaskListFilteredTree.updateTaskProgressBar(TaskListFilteredTree.java:121)
+at org.eclipse.mylar.internal.tasks.ui.views.TaskListFilteredTree.createProgressComposite(TaskListFilteredTree.java:61)
+at org.eclipse.mylar.internal.tasks.ui.views.AbstractMylarFilteredTree.createTreeControl(AbstractMylarFilteredTree.java:76)
+at org.eclipse.ui.dialogs.FilteredTree.createControl(FilteredTree.java:240)
+at org.eclipse.mylar.internal.tasks.ui.views.AbstractMylarFilteredTree.createControl(AbstractMylarFilteredTree.java:66)
+at org.eclipse.ui.dialogs.FilteredTree.init(FilteredTree.java:200)
+at org.eclipse.ui.dialogs.FilteredTree.&lt;init&gt;(FilteredTree.java:166)
+at org.eclipse.mylar.internal.tasks.ui.views.AbstractMylarFilteredTree.&lt;init&gt;(AbstractMylarFilteredTree.java:51)
+at org.eclipse.mylar.internal.tasks.ui.views.TaskListFilteredTree.&lt;init&gt;(TaskListFilteredTree.java:38)
+at org.eclipse.mylar.internal.tasks.ui.views.TaskListView.createPartControl(TaskListView.java:722)
+at org.eclipse.ui.internal.ViewReference.createPartHelper(ViewReference.java:345)
+at org.eclipse.ui.internal.ViewReference.createPart(ViewReference.java:210)
+at org.eclipse.ui.internal.WorkbenchPartReference.getPart(WorkbenchPartReference.java:566)
+at org.eclipse.ui.internal.PartPane.setVisible(PartPane.java:293)
+at org.eclipse.ui.internal.ViewPane.setVisible(ViewPane.java:524)
+at org.eclipse.ui.internal.presentations.PresentablePart.setVisible(PresentablePart.java:140)
+at org.eclipse.ui.internal.presentations.util.PresentablePartFolder.select(PresentablePartFolder.java:268)
+at org.eclipse.ui.internal.presentations.util.LeftToRightTabOrder.select(LeftToRightTabOrder.java:65)
+at org.eclipse.ui.internal.presentations.util.TabbedStackPresentation.selectPart(TabbedStackPresentation.java:394)
+at org.eclipse.ui.internal.PartStack.refreshPresentationSelection(PartStack.java:1156)
+at org.eclipse.ui.internal.PartStack.setSelection(PartStack.java:1109)
+at org.eclipse.ui.internal.PartStack.presentationSelectionChanged(PartStack.java:798)
+at org.eclipse.ui.internal.PartStack.access$1(PartStack.java:784)
+at org.eclipse.ui.internal.PartStack$1.selectPart(PartStack.java:126)
+at org.eclipse.ui.internal.presentations.util.TabbedStackPresentation$1.handleEvent(TabbedStackPresentation.java:126)
+at org.eclipse.ui.internal.presentations.util.AbstractTabFolder.fireEvent(AbstractTabFolder.java:267)
+at org.eclipse.ui.internal.presentations.util.AbstractTabFolder.fireEvent(AbstractTabFolder.java:276)
+at org.eclipse.ui.internal.presentations.defaultpresentation.DefaultTabFolder.access$1(DefaultTabFolder.java:1)
+at org.eclipse.ui.internal.presentations.defaultpresentation.DefaultTabFolder$2.handleEvent(DefaultTabFolder.java:84)
+at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:928)
+at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:952)
+at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:937)
+at org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:707)
+at org.eclipse.swt.custom.CTabFolder.setSelection(CTabFolder.java:3171)
+at org.eclipse.swt.custom.CTabFolder.onMouse(CTabFolder.java:1953)
+at org.eclipse.swt.custom.CTabFolder$1.handleEvent(CTabFolder.java:288)
+at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:928)
+at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:3465)
+at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3079)
+at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:1945)
+at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:1909)
+at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:425)
+at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+at org.eclipse.ui.internal.ide.IDEApplication.run(IDEApplication.java:95)
+at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+at java.lang.reflect.Method.invoke(Method.java:597)
+at org.eclipse.equinox.internal.app.EclipseAppContainer.callMethod(EclipseAppContainer.java:522)
+at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:147)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:104)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:74)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:354)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:170)
+at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+at java.lang.reflect.Method.invoke(Method.java:597)
+at org.eclipse.core.launcher.Main.invokeFramework(Main.java:339)
+at org.eclipse.core.launcher.Main.basicRun(Main.java:283)
+at org.eclipse.core.launcher.Main.run(Main.java:984)
+at org.eclipse.core.launcher.Main.main(Main.java:959)
+
+</pre>
+    </div>
+
+    <div id="c16" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c16">Comment 16</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eugene Kuleshov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ekuleshov&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ekuleshov&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-12-26 15:35:10 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">It doesn't seem like task editor can handle such long stack traces nicely (scrolling is really messy). Maybe it is better to put stuff like that into attachments...</pre>
+    </div>
+
+    <div id="c17" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c17">Comment 17</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Willian Mitsuda</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=wmitsuda&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=wmitsuda&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-12-27 13:57:16 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text"> (In reply to <a href="show_bug.cgi?id=167784#c16">comment #16</a>)
+<span class="quote">&gt; It doesn't seem like task editor can handle such long stack traces nicely
+&gt; (scrolling is really messy). Maybe it is better to put stuff like that into
+&gt; attachments...</span >
+
+Do you mean, the editor painting when you scroll quickly using the mouse wheel, for example?</pre>
+    </div>
+
+    <div id="c18" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c18">Comment 18</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eugene Kuleshov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ekuleshov&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ekuleshov&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-12-27 20:44:14 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Mouse wheel is not so bad. Dragging a scroll bar is much worse...</pre>
+    </div>
+
+    <div id="c19" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c19">Comment 19</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-02 10:42:51 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Willian: could you please create a new bug for this?  The &quot;State change in progress&quot; message and location of the failure is different than what we were seeing previously, and resolving this may be as simple as ensuring that the progress bar and related Task List UI initialization happen lazily.
+
+ (In reply to <a href="show_bug.cgi?id=167784#c18">comment #18</a>)
+<span class="quote">&gt; Mouse wheel is not so bad. Dragging a scroll bar is much worse...</span >
+
+Yup.  Improving the way that stack traces are presented is <a class="bz_bug_link 
+          bz_status_NEW "
+   title="NEW - Improve how stack traces are shown in the task editor"
+   href="show_bug.cgi?id=166402">bug 166402</a> (e.g. folding all but top few frames) and that's probably the better approach than trying to work around the performance profile of the form editor when the forms get huge.  For now I think it is best to paste in stack traces if they're not a full dump but either partial or hand edited.  That way we still get hyperlinking.  For full dumps with multiple traces attaching seems best.
+</pre>
+    </div>
+
+    <div id="c20" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c20">Comment 20</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Nathan Gervais</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=nathan&#64;eclipse.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=nathan&#64;eclipse.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-02 14:13:40 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I've posted to my old <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - 1.0 Errors on Startup."
+   href="show_bug.cgi?id=167639">bug 167639</a>
+
+But i'll post again here since this is the main bug.
+
+On Jan 2nd i downloaded
+download.eclipse.org/technology/mylar/update-site/test/e3.2
+
+And the same error occured.
+
+</pre>
+    </div>
+
+    <div id="c21" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c21">Comment 21</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-04 00:08:35 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Nathan: could you please attach the full stack trace so that I can look for any discrepancies?  At this point I need to verify that this is indeed the failure, and that it's not being triggered by something odd like an old version of Mylar loading.  What would help there is if you could attach the Help -&gt; About Eclipse SDK -&gt; Configuration Details dump.
+
+Also, I assume that this failure is only happening in your original &quot;scene of the crime&quot; workspace, and not the workspace that you got it working with (<a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - 1.0 Errors on Startup."
+   href="show_bug.cgi?id=167639#c14">bug 167639 comment#14</a>)?</pre>
+    </div>
+
+    <div id="c22" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c22">Comment 22</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Nathan Gervais</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=nathan&#64;eclipse.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=nathan&#64;eclipse.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-04 10:05:44 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=167784#c21">comment #21</a>)
+<span class="quote">&gt; Nathan: could you please attach the full stack trace so that I can look for any
+&gt; discrepancies?  At this point I need to verify that this is indeed the failure,
+&gt; and that it's not being triggered by something odd like an old version of Mylar
+&gt; loading.  What would help there is if you could attach the Help -&gt; About
+&gt; Eclipse SDK -&gt; Configuration Details dump.
+&gt; </span >
+Next Comment should be the dump attachment
+
+<span class="quote">&gt; Also, I assume that this failure is only happening in your original &quot;scene of
+&gt; the crime&quot; workspace, and not the workspace that you got it working with (bug
+&gt; 167639 <a href="show_bug.cgi?id=167784#c14">comment#14</a>)?
+&gt; </span >
+Correct, only happening in the scene of the crime :)
+</pre>
+    </div>
+
+    <div id="c23" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c23">Comment 23</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Nathan Gervais</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=nathan&#64;eclipse.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=nathan&#64;eclipse.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-04 10:07:18 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=56393" name="attach_56393" title="Configuration Dump">attachment 56393</a> <a href="attachment.cgi?id=56393&amp;action=edit" title="Configuration Dump">[details]</a></span>
+Configuration Dump</pre>
+    </div>
+
+    <div id="c24" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c24">Comment 24</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Willian Mitsuda</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=wmitsuda&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=wmitsuda&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-11 11:23:04 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=167784#c19">comment #19</a>)
+<span class="quote">&gt; Willian: could you please create a new bug for this?  The &quot;State change in
+&gt; progress&quot; message and location of the failure is different than what we were
+&gt; seeing previously, and resolving this may be as simple as ensuring that the
+&gt; progress bar and related Task List UI initialization happen lazily.</span >
+
+Mik, sorry for the delay...
+
+Are you sure about this? I thought it was because of some message change on M4 regarding circular reference handling, and the effect is the same as I've seem in the original bug sometimes: the Task List view was empty, just a empty composite with default view icon on title.
+
+Nathan: from the configuration attachment you posted, I see that you are using Mylar 1.0.0. Can you try with 1.0.1?</pre>
+    </div>
+
+    <div id="c25" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c25">Comment 25</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Marcello Teodori</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=marcello.teodori&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=marcello.teodori&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-11 23:10:38 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">same deadlock here on mac os x ppc 10.4.8, java 1.5 apple and eclipse 3.2.1 with a patch form update site, after few executions eclipse crashes for out of memory and I have to recreate a new workspace</pre>
+    </div>
+
+    <div id="c26" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c26">Comment 26</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-12 02:24:47 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Nathan: let us know if you can reproduce with 1.0.1 (thanks for reviewing the configuration Willian).  You may want to manually delete all the Mylar 1.0.0 plug-ins in case a confused plug-in registry is the problem in that Eclipse configuration.
+
+Marcello: it looks like you're hitting the following Platform/VM problem, please post if the following does not resolve it: <a href="http://wiki.eclipse.org/index.php/Mylar_FAQ#I_am_seeing_java.lang.OutOfMemoryError:_PermGen_space_errors.2C_what.27s_wrong.3F">http://wiki.eclipse.org/index.php/Mylar_FAQ#I_am_seeing_java.lang.OutOfMemoryError:_PermGen_space_errors.2C_what.27s_wrong.3F</a>
+
+Willian: no I'm not certain that it isn't the same bug, but I did break the circularity which should have addressed the symptoms recorded here.  Do you see that failure every time?  Could you try to see if you can reproduce it reliably by putting in a long Thread.sleep(..) into TaskProgressBar$2 (probably the anonymous PaintListener).</pre>
+    </div>
+
+    <div id="c27" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c27">Comment 27</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Willian Mitsuda</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=wmitsuda&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=wmitsuda&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-12 08:32:22 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=167784#c26">comment #26</a>)
+<span class="quote">&gt; Willian: no I'm not certain that it isn't the same bug, but I did break the
+&gt; circularity which should have addressed the symptoms recorded here.  Do you see
+&gt; that failure every time?  Could you try to see if you can reproduce it reliably
+&gt; by putting in a long Thread.sleep(..) into TaskProgressBar$2 (probably the
+&gt; anonymous PaintListener).
+&gt; </span >
+
+I'll take a look.</pre>
+    </div>
+
+    <div id="c28" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c28">Comment 28</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Nathan Gervais</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=nathan&#64;eclipse.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=nathan&#64;eclipse.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-12 10:05:59 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">So i removed 1.0.0 (dev build) and restarted Eclipse verified that it was no longer installed then downloaded and installed 1.0.1.  Issue is still persisting. Attaching new dump / config dump</pre>
+    </div>
+
+    <div id="c29" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c29">Comment 29</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Nathan Gervais</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=nathan&#64;eclipse.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=nathan&#64;eclipse.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-12 10:06:54 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=56829" name="attach_56829" title="Error Messages and Config Dump">attachment 56829</a> <a href="attachment.cgi?id=56829&amp;action=edit" title="Error Messages and Config Dump">[details]</a></span>
+Error Messages and Config Dump
+
+This zip file contains configuration dump as well as stack trace for 1.0.1</pre>
+    </div>
+
+    <div id="c30" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c30">Comment 30</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Willian Mitsuda</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=wmitsuda&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=wmitsuda&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-12 11:26:43 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Nathan, there were other entries on error log too? If so, can you post them together with the error message?</pre>
+    </div>
+
+    <div id="c31" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c31">Comment 31</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Nathan Gervais</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=nathan&#64;eclipse.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=nathan&#64;eclipse.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-12 12:05:13 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I'm not sure what you mean, i sent the error message that appears in the view that contains the Task List that cannot be created. Can you give me some more specifics of where these other error messages may be.</pre>
+    </div>
+
+    <div id="c32" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c32">Comment 32</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Willian Mitsuda</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=wmitsuda&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=wmitsuda&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-12 12:23:42 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Oh yes, I mean, the message that appear on error log view (you just sent the stack trace), and by other entries I mean: if there are other entries on error log at the same time it happened, so they can be related.</pre>
+    </div>
+
+    <div id="c33" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c33">Comment 33</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Willian Mitsuda</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=wmitsuda&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=wmitsuda&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-16 11:47:44 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Happened today with Eclipse 3.2.1 + Mylar 1.0.1:
+
+eclipse.buildId=M20060629-1905
+java.version=1.6.0
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=pt_BR
+Command-line arguments:  -os win32 -ws win32 -arch x86
+
+Error
+Tue Jan 16 14:26:36 BRST 2007
+While loading class &quot;org.eclipse.mylar.context.core.IMylarContextListener&quot;, thread &quot;Worker-4&quot; timed out waiting (5000ms) for thread &quot;Worker-3&quot; to finish starting bundle &quot;org.eclipse.mylar.context.core&quot;. To avoid deadlock, thread &quot;Worker-4&quot; is proceeding but &quot;org.eclipse.mylar.context.core.IMylarContextListener&quot; may not be fully initialized.
+
+java.lang.Exception: Generated exception.
+at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.preFindLocalClass(EclipseLazyStarter.java:75)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:409)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:188)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findLocalClass(BundleLoader.java:334)
+at org.eclipse.osgi.framework.internal.core.SingleSourcePackage.loadClass(SingleSourcePackage.java:37)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:383)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:347)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:83)
+at java.lang.ClassLoader.loadClass(ClassLoader.java:251)
+at java.lang.ClassLoader.loadClassInternal(ClassLoader.java:319)
+at java.lang.ClassLoader.defineClass1(Native Method)
+at java.lang.ClassLoader.defineClass(ClassLoader.java:620)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.defineClass(DefaultClassLoader.java:160)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.defineClass(ClasspathManager.java:498)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findClassImpl(ClasspathManager.java:468)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClassImpl(ClasspathManager.java:427)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:410)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:188)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findLocalClass(BundleLoader.java:334)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:386)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:347)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:83)
+at java.lang.ClassLoader.loadClass(ClassLoader.java:251)
+at java.lang.ClassLoader.loadClassInternal(ClassLoader.java:319)
+at java.lang.ClassLoader.defineClass1(Native Method)
+at java.lang.ClassLoader.defineClass(ClassLoader.java:620)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.defineClass(DefaultClassLoader.java:160)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.defineClass(ClasspathManager.java:498)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findClassImpl(ClasspathManager.java:468)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClassImpl(ClasspathManager.java:427)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:410)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:188)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findLocalClass(BundleLoader.java:334)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:386)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:347)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:83)
+at java.lang.ClassLoader.loadClass(ClassLoader.java:251)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.loadClass(BundleLoader.java:278)
+at org.eclipse.osgi.framework.internal.core.BundleHost.loadClass(BundleHost.java:227)
+at org.eclipse.osgi.framework.internal.core.AbstractBundle.loadClass(AbstractBundle.java:1245)
+at org.eclipse.core.internal.registry.osgi.RegistryStrategyOSGI.createExecutableExtension(RegistryStrategyOSGI.java:147)
+at org.eclipse.core.internal.registry.ExtensionRegistry.createExecutableExtension(ExtensionRegistry.java:759)
+at org.eclipse.core.internal.registry.ConfigurationElement.createExecutableExtension(ConfigurationElement.java:243)
+at org.eclipse.core.internal.registry.ConfigurationElementHandle.createExecutableExtension(ConfigurationElementHandle.java:51)
+at org.eclipse.mylar.internal.team.MylarTeamExtensionPointReader.readExtensions(MylarTeamExtensionPointReader.java:73)
+at org.eclipse.mylar.team.MylarTeamPlugin.start(MylarTeamPlugin.java:60)
+at org.eclipse.osgi.framework.internal.core.BundleContextImpl$2.run(BundleContextImpl.java:991)
+at java.security.AccessController.doPrivileged(Native Method)
+at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:985)
+at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:966)
+at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:317)
+at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:256)
+at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.preFindLocalClass(EclipseLazyStarter.java:86)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:409)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:188)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findLocalClass(BundleLoader.java:334)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:386)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:347)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:83)
+at java.lang.ClassLoader.loadClass(ClassLoader.java:251)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.loadClass(BundleLoader.java:278)
+at org.eclipse.osgi.framework.internal.core.BundleHost.loadClass(BundleHost.java:227)
+at org.eclipse.osgi.framework.internal.core.AbstractBundle.loadClass(AbstractBundle.java:1245)
+at org.eclipse.core.internal.runtime.InternalPlatform.start(InternalPlatform.java:1138)
+at org.eclipse.core.internal.plugins.PluginDescriptor.doPluginActivation(PluginDescriptor.java:361)
+at org.eclipse.core.internal.plugins.PluginDescriptor.getPlugin(PluginDescriptor.java:340)
+at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+at java.lang.reflect.Method.invoke(Method.java:597)
+at org.eclipse.ui.internal.EarlyStartupRunnable.getPluginForCompatibility(EarlyStartupRunnable.java:149)
+at org.eclipse.ui.internal.EarlyStartupRunnable.run(EarlyStartupRunnable.java:73)
+at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+at org.eclipse.ui.internal.Workbench$20.run(Workbench.java:1759)
+at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+eclipse.buildId=M20060629-1905
+java.version=1.6.0
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=pt_BR
+Command-line arguments:  -os win32 -ws win32 -arch x86
+
+Error
+Tue Jan 16 14:26:42 BRST 2007
+While loading class &quot;org.eclipse.mylar.internal.context.ui.ContextUiImages&quot;, thread &quot;main&quot; timed out waiting (5000ms) for thread &quot;Worker-3&quot; to finish starting bundle &quot;org.eclipse.mylar.context.ui&quot;. To avoid deadlock, thread &quot;main&quot; is proceeding but &quot;org.eclipse.mylar.internal.context.ui.ContextUiImages&quot; may not be fully initialized.
+
+java.lang.Exception: Generated exception.
+at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.preFindLocalClass(EclipseLazyStarter.java:75)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:409)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:188)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findLocalClass(BundleLoader.java:334)
+at org.eclipse.osgi.framework.internal.core.SingleSourcePackage.loadClass(SingleSourcePackage.java:37)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:383)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:347)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:83)
+at java.lang.ClassLoader.loadClass(ClassLoader.java:251)
+at java.lang.ClassLoader.loadClassInternal(ClassLoader.java:319)
+at org.eclipse.mylar.internal.java.ui.actions.ToggleActiveFoldingAction.&lt;init&gt;(ToggleActiveFoldingAction.java:46)
+at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:39)
+at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:27)
+at java.lang.reflect.Constructor.newInstance(Constructor.java:513)
+at java.lang.Class.newInstance0(Class.java:355)
+at java.lang.Class.newInstance(Class.java:308)
+at org.eclipse.core.internal.registry.osgi.RegistryStrategyOSGI.createExecutableExtension(RegistryStrategyOSGI.java:157)
+at org.eclipse.core.internal.registry.ExtensionRegistry.createExecutableExtension(ExtensionRegistry.java:759)
+at org.eclipse.core.internal.registry.ConfigurationElement.createExecutableExtension(ConfigurationElement.java:243)
+at org.eclipse.core.internal.registry.ConfigurationElementHandle.createExecutableExtension(ConfigurationElementHandle.java:51)
+at org.eclipse.ui.internal.WorkbenchPlugin.createExtension(WorkbenchPlugin.java:234)
+at org.eclipse.ui.internal.PluginAction.createDelegate(PluginAction.java:120)
+at org.eclipse.ui.internal.WWinPluginAction.refreshActionList(WWinPluginAction.java:165)
+at org.eclipse.ui.plugin.AbstractUIPlugin$1.run(AbstractUIPlugin.java:486)
+at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:123)
+at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3325)
+at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:2971)
+at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:1914)
+at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:1878)
+at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:419)
+at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+at org.eclipse.ui.internal.ide.IDEApplication.run(IDEApplication.java:95)
+at org.eclipse.core.internal.runtime.PlatformActivator$1.run(PlatformActivator.java:78)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:92)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:68)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:400)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:177)
+at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+at java.lang.reflect.Method.invoke(Method.java:597)
+at org.eclipse.core.launcher.Main.invokeFramework(Main.java:336)
+at org.eclipse.core.launcher.Main.basicRun(Main.java:280)
+at org.eclipse.core.launcher.Main.run(Main.java:977)
+at org.eclipse.core.launcher.Main.main(Main.java:952)
+
+eclipse.buildId=M20060629-1905
+java.version=1.6.0
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=pt_BR
+Command-line arguments:  -os win32 -ws win32 -arch x86
+
+Error
+Tue Jan 16 14:26:45 BRST 2007
+Internal plug-in action delegate error on creation.
+
+java.lang.NullPointerException
+at org.eclipse.mylar.internal.context.ui.ContextUiImages.&lt;clinit&gt;(ContextUiImages.java:35)
+at org.eclipse.mylar.internal.java.ui.actions.ToggleActiveFoldingAction.&lt;init&gt;(ToggleActiveFoldingAction.java:46)
+at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:39)
+at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:27)
+at java.lang.reflect.Constructor.newInstance(Constructor.java:513)
+at java.lang.Class.newInstance0(Class.java:355)
+at java.lang.Class.newInstance(Class.java:308)
+at org.eclipse.core.internal.registry.osgi.RegistryStrategyOSGI.createExecutableExtension(RegistryStrategyOSGI.java:157)
+at org.eclipse.core.internal.registry.ExtensionRegistry.createExecutableExtension(ExtensionRegistry.java:759)
+at org.eclipse.core.internal.registry.ConfigurationElement.createExecutableExtension(ConfigurationElement.java:243)
+at org.eclipse.core.internal.registry.ConfigurationElementHandle.createExecutableExtension(ConfigurationElementHandle.java:51)
+at org.eclipse.ui.internal.WorkbenchPlugin.createExtension(WorkbenchPlugin.java:234)
+at org.eclipse.ui.internal.PluginAction.createDelegate(PluginAction.java:120)
+at org.eclipse.ui.internal.WWinPluginAction.refreshActionList(WWinPluginAction.java:165)
+at org.eclipse.ui.plugin.AbstractUIPlugin$1.run(AbstractUIPlugin.java:486)
+at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:123)
+at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3325)
+at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:2971)
+at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:1914)
+at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:1878)
+at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:419)
+at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+at org.eclipse.ui.internal.ide.IDEApplication.run(IDEApplication.java:95)
+at org.eclipse.core.internal.runtime.PlatformActivator$1.run(PlatformActivator.java:78)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:92)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:68)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:400)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:177)
+at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+at java.lang.reflect.Method.invoke(Method.java:597)
+at org.eclipse.core.launcher.Main.invokeFramework(Main.java:336)
+at org.eclipse.core.launcher.Main.basicRun(Main.java:280)
+at org.eclipse.core.launcher.Main.run(Main.java:977)
+at org.eclipse.core.launcher.Main.main(Main.java:952)
+
+
+The result on this case was that the task list was loaded, but once I press the &quot;Focus on Workweek&quot; button it opens a messagebox saying: &quot;The choosen operation is not currently available&quot;.</pre>
+    </div>
+
+    <div id="c34" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c34">Comment 34</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Willian Mitsuda</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=wmitsuda&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=wmitsuda&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-17 09:13:10 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Please, ignore my last comment. For some unknown reason my 3.2.1 installation was using Mylar 1.0.0. I upgraded now and will keep you posted.</pre>
+    </div>
+
+    <div id="c35" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c35">Comment 35</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-20 19:40:48 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">So I'm assuming that the only occurrence of this that we know of post 1.0.1 is Nathan's &quot;scene of the crime&quot; workspace.  Nathan: if you have any more time for this there is one thing left that's worth trying.  The active plug-ins in your configuration show:
+
+org.eclipse.mylar.team (1.0.1) &quot;Mylar Team Plug-in&quot; [Active]
+org.eclipse.mylar.trac.core (0.9.1) &quot;Mylar Trac Core Plug-in&quot; [Active]
+org.eclipse.mylar.trac.ui (0.9.1) &quot;Mylar Trac UI Plug-in&quot; [Resolved]
+
+There is a small chance that the old 0.9.1 Trac plug-in is failing in startup somehow, and triggering this failure.  Could you delete it from the plug-ins directory, delete the error log, then make sure to launch Eclipse via &quot;eclipse.exe -clean ...&quot; so that the registry updates itself.  If you see a failure, please attach the whole log.  But also try to re-launch again a second time with -clean.</pre>
+    </div>
+
+    <div id="c36" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c36">Comment 36</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Willian Mitsuda</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=wmitsuda&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=wmitsuda&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-22 12:58:39 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Happened now with Eclipse 3.2.1 + Mylar 1.0.1 (this time I'm checked!):
+
+eclipse.buildId=M20060629-1905
+java.version=1.6.0
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=pt_BR
+Command-line arguments:  -os win32 -ws win32 -arch x86
+
+Error
+Mon Jan 22 15:52:40 BRST 2007
+While loading class &quot;org.eclipse.mylar.context.core.IMylarContextListener&quot;, thread &quot;Worker-3&quot; timed out waiting (5000ms) for thread &quot;Worker-0&quot; to finish starting bundle &quot;org.eclipse.mylar.context.core&quot;. To avoid deadlock, thread &quot;Worker-3&quot; is proceeding but &quot;org.eclipse.mylar.context.core.IMylarContextListener&quot; may not be fully initialized.
+
+java.lang.Exception: Generated exception.
+at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.preFindLocalClass(EclipseLazyStarter.java:75)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:409)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:188)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findLocalClass(BundleLoader.java:334)
+at org.eclipse.osgi.framework.internal.core.SingleSourcePackage.loadClass(SingleSourcePackage.java:37)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:383)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:347)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:83)
+at java.lang.ClassLoader.loadClass(ClassLoader.java:251)
+at java.lang.ClassLoader.loadClassInternal(ClassLoader.java:319)
+at java.lang.ClassLoader.defineClass1(Native Method)
+at java.lang.ClassLoader.defineClass(ClassLoader.java:620)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.defineClass(DefaultClassLoader.java:160)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.defineClass(ClasspathManager.java:498)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findClassImpl(ClasspathManager.java:468)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClassImpl(ClasspathManager.java:427)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:410)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:188)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findLocalClass(BundleLoader.java:334)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:386)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:347)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:83)
+at java.lang.ClassLoader.loadClass(ClassLoader.java:251)
+at java.lang.ClassLoader.loadClassInternal(ClassLoader.java:319)
+at java.lang.ClassLoader.defineClass1(Native Method)
+at java.lang.ClassLoader.defineClass(ClassLoader.java:620)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.defineClass(DefaultClassLoader.java:160)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.defineClass(ClasspathManager.java:498)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findClassImpl(ClasspathManager.java:468)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClassImpl(ClasspathManager.java:427)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:410)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:188)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findLocalClass(BundleLoader.java:334)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:386)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:347)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:83)
+at java.lang.ClassLoader.loadClass(ClassLoader.java:251)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.loadClass(BundleLoader.java:278)
+at org.eclipse.osgi.framework.internal.core.BundleHost.loadClass(BundleHost.java:227)
+at org.eclipse.osgi.framework.internal.core.AbstractBundle.loadClass(AbstractBundle.java:1245)
+at org.eclipse.core.internal.registry.osgi.RegistryStrategyOSGI.createExecutableExtension(RegistryStrategyOSGI.java:147)
+at org.eclipse.core.internal.registry.ExtensionRegistry.createExecutableExtension(ExtensionRegistry.java:759)
+at org.eclipse.core.internal.registry.ConfigurationElement.createExecutableExtension(ConfigurationElement.java:243)
+at org.eclipse.core.internal.registry.ConfigurationElementHandle.createExecutableExtension(ConfigurationElementHandle.java:51)
+at org.eclipse.mylar.internal.team.MylarTeamExtensionPointReader.readExtensions(MylarTeamExtensionPointReader.java:73)
+at org.eclipse.mylar.team.MylarTeamPlugin.start(MylarTeamPlugin.java:60)
+at org.eclipse.osgi.framework.internal.core.BundleContextImpl$2.run(BundleContextImpl.java:991)
+at java.security.AccessController.doPrivileged(Native Method)
+at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:985)
+at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:966)
+at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:317)
+at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:256)
+at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.preFindLocalClass(EclipseLazyStarter.java:86)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:409)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:188)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findLocalClass(BundleLoader.java:334)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:386)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:347)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:83)
+at java.lang.ClassLoader.loadClass(ClassLoader.java:251)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.loadClass(BundleLoader.java:278)
+at org.eclipse.osgi.framework.internal.core.BundleHost.loadClass(BundleHost.java:227)
+at org.eclipse.osgi.framework.internal.core.AbstractBundle.loadClass(AbstractBundle.java:1245)
+at org.eclipse.core.internal.runtime.InternalPlatform.start(InternalPlatform.java:1138)
+at org.eclipse.core.internal.plugins.PluginDescriptor.doPluginActivation(PluginDescriptor.java:361)
+at org.eclipse.core.internal.plugins.PluginDescriptor.getPlugin(PluginDescriptor.java:340)
+at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+at java.lang.reflect.Method.invoke(Method.java:597)
+at org.eclipse.ui.internal.EarlyStartupRunnable.getPluginForCompatibility(EarlyStartupRunnable.java:149)
+at org.eclipse.ui.internal.EarlyStartupRunnable.run(EarlyStartupRunnable.java:73)
+at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+at org.eclipse.ui.internal.Workbench$20.run(Workbench.java:1759)
+at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+</pre>
+    </div>
+
+    <div id="c37" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c37">Comment 37</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-22 17:45:30 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Willian: it looks like you have found a bug that's different than that given by the description here, because it has to do with the fact that the MylarTeamPlugin reads extensions during it's start method.  What I have done to fix that is move the extension point reading into the asyncExec of MylarTeam.Plugin.start(..), which will prevent the startup concurrency.  These extension points do need to be initialized on the that plug-in's start method because they need to eagerly update the state of the change sets.  I can give you a dev build to try this out, what version of Eclipse are you running?  Fyi, I'm merging this change back into the 1.0 streams.</pre>
+    </div>
+
+    <div id="c38" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c38">Comment 38</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Willian Mitsuda</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=wmitsuda&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=wmitsuda&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-23 13:55:44 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=167784#c37">comment #37</a>)
+<span class="quote">&gt; MylarTeamPlugin reads extensions during it's start method.  What I have done to
+&gt; fix that is move the extension point reading into the asyncExec of
+&gt; MylarTeam.Plugin.start(..), which will prevent the startup concurrency.  </span >
+
+Hmm... those asyncExecs() on startup don't look good for me. The problem is that removing them would take a lot of refactoring. If you have interest I can take a look when I have time.
+
+<span class="quote">&gt; because they need to eagerly update the state of the change sets.  I can give
+&gt; you a dev build to try this out, what version of Eclipse are you running?  Fyi,
+&gt; I'm merging this change back into the 1.0 streams.
+&gt; </span >
+
+For now, I'm using Eclipse 3.2.1, but I intend to switch to 3.3 as soon as M5 or perhaps M6 is released.</pre>
+    </div>
+
+    <div id="c39" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c39">Comment 39</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-01-23 16:35:44 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Willian: We use the asyncExecs(..) for the cases where we need the plug-in to do stuff at startup, i.e. where the preferred lazily initialization of extension points (or other plug-in state) does not work, but where the initializaiton should not hold up the initialization of the workbench (or causes problems when it does, as with the class loading bug).  In the case of the team provider, not doing this at startup would mean that the change sets would not be probably updated to contain the Mylar elements, since we have to do some tricks to convert the existing change sets that Eclipse supports into the Mylar context change sets.  But if you do encounter ways to improve on the initialization, please do post the ideas.
+
+Regarding builds, we'll post a 3.2 dev build either this or next Friday.
+</pre>
+    </div>
+
+    <div id="c40" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c40">Comment 40</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Willian Mitsuda</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=wmitsuda&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=wmitsuda&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-18 21:49:23 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Looks like there are problems yet, although I didn't detect any side effect this time.
+
+eclipse.buildId=I20070625-1500
+java.version=1.6.0_02
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=pt_BR
+Command-line arguments:  -os win32 -ws win32 -arch x86
+
+Warning
+Mon Jul 16 17:24:09 GMT-03:00 2007
+While loading class &quot;org.eclipse.mylyn.internal.tasks.ui.WorkspaceAwareContextStore&quot;, thread &quot;Thread[main,6,main]&quot; timed out waiting (5000ms) for thread &quot;Thread[Worker-1,5,main]&quot; to finish starting bundle &quot;update&#64;plugins/org.eclipse.mylyn.tasks.ui_2.0.0.v20070713-1300.jar [655]&quot;. To avoid deadlock, thread &quot;Thread[main,6,main]&quot; is proceeding but &quot;org.eclipse.mylyn.internal.tasks.ui.WorkspaceAwareContextStore&quot; may not be fully initialized.
+
+org.osgi.framework.BundleException: State change in progress for bundle &quot;update&#64;plugins/org.eclipse.mylyn.tasks.ui_2.0.0.v20070713-1300.jar&quot; by thread &quot;Worker-1&quot;.
+at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1141)
+at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:258)
+at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:400)
+at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:111)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:417)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:189)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findLocalClass(BundleLoader.java:340)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClassInternal(BundleLoader.java:408)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:369)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:357)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:83)
+at java.lang.ClassLoader.loadClass(Unknown Source)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.loadClass(BundleLoader.java:289)
+at org.eclipse.osgi.framework.internal.core.BundleHost.loadClass(BundleHost.java:227)
+at org.eclipse.osgi.framework.internal.core.AbstractBundle.loadClass(AbstractBundle.java:1269)
+at org.eclipse.core.internal.registry.osgi.RegistryStrategyOSGI.createExecutableExtension(RegistryStrategyOSGI.java:160)
+at org.eclipse.core.internal.registry.ExtensionRegistry.createExecutableExtension(ExtensionRegistry.java:788)
+at org.eclipse.core.internal.registry.ConfigurationElement.createExecutableExtension(ConfigurationElement.java:243)
+at org.eclipse.core.internal.registry.ConfigurationElementHandle.createExecutableExtension(ConfigurationElementHandle.java:51)
+at org.eclipse.mylyn.context.core.ContextCorePlugin$ContextStoreExtensionReader.readStore(ContextCorePlugin.java:282)
+at org.eclipse.mylyn.context.core.ContextCorePlugin$ContextStoreExtensionReader.initExtensions(ContextCorePlugin.java:271)
+at org.eclipse.mylyn.context.core.ContextCorePlugin.getContextStore(ContextCorePlugin.java:242)
+at org.eclipse.mylyn.internal.context.core.InteractionContextManager.loadActivityMetaContext(InteractionContextManager.java:129)
+at org.eclipse.mylyn.internal.context.core.InteractionContextManager.getActivityMetaContext(InteractionContextManager.java:123)
+at org.eclipse.mylyn.internal.context.core.InteractionContextManager.processActivityMetaContextEvent(InteractionContextManager.java:145)
+at org.eclipse.mylyn.internal.monitor.ui.ShellLifecycleListener.&lt;init&gt;(ShellLifecycleListener.java:27)
+at org.eclipse.mylyn.monitor.ui.MonitorUiPlugin$2.run(MonitorUiPlugin.java:112)
+at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:123)
+at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3659)
+at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3296)
+at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:2389)
+at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2353)
+at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2219)
+at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:466)
+at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:289)
+at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:461)
+at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:106)
+at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:153)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:106)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:76)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:363)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:176)
+at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+at java.lang.reflect.Method.invoke(Unknown Source)
+at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:504)
+at org.eclipse.equinox.launcher.Main.basicRun(Main.java:443)
+at org.eclipse.equinox.launcher.Main.run(Main.java:1169)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+... 51 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1141)
+at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:258)
+at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:400)
+at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:111)
+at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:417)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:189)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findLocalClass(BundleLoader.java:340)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClassInternal(BundleLoader.java:408)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:369)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:357)
+at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:83)
+at java.lang.ClassLoader.loadClass(Unknown Source)
+at org.eclipse.osgi.framework.internal.core.BundleLoader.loadClass(BundleLoader.java:289)
+at org.eclipse.osgi.framework.internal.core.BundleHost.loadClass(BundleHost.java:227)
+at org.eclipse.osgi.framework.internal.core.AbstractBundle.loadClass(AbstractBundle.java:1269)
+at org.eclipse.core.internal.registry.osgi.RegistryStrategyOSGI.createExecutableExtension(RegistryStrategyOSGI.java:160)
+at org.eclipse.core.internal.registry.ExtensionRegistry.createExecutableExtension(ExtensionRegistry.java:788)
+at org.eclipse.core.internal.registry.ConfigurationElement.createExecutableExtension(ConfigurationElement.java:243)
+at org.eclipse.core.internal.registry.ConfigurationElementHandle.createExecutableExtension(ConfigurationElementHandle.java:51)
+at org.eclipse.mylyn.context.core.ContextCorePlugin$ContextStoreExtensionReader.readStore(ContextCorePlugin.java:282)
+at org.eclipse.mylyn.context.core.ContextCorePlugin$ContextStoreExtensionReader.initExtensions(ContextCorePlugin.java:271)
+at org.eclipse.mylyn.context.core.ContextCorePlugin.getContextStore(ContextCorePlugin.java:242)
+at org.eclipse.mylyn.internal.context.core.InteractionContextManager.loadActivityMetaContext(InteractionContextManager.java:129)
+at org.eclipse.mylyn.internal.context.core.InteractionContextManager.getActivityMetaContext(InteractionContextManager.java:123)
+at org.eclipse.mylyn.internal.context.core.InteractionContextManager.processActivityMetaContextEvent(InteractionContextManager.java:145)
+at org.eclipse.mylyn.internal.monitor.ui.ShellLifecycleListener.&lt;init&gt;(ShellLifecycleListener.java:27)
+at org.eclipse.mylyn.monitor.ui.MonitorUiPlugin$2.run(MonitorUiPlugin.java:112)
+at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:123)
+at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3659)
+at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3296)
+at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:2389)
+at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2353)
+at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2219)
+at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:466)
+at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:289)
+at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:461)
+at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:106)
+at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:153)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:106)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:76)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:363)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:176)
+at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+at java.lang.reflect.Method.invoke(Unknown Source)
+at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:504)
+at org.eclipse.equinox.launcher.Main.basicRun(Main.java:443)
+at org.eclipse.equinox.launcher.Main.run(Main.java:1169)
+
+</pre>
+    </div>
+
+    <div id="c41" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=167784#c41">Comment 41</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-18 22:11:48 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Willian: while this bug is  related, we're tracking the current state of things (warnings on startup due to initialization issues) on <a class="bz_bug_link 
+          bz_status_CLOSED  bz_closed"
+   title="CLOSED FIXED - warnings on startup in Europa"
+   href="show_bug.cgi?id=188524">bug 188524</a>.  Good that you added the pointer there because this history is definitely relevant and describes the changes we made and related problems, but I don't think that we need to keep this one open anymore. </pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=167784">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=167784">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=167784">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=167784&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=167784" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>

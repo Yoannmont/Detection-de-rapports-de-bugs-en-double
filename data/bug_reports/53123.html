@@ -1,0 +1,1989 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>53123 &ndash; Merge produces CompoundArtifacts with dangling references</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "53123 – Merge produces CompoundArtifacts with dangling references",
+                             "show_bug.cgi?id=53123" );
+        document.title = "53123 – Merge produces CompoundArtifacts with dangling references";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "53123 – Merge produces CompoundArtifacts with dangling references", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_RESOLVED
+                 bz_product_z_Archived
+                 bz_component_Stellation
+                 bz_bug_53123 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;53123</span>
+
+        <span id="subtitle" class="subheader">Merge produces CompoundArtifacts with dangling references</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2005-08-31 16:38:39 EDT</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=53123&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=53123" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2005-08-31 16:38:39">
+  <input type="hidden" name="id" value="53123">
+  <input type="hidden" name="token" value="1629871306-XhvWPyEH-yj2yrRgE3hwd2i5h35xHY5sYwAKzv6Ux5Q">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=53123"><b>Bug&nbsp;53123</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">Merge produces CompoundArtifacts with dangling references</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span>Merge produces CompoundArtifacts with dangling references
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      'Merge produces CompoundArtifacts with dangling references' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">RESOLVED
+          FIXED
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >z_Archived
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >Eclipse Foundation
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=z_Archived"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >Stellation
+
+  (<a href="buglist.cgi?component=Stellation&amp;product=z_Archived&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>unspecified &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">PC
+        Linux-GTK
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P3
+       major<span id="votes_container">
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=53123#vote_53123">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>--- &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">Mark C. Chu-Carroll</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mcc&#64;watson.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mcc&#64;watson.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard">
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'webmaster\x40eclipse.org',
+        '');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          <tr>
+    <th class="field_label">
+      <label>Duplicates (1)</label>:
+    </th>
+    <td class="field_value">
+      <span id="duplicates"><a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Problem in compound merge algorithm"
+   href="show_bug.cgi?id=54131">54131</a> 
+      </span>
+      (<a href="buglist.cgi?bug_id=54131">view as bug list</a>)
+    </td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+
+  </td>
+  </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2004-02-25 16:20 EST by <span class="vcard"><span class="fn">Jim Wright</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jwright&#64;watson.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jwright&#64;watson.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2005-08-31 16:38 EDT
+      (<a href="show_activity.cgi?id=53123">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>1 
+          user
+          <span id="cc_edit_area_showhide_container" class="bz_default_hidden">
+            (<a href="#" id="cc_edit_area_showhide">show</a>)
+          </span>
+        <div id="cc_edit_area">
+          <br>
+            <select id="cc" multiple="multiple" size="5" >
+                <option value="mcc">mcc</option>
+            </select>
+        </div>
+          <script type="text/javascript">
+            hideEditableField( 'cc_edit_area_showhide_container', 
+                               'cc_edit_area', 
+                               'cc_edit_area_showhide', 
+                               '', 
+                               '');  
+          </script>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" >
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+      <tr id="a1" class="bz_contenttype_application_octet-stream">
+        <td>
+            <a href="attachment.cgi?id=8794"
+               title="View the content of the attachment">
+          <b>Zip of changes to stellation.{cli,remote,repos}</b></a>
+
+          <span class="bz_attach_extra_info">
+              (41.49 KB,
+                application/octet-stream)
+
+            <br>
+            <a href="#attach_8794"
+               title="Go to the comment associated with the attachment">2004-03-23 13:07 EST</a>,
+
+            <span class="vcard"><span class="fn">Jim Wright</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jwright&#64;watson.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jwright&#64;watson.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=8794&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a2" class="bz_contenttype_application_octet-stream">
+        <td>
+            <a href="attachment.cgi?id=8795"
+               title="View the content of the attachment">
+          <b>Full source zip for stellation.remote</b></a>
+
+          <span class="bz_attach_extra_info">
+              (97.04 KB,
+                application/octet-stream)
+
+            <br>
+            <a href="#attach_8795"
+               title="Go to the comment associated with the attachment">2004-03-23 13:09 EST</a>,
+
+            <span class="vcard"><span class="fn">Jim Wright</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jwright&#64;watson.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jwright&#64;watson.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=8795&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a3" class="bz_contenttype_application_octet-stream">
+        <td>
+            <a href="attachment.cgi?id=8796"
+               title="View the content of the attachment">
+          <b>Current T-Client 'model' source, including JUnit tests and data</b></a>
+
+          <span class="bz_attach_extra_info">
+              (531.21 KB,
+                application/octet-stream)
+
+            <br>
+            <a href="#attach_8796"
+               title="Go to the comment associated with the attachment">2004-03-23 13:09 EST</a>,
+
+            <span class="vcard"><span class="fn">Jim Wright</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jwright&#64;watson.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jwright&#64;watson.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=8796&amp;action=edit">Details</a>
+        </td>
+      </tr>
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <span class="bz_attach_view_hide">
+            <a id="view_all" href="attachment.cgi?bugid=53123&amp;action=viewall">View All</a>
+        </span>
+        <a href="attachment.cgi?bugid=53123&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=53123&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=53123#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jim Wright</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jwright&#64;watson.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jwright&#64;watson.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-02-25 16:20:11 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">While porting merge unit test #3 from the CLI test suite to the t-client JUnit 
+suite, I found a bug which appears to be an undetected flaw in the core 
+MergeManager code.  (I first assumed this was a bug in my just-written code, 
+since the MergeManager code has been around for quite a while; investigation 
+proved otherwise).
+
+** Test sequence
+
+(The original test is in the Ant script &quot;.../stellation.repos/test/03.xml&quot;.)
+
+The problem concerns an artifact 'file13' which is moved in one branch,
+deleted in a second branch, and which then reappears as a &quot;broken CA link&quot;
+when the two branches are merged.  By 'broken CA link&quot;, I mean that
+the CA contains &lt;filename,ID&gt; entry for the artifact in question, but the
+actual artifact is missing from the BranchImage artifactMap.
+
+Test sequence (excerpted from complete unit test)
+
+1. Create main branch and populate with artifacts.
+Artifact 'file13' in ./dir1 with ID=16 is created here.
+Artifact 16 'file13' is listed as a member of CA #21 'dir1'.
+The local image is checked in to become main&#64;&#64;1.
+
+2. main&#64;&#64;1 is checked out into a separate folder, and forked
+as branch 'new'.  Artifact 16 'file13' is moved from folder ./dir1 to 
+folder ./dir2.  Artifact 16 is now a member of CA #9 'dir2'.
+Artifact 16 is still listed in the BranchImage artifact map.
+The local image is checked in to become new&#64;&#64;1.
+
+3. main&#64;&#64;1 is now checked out into a 3rd folder.
+Artifact 16 is deleted in this workspace (removed from CA #21 'dir1',
+and from the local Branch Imageartifact map.
+The local image is checked in as main&#64;&#64;2
+
+3. main&#64;&#64;2 is now checked out into a 4th folder.
+Artifact 16 is not present (in either the file system or the
+local BI).
+
+4. Branch new&#64;&#64;1 is merged into the local image (based on main&#64;&#64;2).
+The &quot;merge results&quot; image is flawed: 
+* The 'dir2' CA (#9) lists artifact 16 as a member.
+* The BI artifactMap has no entry for artifact 16.
+Result: an NPE while attempting to update the local filesystem
+and workspace from the merge results BI.
+
+** A closer look.
+
+// TA16 denotes the Text Artifact with ID 16 and name 'file13'.
+// CA9 denotes the Compound Artifact 'dir2'.
+// CA21 denotes the Compound Artifact 'dir1'.
+
+I spent some time tracing through MergeManager.mergeChanges 
+(in ...stellation.repos).
+On entry to mergeChanges, the following was observed:
+- the target BI is based on main&#64;&#64;2.  It does not contain TA16 or any 
+references to TA16.
+- the 'changed' BI is based on new&#64;&#64;1. It contains TA16 (in artifact map);  CA9 
+includes TA16 as a member.
+- The target BI has a later timestamp than the 'changed' BI.
+
+The set of 'common' artifacts is correctly determined around line 172 of 
+MergeManager.mergeChanges.  This set includes CA9 and excludes TA16 (both are 
+correct).
+
+Next, differing versions of the 'common' artifacts are merged to form a single 
+set, drawing on artifact versions contained within the target image, changed 
+image and ancestor image (based on main&#64;&#64;1).
+
+The resulting set is contained by the 'resultArtifacts' ArtifactMap, which is 
+fully populated by line 192.
+NOTE:
+* resultArtifacts contains a version of CA9 which includes TA16 as a member.
+* resultArtifacts does NOT contain TA16 itself.
+
+The version of CA9 contained by resultArtifacts is taken from the 'changed' 
+(new&#64;&#64;1) image.  Selection of this version of CA9 is performed by the 
+CompoundArtifactAgent merge method.   
+
+From this point on, the broken link inside CA9 remains; the actual artifact 
+TA16 is never added to the artifactMap for the branch image.
+
+----------
+
+Subsequently, an NPE occurs while attempting to update the local filesystem 
+from the merge-results BI; this occurs because when adding an &lt;id,artifact&gt; 
+pair from the merge-results image to the internal 'tcore' ScmResourceMap, which 
+checks that the artifact reference is not null.  Apparently, the CLI code did 
+not perform a similar null-value check when using the merge-results BI.  I 
+assume this is why the MergeManager flaw did not manifest in the CLI version of 
+this unit test (03.xml).
+
+Suggested resolution:
+B. This situation (deletion in one, relocation in another) should be treated as 
+an ambiguous conflict and punted to the user for manual resolution.  Fixups 
+should be performed to restore any artifacts referenced by a CA, but missing 
+from the artifact map bound to the merge-results BranchImage.</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=53123#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mark C. Chu-Carroll</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mcc&#64;watson.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mcc&#64;watson.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-03-17 16:07:28 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Problem in compound merge algorithm"
+   href="show_bug.cgi?id=54131">Bug 54131</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c2" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=53123#c2">Comment 2</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mark C. Chu-Carroll</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mcc&#64;watson.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mcc&#64;watson.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-03-17 16:09:35 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I think that I've got a fix in place, but it required some API changes. In the interests of letting
+other folks try to adapt to the API changes, I'm posting the changes as an attachment *untested*. The
+test code does not run with the API changes; rather that making everyone wait, I'll just warn you
+that this might not  work.
+</pre>
+    </div>
+
+    <div id="c3" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=53123#c3">Comment 3</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mark C. Chu-Carroll</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mcc&#64;watson.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mcc&#64;watson.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-03-17 16:28:26 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The zipfile of the changes is, alas, too large for bugzilla. 
+
+I'll post in on our wiki, in the page discussing the compound merge algorithm.
+</pre>
+    </div>
+
+    <div id="c4" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=53123#c4">Comment 4</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jim Wright</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jwright&#64;watson.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jwright&#64;watson.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-03-19 13:06:47 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Mark, it appears you've removed the method 
+CompoundArtifact.createCatalogElement.  As a result, when a project is saved 
+locally, the resulting project.xml document has no children at all (because 
+rootArtifact.createCatalogElement defaults to Artifact.createCatalogElement, 
+which of course assumes it has no children...).
+
+Were you intending to handle this elsewhere?  If so, where (and how)?
+</pre>
+    </div>
+
+    <div id="c5" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=53123#c5">Comment 5</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jim Wright</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jwright&#64;watson.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jwright&#64;watson.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-03-19 13:10:13 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I've resolved the issue with createCatalogElement by:
+a) adding an ArtifactMap argument to createCatalogElement
+b) restoring (and fixing) CompoundArtifact.createCatalogElement
+c) changing BranchImage.getDocument to pass its ArtifactMap when it calls 
+rootArtifact.createCatalogElement.
+
+The code now passes all of my everything-but-merge Eclipse JUnit tests.  It 
+also passes test 0 of the Ant/CLI tests.  Ant/CLI test 1 is failing, somewhere 
+in the merge algorithm.  As before, I'll first fix any merge issues in the 
+Eclipse T-Client environment, and then retest and fix the CLI as needed.</pre>
+    </div>
+
+    <div id="c6" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=53123#c6">Comment 6</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mark C. Chu-Carroll</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mcc&#64;watson.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mcc&#64;watson.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-03-19 13:30:05 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">My reasoning was that the catalog is really not a generic piece of functionalitty that belongs 
+in the compound, but a piece of workspace code that had crept in to the cowpound.
+
+I would rather see it kept out of the compund, and implemented in the workspace.</pre>
+    </div>
+
+    <div id="c7" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=53123#c7">Comment 7</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jim Wright</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jwright&#64;watson.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jwright&#64;watson.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-03-19 13:59:46 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Would you like all of the associated functionality (to create XML docs and 
+elements) moved out of the core Artifact code?  Wouldn't this tend to 
+compromise extensibility (i.e. , instead of adding only FooArtifact and 
+FooArtifactAgent to support a new type, one would also need to add 
+FooElementCreator in some parallel structure .......
+
+Come to think of it, I've had to create just such a parallel structure to save 
+T-Client-specific metadata.  If we move all of the XML stuff out of 
+repos.artifact and into workspace-specific code, that's probably a win 
+overall.  Except that it will take a bit more time.
+
+Your preference?
+
+</pre>
+    </div>
+
+    <div id="c8" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=53123#c8">Comment 8</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mark C. Chu-Carroll</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mcc&#64;watson.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mcc&#64;watson.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-03-19 15:54:27 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The catalog code is really a very special case: it's not a general part of artifact function, but something 
+extra added specifically for the CLI workspace. The general artifact externalization facilities are really 
+intrinsic functionality that is needed for every client and server of Stellation, not just for a particular 
+workspace implementation. 
+
+Anything that's specific to a particular workspace implementation should, ideally, be moved into that 
+workspace. More practically, if it takes a non-trivial amount of time, it's not worth making the changes 
+to the current code, because the WVCM rewrite is so different that the time spent making extensiblitily-
+oriented fixes to the current codebase is a waste of time: anyone who wants to extend Stellation is 
+going to be doing it with WVCM; and the extension mechanisms are quite different.</pre>
+    </div>
+
+    <div id="c9" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=53123#c9">Comment 9</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jim Wright</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jwright&#64;watson.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jwright&#64;watson.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-03-19 17:21:48 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Reworking the catalog code will take non-trivial time, so I think we should 
+leave it as-is.  The WVCM implementation, of course, should be done properly.
+
+Moving on to the next problems -- I've fixed one bug in ChangeNotice, related 
+to the order of static initializers (the static ChangeTypes map was not yet 
+initialized when the static ChangeType class members were being created and 
+added to the same map, so an NPE was occurring during class initialization). 
+
+I'm currently working on an apparent issue with artifact reinstatement.
+It appears that MergeManager.mergeBaselines (or a method called by it) is 
+detecting the rootCA of the leaf as a 'live' artifact that needs to be 
+reinstated.  Since the rootCA has no parent, the attempt to find and reference 
+it's parent generates an NPE.  It seems clearly incorrect to attempt 
+to 'reinstate' the leaf rootCA into the resulting image.  Therefore, special 
+handling is needed to a) avoid direct attempts to reinstate the rootCA, and b) 
+avoid indirect attempts to reinstate said rootCA when one of its immediate 
+children is being reinstated (thus triggering reinstatement of that child's 
+parent).  It's still necessary to check the leaf rootCA for 'live' children 
+that may need reinstatement, but such children should be added to the rootCA of 
+the result, not to a reinstated leaf rootCA.
+
+I'm working on that now.  Please let me know if you'd prefer to address that 
+yourself, or if my analysis is missing something.</pre>
+    </div>
+
+    <div id="c10" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=53123#c10">Comment 10</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mark C. Chu-Carroll</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mcc&#64;watson.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mcc&#64;watson.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-03-19 21:50:53 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Go ahead and do the static initializer fix. That was a really boneheaded mistake on my part, but
+it's trivial to fix.
+
+For the other - the root reinstatement problem, that qualifies as a bug in my code, which I think I 
+should take care of. It's actually a pretty easy fix. I'll do it and get the fix posted as a patch to merge 
+manager shortly.</pre>
+    </div>
+
+    <div id="c11" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=53123#c11">Comment 11</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mark C. Chu-Carroll</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mcc&#64;watson.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mcc&#64;watson.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-03-19 22:02:57 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">OK. So, the root artifact bug also turns out to be trivial and incredibly boneheaded. I should be
+shot for this. It's not even worth posting a patch; just doing the fix yourself will be faster.
+
+Inside of MergeManager.mergeBaselines, there's the following loop to go over the live artifact queue:
+
+      while (!context.getWorkQueue().isEmpty()) {
+            Integer curID = (Integer)context.getWorkQueue().dequeue();
+            if (curID == base.getRootID())
+                continue;
+            Integer parentID = resultRootDir.findParentOfArtifact(curID, result);
+            if (parentID == null) {                
+                // First, check to see if the artifact came from the leaf.
+                if (leaf.getArtifact(curID) != null) 
+                    reinstateArtifact(result, base, leaf, curID, context);
+                else if (target.getArtifact(curID) != null)
+                    reinstateArtifact(result, base, target, curID, context);
+            }
+         
+        }            
+
+See that line, &quot;if (curID == base.getRootID())&quot;. That &quot;==&quot; should be &quot;.equals&quot;. Yes, indeedy Mark,
+we do need to use *value* comparison if we want to compare values. Duh. I hate it when I'm this
+dumb.
+</pre>
+    </div>
+
+    <div id="c12" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=53123#c12">Comment 12</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jim Wright</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jwright&#64;watson.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jwright&#64;watson.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-03-22 15:11:56 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I believe this specific issue is now fixed: it now passes merge tests 1,2 and 4 
+(test 3 was failing with the original version of the merge algorithm, and has 
+not yet been retested).
+
+A number of changes were needed, largely to MergeManager.  A new method was 
+added: ArtifactMap.removeAll(ArtifactMap), and ScmProject usage of 
+ResourceInputs and ResourceOutputs was overhauled.   The ResourceInput fix is 
+somewhat kludgy (allowing 'snapshot' or 'live' access to associated Project 
+resource map), but seems adequate for the T-Client.
+
+MergeManager changes included the following:
+
+mergeChanges method
+* Changing '==' to 'equals' for various Integer ID comparisons 
+* Deleting some unused code related to resultArtifacts, liveArtifacts (local 
+ArtifactMaps )
+* Adding the *results* of mergeBaselines to the actual 'result' BranchImage 
+returned by mergeChanges
+
+mergeBaselines method
+* Changing '==' to 'equals' for Integer ID comparisons 
+* Explicitly removing the rootCA of the leaf image from the generated 
+ArtifactMap.
+* Removing all members of the 'mergedArtifacts' input argument from the 
+liveFromLeaf and liveFromTarget maps.  (Otherwise, artifacts with merged 
+content are replaced by artifacts with un-merged content (a 'live' artifact 
+replaces a 'merged' artifact)).
+
+reinstateArtifact method
+* Added return statement for case of null parentID (continuing generates NPE)
+* Added checks for artifacts which are children of deltaRoot, so they are 
+reinstated as children of resultRoot
+* Fixed error in code to ensure unique member names (replaced '==' with '!='
+
+More testing is needed before this item is closed.</pre>
+    </div>
+
+    <div id="c13" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=53123#c13">Comment 13</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jim Wright</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jwright&#64;watson.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jwright&#64;watson.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-03-22 17:53:09 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">There is still at least one flaw in the CompoundArtifact merge.
+
+Test case (test 3 of original Ant/CLI test suite):
+* A TextArtifact is originally named 'file3' and located in the root project 
+dir.
+* In the leaf branch, this artifact is both moved and renamed.
+* In the main branch, this artifact is renamed, but not moved.
+When merge is performed, a conflict should be reported.  However, only a change 
+is reported (message: &quot;Resource renamed in target....&quot;).
+
+This conflict should be detected CompoundArtifactAgent.merge.
+In the existing code, there is a section which begins:
+
+if( inTarget &amp;&amp; ! inLeaf )
+   ...
+   ...
+   if(! leafBranchContainsArt) {
+      ... logic to handle 3 cases (target modified, target renamed, no target 
+change)
+   }
+
+However, there is no ELSE for if(! leafBranchContainsArt).
+Thus, no confict is raised if the artifact exists elsewhere in the leaf image 
+(and there is no way to determine if the artifact was moved AND renamed in the 
+leafImage.
+
+Similarly, CompoundArtifactAgent.merge contains code for:
+   if( inLeaf &amp;&amp; ! inTarget )
+but has no ELSE clause for if( ! targetBranchContainsArt ).
+Thus, the conflict is not detected.
+
+One possible fix is to raise a conflict when the artifact a) exists in leaf but 
+not target CA AND b) exists elsewhere in the targetImage AND c) has been 
+renamed in the leafCA.  Conditions a and b imply a move, while c indicates a 
+rename.  Thus, I'm suggesting that a combined move-and-rename should always 
+raise a conflict requiring manual resolution.
+
+It would probably be better to only raise the conflict if the corresponding 
+target artifact has also been renamed.  However, there's no way to determine 
+that here (within CompoundArtifactAgent.merge), because the complete set of 
+name bindings for the leaf and target images is not available.
+
+Note also that no ChangeNotice is generated for any case within if( inLeaf &amp;&amp; ! 
+inTarget).  There should probably be a ChangeNotice for the case:
+   inLeaf &amp;&amp; (! inTarget) &amp;&amp; targetContainsArt &amp;&amp; (! leafName.equals(baseName)).
+
+This compound condition is true when the artifact has been moved (! inTarget) 
+and renamed (! leafName.equals(baseName)) and still exists in the target (with 
+the original or yet a 3rd name, and possibly moved to a different location as 
+well).
+
+ChangeNotices may be appropriate for other cases as well.
+
+Ideally, this type of conflict (rename in target, move AND rename in leaf) 
+could be detected and labeled accurately in mergeBaselines.  This might be 
+feasible by using the mergeConflicts list as one of the inputs to 
+mergeBaselines, and doing some extra checks for any artifact contained on that 
+list (and possibly any artifact contained on the mergeChanges list as well).
+
+Comments ?</pre>
+    </div>
+
+    <div id="c14" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=53123#c14">Comment 14</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mark C. Chu-Carroll</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mcc&#64;watson.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mcc&#64;watson.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-03-23 10:28:30 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I'm confused by this latest problem. &quot;Moved but not renamed&quot; is a meaningless phrase in terms of the 
+semantics. In terms of semantics, we've defined &quot;renamed&quot; as &quot;the binding to the resource in a folder 
+was preserved, but the name associated with that binding was modified&quot;, and &quot;moved&quot; as &quot;the binding 
+to the resource in its original compound was removed, and a new binding to the resource was created 
+in a different compound&quot;. 
+
+In the &quot;moved&quot; case, the name of the binding is irrelevant. Whether it's the same name that it had in 
+the original compound, or an entirely different name, it doesn't matter: it's a binding delete from one
+compound, and a binding add to another.</pre>
+    </div>
+
+    <div id="c15" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=53123#c15">Comment 15</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jim Wright</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jwright&#64;watson.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jwright&#64;watson.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-03-23 11:32:23 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">OK, I understand now that &quot;Moved but not renamed&quot; is meaningless in terms of 
+the intended semantics.
+
+However, we still have the following potential conflict:
+* Renamed in target AND moved in leaf
+(or, if you prefer, a binding modified (rename) in one branch and a binding 
+removed/created (move) in another branch).
+
+which is not currently detected or reported.
+
+I'm assuming we want to change CompoundArtifact merge to issue appropriate 
+conflict notices, so that a name change is not simply lost when the associated 
+artifact has a different parent in the other different branch.
+
+The current version of CompoundArtifactAgent.merge identifies four possible 
+cases:
+resource (artifact) is bound in both target and leaf, bound just in target, 
+just in leaf, or neither). A number of subcases are considered for each of the 
+four major cases.  However, several subcases are not considered:
+* inTarget, ! inLeaf, leafBranchContainsArt, targetName != ancestorName
+* inLeaf, ! inTarget, targetBranchContainsArt, leafName != ancestorName.
+
+I suggest conflicts and change messages should be issued as follows (in 
+addition to the actions already taken by CompoundArtifactAgent.merge.)  Note: 
+Cases 1-4 assume the bound artifact is also in the ancestor CA; case 5 assumes 
+the bound artifact is only in the leafCA.
+
+Case 1: artifact is inTarget only, targetName == ancestorName, 
+leafBranchContainsArt
+Action: None (Leaf binding is used in resulting image)  
+[already handled]
+
+Case 2: artifact is inTarget only, targetName != ancestorName, 
+leafBranchContainsArt
+Action: Issue conflict: &quot;Artifact renamed in target, moved in leaf&quot; 
+[new code needed]
+
+Case 3: artifact is inLeaf only, leafName == ancestorName, 
+targetBranchContainsArt
+Action: Assume artifact moved in target.  Discard leaf member binding from 
+resulting CA.
+[already handled]
+
+Case 4: artifact is inLeaf only, leafName != ancestorName, 
+targetBranchContainsArt
+Action: Issue conflict: &quot;Artifact moved in target, renamed in leaf&quot;
+[new code needed]
+
+Case 5: artifact is inLeaf but not target or ancestor, targetBranchContainsArt
+Action: Assume artifact moved in leaf.  Accept change (and issue ChangeNotice).
+If this is part of a case-2 conflict, the conflict will be raised when the 
+corresponding target CA is processed.
+[already handled]
+
+If you agree, I'll go ahead and add code cases 2 and 4.
+</pre>
+    </div>
+
+    <div id="c16" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=53123#c16">Comment 16</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mark C. Chu-Carroll</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mcc&#64;watson.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mcc&#64;watson.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-03-23 12:21:02 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">OK. I think I see the problem now...
+
+The name of the artifact is not the issue. But there are some missing cases... And I think those are 
+coming from the fact that the fix that I sent is really just part1; I wanted to debug this much before 
+adding one more messy bit. The missing bit is the code to ensure that there is no more than one 
+binding to any artifact.
+
+I think that my idea was to handle this kind of conflict by having the compound merges keep *both* 
+bindings. So if compound merge sees a rename in one of target and leaf for a compound, it doesn't 
+really care about what bindings there are in the other, so long as it wasn't deleted. It should just put the 
+updated binding into the result compound. 
+
+Then, after all the artifact merges are done, there should be another pass, that ensures that there is no 
+more than one binding per artifact. If there is, then it should signal a conflict, and drop one of the 
+bindings. (In theory, it's non-deterministic choice which one gets dropped; in practice, I think that the 
+binding from the target should take precedence.
+
+I'm not going to go check my code to see if this whole theory is right, because you've mentioned that 
+you've made a lot of changes to it, and I don't want to cause any more merge headaches! But if you 
+could post the latest code as an attachment here, I'll take a look, check that my theory is correct, and 
+add in the code to do the single-binding check.
+</pre>
+    </div>
+
+    <div id="c17" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=53123#c17">Comment 17</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jim Wright</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jwright&#64;watson.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jwright&#64;watson.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-03-23 13:07:56 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=8794" name="attach_8794" title="Zip of changes to stellation.{cli,remote,repos}">attachment 8794</a> <a href="attachment.cgi?id=8794&amp;action=edit" title="Zip of changes to stellation.{cli,remote,repos}">[details]</a></span>
+Zip of changes to stellation.{cli,remote,repos}
+
+As requested, I'm attaching my current version of the source.
+There will be three attachments: 
+* actual changes to core code (stellation.{cli,remote,repos}
+* My full version of stellation.remote (edited most files to remove CVS &quot;//
+$Id&quot; lines
+* The full current version of stellation.scm.model, which includes the JUnit
+tests and associated test data I've been using.
+
+This zip &quot;stelCore-changes...&quot; contains the following classes:
+
+cli.workspace.Change
+remote.client.io.{MessagingZipInput, ZipUtils}
+repos.{AccessPoint,BranchImage,MergeManager}
+repos.artifact.{Artifact, ArtifactMap, ChangeNotice, CompoundArtifact,
+DataArtifact, LinkArtifact, TextArtifact}
+repos.util.{CompoundMergeConflict, SimpleMergeConflict}
+
+The cli.workspace change was required for the code to build and run the first
+CLI/Ant test (test 0).	Note: I haven't rerun CLI tests since starting to work
+on merge issues.
+
+The remote.client.io changes constitute the &quot;October 2003&quot; bugfixes, which were
+missing from Mark's earlier code drop.
+
+In repos, BranchImage has an extra method, MergeManager has substantial
+changes, and AccessPoint has a CodeStatusTag change.
+
+In repos.artifact, most changes relate to a) reinstituting the
+createCatalogElement method in CompoundArtifact and b) changing
+createCatalogElement to include the artifactMap of the associated BranchImage.
+
+In repos.util, I added a toString() impl to two classes, for debugging.</pre>
+    </div>
+
+    <div id="c18" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=53123#c18">Comment 18</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jim Wright</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jwright&#64;watson.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jwright&#64;watson.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-03-23 13:09:13 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=8795" name="attach_8795" title="Full source zip for stellation.remote">attachment 8795</a> <a href="attachment.cgi?id=8795&amp;action=edit" title="Full source zip for stellation.remote">[details]</a></span>
+Full source zip for stellation.remote
+
+Complete source code for stellation.remote, including many files edited to
+remove extraneous CVS &quot;// $Id: &quot; directives.</pre>
+    </div>
+
+    <div id="c19" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=53123#c19">Comment 19</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jim Wright</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jwright&#64;watson.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jwright&#64;watson.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-03-23 13:09:51 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=8796" name="attach_8796" title="Current T-Client 'model' source, including JUnit tests and data">attachment 8796</a> <a href="attachment.cgi?id=8796&amp;action=edit" title="Current T-Client 'model' source, including JUnit tests and data">[details]</a></span>
+Current T-Client 'model' source, including JUnit tests and data</pre>
+    </div>
+
+    <div id="c20" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=53123#c20">Comment 20</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jim Wright</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jwright&#64;watson.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jwright&#64;watson.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-04-22 17:46:49 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Fix incorporated into initial TClient release.</pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=53123">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=53123">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=53123">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=53123&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=53123" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>

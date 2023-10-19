@@ -1,0 +1,3694 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>194917 &ndash; stack overflow error from working set management</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "194917 – stack overflow error from working set management",
+                             "show_bug.cgi?id=194917" );
+        document.title = "194917 – stack overflow error from working set management";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "194917 – stack overflow error from working set management", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_VERIFIED
+                 bz_product_Platform
+                 bz_component_UI
+                 bz_bug_194917 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;194917</span>
+
+        <span id="subtitle" class="subheader">stack overflow error from working set management</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2009-06-03 12:53:08 EDT</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=194917&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=194917" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2009-06-03 12:53:08">
+  <input type="hidden" name="id" value="194917">
+  <input type="hidden" name="token" value="1629869301-iGq0wQjpwCZKPfJzs7ERm513NEzOKxqbVWSe34PDZFs">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=194917"><b>Bug&nbsp;194917</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">stack overflow error from working set management</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span>stack overflow error from working set management
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      'stack overflow error from working set management' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">VERIFIED
+          FIXED
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >Platform
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >Eclipse Project
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=Platform"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >UI
+
+  (<a href="buglist.cgi?component=UI&amp;product=Platform&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>3.3 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">PC
+        Windows XP
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P3
+       major<span id="votes_container">
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=194917#vote_194917">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>3.5 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">Eric Moffatt</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=emoffatt&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=emoffatt&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard">
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'Platform-UI-Inbox\x40eclipse.org',
+        '');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          <tr>
+    <th class="field_label">
+      <label>Duplicates (2)</label>:
+    </th>
+    <td class="field_value">
+      <span id="duplicates"><a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Eclipse crash on startup"
+   href="show_bug.cgi?id=194699">194699</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - TaskWorkingSetUpdater failure"
+   href="show_bug.cgi?id=195325">195325</a> 
+      </span>
+      (<a href="buglist.cgi?bug_id=194699,195325">view as bug list</a>)
+    </td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+<a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [WorkingSets] Save/restore of aggregate workingset broken by changes from Bug 217955."
+   href="show_bug.cgi?id=274631">274631</a> 
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+
+  </td>
+  </tr>
+
+    <tr>
+      <th>&nbsp;</th>
+
+      <td id="show_dependency_tree_or_graph">
+        Show dependency <a href="showdependencytree.cgi?id=194917&amp;hide_resolved=1">tree</a>
+
+      </td>
+    </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2007-06-29 10:10 EDT by <span class="vcard"><span class="fn">Eugene Kuleshov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ekuleshov&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ekuleshov&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2009-06-03 12:53 EDT
+      (<a href="show_activity.cgi?id=194917">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>10 
+          users
+          <span id="cc_edit_area_showhide_container" class="bz_default_hidden">
+            (<a href="#" id="cc_edit_area_showhide">show</a>)
+          </span>
+        <div id="cc_edit_area">
+          <br>
+            <select id="cc" multiple="multiple" size="5" >
+                <option value="bokowski">bokowski</option>
+                <option value="eclipse">eclipse</option>
+                <option value="hsoliwal">hsoliwal</option>
+                <option value="mik.kersten">mik.kersten</option>
+                <option value="Mike_Wilson">Mike_Wilson</option>
+                <option value="nboldt">nboldt</option>
+                <option value="ob1.eclipse">ob1.eclipse</option>
+                <option value="philippe_mulet">philippe_mulet</option>
+                <option value="steffen.pingel">steffen.pingel</option>
+                <option value="wmitsuda">wmitsuda</option>
+            </select>
+        </div>
+          <script type="text/javascript">
+            hideEditableField( 'cc_edit_area_showhide_container', 
+                               'cc_edit_area', 
+                               'cc_edit_area_showhide', 
+                               '', 
+                               '');  
+          </script>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" >
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+      <tr id="a1" class="bz_contenttype_application_octet-stream">
+        <td>
+            <a href="attachment.cgi?id=100844"
+               title="View the content of the attachment">
+          <b>mylyn/context/zip</b></a>
+
+          <span class="bz_attach_extra_info">
+              (1.14 KB,
+                application/octet-stream)
+
+            <br>
+            <a href="#attach_100844"
+               title="Go to the comment associated with the attachment">2008-05-18 19:08 EDT</a>,
+
+            <span class="vcard"><span class="fn">Willian Mitsuda</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=wmitsuda&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=wmitsuda&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=100844&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a2" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=127554"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">JUnit that shows how it is possible to create a cycle</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (10.64 KB,
+                patch)
+
+            <br>
+            <a href="#attach_127554"
+               title="Go to the comment associated with the attachment">2009-03-04 16:01 EST</a>,
+
+            <span class="vcard"><span class="fn">Oleg Besedin</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ob1.eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ob1.eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=127554&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=127554&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a3" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=127694"
+               title="View the content of the attachment">
+          <b>Patch v1</b></a>
+
+          <span class="bz_attach_extra_info">
+              (19.52 KB,
+                patch)
+
+            <br>
+            <a href="#attach_127694"
+               title="Go to the comment associated with the attachment">2009-03-05 14:13 EST</a>,
+
+            <span class="vcard"><span class="fn">Oleg Besedin</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ob1.eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ob1.eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+                  <span title="Eric Moffatt">emoffatt</span>:
+                iplog+
+                <br>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=127694&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=127694&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a4" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=127804"
+               title="View the content of the attachment">
+          <b>save-restore free workingset</b></a>
+
+          <span class="bz_attach_extra_info">
+              (9.60 KB,
+                patch)
+
+            <br>
+            <a href="#attach_127804"
+               title="Go to the comment associated with the attachment">2009-03-06 07:21 EST</a>,
+
+            <span class="vcard"><span class="fn">Hitesh</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=hsoliwal&#64;in.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=hsoliwal&#64;in.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=127804&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=127804&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <span class="bz_attach_view_hide">
+            <a href="#a0" onclick="return toggle_display(this);">Show
+              Obsolete</a> (1)
+            <a id="view_all" href="attachment.cgi?bugid=194917&amp;action=viewall&amp;hide_obsolete=1">View All</a>
+        </span>
+        <a href="attachment.cgi?bugid=194917&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=194917&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eugene Kuleshov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ekuleshov&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ekuleshov&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-06-29 10:10:30 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">stack overflow error on saving newly created bugzilla task. Error dialog said something strange about adding entry to the working set.
+
+-- Error Log --
+Date: Fri Jun 29 10:05:52 EDT 2007
+Message: task activity listener failed: org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater&#64;1d8c046
+
+Severity: Error
+Plugin ID: org.eclipse.mylyn
+Stack Trace:
+java.lang.StackOverflowError
+	at com.sun.org.apache.xerces.internal.dom.ParentNode.getLength(ParentNode.java:720)
+	at org.eclipse.ui.XMLMemento.getChildren(XMLMemento.java:224)
+	at org.eclipse.ui.internal.AggregateWorkingSet.restoreWorkingSet(AggregateWorkingSet.java:199)
+	at org.eclipse.ui.internal.AbstractWorkingSet.getElementsArray(AbstractWorkingSet.java:151)
+	at org.eclipse.ui.internal.AbstractWorkingSet.getElements(AbstractWorkingSet.java:139)
+	at org.eclipse.ui.internal.AggregateWorkingSet.constructElements(AggregateWorkingSet.java:83)
+	at org.eclipse.ui.internal.AggregateWorkingSet.restoreWorkingSet(AggregateWorkingSet.java:212)
+	at org.eclipse.ui.internal.AbstractWorkingSet.getElementsArray(AbstractWorkingSet.java:151)
+	at org.eclipse.ui.internal.AbstractWorkingSet.getElements(AbstractWorkingSet.java:139)
+	at org.eclipse.ui.internal.AggregateWorkingSet.constructElements(AggregateWorkingSet.java:83)
+	at org.eclipse.ui.internal.AggregateWorkingSet.restoreWorkingSet(AggregateWorkingSet.java:212)
+	at org.eclipse.ui.internal.AbstractWorkingSet.getElementsArray(AbstractWorkingSet.java:151)
+	at org.eclipse.ui.internal.AbstractWorkingSet.getElements(AbstractWorkingSet.java:139)
+....</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-06-29 10:22:22 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Leo saw this once last week but we could not reproduce it.  Did it cause any bad behavior?</pre>
+    </div>
+
+    <div id="c2" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c2">Comment 2</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eugene Kuleshov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ekuleshov&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ekuleshov&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-06-29 10:33:50 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=194917#c1">comment #1</a>)
+<span class="quote">&gt; Leo saw this once last week but we could not reproduce it.  Did it cause any
+&gt; bad behavior?</span >
+
+Nothing obvious. Strange that it touched working sets at all...</pre>
+    </div>
+
+    <div id="c3" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c3">Comment 3</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Leo Dos Santos</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=leo.dos.santos&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=leo.dos.santos&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-06-29 19:00:41 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Here were my findings. Pattern seems to be the following:
+1) Upon starting up, workspace locks up with a 'creating file buffer' message in the status bar.
+2) Kill the workbench and attempt to start up again. Starting up fails during the Eclipse splash screen. Get the error dump seen above.
+3) Start up again. See 'Mylar Monitor stop failed' entry in the Error log with the following stack trace:
+
+java.lang.NullPointerException
+at org.eclipse.mylyn.monitor.ui.MonitorUiPlugin.stop(MonitorUiPlugin.java:143)
+at org.eclipse.osgi.framework.internal.core.BundleContextImpl$3.run(BundleContextImpl.java:1040)
+at java.security.AccessController.doPrivileged(Native Method)
+at org.eclipse.osgi.framework.internal.core.BundleContextImpl.stop(BundleContextImpl.java:1036)
+at org.eclipse.osgi.framework.internal.core.BundleHost.stopWorker(BundleHost.java:457)
+at org.eclipse.osgi.framework.internal.core.AbstractBundle.suspend(AbstractBundle.java:526)
+at org.eclipse.osgi.framework.internal.core.Framework.suspendBundle(Framework.java:1148)
+at org.eclipse.osgi.framework.internal.core.StartLevelManager.decFWSL(StartLevelManager.java:675)
+at org.eclipse.osgi.framework.internal.core.StartLevelManager.doSetStartLevel(StartLevelManager.java:291)
+at org.eclipse.osgi.framework.internal.core.StartLevelManager.shutdown(StartLevelManager.java:261)
+at org.eclipse.osgi.framework.internal.core.SystemBundle.suspend(SystemBundle.java:188)
+at org.eclipse.osgi.framework.internal.core.Framework.shutdown(Framework.java:622)
+at org.eclipse.osgi.framework.internal.core.Framework.close(Framework.java:525)
+at org.eclipse.osgi.framework.internal.core.OSGi.close(OSGi.java:41)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.shutdown(EclipseStarter.java:399)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:197)
+at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+at java.lang.reflect.Method.invoke(Method.java:589)
+at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:504)
+at org.eclipse.equinox.launcher.Main.basicRun(Main.java:443)
+at org.eclipse.equinox.launcher.Main.run(Main.java:1169)
+at org.eclipse.equinox.launcher.Main.main(Main.java:1144)
+
+I cannot reproduce consistently. I would guess the MonitorUiPlugin.stop() exception results from the failure to startup in step 2. The working sets exception I would guess is the result of the lock up in step 1 (bad/incomplete cleanup of working sets?). The question is what is causing the 'creating file buffer' lockup? I sometimes see that message when switching tasks, but no lock ups then.</pre>
+    </div>
+
+    <div id="c4" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c4">Comment 4</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Shawn Minto</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=shawn.minto&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=shawn.minto&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-04 20:01:33 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I hit this as well after I had killed my workspace.
+
+
+
+-- Error Log --
+Date: Wed Jul 04 16:55:31 PDT 2007
+Message: task activity listener failed: org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater&#64;f90b1a
+
+Severity: Error
+Plugin ID: org.eclipse.mylyn
+Stack Trace:
+java.lang.StackOverflowError
+	at java.util.zip.ZipFile.getEntry(Unknown Source)
+	at java.util.jar.JarFile.getEntry(Unknown Source)
+	at java.util.jar.JarFile.getJarEntry(Unknown Source)
+	at sun.misc.URLClassPath$JarLoader.getResource(Unknown Source)
+	at sun.misc.URLClassPath$JarLoader.findResource(Unknown Source)
+	at sun.misc.URLClassPath.findResource(Unknown Source)
+	at java.net.URLClassLoader$2.run(Unknown Source)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findResource(Unknown Source)
+	at java.lang.ClassLoader.getResource(Unknown Source)
+	at java.lang.ClassLoader.getResource(Unknown Source)
+	at java.lang.ClassLoader.getResource(Unknown Source)
+	at org.eclipse.core.runtime.internal.adaptor.ContextFinder.getResource(ContextFinder.java:142)
+	at java.lang.ClassLoader.getResourceAsStream(Unknown Source)
+	at javax.xml.parsers.SecuritySupport$4.run(Unknown Source)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at javax.xml.parsers.SecuritySupport.getResourceAsStream(Unknown Source)
+	at javax.xml.parsers.FactoryFinder.findJarServiceProvider(Unknown Source)
+	at javax.xml.parsers.FactoryFinder.find(Unknown Source)
+	at javax.xml.parsers.DocumentBuilderFactory.newInstance(Unknown Source)
+	at org.eclipse.ui.XMLMemento.createWriteRoot(XMLMemento.java:133)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.saveState(AbstractWorkingSetManager.java:721)
+	at org.eclipse.ui.internal.WorkingSetManager.saveState(WorkingSetManager.java:138)
+	at org.eclipse.ui.internal.WorkingSetManager.workingSetChanged(WorkingSetManager.java:160)
+	at org.eclipse.ui.internal.AbstractWorkingSet.fireWorkingSetChanged(AbstractWorkingSet.java:119)
+	at org.eclipse.ui.internal.AggregateWorkingSet.constructElements(AggregateWorkingSet.java:88)
+	at org.eclipse.ui.internal.AggregateWorkingSet.propertyChange(AggregateWorkingSet.java:186)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$4.run(AbstractWorkingSetManager.java:364)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$3.run(AbstractWorkingSetManager.java:371)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.firePropertyChange(AbstractWorkingSetManager.java:377)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.workingSetChanged(AbstractWorkingSetManager.java:400)
+	at org.eclipse.ui.internal.WorkingSetManager.workingSetChanged(WorkingSetManager.java:161)
+	at org.eclipse.ui.internal.AbstractWorkingSet.fireWorkingSetChanged(AbstractWorkingSet.java:119)
+	at org.eclipse.ui.internal.AggregateWorkingSet.constructElements(AggregateWorkingSet.java:88)
+	at org.eclipse.ui.internal.AggregateWorkingSet.propertyChange(AggregateWorkingSet.java:186)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$4.run(AbstractWorkingSetManager.java:364)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$3.run(AbstractWorkingSetManager.java:371)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.firePropertyChange(AbstractWorkingSetManager.java:377)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.workingSetChanged(AbstractWorkingSetManager.java:400)
+	at org.eclipse.ui.internal.WorkingSetManager.workingSetChanged(WorkingSetManager.java:161)
+	at org.eclipse.ui.internal.AbstractWorkingSet.fireWorkingSetChanged(AbstractWorkingSet.java:119)
+	at org.eclipse.ui.internal.AggregateWorkingSet.constructElements(AggregateWorkingSet.java:88)
+	at org.eclipse.ui.internal.AggregateWorkingSet.propertyChange(AggregateWorkingSet.java:186)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$4.run(AbstractWorkingSetManager.java:364)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$3.run(AbstractWorkingSetManager.java:371)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.firePropertyChange(AbstractWorkingSetManager.java:377)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.workingSetChanged(AbstractWorkingSetManager.java:400)
+	at org.eclipse.ui.internal.WorkingSetManager.workingSetChanged(WorkingSetManager.java:161)
+	at org.eclipse.ui.internal.AbstractWorkingSet.fireWorkingSetChanged(AbstractWorkingSet.java:119)
+	at org.eclipse.ui.internal.AggregateWorkingSet.constructElements(AggregateWorkingSet.java:88)
+	at org.eclipse.ui.internal.AggregateWorkingSet.propertyChange(AggregateWorkingSet.java:186)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$4.run(AbstractWorkingSetManager.java:364)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$3.run(AbstractWorkingSetManager.java:371)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.firePropertyChange(AbstractWorkingSetManager.java:377)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.workingSetChanged(AbstractWorkingSetManager.java:400)
+	at org.eclipse.ui.internal.WorkingSetManager.workingSetChanged(WorkingSetManager.java:161)
+	at org.eclipse.ui.internal.AbstractWorkingSet.fireWorkingSetChanged(AbstractWorkingSet.java:119)
+	at org.eclipse.ui.internal.AggregateWorkingSet.constructElements(AggregateWorkingSet.java:88)
+	at org.eclipse.ui.internal.AggregateWorkingSet.propertyChange(AggregateWorkingSet.java:186)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$4.run(AbstractWorkingSetManager.java:364)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$3.run(AbstractWorkingSetManager.java:371)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.firePropertyChange(AbstractWorkingSetManager.java:377)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.workingSetChanged(AbstractWorkingSetManager.java:400)
+	at org.eclipse.ui.internal.WorkingSetManager.workingSetChanged(WorkingSetManager.java:161)
+	at org.eclipse.ui.internal.AbstractWorkingSet.fireWorkingSetChanged(AbstractWorkingSet.java:119)
+	at org.eclipse.ui.internal.AggregateWorkingSet.constructElements(AggregateWorkingSet.java:88)
+	at org.eclipse.ui.internal.AggregateWorkingSet.propertyChange(AggregateWorkingSet.java:186)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$4.run(AbstractWorkingSetManager.java:364)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$3.run(AbstractWorkingSetManager.java:371)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.firePropertyChange(AbstractWorkingSetManager.java:377)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.workingSetChanged(AbstractWorkingSetManager.java:400)
+	at org.eclipse.ui.internal.WorkingSetManager.workingSetChanged(WorkingSetManager.java:161)
+	at org.eclipse.ui.internal.AbstractWorkingSet.fireWorkingSetChanged(AbstractWorkingSet.java:119)
+	at org.eclipse.ui.internal.AggregateWorkingSet.constructElements(AggregateWorkingSet.java:88)
+	at org.eclipse.ui.internal.AggregateWorkingSet.propertyChange(AggregateWorkingSet.java:186)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$4.run(AbstractWorkingSetManager.java:364)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$3.run(AbstractWorkingSetManager.java:371)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.firePropertyChange(AbstractWorkingSetManager.java:377)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.workingSetChanged(AbstractWorkingSetManager.java:400)
+	at org.eclipse.ui.internal.WorkingSetManager.workingSetChanged(WorkingSetManager.java:161)
+	at org.eclipse.ui.internal.AbstractWorkingSet.fireWorkingSetChanged(AbstractWorkingSet.java:119)
+	at org.eclipse.ui.internal.AggregateWorkingSet.constructElements(AggregateWorkingSet.java:88)
+	at org.eclipse.ui.internal.AggregateWorkingSet.propertyChange(AggregateWorkingSet.java:186)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$4.run(AbstractWorkingSetManager.java:364)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$3.run(AbstractWorkingSetManager.java:371)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.firePropertyChange(AbstractWorkingSetManager.java:377)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.workingSetChanged(AbstractWorkingSetManager.java:400)
+	at org.eclipse.ui.internal.WorkingSetManager.workingSetChanged(WorkingSetManager.java:161)
+	at org.eclipse.ui.internal.AbstractWorkingSet.fireWorkingSetChanged(AbstractWorkingSet.java:119)
+	at org.eclipse.ui.internal.AggregateWorkingSet.constructElements(AggregateWorkingSet.java:88)
+	at org.eclipse.ui.internal.AggregateWorkingSet.propertyChange(AggregateWorkingSet.java:186)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$4.run(AbstractWorkingSetManager.java:364)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$3.run(AbstractWorkingSetManager.java:371)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.firePropertyChange(AbstractWorkingSetManager.java:377)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.workingSetChanged(AbstractWorkingSetManager.java:400)
+	at org.eclipse.ui.internal.WorkingSetManager.workingSetChanged(WorkingSetManager.java:161)
+	at org.eclipse.ui.internal.AbstractWorkingSet.fireWorkingSetChanged(AbstractWorkingSet.java:119)
+	at org.eclipse.ui.internal.AggregateWorkingSet.constructElements(AggregateWorkingSet.java:88)
+	at org.eclipse.ui.internal.AggregateWorkingSet.propertyChange(AggregateWorkingSet.java:186)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$4.run(AbstractWorkingSetManager.java:364)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$3.run(AbstractWorkingSetManager.java:371)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.firePropertyChange(AbstractWorkingSetManager.java:377)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.workingSetChanged(AbstractWorkingSetManager.java:400)
+	at org.eclipse.ui.internal.WorkingSetManager.workingSetChanged(WorkingSetManager.java:161)
+	at org.eclipse.ui.internal.AbstractWorkingSet.fireWorkingSetChanged(AbstractWorkingSet.java:119)
+	at org.eclipse.ui.internal.AggregateWorkingSet.constructElements(AggregateWorkingSet.java:88)
+	at org.eclipse.ui.internal.AggregateWorkingSet.propertyChange(AggregateWorkingSet.java:186)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$4.run(AbstractWorkingSetManager.java:364)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$3.run(AbstractWorkingSetManager.java:371)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.firePropertyChange(AbstractWorkingSetManager.java:377)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.workingSetChanged(AbstractWorkingSetManager.java:400)
+	at org.eclipse.ui.internal.WorkingSetManager.workingSetChanged(WorkingSetManager.java:161)
+	at org.eclipse.ui.internal.AbstractWorkingSet.fireWorkingSetChanged(AbstractWorkingSet.java:119)
+	at org.eclipse.ui.internal.AggregateWorkingSet.constructElements(AggregateWorkingSet.java:88)
+	at org.eclipse.ui.internal.AggregateWorkingSet.propertyChange(AggregateWorkingSet.java:186)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$4.run(AbstractWorkingSetManager.java:364)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$3.run(AbstractWorkingSetManager.java:371)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.firePropertyChange(AbstractWorkingSetManager.java:377)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.workingSetChanged(AbstractWorkingSetManager.java:400)
+	at org.eclipse.ui.internal.WorkingSetManager.workingSetChanged(WorkingSetManager.java:161)
+	at org.eclipse.ui.internal.AbstractWorkingSet.fireWorkingSetChanged(AbstractWorkingSet.java:119)
+	at org.eclipse.ui.internal.AggregateWorkingSet.constructElements(AggregateWorkingSet.java:88)
+	at org.eclipse.ui.internal.AggregateWorkingSet.propertyChange(AggregateWorkingSet.java:186)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$4.run(AbstractWorkingSetManager.java:364)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$3.run(AbstractWorkingSetManager.java:371)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.firePropertyChange(AbstractWorkingSetManager.java:377)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.workingSetChanged(AbstractWorkingSetManager.java:400)
+	at org.eclipse.ui.internal.WorkingSetManager.workingSetChanged(WorkingSetManager.java:161)
+	at org.eclipse.ui.internal.AbstractWorkingSet.fireWorkingSetChanged(AbstractWorkingSet.java:119)
+	at org.eclipse.ui.internal.AggregateWorkingSet.constructElements(AggregateWorkingSet.java:88)
+	at org.eclipse.ui.internal.AggregateWorkingSet.propertyChange(AggregateWorkingSet.java:186)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$4.run(AbstractWorkingSetManager.java:364)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$3.run(AbstractWorkingSetManager.java:371)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.firePropertyChange(AbstractWorkingSetManager.java:377)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.workingSetChanged(AbstractWorkingSetManager.java:400)
+	at org.eclipse.ui.internal.WorkingSetManager.workingSetChanged(WorkingSetManager.java:161)
+	at org.eclipse.ui.internal.AbstractWorkingSet.fireWorkingSetChanged(AbstractWorkingSet.java:119)
+	at org.eclipse.ui.internal.AggregateWorkingSet.constructElements(AggregateWorkingSet.java:88)
+	at org.eclipse.ui.internal.AggregateWorkingSet.propertyChange(AggregateWorkingSet.java:186)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$4.run(AbstractWorkingSetManager.java:364)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$3.run(AbstractWorkingSetManager.java:371)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.firePropertyChange(AbstractWorkingSetManager.java:377)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.workingSetChanged(AbstractWorkingSetManager.java:400)
+	at org.eclipse.ui.internal.WorkingSetManager.workingSetChanged(WorkingSetManager.java:161)
+	at org.eclipse.ui.internal.AbstractWorkingSet.fireWorkingSetChanged(AbstractWorkingSet.java:119)
+	at org.eclipse.ui.internal.AggregateWorkingSet.constructElements(AggregateWorkingSet.java:88)
+	at org.eclipse.ui.internal.AggregateWorkingSet.propertyChange(AggregateWorkingSet.java:186)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$4.run(AbstractWorkingSetManager.java:364)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$3.run(AbstractWorkingSetManager.java:371)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.firePropertyChange(AbstractWorkingSetManager.java:377)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.workingSetChanged(AbstractWorkingSetManager.java:400)
+	at org.eclipse.ui.internal.WorkingSetManager.workingSetChanged(WorkingSetManager.java:161)
+	at org.eclipse.ui.internal.AbstractWorkingSet.fireWorkingSetChanged(AbstractWorkingSet.java:119)
+	at org.eclipse.ui.internal.AggregateWorkingSet.constructElements(AggregateWorkingSet.java:88)
+	at org.eclipse.ui.internal.AggregateWorkingSet.propertyChange(AggregateWorkingSet.java:186)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$4.run(AbstractWorkingSetManager.java:364)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$3.run(AbstractWorkingSetManager.java:371)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.firePropertyChange(AbstractWorkingSetManager.java:377)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.workingSetChanged(AbstractWorkingSetManager.java:400)
+	at org.eclipse.ui.internal.WorkingSetManager.workingSetChanged(WorkingSetManager.java:161)
+	at org.eclipse.ui.internal.AbstractWorkingSet.fireWorkingSetChanged(AbstractWorkingSet.java:119)
+	at org.eclipse.ui.internal.AggregateWorkingSet.constructElements(AggregateWorkingSet.java:88)
+	at org.eclipse.ui.internal.AggregateWorkingSet.propertyChange(AggregateWorkingSet.java:186)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$4.run(AbstractWorkingSetManager.java:364)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$3.run(AbstractWorkingSetManager.java:371)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.firePropertyChange(AbstractWorkingSetManager.java:377)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.workingSetChanged(AbstractWorkingSetManager.java:400)
+	at org.eclipse.ui.internal.WorkingSetManager.workingSetChanged(WorkingSetManager.java:161)
+	at org.eclipse.ui.internal.AbstractWorkingSet.fireWorkingSetChanged(AbstractWorkingSet.java:119)
+	at org.eclipse.ui.internal.AggregateWorkingSet.constructElements(AggregateWorkingSet.java:88)
+	at org.eclipse.ui.internal.AggregateWorkingSet.propertyChange(AggregateWorkingSet.java:186)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$4.run(AbstractWorkingSetManager.java:364)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$3.run(AbstractWorkingSetManager.java:371)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.firePropertyChange(AbstractWorkingSetManager.java:377)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.workingSetChanged(AbstractWorkingSetManager.java:400)
+	at org.eclipse.ui.internal.WorkingSetManager.workingSetChanged(WorkingSetManager.java:161)
+	at org.eclipse.ui.internal.AbstractWorkingSet.fireWorkingSetChanged(AbstractWorkingSet.java:119)
+	at org.eclipse.ui.internal.AggregateWorkingSet.constructElements(AggregateWorkingSet.java:88)
+	at org.eclipse.ui.internal.AggregateWorkingSet.propertyChange(AggregateWorkingSet.java:186)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$4.run(AbstractWorkingSetManager.java:364)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$3.run(AbstractWorkingSetManager.java:371)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.firePropertyChange(AbstractWorkingSetManager.java:377)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager.workingSetChanged(AbstractWorkingSetManager.java:400)
+	at org.eclipse.ui.internal.WorkingSetManager.workingSetChanged(WorkingSetManager.java:161)
+	at org.eclipse.ui.internal.AbstractWorkingSet.fireWorkingSetChanged(AbstractWorkingSet.java:119)
+	at org.eclipse.ui.internal.AggregateWorkingSet.constructElements(AggregateWorkingSet.java:88)
+	at org.eclipse.ui.internal.AggregateWorkingSet.propertyChange(AggregateWorkingSet.java:186)
+	at org.eclipse.ui.internal.AbstractWorkingSetManager$4.run(AbstractWorkingSetManager.java:364)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+</pre>
+    </div>
+
+    <div id="c5" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c5">Comment 5</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-05 00:18:37 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">From <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - TaskWorkingSetUpdater failure"
+   href="show_bug.cgi?id=195325">bug 195325</a>:
+
+Severity: Error
+Plugin ID: org.eclipse.mylyn
+Stack Trace:
+java.lang.StackOverflowError
+	at org.eclipse.ui.internal.AggregateWorkingSet.restoreWorkingSet(AggregateWorkingSet.java:199)
+	at org.eclipse.ui.internal.AbstractWorkingSet.getElementsArray(AbstractWorkingSet.java:151)
+	at org.eclipse.ui.internal.AbstractWorkingSet.getElements(AbstractWorkingSet.java:139)
+	at org.eclipse.ui.internal.AggregateWorkingSet.constructElements(AggregateWorkingSet.java:83)
+	at org.eclipse.ui.internal.AggregateWorkingSet.restoreWorkingSet(AggregateWorkingSet.java:212)
+	at org.eclipse.ui.internal.AbstractWorkingSet.getElementsArray(AbstractWorkingSet.java:151)
+	at org.eclipse.ui.internal.AbstractWorkingSet</pre>
+    </div>
+
+    <div id="c6" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c6">Comment 6</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-05 00:19:17 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - TaskWorkingSetUpdater failure"
+   href="show_bug.cgi?id=195325">Bug 195325</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c7" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c7">Comment 7</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eugene Kuleshov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ekuleshov&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ekuleshov&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-14 17:27:49 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Try this:
+
+-- activate some working set with query
+-- create new task that would match that query and submit it to the repo
+-- after it submitted (but before it added to the query) activate task
+-- enjoy the stack overflow exception</pre>
+    </div>
+
+    <div id="c8" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c8">Comment 8</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eugene Kuleshov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ekuleshov&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ekuleshov&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-21 19:37:07 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Any update on this? It seems like this exception is screwing up the task history and I am getting it pretty much on every task activation.</pre>
+    </div>
+
+    <div id="c9" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c9">Comment 9</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-23 13:37:05 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I haven't had a chance to work on this yet but hope to start on it tomorrow.  From what I have seen restarting the workbench twice will make this exception go away, since that seems to fix the malformed memento.</pre>
+    </div>
+
+    <div id="c10" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c10">Comment 10</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-23 14:51:06 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Eclipse crash on startup"
+   href="show_bug.cgi?id=194699">Bug 194699</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c11" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c11">Comment 11</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-23 18:43:16 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Eclipse crash on startup"
+   href="show_bug.cgi?id=194699">Bug 194699</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c12" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c12">Comment 12</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-08-27 23:59:58 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">If anyone sees this with 2.1M1 please post, recent fixes may have resolved it.
+
+Tod: I wonder if this should be moved over to Platform?  Which person/component is responsible for working set externalization?  It looks like some double activation of a working set could cause the Platfrom to not externalize working sets correctly, which could then cause the workbench to fail to start due to the stack overflow visible in the description.  This would only happen if the workbench crashed, not if it exited properly (perhaps some clean-up is done with the save that happens on exit).  On the Mylyn end we want to make sure that we don't trigger this, but since the failure is so severe I think that Platform should be defensive to this kind of state in the XML and simply discard the failed working set.  Removing it from from workingsets.xml manually always did the trick.</pre>
+    </div>
+
+    <div id="c13" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c13">Comment 13</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Kim Horne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse&#64;pookzilla.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse&#64;pookzilla.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-09-05 11:20:34 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Feel free to open a new bug or punt this one to me.  I'll take a look at it for 3.4.</pre>
+    </div>
+
+    <div id="c14" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c14">Comment 14</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Kim Horne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse&#64;pookzilla.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse&#64;pookzilla.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-09-14 10:53:58 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Eugene, Mik, have either of you guys had reports of this occurring recently?</pre>
+    </div>
+
+    <div id="c15" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c15">Comment 15</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eugene Kuleshov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ekuleshov&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ekuleshov&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-09-14 11:00:09 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=194917#c14">comment #14</a>)
+<span class="quote">&gt; Eugene, Mik, have either of you guys had reports of this occurring recently?</span >
+
+I am not using 3.4 builds just yet, but I've seen this issue triggered not only by Mylyn's UI, though detail are escaping me.</pre>
+    </div>
+
+    <div id="c16" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c16">Comment 16</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-09-14 23:31:29 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I have not seen this recurring in 3.4M1, although I made some fixes in Mylyn UI to avoid this happening around the same time as I updated.  It would only happen to me if the workbench was killed, and I have killed my workbench multiple times since.  So no real data from me.
+
+Eugene: are you saying that you have seen this occur on a recent (past 3 weeks) Mylyn dev build when using Eclipse 3.3.0?</pre>
+    </div>
+
+    <div id="c17" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c17">Comment 17</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eugene Kuleshov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ekuleshov&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ekuleshov&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-09-15 20:48:49 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=194917#c16">comment #16</a>)
+<span class="quote">&gt; Eugene: are you saying that you have seen this occur on a recent (past 3 weeks)
+&gt; Mylyn dev build when using Eclipse 3.3.0?</span >
+
+I almost sure it was last week. I will let you know if it will happen again.
+</pre>
+    </div>
+
+    <div id="c18" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c18">Comment 18</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eugene Kuleshov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ekuleshov&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ekuleshov&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-09-17 02:31:12 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Just got it again after restarting Eclipse from update manager (i.e. uninstall some plugins from Manage Configuration, restart, install some plugin, restart).</pre>
+    </div>
+
+    <div id="c19" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c19">Comment 19</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eugene Kuleshov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ekuleshov&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ekuleshov&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-06 01:11:55 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">FWIW, I ma sill getting this error on both Eclipse 3.3 and last 3.4m3.
+
+org.eclipse.swt.SWTException: Failed to execute runnable (java.lang.StackOverflowError)
+at org.eclipse.swt.SWT.error(SWT.java:3706)
+at org.eclipse.swt.SWT.error(SWT.java:3624)
+at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:133)
+at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3721)
+at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3358)
+at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:2395)
+at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2359)
+at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2225)
+at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:468)
+at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:288)
+at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:463)
+at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:106)
+at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:193)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:106)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:76)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:362)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:175)
+at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+at java.lang.reflect.Method.invoke(Method.java:597)
+at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:515)
+at org.eclipse.equinox.launcher.Main.basicRun(Main.java:455)
+at org.eclipse.equinox.launcher.Main.run(Main.java:1193)
+at org.eclipse.equinox.launcher.Main.main(Main.java:1169)
+Caused by: java.lang.StackOverflowError
+at org.eclipse.ui.XMLMemento.getChildren(XMLMemento.java:223)
+at org.eclipse.ui.internal.AggregateWorkingSet.restoreWorkingSet(AggregateWorkingSet.java:199)
+at org.eclipse.ui.internal.AbstractWorkingSet.getElementsArray(AbstractWorkingSet.java:151)
+at org.eclipse.ui.internal.AbstractWorkingSet.getElements(AbstractWorkingSet.java:139)
+at org.eclipse.ui.internal.AggregateWorkingSet.constructElements(AggregateWorkingSet.java:83)
+at org.eclipse.ui.internal.AggregateWorkingSet.restoreWorkingSet(AggregateWorkingSet.java:212)
+at org.eclipse.ui.internal.AbstractWorkingSet.getElementsArray(AbstractWorkingSet.java:151)
+at org.eclipse.ui.internal.AbstractWorkingSet.getElements(AbstractWorkingSet.java:139)
+at org.eclipse.ui.internal.AggregateWorkingSet.constructElements(AggregateWorkingSet.java:83)
+at org.eclipse.ui.internal.AggregateWorkingSet.restoreWorkingSet(AggregateWorkingSet.java:212)
+at org.eclipse.ui.internal.AbstractWorkingSet.getElementsArray(AbstractWorkingSet.java:151)
+at org.eclipse.ui.internal.AbstractWorkingSet.getElements(AbstractWorkingSet.java:139)
+(last 4 lines repeated many many times)</pre>
+    </div>
+
+    <div id="c20" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c20">Comment 20</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Kim Horne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse&#64;pookzilla.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse&#64;pookzilla.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-06 09:45:00 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I will try to get to the bottom of this in M4.</pre>
+    </div>
+
+    <div id="c21" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c21">Comment 21</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eugene Kuleshov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ekuleshov&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ekuleshov&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-06 11:17:46 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=194917#c20">comment #20</a>)
+<span class="quote">&gt; I will try to get to the bottom of this in M4.</span >
+
+Thanks Kim</pre>
+    </div>
+
+    <div id="c22" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c22">Comment 22</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-02-26 17:21:39 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Kim: did you fix something related to this?  I haven't seen it again and haven't seen it reported since <a href="show_bug.cgi?id=194917#c16">comment#16</a>.</pre>
+    </div>
+
+    <div id="c23" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c23">Comment 23</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Kim Horne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse&#64;pookzilla.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse&#64;pookzilla.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-02-28 13:58:17 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Mik: no, I haven't.  I dug a bit but didn't get anywhere with it.  Have you guys changed your working set code at all?  Perhaps changed how/when you're hooking listeners?</pre>
+    </div>
+
+    <div id="c24" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c24">Comment 24</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-02-28 19:47:14 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Yes, we have changed that code considerably since the failure was reported, so unfortunately it's hard for me to say what fixed it on our end.  </pre>
+    </div>
+
+    <div id="c25" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c25">Comment 25</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eugene Kuleshov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ekuleshov&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ekuleshov&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-02-29 01:28:25 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I haven't seen errors in the log for some time, but there is one weird issue that is quite annoying. I have 2 java working sets created using &quot;Configure Working Sets&quot; in the Package Explorer view. Those have 20..30 projects each and they disappear every time I install something using Update Manager. I think I recreated those working sets 20 times already, but there is no errors in the logs.</pre>
+    </div>
+
+    <div id="c26" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c26">Comment 26</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-02-29 12:12:11 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Steffen: I think that you have seen a similar problem, also without anything in the Error Log?
+
+My guess is that what's happening is that the workbench is being improperly closed by the Update Manager (<a class="bz_bug_link 
+          bz_status_NEW "
+   title="NEW - [JFace] ShellListener.shellClosed is not called on Update Manager restart"
+   href="show_bug.cgi?id=107280">bug 107280</a>) and that the working set support is listening to shellClosed() or something to that effect before saving it's working sets, and either fails to save them or only saves them partially.
+
+Kim: if that's the case, I think it would be worth exploring a more pro-active save?  Working sets are a pretty significant time investment for users to set up, so it's painful when they're lost.</pre>
+    </div>
+
+    <div id="c27" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c27">Comment 27</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-02-29 12:37:21 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Yes, my working sets file was corrupted after the update manager had restarted the workbench. I was able to manually repair it though (<a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - [WorkingSets] unable to recover from corrupt workingsets.xml file"
+   href="show_bug.cgi?id=220473">bug 220473</a>). I lost part of my task list during the same update as well so the restart must have happened at a bad point in time.</pre>
+    </div>
+
+    <div id="c28" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c28">Comment 28</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Kim Horne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse&#64;pookzilla.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse&#64;pookzilla.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-02 15:44:51 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Will attempt another kick at this can in RC1.</pre>
+    </div>
+
+    <div id="c29" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c29">Comment 29</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-05 01:08:25 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Thanks Kim!</pre>
+    </div>
+
+    <div id="c30" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c30">Comment 30</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eugene Kuleshov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ekuleshov&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ekuleshov&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-05 03:12:23 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">For what it worth, I haven't seen the stack overflows lately, but it is been loosing my Java working sets configuration until I deleted all Mylyn working sets. I don't know it that is related.</pre>
+    </div>
+
+    <div id="c31" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c31">Comment 31</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Kim Horne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse&#64;pookzilla.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse&#64;pookzilla.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-12 13:51:23 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=194917#c30">comment #30</a>)
+<span class="quote">&gt; For what it worth, I haven't seen the stack overflows lately, but it is been
+&gt; loosing my Java working sets configuration until I deleted all Mylyn working
+&gt; sets. I don't know it that is related.
+&gt; </span >
+
+I haven't been able to reproduce this issue but we have fixed a bug in RC1 (<a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [WorkingSets] possible problem in shutdown sequence"
+   href="show_bug.cgi?id=94825">bug 94825</a>) that pertains to the shutdown lifecycle of the working set manager.  Although I can't confirm that is indeed the cause of this problem it MAY indeed be possible.  Fingers are crossed, at least.
+
+I'm not done digging just yet - I want to try the update scenario.
+
+</pre>
+    </div>
+
+    <div id="c32" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c32">Comment 32</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Kim Horne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse&#64;pookzilla.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse&#64;pookzilla.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-14 15:10:08 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Mylyn guys:
+
+Do you have code that manipulates the window working set by chance?</pre>
+    </div>
+
+    <div id="c33" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c33">Comment 33</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eugene Kuleshov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ekuleshov&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ekuleshov&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-14 15:11:59 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=194917#c32">comment #32</a>)
+<span class="quote">&gt; Mylyn guys: Do you have code that manipulates the window working set by chance?</span >
+
+that would be yes</pre>
+    </div>
+
+    <div id="c34" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c34">Comment 34</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Kim Horne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse&#64;pookzilla.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse&#64;pookzilla.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-14 15:23:42 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=194917#c33">comment #33</a>)
+<span class="quote">&gt; (In reply to <a href="show_bug.cgi?id=194917#c32">comment #32</a>)
+&gt; &gt; Mylyn guys: Do you have code that manipulates the window working set by chance?
+&gt; 
+&gt; that would be yes
+&gt; </span >
+
+Do you have code that could potentially add a window working set to itself? :)</pre>
+    </div>
+
+    <div id="c35" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c35">Comment 35</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eugene Kuleshov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ekuleshov&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ekuleshov&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-14 15:46:36 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=194917#c34">comment #34</a>)
+<span class="quote">&gt; &gt; that would be yes
+&gt; Do you have code that could potentially add a window working set to itself? :)</span >
+
+That I am not sure. I did wrote initial working set implementation, but Mik changed it quite a bit and added mixed resources support into the task working set afterwards.</pre>
+    </div>
+
+    <div id="c36" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c36">Comment 36</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Kim Horne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse&#64;pookzilla.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse&#64;pookzilla.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-14 16:01:44 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=194917#c35">comment #35</a>)
+<span class="quote">&gt; (In reply to <a href="show_bug.cgi?id=194917#c34">comment #34</a>)
+&gt; &gt; &gt; that would be yes
+&gt; &gt; Do you have code that could potentially add a window working set to itself? :)
+&gt; 
+&gt; That I am not sure. I did wrote initial working set implementation, but Mik
+&gt; changed it quite a bit and added mixed resources support into the task working
+&gt; set afterwards.
+&gt; </span >
+
+We dont protect against this possibility in the workbench although we should.   My concern is that it may be a violation of API if we start aggregate working sets from inclusion in the component list of aggregate sets.  Perhaps it's sufficient to guard against the case where the set is trying to add itself.  At any rate, it'd be helpful to know if it's possible that you could be doing this at your end.  Could you point me at some code at your end that deals with working sets?</pre>
+    </div>
+
+    <div id="c37" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c37">Comment 37</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-14 16:29:44 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The code is in the org.eclipse.mylyn.tasks.ui plug-in. Most of the implementation is in the org.eclipse.mylyn.internal.tasks.ui.workingsets package (you can search for type names starting with TaskWorkingSet...). A team project set is available here: <a href="http://www.eclipse.org/mylyn/doc/dev/mylyn.psf">http://www.eclipse.org/mylyn/doc/dev/mylyn.psf</a></pre>
+    </div>
+
+    <div id="c38" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c38">Comment 38</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eugene Kuleshov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ekuleshov&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ekuleshov&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-14 16:31:38 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=194917#c36">comment #36</a>)
+<span class="quote">&gt; Could you point me at some code at your end that deals with working sets?</span >
+
+Here are few classes that probably relevant to this:
+
+/org.eclipse.mylyn.tasks.ui/src/org/eclipse/mylyn/internal/tasks/ui/actions/TaskWorkingSetAction.java 
+/org.eclipse.mylyn.tasks.ui/src/org/eclipse/mylyn/internal/tasks/ui/workingsets/TaskWorkingSetUpdater.java
+/org.eclipse.mylyn.tasks.ui/src/org/eclipse/mylyn/internal/tasks/ui/dialogs/AbstractWorkingSetDialogCOPY.java
+</pre>
+    </div>
+
+    <div id="c39" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c39">Comment 39</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mike Wilson</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Mike_Wilson&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Mike_Wilson&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-16 10:59:12 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">This is marked as P1, and for 3.4 RC1. That should imply it's been fixed by now. What is the status?
+
+</pre>
+    </div>
+
+    <div id="c40" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c40">Comment 40</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Kim Horne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse&#64;pookzilla.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse&#64;pookzilla.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-16 11:04:03 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=194917#c39">comment #39</a>)
+<span class="quote">&gt; This is marked as P1, and for 3.4 RC1. That should imply it's been fixed by
+&gt; now. What is the status?
+&gt; </span >
+
+There is no fix as of yet but I have a pretty good idea of why it's happening and a candidate fix in mind.  I would like to move this to RC2.</pre>
+    </div>
+
+    <div id="c41" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c41">Comment 41</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-16 11:55:30 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Kim: let me know if we can help in any way, or if you want any specific code samples from Mylyn attached to this bug.  I don't think I've seen this since 3.4M1 (<a href="show_bug.cgi?id=194917#c12">comment#12</a>), but any additional safety with working set saving seems like a good idea, because it's quite painful to have to recreate the working sets by hand.</pre>
+    </div>
+
+    <div id="c42" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c42">Comment 42</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Kim Horne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse&#64;pookzilla.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse&#64;pookzilla.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-16 12:12:15 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=194917#c41">comment #41</a>)
+<span class="quote">&gt; Kim: let me know if we can help in any way, or if you want any specific code
+&gt; samples from Mylyn attached to this bug.  I don't think I've seen this since
+&gt; 3.4M1 (<a href="show_bug.cgi?id=194917#c12">comment#12</a>), but any additional safety with working set saving seems
+&gt; like a good idea, because it's quite painful to have to recreate the working
+&gt; sets by hand.
+&gt; </span >
+
+I've started looking through your working set code, hoping to find a place where you might be getting the window working set (via the window/page or from the manager itself) and adding it to itself.  I haven't gotten very far - I've been distracted by several issues - but if you have an inking of where this could potentially be happing that'd be helpful.  A check at our end for this case seems sensible but I'm hesitant to do it so late if we're not entirely sure it's to blame.  The biggest issue I have with the fix I'm thinking of is that it may be an API violation - our doc doesn't say anything about filtering content from the window set automatically. </pre>
+    </div>
+
+    <div id="c43" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c43">Comment 43</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Kim Horne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse&#64;pookzilla.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse&#64;pookzilla.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-16 12:47:31 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Actually, I should clarify - it may not be the window set itself but another aggregate working set (if you guys use those)...</pre>
+    </div>
+
+    <div id="c44" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c44">Comment 44</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Willian Mitsuda</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=wmitsuda&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=wmitsuda&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-18 19:07:18 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">TaskSelectionDialog.SelectWorkingSetAction.run() calls PlatformUI.getWorkbench().getWorkingSetManager().createWorkingSetSelectionDialog(...), which indirectly may create a aggregate working set and set it as window working set (because I'm passing multi=false).
+
+BTW Kim, are you willing to fix the <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - [WorkingSets] IWorkingSetManager.createWorkingSetSelectionDialog javadoc states wrong behavior"
+   href="show_bug.cgi?id=217906">bug#217906</a> for 3.4?</pre>
+    </div>
+
+    <div id="c45" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c45">Comment 45</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Willian Mitsuda</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=wmitsuda&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=wmitsuda&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-18 19:08:04 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=100844" name="attach_100844" title="mylyn/context/zip">attachment 100844</a> <a href="attachment.cgi?id=100844&amp;action=edit" title="mylyn/context/zip">[details]</a></span>
+mylyn/context/zip</pre>
+    </div>
+
+    <div id="c46" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c46">Comment 46</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Kim Horne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse&#64;pookzilla.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse&#64;pookzilla.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-21 09:50:40 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=194917#c44">comment #44</a>)
+<span class="quote">&gt; TaskSelectionDialog.SelectWorkingSetAction.run() calls
+&gt; PlatformUI.getWorkbench().getWorkingSetManager().createWorkingSetSelectionDialog(...),
+&gt; which indirectly may create a aggregate working set and set it as window
+&gt; working set (because I'm passing multi=false).
+&gt; 
+&gt; BTW Kim, are you willing to fix the <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - [WorkingSets] IWorkingSetManager.createWorkingSetSelectionDialog javadoc states wrong behavior"
+   href="show_bug.cgi?id=217906">bug#217906</a> for 3.4?
+&gt; </span >
+
+Mmmm.  Looking at this code path I'm not sure that it is the precipitator of this problem.  We need a case where working set A contains A, or A contains B contains A, or a variation on that theme.  I dont see where we could get this from this code.
+
+At this point I'm inclined to defer this to 3.5.  As soon as 3.4 is out the door I put in the fix that prevents a set from containing itself (recursively) and we'll evaluate the success of that fix at that time.  Does anyone object to that?</pre>
+    </div>
+
+    <div id="c47" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c47">Comment 47</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eugene Kuleshov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ekuleshov&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ekuleshov&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-21 11:55:50 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=194917#c46">comment #46</a>)
+<span class="quote">&gt; At this point I'm inclined to defer this to 3.5.  As soon as 3.4 is out the
+&gt; door I put in the fix that prevents a set from containing itself (recursively)
+&gt; and we'll evaluate the success of that fix at that time.  Does anyone object to
+&gt; that?</span >
+
+Kim, I am not sure about others, but I don't see the initial stack overflow symptoms anymore. However I am still losing Java working sets in the Package Explorer on every restart and only if I have at least one Mylyn working set (when no Mylyn working sets are there, it is all working ok). I don't know if it is issue in a Platform or in Mylyn, but it is definitely the most annoying one.</pre>
+    </div>
+
+    <div id="c48" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c48">Comment 48</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Kim Horne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse&#64;pookzilla.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse&#64;pookzilla.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-21 12:04:19 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=194917#c47">comment #47</a>)
+<span class="quote">&gt; (In reply to <a href="show_bug.cgi?id=194917#c46">comment #46</a>)
+&gt; &gt; At this point I'm inclined to defer this to 3.5.  As soon as 3.4 is out the
+&gt; &gt; door I put in the fix that prevents a set from containing itself (recursively)
+&gt; &gt; and we'll evaluate the success of that fix at that time.  Does anyone object to
+&gt; &gt; that?
+&gt; 
+&gt; Kim, I am not sure about others, but I don't see the initial stack overflow
+&gt; symptoms anymore. However I am still losing Java working sets in the Package
+&gt; Explorer on every restart and only if I have at least one Mylyn working set
+&gt; (when no Mylyn working sets are there, it is all working ok). I don't know if
+&gt; it is issue in a Platform or in Mylyn, but it is definitely the most annoying
+&gt; one.
+&gt; </span >
+
+Is there a separate bug report for losing the JDT working sets?</pre>
+    </div>
+
+    <div id="c49" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c49">Comment 49</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eugene Kuleshov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ekuleshov&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ekuleshov&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-21 12:06:44 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=194917#c48">comment #48</a>)
+<span class="quote">&gt; Is there a separate bug report for losing the JDT working sets?</span >
+
+I am not aware of any. The end result is the same as with stack overflow error, but it is hard to say if they are related.</pre>
+    </div>
+
+    <div id="c50" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c50">Comment 50</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Kim Horne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse&#64;pookzilla.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse&#64;pookzilla.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-21 12:17:47 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=194917#c49">comment #49</a>)
+<span class="quote">&gt; (In reply to <a href="show_bug.cgi?id=194917#c48">comment #48</a>)
+&gt; &gt; Is there a separate bug report for losing the JDT working sets?
+&gt; 
+&gt; I am not aware of any. The end result is the same as with stack overflow error,
+&gt; but it is hard to say if they are related.
+&gt; </span >
+
+Well, the stack overflow has the potential of preventing the workbench from even coming up so that's a shade worse than munging your working sets (as bad as that is).  Could you log a bug about the JDT problem, assigned to me?  I will look at it first thing in 3.5 (or possibly 3.4.1).</pre>
+    </div>
+
+    <div id="c51" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c51">Comment 51</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-22 18:47:27 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=194917#c47">comment #47</a>)
+<span class="quote">&gt; Kim, I am not sure about others, but I don't see the initial stack overflow
+&gt; symptoms anymore. However I am still losing Java working sets in the Package
+&gt; Explorer on every restart and only if I have at least one Mylyn working set
+&gt; (when no Mylyn working sets are there, it is all working ok). I don't know if it
+&gt; is issue in a Platform or in Mylyn, but it is definitely the most annoying one.</span >
+
+Wow, that's pretty terrible.  I don't recall anyone else seeing this behavior, and I have both Java and Mylyn working sets.  Please also CC me on any bugs related to this in case Mylyn could avoid triggering this behavior. 
+
+Steffen: have you seen anything like this?</pre>
+    </div>
+
+    <div id="c52" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c52">Comment 52</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-22 19:13:12 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I have seen one other report (outside of Eclipse.org) where Mylyn caused loss of working sets.</pre>
+    </div>
+
+    <div id="c53" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c53">Comment 53</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Philipe Mulet</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=philippe_mulet&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=philippe_mulet&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-30 09:14:26 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Kim - pls fix the priority. If clearly a P1, then it should not be deferred until 3.5 as per definition.</pre>
+    </div>
+
+    <div id="c54" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c54">Comment 54</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Oleg Besedin</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ob1.eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ob1.eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-03-04 16:01:41 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=127554&amp;action=diff" name="attach_127554" title="JUnit that shows how it is possible to create a cycle">attachment 127554</a> <a href="attachment.cgi?id=127554&amp;action=edit" title="JUnit that shows how it is possible to create a cycle">[details]</a></span>
+JUnit that shows how it is possible to create a cycle
+
+Here is the JUnit that creates cycle in the aggregate working sets. It turned out to be a non-trivial task :-). Here is how it could happen: 
+
+The creation of an aggregate working set is a two-step process. First, a developer calls 
+	IWorkingSetManager#createAggregateWorkingSet()
+and later:
+	IWorkingSetManager#addWorkingSet()
+
+The name uniqueness if verified only in the add..() method, not in create...() method. As a result it is possible to create multiple working sets with the same name. 
+
+The last step to form a cycle happens on Eclipse restart when working sets are saved into IMemento's and different working sets with the same name become indistinguishable.
+
+Now the question is how much we can do about it without breaking APIs. We can detect cycles (and avoid stack overflows), but it seems that either cleanup or prevention need either slight &quot;adjustments&quot; in API contracts or a sizable amount of extra code.</pre>
+    </div>
+
+    <div id="c55" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c55">Comment 55</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Oleg Besedin</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ob1.eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ob1.eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-03-05 14:13:10 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=127694&amp;action=diff" name="attach_127694" title="Patch v1">attachment 127694</a> <a href="attachment.cgi?id=127694&amp;action=edit" title="Patch v1">[details]</a></span>
+Patch v1
+
+This patch detects and removes cycles.
+
+The patch adds a comment to the IWorkingSet#getElements() method saying that it can throw IllegalStateException. This is a slight change in API contract but from the practical side it makes no difference as the current behavior is to create a stack overflow.  For the typical uses the exception will be caught by the aggregate working set code and logged as a proper error.
+
+The patch contains two new JUnits to test detection and cleanup of the dependency cycles in the aggregate working sets.</pre>
+    </div>
+
+    <div id="c56" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c56">Comment 56</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Oleg Besedin</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ob1.eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ob1.eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-03-05 14:17:29 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Hitesh, Eric, could you have a look at the patch? 
+</pre>
+    </div>
+
+    <div id="c57" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c57">Comment 57</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eric Moffatt</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=emoffatt&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=emoffatt&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-03-05 16:21:57 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">
+Hitesh, is it possible that we can help fix this using the same 'uniqueId' (the timestamp thingie) ? I'm thinking that if the unique 'id' were used as the storage tag (rather than the label) then they'd be distinguishable at reload time.
+</pre>
+    </div>
+
+    <div id="c58" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c58">Comment 58</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Hitesh</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=hsoliwal&#64;in.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=hsoliwal&#64;in.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-03-06 07:21:32 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=127804&amp;action=diff" name="attach_127804" title="save-restore free workingset">attachment 127804</a> <a href="attachment.cgi?id=127804&amp;action=edit" title="save-restore free workingset">[details]</a></span>
+save-restore free workingset
+
+(In reply to <a href="show_bug.cgi?id=194917#c56">comment #56</a>)
+(In reply to <a href="show_bug.cgi?id=194917#c57">comment #57</a>)
+
+Eric, that would fix the problem partly.It sounds good, but it would require some rework in the save and restore methods, while keeping them compatible with the old way.
+
+A workingset can either be connected to a manager or not in which case I call it a 'free' workingset. A free workingset cannot be checked for clashing names and also it is not saved or restored unless done separately and explicitly .
+
+In the Junit test &quot;testDirectCycle()&quot;  the containing workingset ,&quot;aggregate&quot;, is a free workingset.( So is the  container workingset, anyway this is saved and restored explicitly.) By running the test attached to this comment, you can notice that a free workingset is not restored.
+
+I think we should fix the saveState method, either to neglect a free working set (or to handle it).So we do not have trouble while restoring.Also, this will not change the current behaviour.
+
+We would not face this problem with a containing workingset that is connected to a manger, as the manager would not have allowed a duplicate-named workingset to begin with. For cycles , we should detect them while setting the components or creating an aggregate workingset, if detected we could log it.</pre>
+    </div>
+
+    <div id="c59" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c59">Comment 59</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Hitesh</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=hsoliwal&#64;in.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=hsoliwal&#64;in.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-03-06 07:39:08 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I realized this after posting :) . To avoid ambiguity, I meant:
+
+Containing = Contained
+
+Container =  Container.</pre>
+    </div>
+
+    <div id="c60" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c60">Comment 60</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Oleg Besedin</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ob1.eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ob1.eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-03-06 14:00:00 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">In a broad sense, yes, adding Eclipse-wide unique working set IDs should prevent the scenario from the <a href="show_bug.cgi?id=194917#c54">comment 54</a>. 
+
+I guess for this bug the question is if you'd like to add code to detect and handle cycles. 
+
+From my experiments with the workbench, if the cycle forms at some point, the Eclipse SDK crashes on startup and the only way to get it to work is by manually editing workingsets.xml file from the org.eclipse.ui.workbench cache (&quot;-clean&quot; does not help).
+</pre>
+    </div>
+
+    <div id="c61" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c61">Comment 61</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eric Moffatt</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=emoffatt&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=emoffatt&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-03-06 15:18:26 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">
+After a talk with Oleg it appears that we should do the 'belt and braces' thing; on restore we should fix existing cycles (Oleg's patch) but going forward we should switch to generating and using a unique id rather than the label in the save/restore cycle to ensure that all WS info is being restored from the correct XML info (Hitesh's work).
+
+Hitesh, can we 'upgrade' existing workspaces using the following approach?
+
+Check the fist working set we restore to see if it has a 'uniqueId' field. If not then we revert to our old code (with Oleg's cycle detection patch). If so then we're already in our new format and can read it however we want.
+
+On saves we -always- use the new field to identify a particular WS (i.e. when we write out the set of children of a WSM we'd write out the uniqueId rather than the label as we currently do).
+</pre>
+    </div>
+
+    <div id="c62" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c62">Comment 62</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Hitesh</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=hsoliwal&#64;in.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=hsoliwal&#64;in.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-03-09 09:10:59 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Yes Eric. We should do that.
+
+Oleg, about the patch, the constructElements() is called in a few more places than just getElements, for example in the constructor , would we have to change the JavaDoc for those API methods as well? Also, I am wondering if it makes sense to not discard a component and just ignore it in case a cycle is detected ? For example B contains A and C, and B' is added to C. Save and restore.B has lost data.
+
+What if we just logged the cycle (no exception involved) and ignore the problem component? Just thought of sharing this - although removing the problem component is certainly the better approach.  
+</pre>
+    </div>
+
+    <div id="c63" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c63">Comment 63</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eric Moffatt</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=emoffatt&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=emoffatt&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-03-09 13:40:19 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">
+Sounds good. I just checked with Oleg about the 'API' to ensure that it won't be a problem to put it in after M6 goes out...which it what I'd suggest.
+
+Is that OK with everyone?
+</pre>
+    </div>
+
+    <div id="c64" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c64">Comment 64</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Oleg Besedin</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ob1.eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ob1.eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-03-23 14:04:36 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=194917#c62">comment #62</a>)
+<span class="quote">&gt; What if we just logged the cycle (no exception involved) and ignore 
+&gt; the problem component?</span >
+
+Then you'd get the error logged every time it is accessed - and that seems to be the situation that people generally don't like. Besides, it is not like we can log a error with a suggestion on how to fix it - there is realy no fix at that point.
+
+
+</pre>
+    </div>
+
+    <div id="c65" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c65">Comment 65</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eric Moffatt</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=emoffatt&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=emoffatt&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-04-20 15:33:02 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">
+Oleg, I've just been kicking around your part of the cycle detection/removal code. Looks fine to me. It's a nice, localized, recursion detector.
+
+To test the tests I first applied the patch to tests only and a run of the IAggragateWorkingSetTest got me two failures. Applying the rest of the patch to the actual working set code turned the tests green.
+
+Note that the change in IWorkingSet is a (minor) API change since the code can now throw an IllegalStateException. However it's replacing a non-recoverable StackOverflow so I don't see it as an issue but it'll have to get PMC's blessing since it's past API freeze...Boris, do you see any issues with this?
+</pre>
+    </div>
+
+    <div id="c66" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c66">Comment 66</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Boris Bokowski</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=bokowski&#64;google.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=bokowski&#64;google.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-04-20 22:41:09 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=194917#c65">comment #65</a>)
+<span class="quote">&gt; Note that the change in IWorkingSet is a (minor) API change since the code can
+&gt; now throw an IllegalStateException. However it's replacing a non-recoverable
+&gt; StackOverflow so I don't see it as an issue but it'll have to get PMC's
+&gt; blessing since it's past API freeze...Boris, do you see any issues with this?</span >
+
+I see no problem with this change if it is thrown now where it used to run into a stack overflow. I don't think we need API change approval for this.
+</pre>
+    </div>
+
+    <div id="c67" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c67">Comment 67</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eric Moffatt</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=emoffatt&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=emoffatt&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-04-21 15:51:01 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">
+Committed in &gt;20090421. Applied Oleg's patch. I'll leave the defect open until the patch from Hitesh has been reviewed and applied...
+</pre>
+    </div>
+
+    <div id="c68" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c68">Comment 68</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eric Moffatt</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=emoffatt&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=emoffatt&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-04-23 13:55:07 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">
+Now that <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - [WorkingSets] Changing name(or label) of WorkingSet breaks logic of TreeSet where WorkingSetManager stores WorkingSets."
+   href="show_bug.cgi?id=212583">bug 212583</a> has been committed I'll mark this as FIXED.
+</pre>
+    </div>
+
+    <div id="c69" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=194917#c69">Comment 69</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Oleg Besedin</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ob1.eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ob1.eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-04-28 14:28:40 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Verified that JUnit passes and code changes are present in the I20090428-0100.</pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=194917">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=194917">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=194917">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=194917&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=194917" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>

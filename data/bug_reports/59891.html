@@ -1,0 +1,3926 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>59891 &ndash; [formatter] improve lines wrapping in nested method calls</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "59891 – [formatter] improve lines wrapping in nested method calls",
+                             "show_bug.cgi?id=59891" );
+        document.title = "59891 – [formatter] improve lines wrapping in nested method calls";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "59891 – [formatter] improve lines wrapping in nested method calls", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_VERIFIED
+                 bz_product_JDT
+                 bz_component_Core
+                 bz_bug_59891 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;59891</span>
+
+        <span id="subtitle" class="subheader">[formatter] improve lines wrapping in nested method calls</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2010-05-19 09:57:57 EDT</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=59891&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=59891" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2010-05-19 09:57:57">
+  <input type="hidden" name="id" value="59891">
+  <input type="hidden" name="token" value="1629875259-c9Wff1i4WVDUD_MSr9-9uDVTzukA2l1BV9FTd9iVCxA">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=59891"><b>Bug&nbsp;59891</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">[formatter] improve lines wrapping in nested method calls</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span>[formatter] improve lines wrapping in nested method calls
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      '[formatter] improve lines wrapping in nested method calls' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">VERIFIED
+          FIXED
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >JDT
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >Eclipse Project
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=JDT"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >Core
+
+  (<a href="buglist.cgi?component=Core&amp;product=JDT&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>3.0 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">PC
+        Windows XP
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P3
+       normal<span id="votes_container">
+      with
+      <a href="page.cgi?id=voting/bug.html&amp;bug_id=59891">16 
+            votes</a>
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=59891#vote_59891">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>3.6 M7 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">Frederic Fusier</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=frederic_fusier&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=frederic_fusier&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard">
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'jdt-core-inbox\x40eclipse.org',
+        '');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          <tr>
+    <th class="field_label">
+      <label>Duplicates (2)</label>:
+    </th>
+    <td class="field_value">
+      <span id="duplicates"><a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - Code formatter cannot produce same result as in 2.1"
+   href="show_bug.cgi?id=146175">146175</a> <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - [formatter] Qualified invocation + binary expressions excessive wrap"
+   href="show_bug.cgi?id=203588">203588</a> 
+      </span>
+      (<a href="buglist.cgi?bug_id=146175,203588">view as bug list</a>)
+    </td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+
+  </td>
+  </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2004-04-25 18:02 EDT by <span class="vcard"><span class="fn">Dan Berindei</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=dberindei&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=dberindei&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2010-05-19 09:57 EDT
+      (<a href="show_activity.cgi?id=59891">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>32 
+          users
+          <span id="cc_edit_area_showhide_container" class="bz_default_hidden">
+            (<a href="#" id="cc_edit_area_showhide">show</a>)
+          </span>
+        <div id="cc_edit_area">
+          <br>
+            <select id="cc" multiple="multiple" size="5" >
+                <option value="acabler">acabler</option>
+                <option value="amj87.iitr">amj87.iitr</option>
+                <option value="Andrzej.Miazga">Andrzej.Miazga</option>
+                <option value="arjan.tijms">arjan.tijms</option>
+                <option value="ben.arnold.spam">ben.arnold.spam</option>
+                <option value="bokowski">bokowski</option>
+                <option value="cagatayk">cagatayk</option>
+                <option value="daniel_megert">daniel_megert</option>
+                <option value="eclipse">eclipse</option>
+                <option value="georgmueller">georgmueller</option>
+                <option value="hao.yu">hao.yu</option>
+                <option value="jarthana">jarthana</option>
+                <option value="jerome_lanneluc">jerome_lanneluc</option>
+                <option value="juergen.kremp">juergen.kremp</option>
+                <option value="karenfbutzke">karenfbutzke</option>
+                <option value="laurent.goubet">laurent.goubet</option>
+                <option value="mark.edward.davis">mark.edward.davis</option>
+                <option value="markus.kell.r">markus.kell.r</option>
+                <option value="mauritz.lovgren">mauritz.lovgren</option>
+                <option value="mauromol">mauromol</option>
+                <option value="mlists">mlists</option>
+                <option value="mmo">mmo</option>
+                <option value="nanda.firdausi">nanda.firdausi</option>
+                <option value="nikolaymetchev">nikolaymetchev</option>
+                <option value="oliver">oliver</option>
+                <option value="Olivier_Thomann">Olivier_Thomann</option>
+                <option value="ric.almeida">ric.almeida</option>
+                <option value="roland">roland</option>
+                <option value="sduchin">sduchin</option>
+                <option value="soleroGT">soleroGT</option>
+                <option value="tomy.inhauser">tomy.inhauser</option>
+                <option value="trevorj">trevorj</option>
+            </select>
+        </div>
+          <script type="text/javascript">
+            hideEditableField( 'cc_edit_area_showhide_container', 
+                               'cc_edit_area', 
+                               'cc_edit_area_showhide', 
+                               '', 
+                               '');  
+          </script>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" >
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+      <tr id="a1" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=165868"
+               title="View the content of the attachment">
+          <b>Proposed patch</b></a>
+
+          <span class="bz_attach_extra_info">
+              (66.89 KB,
+                patch)
+
+            <br>
+            <a href="#attach_165868"
+               title="Go to the comment associated with the attachment">2010-04-22 21:59 EDT</a>,
+
+            <span class="vcard"><span class="fn">Frederic Fusier</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=frederic_fusier&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=frederic_fusier&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=165868&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=165868&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a2" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=165869"
+               title="View the content of the attachment">
+          <b>Fix failing JDT-UI tests as the formatting output changed</b></a>
+
+          <span class="bz_attach_extra_info">
+              (10.97 KB,
+                patch)
+
+            <br>
+            <a href="#attach_165869"
+               title="Go to the comment associated with the attachment">2010-04-22 22:02 EDT</a>,
+
+            <span class="vcard"><span class="fn">Frederic Fusier</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=frederic_fusier&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=frederic_fusier&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=165869&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=165869&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a3" class="bz_contenttype_application_octet-stream">
+        <td>
+            <a href="attachment.cgi?id=166198"
+               title="View the content of the attachment">
+          <b>testcase</b></a>
+
+          <span class="bz_attach_extra_info">
+              (415 bytes,
+                application/octet-stream)
+
+            <br>
+            <a href="#attach_166198"
+               title="Go to the comment associated with the attachment">2010-04-27 09:49 EDT</a>,
+
+            <span class="vcard"><span class="fn">Ayushman Jain</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=amj87.iitr&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=amj87.iitr&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=166198&amp;action=edit">Details</a>
+        </td>
+      </tr>
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <span class="bz_attach_view_hide">
+            <a id="view_all" href="attachment.cgi?bugid=59891&amp;action=viewall">View All</a>
+        </span>
+        <a href="attachment.cgi?bugid=59891&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=59891&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Dan Berindei</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=dberindei&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=dberindei&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-04-25 18:02:56 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Build 3.0M8
+
+I'm using the Code formatter with the Java Conventions profile (with only the
+maximum line width changed to 40 characters) to format this class:
+
+public class Main {
+    public static void main(
+            String[] args) {
+        foo(bar(1, 2, 3), baz(4, 5, 6, 7));
+    }
+}
+
+The result looks like this:
+
+public class Main {
+    public static void main(
+            String[] args) {
+        foo(bar(1, 2, 3), baz(4, 5, 6,
+                7));
+    }
+}
+
+I was expecting something like this:
+
+public class Main {
+    public static void main(
+            String[] args) {
+        foo(bar(1, 2, 3), 
+                baz(4, 5, 6, 7));
+    }
+}
+
+The formatter should break the line in  between the calls to bar and baz, so
+that each line can be read by itself (almost). In general, this means that lines
+should be broken at the highest level possible.
+
+Btw, I've noticed that lines with arithmetic expressions are already split this
+way, so subexpressions contained in paranthesis are usually kept on the same
+line. Witth the same settings, the following code: 
+
+public class Main {
+    public static void main(
+            String[] args) {
+        int a = (1 + 2 + 3) + (4 + 5 + 6 + 7);
+    }
+}
+
+gets formatted like this:
+
+public class Main {
+    public static void main(
+            String[] args) {
+        int a = (1 + 2 + 3)
+                + (4 + 5 + 6 + 7);
+    }
+}</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Olivier Thomann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Olivier_Thomann&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Olivier_Thomann&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-05-19 15:38:32 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Reconsider post 3.0.</pre>
+    </div>
+
+    <div id="c2" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c2">Comment 2</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jerome Lanneluc</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jerome_lanneluc&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jerome_lanneluc&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-09-23 09:56:44 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Reconsidering for 3.1</pre>
+    </div>
+
+    <div id="c3" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c3">Comment 3</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Olivier Thomann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Olivier_Thomann&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Olivier_Thomann&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-09-27 12:27:13 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I'll investigate it for M3.</pre>
+    </div>
+
+    <div id="c4" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c4">Comment 4</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tim Taylor</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse&#64;tool-man.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse&#64;tool-man.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-09-27 17:13:42 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I would generalize this bug as follows:
+
+&quot;Line wrapping needs better aesthetics&quot;
+
+Here's another example, this time mixing conditional operator and method calls.
+
+Eclipse 3.1 code formatter:
+
+    String foo = thing.startsWith(&quot;/stuff/&quot;) ? thing.substring(
+            &quot;/stuff&quot;.length()) : thing;
+
+
+More aesthetic formatting:
+
+    String foo = thing.startsWith(&quot;/stuff/&quot;)
+            ? thing.substring(&quot;/stuff&quot;.length()) : thing;
+
+or (depending on your wrapping prefs)
+
+    String foo = thing.startsWith(&quot;/stuff/&quot;)
+            ? thing.substring(&quot;/stuff&quot;.length())
+            : thing;
+
+
+A variation using string concatenation instead of a conditional operator:
+
+    String foo = thing.startsWith(&quot;/stuff/&quot;) ? &quot;/&quot; +
+            &quot;/stuff&quot;.length() + thing : thing;
+
+Would be more readable as:
+
+    String foo = thing.startsWith(&quot;/stuff/&quot;)
+            ? &quot;/&quot; + &quot;/stuff&quot;.length() + thing
+            : thing;
+
+
+I think the generalization is that &quot;arguments&quot; to the outermost &quot;method call&quot;
+shouldn't be wrapped unless necessary.</pre>
+    </div>
+
+    <div id="c5" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c5">Comment 5</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Olivier Thomann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Olivier_Thomann&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Olivier_Thomann&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-18 12:06:57 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - [formatter] unnecessary line braking"
+   href="show_bug.cgi?id=95735">Bug 95735</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c6" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c6">Comment 6</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Andrzej Miazga</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Andrzej.Miazga&#64;zst-softel.pl" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Andrzej.Miazga&#64;zst-softel.pl" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-04-07 07:39:54 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Please add the option to disable this &quot;Line wrapping better aesthetics&quot; feature, because I'd like to format my code exactly like the formatter formats it now.</pre>
+    </div>
+
+    <div id="c7" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c7">Comment 7</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Olivier Thomann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Olivier_Thomann&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Olivier_Thomann&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-06-02 12:05:24 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Moving to 3.3.
+This definitely needs to be addressed in the 3.3 time frame.</pre>
+    </div>
+
+    <div id="c8" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c8">Comment 8</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Olivier Thomann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Olivier_Thomann&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Olivier_Thomann&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-08-14 11:50:58 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - [formatter] Source Formatter could not format chain-style method call correctly"
+   href="show_bug.cgi?id=152444">Bug 152444</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c9" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c9">Comment 9</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Olivier Thomann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Olivier_Thomann&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Olivier_Thomann&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-11-17 15:18:25 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED WORKSFORME - [formatter] Proper indentation-option for method arguments and qualified invocations still missing"
+   href="show_bug.cgi?id=164093">Bug 164093</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c10" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c10">Comment 10</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Olivier Thomann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Olivier_Thomann&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Olivier_Thomann&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-11-21 11:06:15 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - Code formatter cannot produce same result as in 2.1"
+   href="show_bug.cgi?id=146175">Bug 146175</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c11" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c11">Comment 11</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Olivier Thomann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Olivier_Thomann&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Olivier_Thomann&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-11-21 12:32:45 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - Strange placing of '.method(' part in Java Conventions formatter"
+   href="show_bug.cgi?id=130471">Bug 130471</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c12" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c12">Comment 12</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Olivier Thomann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Olivier_Thomann&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Olivier_Thomann&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-11-21 12:33:10 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - [formatting] Prevent line breaks before &quot;.&quot;"
+   href="show_bug.cgi?id=97613">Bug 97613</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c13" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c13">Comment 13</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Olivier Thomann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Olivier_Thomann&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Olivier_Thomann&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-05-09 09:30:47 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Postponed again.</pre>
+    </div>
+
+    <div id="c14" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c14">Comment 14</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Olivier Thomann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Olivier_Thomann&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Olivier_Thomann&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-06-21 11:33:25 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - [Code Formatter] Line Wrapping policy wrap only when necessary issue"
+   href="show_bug.cgi?id=83915">Bug 83915</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c15" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c15">Comment 15</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Olivier Thomann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Olivier_Thomann&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Olivier_Thomann&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-06-21 12:05:18 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - formatter wraps line improperly"
+   href="show_bug.cgi?id=99026">Bug 99026</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c16" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c16">Comment 16</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Olivier Thomann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Olivier_Thomann&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Olivier_Thomann&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-06-21 12:20:33 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - Incorrect source formatting"
+   href="show_bug.cgi?id=104004">Bug 104004</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c17" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c17">Comment 17</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Olivier Thomann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Olivier_Thomann&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Olivier_Thomann&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-06-21 12:22:12 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - [formating]: wrong line breaks"
+   href="show_bug.cgi?id=104774">Bug 104774</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c18" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c18">Comment 18</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Olivier Thomann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Olivier_Thomann&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Olivier_Thomann&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-06-21 13:11:38 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - Unexpected newline when using formatter with default settings"
+   href="show_bug.cgi?id=114639">Bug 114639</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c19" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c19">Comment 19</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Olivier Thomann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Olivier_Thomann&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Olivier_Thomann&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-06-21 13:12:15 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - [code formatter] ability to align arguments vertically in a row"
+   href="show_bug.cgi?id=117896">Bug 117896</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c20" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c20">Comment 20</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Olivier Thomann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Olivier_Thomann&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Olivier_Thomann&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-06-21 14:16:11 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - [formatter] Format joins lines causing them to break an 80 character limit"
+   href="show_bug.cgi?id=179796">Bug 179796</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c21" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c21">Comment 21</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jerome Lanneluc</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jerome_lanneluc&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jerome_lanneluc&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-12 07:04:53 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">We ran out of time again. Deferring post 3.4</pre>
+    </div>
+
+    <div id="c22" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c22">Comment 22</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Georg Müller</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=georgmueller&#64;gmx.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=georgmueller&#64;gmx.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-02-19 06:20:05 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I don't know about the current state, but from all the closed bugs, having the following formatting since years is a big problem:
+
+--start--
+        out
+                .printf(
+                        &quot;test %d test %d test %d test %d test %d test %d test %d test %d&quot;,
+                        1, 2, 3, 4, 5, 6, 7);
+--end---
+</pre>
+    </div>
+
+    <div id="c23" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c23">Comment 23</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Roland Tepp</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=roland&#64;videobet.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=roland&#64;videobet.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-03-19 04:58:57 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=59891#c22">comment #22</a>)
+Exactly my point.
+
+Logical splitting by groups of code is nice and all, but for god's sake, splitting the code in ways that makes lines even longer than they were before strikes me as exceptionally stupid.
+
+Aesthetics can be a matter of taste, but splitting code so that the resulting line is even longer than the original line of code, seems a genuine bug to me...
+
+(+1 vote)</pre>
+    </div>
+
+    <div id="c24" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c24">Comment 24</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Frederic Fusier</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=frederic_fusier&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=frederic_fusier&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-10-02 11:28:49 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - [formatter] Qualified invocation + binary expressions excessive wrap"
+   href="show_bug.cgi?id=203588">Bug 203588</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c25" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c25">Comment 25</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">arjan tijms</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=arjan.tijms&#64;mbuyu.nl" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=arjan.tijms&#64;mbuyu.nl" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-12-31 16:16:55 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I would love to see the Eclipse formatter able to do a formating like this:
+
+return new ToStringBuilder( this )
+	.append( &quot;name&quot;, getName() )
+	.append( &quot;category&quot;, getCategory() )
+	.append( &quot;download&quot;, getDownloadUrl() )
+	.append( &quot;detail&quot;, getDetailUrl() )
+	.append( &quot;publisher&quot;, getPublisher() )
+	.append( &quot;time&quot;, getPublishTime() )
+	.append( &quot;users&quot;, getUsers() )
+	.toString();
+
+(see <a href="http://dev.eclipse.org/newslists/news.eclipse.newcomer/msg10260.html">http://dev.eclipse.org/newslists/news.eclipse.newcomer/msg10260.html</a>)
+
+In our code we make often use of the Builder pattern, which allows for a very elegant way to do a lot of things. The only small downside till date has been that the Eclipse Java formatting of these constructs is horrible. Simply horrible. We now have to hunt down all occurrences of this pattern after an automatic format, correct the formatting manually, and then hope that someone else doesn't apply automatic formatting again later.
+
+How hard would adding such a formatting option be for an outsider from the community? Could someone maybe comment about that and maybe point us in the right direction?</pre>
+    </div>
+
+    <div id="c26" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c26">Comment 26</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Frederic Fusier</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=frederic_fusier&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=frederic_fusier&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-03-04 11:25:59 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I ran out of time for M6 for this bug as I needed to focus on bugs which required an API addition, hence move its target to M7...</pre>
+    </div>
+
+    <div id="c27" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c27">Comment 27</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Frederic Fusier</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=frederic_fusier&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=frederic_fusier&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-04-14 07:14:35 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=59891#c8">comment #8</a>)
+<span class="quote">&gt; *** <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - [formatter] Source Formatter could not format chain-style method call correctly"
+   href="show_bug.cgi?id=152444">Bug 152444</a> has been marked as a duplicate of this bug. ***</span >
+<a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - NPE in JDTCompilerAdapter"
+   href="show_bug.cgi?id=15244">Bug 15244</a> was in fact a duplicate of <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - [formatter] the code formatter doesn't respect my new lines"
+   href="show_bug.cgi?id=198074">bug 198074</a>...
+
+(In reply to <a href="show_bug.cgi?id=59891#c11">comment #11</a>)
+<span class="quote">&gt; *** <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - Strange placing of '.method(' part in Java Conventions formatter"
+   href="show_bug.cgi?id=130471">Bug 130471</a> has been marked as a duplicate of this bug. ***</span >
+<a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - Strange placing of '.method(' part in Java Conventions formatter"
+   href="show_bug.cgi?id=130471">Bug 130471</a> was in fact a duplicate of <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - [Formatter] Wrap when necessary too aggressive on short qualifiers"
+   href="show_bug.cgi?id=264112">bug 264112</a>...
+
+(In reply to <a href="show_bug.cgi?id=59891#c14">comment #14</a>)
+<span class="quote">&gt; *** <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - [Code Formatter] Line Wrapping policy wrap only when necessary issue"
+   href="show_bug.cgi?id=83915">Bug 83915</a> has been marked as a duplicate of this bug. ***</span >
+<a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - [Code Formatter] Line Wrapping policy wrap only when necessary issue"
+   href="show_bug.cgi?id=83915">Bug 83915</a> was in fact a duplicate of <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - [Formatter] Wrap when necessary too aggressive on short qualifiers"
+   href="show_bug.cgi?id=264112">bug 264112</a>...
+
+(In reply to <a href="show_bug.cgi?id=59891#c15">comment #15</a>)
+<span class="quote">&gt; *** <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - formatter wraps line improperly"
+   href="show_bug.cgi?id=99026">Bug 99026</a> has been marked as a duplicate of this bug. ***</span >
+<a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - formatter wraps line improperly"
+   href="show_bug.cgi?id=99026">Bug 99026</a> was in fact a duplicate of <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - [Formatter] Wrap when necessary too aggressive on short qualifiers"
+   href="show_bug.cgi?id=264112">bug 264112</a>...
+
+(In reply to <a href="show_bug.cgi?id=59891#c16">comment #16</a>)
+<span class="quote">&gt; *** <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - Incorrect source formatting"
+   href="show_bug.cgi?id=104004">Bug 104004</a> has been marked as a duplicate of this bug. ***</span >
+<a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - Incorrect source formatting"
+   href="show_bug.cgi?id=104004">Bug 104004</a> was in fact a duplicate of <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - [Formatter] Wrap when necessary too aggressive on short qualifiers"
+   href="show_bug.cgi?id=264112">bug 264112</a>...
+
+(In reply to <a href="show_bug.cgi?id=59891#c17">comment #17</a>)
+<span class="quote">&gt; *** <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - [formating]: wrong line breaks"
+   href="show_bug.cgi?id=104774">Bug 104774</a> has been marked as a duplicate of this bug. ***</span >
+<a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - [formating]: wrong line breaks"
+   href="show_bug.cgi?id=104774">Bug 104774</a> was in fact a duplicate of <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - [Formatter] Wrap when necessary too aggressive on short qualifiers"
+   href="show_bug.cgi?id=264112">bug 264112</a>...
+
+(In reply to <a href="show_bug.cgi?id=59891#c18">comment #18</a>)
+<span class="quote">&gt; *** <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - Unexpected newline when using formatter with default settings"
+   href="show_bug.cgi?id=114639">Bug 114639</a> has been marked as a duplicate of this bug. ***</span >
+<a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - Unexpected newline when using formatter with default settings"
+   href="show_bug.cgi?id=114639">Bug 114639</a> was in fact a duplicate of <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - [Formatter] Wrap when necessary too aggressive on short qualifiers"
+   href="show_bug.cgi?id=264112">bug 264112</a>...
+
+(In reply to <a href="show_bug.cgi?id=59891#c19">comment #19</a>)
+<span class="quote">&gt; *** <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - [code formatter] ability to align arguments vertically in a row"
+   href="show_bug.cgi?id=117896">Bug 117896</a> has been marked as a duplicate of this bug. ***</span >
+<a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - [code formatter] ability to align arguments vertically in a row"
+   href="show_bug.cgi?id=117896">Bug 117896</a> was in fact a duplicate of <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - [Formatter] Wrap when necessary too aggressive on short qualifiers"
+   href="show_bug.cgi?id=264112">bug 264112</a>...</pre>
+    </div>
+
+    <div id="c28" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c28">Comment 28</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Frederic Fusier</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=frederic_fusier&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=frederic_fusier&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-04-14 07:15:33 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=59891#c23">comment #23</a>)
+<span class="quote">&gt; (In reply to <a href="show_bug.cgi?id=59891#c22">comment #22</a>)
+&gt; Exactly my point.
+&gt; </span >
+This was fixed in 3.6M5, see <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - [Formatter] Wrap when necessary too aggressive on short qualifiers"
+   href="show_bug.cgi?id=264112">bug 264112</a></pre>
+    </div>
+
+    <div id="c29" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c29">Comment 29</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Frederic Fusier</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=frederic_fusier&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=frederic_fusier&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-04-14 07:22:33 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=59891#c25">comment #25</a>)
+<span class="quote">&gt; I would love to see the Eclipse formatter able to do a formating like this:
+&gt; 
+&gt; return new ToStringBuilder( this )
+&gt;     .append( &quot;name&quot;, getName() )
+&gt;     .append( &quot;category&quot;, getCategory() )
+&gt;     .append( &quot;download&quot;, getDownloadUrl() )
+&gt;     .append( &quot;detail&quot;, getDetailUrl() )
+&gt;     .append( &quot;publisher&quot;, getPublisher() )
+&gt;     .append( &quot;time&quot;, getPublishTime() )
+&gt;     .append( &quot;users&quot;, getUsers() )
+&gt;     .toString();
+&gt; 
+&gt; (see <a href="http://dev.eclipse.org/newslists/news.eclipse.newcomer/msg10260.html">http://dev.eclipse.org/newslists/news.eclipse.newcomer/msg10260.html</a>)
+&gt; 
+&gt; In our code we make often use of the Builder pattern, which allows for a very
+&gt; elegant way to do a lot of things. The only small downside till date has been
+&gt; that the Eclipse Java formatting of these constructs is horrible. Simply
+&gt; horrible. We now have to hunt down all occurrences of this pattern after an
+&gt; automatic format, correct the formatting manually, and then hope that someone
+&gt; else doesn't apply automatic formatting again later.
+&gt; 
+&gt; How hard would adding such a formatting option be for an outsider from the
+&gt; community? Could someone maybe comment about that and maybe point us in the
+&gt; right direction?</span >
+
+This is a requirement to add a new formatter preference which would break line at each cascaded message sent. Please open a new bug for it.
+
+Waiting for next version about this requirement, 3.6 will allow you to format manually this kind of call and disable the formatter around it (see <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - Tags for disabling/enabling code formatter (feature)"
+   href="show_bug.cgi?id=27079">bug 27079</a>)</pre>
+    </div>
+
+    <div id="c30" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c30">Comment 30</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Frederic Fusier</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=frederic_fusier&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=frederic_fusier&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-04-14 11:35:49 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=59891#c4">comment #4</a>)
+<span class="quote">&gt; I would generalize this bug as follows:
+&gt; 
+&gt; &quot;Line wrapping needs better aesthetics&quot;
+&gt; 
+&gt; Here's another example, this time mixing conditional operator and method calls.
+&gt; 
+&gt; Eclipse 3.1 code formatter:
+&gt; 
+&gt;     String foo = thing.startsWith(&quot;/stuff/&quot;) ? thing.substring(
+&gt;             &quot;/stuff&quot;.length()) : thing;
+&gt; 
+&gt; 
+&gt; More aesthetic formatting:
+&gt; 
+&gt;     String foo = thing.startsWith(&quot;/stuff/&quot;)
+&gt;             ? thing.substring(&quot;/stuff&quot;.length()) : thing;
+&gt; 
+&gt; or (depending on your wrapping prefs)
+&gt; 
+&gt;     String foo = thing.startsWith(&quot;/stuff/&quot;)
+&gt;             ? thing.substring(&quot;/stuff&quot;.length())
+&gt;             : thing;
+&gt; 
+&gt; 
+&gt; A variation using string concatenation instead of a conditional operator:
+&gt; 
+&gt;     String foo = thing.startsWith(&quot;/stuff/&quot;) ? &quot;/&quot; +
+&gt;             &quot;/stuff&quot;.length() + thing : thing;
+&gt; 
+&gt; Would be more readable as:
+&gt; 
+&gt;     String foo = thing.startsWith(&quot;/stuff/&quot;)
+&gt;             ? &quot;/&quot; + &quot;/stuff&quot;.length() + thing
+&gt;             : thing;
+&gt; 
+&gt; 
+&gt; I think the generalization is that &quot;arguments&quot; to the outermost &quot;method call&quot;
+&gt; shouldn't be wrapped unless necessary.</span >
+
+This is a different requirement than the original opened issue. Please open a separate enhancement if you want this new behavior to be added to the formatter preferences...</pre>
+    </div>
+
+    <div id="c31" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c31">Comment 31</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Frederic Fusier</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=frederic_fusier&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=frederic_fusier&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-04-22 21:59:33 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=165868&amp;action=diff" name="attach_165868" title="Proposed patch">attachment 165868</a> <a href="attachment.cgi?id=165868&amp;action=edit" title="Proposed patch">[details]</a></span>
+Proposed patch
+
+Not perfect as there are still some corner cases which are difficult to address with the current design. But I think this patch improves a lot the formatting of the method calls...</pre>
+    </div>
+
+    <div id="c32" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c32">Comment 32</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Frederic Fusier</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=frederic_fusier&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=frederic_fusier&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-04-22 22:02:19 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=165869&amp;action=diff" name="attach_165869" title="Fix failing JDT-UI tests as the formatting output changed">attachment 165869</a> <a href="attachment.cgi?id=165869&amp;action=edit" title="Fix failing JDT-UI tests as the formatting output changed">[details]</a></span>
+Fix failing JDT-UI tests as the formatting output changed
+
+Markus,
+
+I want to release this patch for tomorrow (ooops today ;-)) warm-up build. We need to synchronize to be sure that those two patches are released in the same time frame...
+
+TIA</pre>
+    </div>
+
+    <div id="c33" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c33">Comment 33</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Markus Keller</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=markus.kell.r&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=markus.kell.r&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-04-23 05:54:09 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=59891#c32">comment #32</a>)
+Looks good, Dani will release this.
+
+(In reply to <a href="show_bug.cgi?id=59891#c29">comment #29</a>)
+<span class="quote">&gt; This is a requirement to add a new formatter preference which would break line
+&gt; at each cascaded message sent. Please open a new bug for it.
+&gt; 
+&gt; Waiting for next version about this requirement, 3.6 will allow you to format
+&gt; manually this kind of call and disable the formatter around it (see <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - Tags for disabling/enabling code formatter (feature)"
+   href="show_bug.cgi?id=27079">bug 27079</a>)</span >
+
+... or you can select &quot;Line Wrapping &gt; Never join already wrapped lines&quot; globally. Then, you can break it manually and the formatter will only format inside lines (or add additional line breaks if necessary).</pre>
+    </div>
+
+    <div id="c34" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c34">Comment 34</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Frederic Fusier</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=frederic_fusier&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=frederic_fusier&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-04-23 06:11:21 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=59891#c31">comment #31</a>)
+<span class="quote">&gt; Created an attachment (id=165868) [details]
+&gt; Proposed patch</span >
+
+Released for 3.6M7 in HEAD stream.</pre>
+    </div>
+
+    <div id="c35" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c35">Comment 35</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Frederic Fusier</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=frederic_fusier&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=frederic_fusier&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-04-23 06:19:05 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=59891#c5">comment #5</a>)
+<span class="quote">&gt; *** <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - [formatter] unnecessary line braking"
+   href="show_bug.cgi?id=95735">Bug 95735</a> has been marked as a duplicate of this bug. ***</span >
+
+(In reply to <a href="show_bug.cgi?id=59891#c12">comment #12</a>)
+<span class="quote">&gt; *** <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - [formatting] Prevent line breaks before &quot;.&quot;"
+   href="show_bug.cgi?id=97613">Bug 97613</a> has been marked as a duplicate of this bug. ***</span >
+
+(In reply to <a href="show_bug.cgi?id=59891#c9">comment #9</a>)
+<span class="quote">&gt; *** <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED WORKSFORME - [formatter] Proper indentation-option for method arguments and qualified invocations still missing"
+   href="show_bug.cgi?id=164093">Bug 164093</a> has been marked as a duplicate of this bug. ***</span >
+
+Those bugs will be finally considered as separated work and are no longer duplicates...</pre>
+    </div>
+
+    <div id="c36" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c36">Comment 36</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Dani Megert</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=daniel_megert&#64;ch.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=daniel_megert&#64;ch.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-04-23 07:26:29 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text"><span class="quote">&gt;Created an attachment (id=165869) [details] [diff]
+&gt;Fix failing JDT-UI tests as the formatting output changed</span >
+Committed to HEAD and released into I20100423-0800.</pre>
+    </div>
+
+    <div id="c37" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c37">Comment 37</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Ayushman Jain</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=amj87.iitr&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=amj87.iitr&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-04-27 09:38:08 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I dont know if this a corner case and has already been reported in a bug - but i found an inconsistency during verification.
+In the below example, try CTRL+SHIFT+F:
+
+class ABC {
+    public String getString(String sadla, String ad, String qwer3q, String newPaasdram){
+	return &quot;hi&quot;;
+}
+public String foo(String a, String b) {
+    return &quot;hello&quot;;
+}
+
+public static void main(String[] args) {
+        ABC abc  = new ABC();
+	abc.foo(abc.getString(&quot;sadldwdqd&quot;, &quot;adadw&quot;, &quot;qwdwwfr&quot;, &quot;WFs&quot;), abc.getString(&quot;sadlaawddwdqd&quot;, &quot;adawqrdw&quot;, &quot;qwdwqrfqwfr&quot;,&quot;dwqFRFRQEWFs&quot;));
+}
+}
+
+The output obtained is:
+
+...
+public static void main(String[] args) {
+        ABC abc  = new ABC();
+	abc.foo(abc.getString(&quot;sadldwdqd&quot;, &quot;adadw&quot;, &quot;qwdwwfr&quot;, &quot;WFs&quot;), abc
+		.getString(&quot;sadlaawddwdqd&quot;, &quot;adawqrdw&quot;, &quot;qwdwqrfqwfr&quot;,
+			&quot;dwqFRFRQEWFs&quot;));
+...
+
+
+while this should be expected:
+...
+public static void main(String[] args) {
+        ABC abc  = new ABC();
+	abc.foo(abc.getString(&quot;sadldwdqd&quot;, &quot;adadw&quot;, &quot;qwdwwfr&quot;, &quot;WFs&quot;), 
+                abc.getString(&quot;sadlaawddwdqd&quot;, &quot;adawqrdw&quot;, &quot;qwdwqrfqwfr&quot;,
+			&quot;dwqFRFRQEWFs&quot;));
+...
+
+Different lengths of strings passed as arguments give different outputs here. This works fine if the strings passed as arguments are small.
+Frederic, can you please verify this? I'll raise a separate defect if this isnt a known issue already.Thanks.</pre>
+    </div>
+
+    <div id="c38" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c38">Comment 38</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Frederic Fusier</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=frederic_fusier&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=frederic_fusier&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-04-27 09:45:24 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=59891#c37">comment #37</a>)
+
+Ayush, please use an attached file or reduce the line length to make your test case readable, thanks</pre>
+    </div>
+
+    <div id="c39" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c39">Comment 39</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Ayushman Jain</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=amj87.iitr&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=amj87.iitr&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-04-27 09:49:27 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=166198" name="attach_166198" title="testcase">attachment 166198</a> <a href="attachment.cgi?id=166198&amp;action=edit" title="testcase">[details]</a></span>
+testcase</pre>
+    </div>
+
+    <div id="c40" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c40">Comment 40</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Ayushman Jain</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=amj87.iitr&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=amj87.iitr&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-04-27 09:51:12 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Oh and forgot to mention... I'm using java conventions default profile</pre>
+    </div>
+
+    <div id="c41" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c41">Comment 41</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Frederic Fusier</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=frederic_fusier&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=frederic_fusier&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-04-27 10:20:04 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=59891#c37">comment #37</a>)
+<span class="quote">&gt; 
+&gt; Different lengths of strings passed as arguments give different outputs here.
+&gt; This works fine if the strings passed as arguments are small.
+&gt; Frederic, can you please verify this? I'll raise a separate defect if this isnt
+&gt; a known issue already.Thanks.</span >
+
+Yes, this is a corner case, where the second argument is over the max line, hence the formatter enters into the &quot;panic&quot; mode and breaks the line as it did before (i.e. the sooner as it can).
+
+Please open a new bug with this test case attached. It will be the starting point for the second round to definitely fix this issue...</pre>
+    </div>
+
+    <div id="c42" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c42">Comment 42</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Ayushman Jain</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=amj87.iitr&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=amj87.iitr&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-04-27 10:33:24 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=59891#c41">comment #41</a>)
+<span class="quote">&gt; Yes, this is a corner case, where the second argument is over the max line,
+&gt; hence the formatter enters into the &quot;panic&quot; mode and breaks the line as it did
+&gt; before (i.e. the sooner as it can).
+&gt; 
+&gt; Please open a new bug with this test case attached. It will be the starting
+&gt; point for the second round to definitely fix this issue...</span >
+
+Thanks. Opened <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - [formatter] problem in line wrapping in nested method calls"
+   href="show_bug.cgi?id=310642">bug 310642</a> as follow up.</pre>
+    </div>
+
+    <div id="c43" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c43">Comment 43</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Ayushman Jain</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=amj87.iitr&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=amj87.iitr&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-04-27 10:34:48 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Verified for 3.6M7 using build I20100426-0852.</pre>
+    </div>
+
+    <div id="c44" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c44">Comment 44</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jay Arthanareeswaran</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jarthana&#64;in.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jarthana&#64;in.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-04-27 11:01:48 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Verified.</pre>
+    </div>
+
+    <div id="c45" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c45">Comment 45</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Laurent Goubet</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=laurent.goubet&#64;obeo.fr" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=laurent.goubet&#64;obeo.fr" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-05-17 05:11:52 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I believe this is related to this bug, let me know if I have to raise a new one instead.
+
+I have a line of code that resembles this :
+
+AcceleoUIActivator.getDefault().getLog().log(new Status(IStatus.ERROR, AcceleoUIActivator.PLUGIN_ID, e.getMessage(), e));
+
+With our formatter, it was indented like this in 3.4, 3.5 and 3.6 (until M7 went live) :
+
+AcceleoUIActivator.getDefault().getLog().log(
+		new Status(IStatus.ERROR, AcceleoUIActivator.PLUGIN_ID, e.getMessage(), e));
+
+The problem is, it is now formatted as :
+
+AcceleoUIActivator
+		.getDefault()
+		.getLog()
+		.log(new Status(IStatus.ERROR, AcceleoUIActivator.PLUGIN_ID, e.getMessage(),
+				e));
+
+With the _very same formatter_ in Eclipse 3.6RC1. This is not acceptable as our project is compatible with Eclipse 3.4, Eclipse 3.5 _and_ Eclipse 3.6. We have developpers on all three versions, and the code must look the same on all three (this is the very reason why we had a custom formatter defined on a per-project basis in the first place).
+
+This new formatting setting must be set to the &quot;old&quot; behavior by default, and allow users to use the &quot;new&quot; if they so desire ; it mustn't be forced on users. I for one don't like this new formatting, but in general I tend to consider it a bug when a configuration for something (here, the formatter) behaves differently on the same input with different Eclipses (save for bug fixes).
+
+Rambling apart, can this new setting be set to false by default or, if the behavioral change is not a regression and was desired, do I have a way to configure my formatter to use the old behavior without having my configuration fail in older Eclipses?</pre>
+    </div>
+
+    <div id="c46" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c46">Comment 46</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Frederic Fusier</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=frederic_fusier&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=frederic_fusier&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-05-18 09:36:49 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=59891#c45">comment #45</a>)
+<span class="quote">&gt; I believe this is related to this bug, let me know if I have to raise a new one
+&gt; instead.
+&gt; </span >
+The reason why we have not introduced a new preferences is that the previous behavior was obviously buggy (see all the complains along this bug and its duplicate...). Hence, we could not add a preference saying: 'keep the buggy behavior'.
+
+Obviously, I agree that in your case, the fixed behavior is not optimal... :-S
+So, please open a new bug for this peculiar issue and we'll try to address it as soon as possible.
+
+Waiting for the fix, which unfortunately would only be in 3.6.1, you can set those lines formatted as 3.5 did and disable the formatter around them using the disabling/enabling tags.
+
+E.g., if you use default tags that would look like:
+// &#64;format:off
+AcceleoUIActivator.getDefault().getLog().log(
+    new Status(IStatus.ERROR, AcceleoUIActivator.PLUGIN_ID, e.getMessage(), e));
+// &#64;format:on
+
+TIA</pre>
+    </div>
+
+    <div id="c47" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c47">Comment 47</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Laurent Goubet</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=laurent.goubet&#64;obeo.fr" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=laurent.goubet&#64;obeo.fr" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-05-18 11:37:50 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=59891#c46">comment #46</a>)
+<span class="quote">&gt; (In reply to <a href="show_bug.cgi?id=59891#c45">comment #45</a>)
+&gt; &gt; I believe this is related to this bug, let me know if I have to raise a new one
+&gt; &gt; instead.
+&gt; &gt; 
+&gt; The reason why we have not introduced a new preferences is that the previous
+&gt; behavior was obviously buggy (see all the complains along this bug and its
+&gt; duplicate...). Hence, we could not add a preference saying: 'keep the buggy
+&gt; behavior'.</span >
+
+When I look at all of the changes I have when comparing my code (formatted in RC1) with the code a colleague commited (formatted with M6), I can't help but think it is the new behavior that is buggy ... There's no accounting for taste as they say ; the main problem being that we won't be able to carry on working with different eclipses without cluttering our code with &quot;format : off&quot; comments. And I say clutter : 120 files wrongly formatted, with up to 18 lines that are now formatted differently according to the Eclipse we develop with, that's at the _very_ least a good thousand useless comments in our code ... and that's a small code base.
+
+<span class="quote">&gt; 
+&gt; Obviously, I agree that in your case, the fixed behavior is not optimal... :-S
+&gt; So, please open a new bug for this peculiar issue and we'll try to address it
+&gt; as soon as possible.
+&gt; </span >
+
+I could give more examples of places where the code was better formatted in 3.5. The real problem here is compatibility. We may be the only ones with developpers on more than a single version of Eclipse (if only for our product's backward compatibility's sake), but I doubt it. With something as important as the JDT's formatter, I find it truly hallucinating to just say &quot;we modified it, if you wish for a code formatted in a particular way, just format yourself and put &quot;&#64;format : off&quot; comments&quot;.
+
+That really accounts to this : it may be seen as &quot;buggy&quot; or &quot;ugly&quot; by others, but I might want to always put new lines before and after my braces ; I might want to have no indentation in my files ... the formatter allows it. Why doesn't it allow for me to cut my lines wherever possible (dot, opening parenthesis, comma) instead of dot only?
+
+What was once formatted as 
+
+AcceleoCommonPlugin.log(AcceleoCommonMessages.getString(INSTANTIATION_FAILURE_KEY,
+	((Class&lt;?&gt;)service).getName()), e, false);
+
+is now formatted as 
+
+AcceleoCommonPlugin.log(
+	AcceleoCommonMessages.getString(INSTANTIATION_FAILURE_KEY,
+		((Class&lt;?&gt;)service).getName()), e, false);
+
+What was once
+
+EPackage.Registry.INSTANCE.put(org.eclipse.ocl.expressions.ExpressionsPackage.eINSTANCE
+	.getNsURI(), org.eclipse.ocl.expressions.ExpressionsPackage.eINSTANCE);
+
+is now
+
+EPackage.Registry.INSTANCE.put(
+	org.eclipse.ocl.expressions.ExpressionsPackage.eINSTANCE.getNsURI(),
+	org.eclipse.ocl.expressions.ExpressionsPackage.eINSTANCE);
+
+Well you get the idea. I am all for fixing bugs, and of course allowing users to keep a bug through a preference would be stupid. Here, we're not talking about a bug, we're talking about code preferences. I like the previous behavior of breaking lines wherever possible when the max width was reached, why can't I keep it? Even it it is set to the new policy by default, there should be a way to configure it.
+
+I thought RC1 was still early enough to fix bugs, especially one that has been introduced in M7 as we're very few to have tested it. I believe the code formatter is too much of a core component (I don't really know anyone using Eclipse but not using the formatter when targetting Java) to not consider a bug something that will prevent teams (at least mine) from using the 3.6.0 release.
+
+I do not think that cluttering our code with useless comments is an acceptable workaround, and I don't think manually checking all of the 120+ changes before each commit is either. I might be the only one on this huge cc list to think like that, but I think this will get more than a few reports after Helios goes live and folks begin using it.</pre>
+    </div>
+
+    <div id="c48" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c48">Comment 48</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Dani Megert</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=daniel_megert&#64;ch.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=daniel_megert&#64;ch.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-05-18 12:05:11 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Frédéric, how hard is it to add a preference? Obviously we wouldn't call it 'Keep broken behavior' but would have to come up with a good name that reflects the formatting preference chosen by Laurent - is that possible? If we add the preference we can still have the new (fixed) style as default but at least give the opportunity to back out of it by adjusting the formatter profile.</pre>
+    </div>
+
+    <div id="c49" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c49">Comment 49</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Olivier Thomann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Olivier_Thomann&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Olivier_Thomann&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-05-18 13:13:17 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">All formatting examples given in <a href="show_bug.cgi?id=59891#c47">comment 47</a> look better to me now. All examples I have seen so far are improved.
+If we cannot fix issues with the formatter without adding new preferences to keep the old ugly formatting, because this might affect previous formatting, then we better spend our time working on something else.
+How do you want to call the new preference? We already have so many preferences... Adding one to keep the old behavior is not the right approach.
+This means that each time we fix something we need a new preference to keep the old bogus behavior. Is this really what you are asking ?</pre>
+    </div>
+
+    <div id="c50" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c50">Comment 50</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Laurent Goubet</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=laurent.goubet&#64;obeo.fr" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=laurent.goubet&#64;obeo.fr" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-05-18 14:03:13 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=59891#c49">comment #49</a>)
+<span class="quote">&gt; All formatting examples given in <a href="show_bug.cgi?id=59891#c47">comment 47</a> look better to me now. All examples
+&gt; I have seen so far are improved.</span >
+
+I mentionned it in <a href="show_bug.cgi?id=59891#c47">comment 47</a>, you confirm it in your own. This is no bug, this is a discussion about tastes. I for one prefer the old behavior for most of these samples, even if they are samples I randomly copy/pasted from my team synchronizing view. What of the example from <a href="show_bug.cgi?id=59891#c46">comment 46</a>? That one was among the ugliest I had.
+
+<span class="quote">&gt; If we cannot fix issues with the formatter without adding new preferences to
+&gt; keep the old ugly formatting, because this might affect previous formatting,
+&gt; then we better spend our time working on something else.
+&gt; How do you want to call the new preference? We already have so many
+&gt; preferences... Adding one to keep the old behavior is not the right approach.
+&gt; This means that each time we fix something we need a new preference to keep the
+&gt; old bogus behavior. Is this really what you are asking ?</span >
+
+I'll make abstraction of the &quot;bogus&quot;, I believe I already discussed that. For the rest, yes. If we are to break the formatting for the community at large, I'd rather a preference be introduced to let those that don't like the change, or teams with legacy code to maintain, keep the formatting they like and/or are accustomed to. Your alternative isn't really better : force all users to switch to 3.6M7 or later, format all of their projects, commit it and never try to go back to ol' Galileo ever again lest they have to manually double-check their code before any commit. That with the issues it can bring to projects that strive for compatibility with multiple Eclipse versions.
+
+Might not be for you, but we have users, clients, fellow developpers that are still using old Eclipses and cannot upgrade. Striving to maintain compatibility through API breakages of the frameworks we depend on is already hard enough, having to double-check each and every commit to review what really are changes and what are simply noise is an unwanted overhead.
+
+That being said, this is the very same formatter we have used since Eclipse 3.3 ; and 3.6M7 is the very first time it gets broken like that. I believe this doesn't mean that no bug has ever been fixed for the past 3 years. On the contrary, many preferences have been added to fine-tune the formatting of our code, and it's been a pleasure so far to work with something as stable and robust as that. I don't think adding another preference to let users choose how their lines should be broken (as I understand it, either &quot;on nested call&quot; or &quot;whenever possible&quot;) would be that much of a deviation to the past years' evolution.</pre>
+    </div>
+
+    <div id="c51" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c51">Comment 51</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Frederic Fusier</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=frederic_fusier&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=frederic_fusier&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-05-18 14:32:37 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=59891#c50">comment #50</a>)
+<span class="quote">&gt; 
+&gt; I mentionned it in <a href="show_bug.cgi?id=59891#c47">comment 47</a>, you confirm it in your own. This is no bug, 
+&gt; this is a discussion about tastes. I for one prefer the old behavior for most 
+&gt; of these samples, even if they are samples I randomly copy/pasted from my team
+&gt; synchronizing view. What of the example from <a href="show_bug.cgi?id=59891#c46">comment 46</a>? That one was among 
+&gt; the ugliest I had.
+&gt; </span >
+I guess you meant <a href="show_bug.cgi?id=59891#c45">comment 45</a>. For this one I already agree that the current behavior deserve a new bug to be opened...
+
+<span class="quote">&gt; ...
+&gt; That being said, this is the very same formatter we have used since Eclipse 3.3
+&gt; ; and 3.6M7 is the very first time it gets broken like that. I believe this
+&gt; doesn't mean that no bug has ever been fixed for the past 3 years. On the
+&gt; contrary, many preferences have been added to fine-tune the formatting of our
+&gt; code, and it's been a pleasure so far to work with something as stable and
+&gt; robust as that. I don't think adding another preference to let users choose how
+&gt; their lines should be broken (as I understand it, either &quot;on nested call&quot; or
+&gt; &quot;whenever possible&quot;) would be that much of a deviation to the past years'
+&gt; evolution.</span >
+
+That's wrong, we strongly changed the formatter between 3.3 and 3.4 around comments formatting. And of course we didn't get it the first time, many bugs were opened at that time about this change and we worked hard to fix them all and finally succeeded to get an agreement on the new version when initial misbehaviors were fixed.
+
+But at that time, nobody complains about this compatibility. So, I guess that using three different versions of Eclipse to edit the same file might be a little bit a not so frequent configuration.
+
+BTW, have you also tried to use the 'Never join lines' preference? It seems that what you're asking for looks like this already existing preference...</pre>
+    </div>
+
+    <div id="c52" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c52">Comment 52</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Laurent Goubet</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=laurent.goubet&#64;obeo.fr" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=laurent.goubet&#64;obeo.fr" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-05-18 15:50:27 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Sorry, this'll be another lengthy post, got a little carried away with my examples.
+
+(In reply to <a href="show_bug.cgi?id=59891#c51">comment #51</a>)
+<span class="quote">&gt; (In reply to <a href="show_bug.cgi?id=59891#c50">comment #50</a>)
+&gt; &gt; 
+&gt; &gt; I mentionned it in <a href="show_bug.cgi?id=59891#c47">comment 47</a>, you confirm it in your own. This is no bug, 
+&gt; &gt; this is a discussion about tastes. I for one prefer the old behavior for most 
+&gt; &gt; of these samples, even if they are samples I randomly copy/pasted from my team
+&gt; &gt; synchronizing view. What of the example from <a href="show_bug.cgi?id=59891#c46">comment 46</a>? That one was among 
+&gt; &gt; the ugliest I had.
+&gt; &gt; 
+&gt; I guess you meant <a href="show_bug.cgi?id=59891#c45">comment 45</a>. For this one I already agree that the current
+&gt; behavior deserve a new bug to be opened...</span >
+
+Sorry, that should have been 45 indeed.
+
+<span class="quote">&gt; That's wrong, we strongly changed the formatter between 3.3 and 3.4 around
+&gt; comments formatting. And of course we didn't get it the first time, many bugs
+&gt; were opened at that time about this change and we worked hard to fix them all
+&gt; and finally succeeded to get an agreement on the new version when initial
+&gt; misbehaviors were fixed.
+&gt; </span >
+
+I guess we didn't have anything in our code base presenting this issue, as I don't recall encountering issues with comment formating.
+
+<span class="quote">&gt; 
+&gt; BTW, have you also tried to use the 'Never join lines' preference? It seems
+&gt; that what you're asking for looks like this already existing preference...</span >
+
+I have tried most if not all wrapping related options in order to try and have a coherent behavior, to no avail. The &quot;never join already wrapped lines&quot; preference was promising, but it really doesn't do the trick : new code scarcely gets properly formatted with this on.
+
+I agree that in most cases I don't mind the new behavior as it simply seems to put the source of method calls on the same line as the calls themselves. However it implies stranges things and I cannot single out the reason why some lines get formatted as they are. If I have to point out some of my strangest 
+
+-----8&lt;-----
+source.log(AcceleoParserMessages.getString(
+	&quot;AcceleoParser.Error.InvalidAST&quot;, oURI.lastSegment()), 0, -1); //$NON-NLS-1$
+-----&gt;8-----
+that is now
+-----8&lt;-----
+source.log(
+	AcceleoParserMessages.getString(
+		&quot;AcceleoParser.Error.InvalidAST&quot;, oURI.lastSegment()), 0, -1); //$NON-NLS-1$
+-----&gt;8-----
+
+-----8&lt;-----
+AcceleoUIActivator.getDefault().getLog().log(
+	new Status(IStatus.ERROR, AcceleoUIActivator.PLUGIN_ID, AcceleoUIMessages
+		.getString(&quot;AcceleoLaunchDelegate.MissingProfileModel&quot;))); //$NON-NLS-1$
+-----&gt;8-----
+which becomes
+-----8&lt;-----
+AcceleoUIActivator
+	.getDefault()
+	.getLog()
+	.log(new Status(IStatus.ERROR, AcceleoUIActivator.PLUGIN_ID, AcceleoUIMessages
+		.getString(&quot;AcceleoLaunchDelegate.MissingProfileModel&quot;))); //$NON-NLS-1$
+-----&gt;8-----
+
+Maybe due to the NON-NLS annotation? The worst of all seems to be
+-----8&lt;-----
+AcceleoUIActivator.getDefault().getLog().log(
+	new Status(IStatus.ERROR, AcceleoUIActivator.PLUGIN_ID, AcceleoUIMessages.getString(
+		&quot;AcceleoLaunchDelegate.ProfileModelError&quot;, new Object[] {e.getMessage(), }))); //$NON-NLS-1$
+-----&gt;8-----
+Which seems much the same to me, but becomes
+-----8&lt;-----
+AcceleoUIActivator
+	.getDefault()
+	.getLog()
+	.log(new Status(
+		IStatus.ERROR,
+		AcceleoUIActivator.PLUGIN_ID,
+		AcceleoUIMessages
+			.getString(
+				&quot;AcceleoLaunchDelegate.ProfileModelError&quot;, new Object[] {e.getMessage(), }))); //$NON-NLS-1$
+-----&gt;8-----
+
+ugh.
+-----8&lt;-----
+IPath relativePath = fileEMTL.removeFileExtension().addFileExtension(
+	IAcceleoConstants.MTL_FILE_EXTENSION).removeFirstSegments(
+	folder.getFullPath().segmentCount());
+-----&gt;8-----
+now becomes
+-----8&lt;-----
+IPath relativePath = fileEMTL.removeFileExtension()
+	.addFileExtension(IAcceleoConstants.MTL_FILE_EXTENSION)
+	.removeFirstSegments(folder.getFullPath().segmentCount());
+-----&gt;8-----
+
+Which seems to violate my thought that the formatter was now putting the source of an invocation before the call ... So many examples in the small code base of Acceleo, and that many doesn't allow me to understand the new rules at all.
+
+At some other points, the formatter seems to be using the rule to &quot;break line on each argument&quot; and things like
+-----8&lt;-----
+proposals.add(createTemplateProposal(name, offset - start.length(), start.length(),
+	name.length(), AcceleoUIActivator.getDefault().getImage(
+		&quot;icons/template-editor/completion/Type.gif&quot;), eClassifier //$NON-NLS-1$
+		.getName(), null, name));
+-----&gt;8-----
+become
+-----8&lt;-----
+proposals.add(createTemplateProposal(
+	name,
+	offset - start.length(),
+	start.length(),
+	name.length(),
+	AcceleoUIActivator.getDefault().getImage(
+		&quot;icons/template-editor/completion/Type.gif&quot;), eClassifier //$NON-NLS-1$
+		.getName(), null, name));
+-----&gt;8-----
+Note : the NON-NLS annotation isn't what makes the formatter go doofus here, I tried it with and without, and my line still gets broken on each argument.
+
+I'll stop with my samples here, you can get more of the sort by browsing the CVS on /cvsroot/modeling/org.eclipse.m2t/org.eclipse.acceleo/plugins and retrieving all of the projects contained in this folder. I believe all projects will have things like this showing up as soon as they switch to 3.6.
+
+I do agree that some of these can be seen as improvements ... but absolutely not all of them are ; if I were to vote on this, I'd obviously ask for the old behavior back, and I don't believe I'd be the only one. True, I may be the only one here that asks for this, and the 44 comments before (and on the duplicates) me seem to tell that this change is something wanted by part of the community ... but we scarcely see satisfied customers on a bugzilla (proof being me, happy for a number of releases and realising there was a bug like this only when struck). Surely I am not the only one that will be dissatisfied by such a change; especially with the bugs it introduces (those one or two of my samples that get totally distorted) and no way to workaround them (save for disabling the formatter and doing it themselves, talk about regressing!), but I might very well be the only one of those that gave a try to M7/RC1.</pre>
+    </div>
+
+    <div id="c53" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c53">Comment 53</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Andrzej Miazga</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Andrzej.Miazga&#64;zst-softel.pl" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Andrzej.Miazga&#64;zst-softel.pl" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-05-18 18:46:25 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I predicted this problem 4 years ago - please see my <a href="show_bug.cgi?id=59891#c6">comment 6</a>.</pre>
+    </div>
+
+    <div id="c54" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c54">Comment 54</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mauro Molinari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mauromol&#64;tiscali.it" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mauromol&#64;tiscali.it" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-05-19 03:14:19 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">My 2 cents.
+
+Given the fact that anyone can open new bug reports about the new formatter strategy to highlight cases where the formatter behaves worst than before, I can't understand why a new formatter would cause so many problems to existing code. I mean: is anyone forcing your team (Laurent) to reformat the whole class when editing an existing source file? I personally work in a team where not only there are users using different versions of Eclipse, but some of them are even using NetBeans. That said, in my experience it's always a bad idea to make the IDE reformat whole classes, so I set up a save action to just reformat the edited lines. When this is not appropriate (for whatever reason), I manually reformat single blocks of code through selection.
+
+On the other hand, giving vacant reads to this bug report there's only one thing that worries me about the new formatter strategy (but I may be perfectly wrong): my feeling is that while the old formatter had a quite predictable behaviour, the new one seems to handle many particular cases in different ways, so that it might be hard to predict the result. I mean, at a first thought it's quite unexpected the fact that, given the exact same style preferences, the formatter behaves so much differently than before in so many cases. Maybe the optimal solution would be to translate the new behaviours in appropriate new formatter preferences, as Laurent said?</pre>
+    </div>
+
+    <div id="c55" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c55">Comment 55</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Laurent Goubet</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=laurent.goubet&#64;obeo.fr" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=laurent.goubet&#64;obeo.fr" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-05-19 03:28:24 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=59891#c53">comment #53</a>)
+<span class="quote">&gt; I predicted this problem 4 years ago - please see my <a href="show_bug.cgi?id=59891#c6">comment 6</a>.</span >
+
+Thanks, at least I know that we're not the only ones that don't like the new aesthetics.
+
+(In reply to <a href="show_bug.cgi?id=59891#c54">comment #54</a>)
+<span class="quote">&gt; [...]
+&gt; code. I mean: is anyone forcing your team (Laurent) to reformat the whole class
+&gt; when editing an existing source file? I personally work in a team where not
+&gt; [...]</span >
+
+We're not forced to, but we like to have a coherent code style in our projects so that new developpers can rapidly get the whole picture without stumbling upon a particular developper's habits. Checkstyle and the formatter allow us to.</pre>
+    </div>
+
+    <div id="c56" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c56">Comment 56</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Markus Keller</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=markus.kell.r&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=markus.kell.r&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-05-19 06:07:27 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=59891#c48">comment #48</a>)
+<span class="quote">&gt; Frédéric, how hard is it to add a preference? Obviously we wouldn't call it
+&gt; 'Keep broken behavior' but would have to come up with a good name that reflects
+&gt; the formatting preference chosen by Laurent - is that possible? If we add the
+&gt; preference we can still have the new (fixed) style as default but at least give
+&gt; the opportunity to back out of it by adjusting the formatter profile.</span >
+
+I agree with that, unless adding the preference is destabilizing the code a lot (in <a href="show_bug.cgi?id=59891#c41">comment 41</a>, it sounds like the old behavior is still around). The fixed style should be the default in 3.6, but I think teams working with multiple versions of Eclipse are not that uncommon, so we should try to help them if possible.
+
+I guess Frederic is in the best position to come up with a good name for the preference that describes the new behavior (e.g. &quot;Avoid wrapping nested expressions if possible&quot; or &quot;Try to keep nested expressions on one line&quot;?).</pre>
+    </div>
+
+    <div id="c57" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c57">Comment 57</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Nanda Firdausi</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=nanda.firdausi&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=nanda.firdausi&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-05-19 06:31:54 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Let me try to put my opinion on this.
+
+I believe the problem is the fix is still buggy. If I understand correctly, the goal of the fix is to group elements under the same levels as much as possible so they formatted in the same line. 
+
+First example:
+
+-----------------------
+public class Main {
+    public static void main(
+            String[] args) {
+        foo(bar(1, 2, 3), 
+                baz(4, 5, 6, 7));
+    }
+}
+-----------------------
+
+1, 2, 3 are on the same level. So are 4, 5, 6, 7, so formatting it like:
+
+-----------------------
+public class Main {
+    public static void main(
+            String[] args) {
+        foo(bar(1, 2, 3), baz(4, 5, 6,
+                7));
+    }
+}
+-----------------------
+
+is just ugly.
+
+The best solution is:
+
+-----------------------
+public class Main {
+    public static void main(
+            String[] args) {
+        foo(bar(1, 2, 3), baz(4, 5, 6, 7));
+    }
+}
+-----------------------
+
+but it is over 40 characters.
+
+Based on this observation (elements within the same level should be on the same line whenever possible), I can comment the code from Laurent like this: 
+
+----------------------------------------------------------------
+
+-----8&lt;-----
+source.log(AcceleoParserMessages.getString(
+    &quot;AcceleoParser.Error.InvalidAST&quot;, oURI.lastSegment()), 0, -1);
+//$NON-NLS-1$
+-----&gt;8-----
+-----8&lt;-----
+source.log(
+    AcceleoParserMessages.getString(
+        &quot;AcceleoParser.Error.InvalidAST&quot;, oURI.lastSegment()), 0, -1);
+//$NON-NLS-1$
+-----&gt;8-----
+
+I agree that this is wrong behavior. It should be 
+
+-----8&lt;-----
+source.log(
+    AcceleoParserMessages
+       .getString(&quot;AcceleoParser.Error.InvalidAST&quot;, oURI.lastSegment()), 0, -1);
+//$NON-NLS-1$
+-----&gt;8-----
+
+but then the line width is too big, so old behavior is the best one.
+
+-----------------------------------------------------------------
+
+-----8&lt;-----
+AcceleoUIActivator.getDefault().getLog().log(
+    new Status(IStatus.ERROR, AcceleoUIActivator.PLUGIN_ID, AcceleoUIMessages
+        .getString(&quot;AcceleoLaunchDelegate.MissingProfileModel&quot;)));
+//$NON-NLS-1$
+-----&gt;8-----
+-----8&lt;-----
+AcceleoUIActivator
+    .getDefault()
+    .getLog()
+    .log(new Status(IStatus.ERROR, AcceleoUIActivator.PLUGIN_ID,
+AcceleoUIMessages
+        .getString(&quot;AcceleoLaunchDelegate.MissingProfileModel&quot;)));
+//$NON-NLS-1$
+-----&gt;8-----
+
+In my opinion, the correct way to format this is as follows:
+
+-----8&lt;-----
+AcceleoUIActivator.getDefault().getLog().log(
+    new Status(IStatus.ERROR, AcceleoUIActivator.PLUGIN_ID, 
+	    AcceleoUIMessages.getString(
+		    &quot;AcceleoLaunchDelegate.MissingProfileModel&quot;)));
+//$NON-NLS-1$
+-----&gt;8-----
+
+-----------------------------------------------------------------
+
+-----8&lt;-----
+AcceleoUIActivator.getDefault().getLog().log(
+    new Status(IStatus.ERROR, AcceleoUIActivator.PLUGIN_ID,
+AcceleoUIMessages.getString(
+        &quot;AcceleoLaunchDelegate.ProfileModelError&quot;, new Object[]
+{e.getMessage(), }))); //$NON-NLS-1$
+-----&gt;8-----
+-----8&lt;-----
+AcceleoUIActivator
+    .getDefault()
+    .getLog()
+    .log(new Status(
+        IStatus.ERROR,
+        AcceleoUIActivator.PLUGIN_ID,
+        AcceleoUIMessages
+            .getString(
+                &quot;AcceleoLaunchDelegate.ProfileModelError&quot;, new Object[]
+{e.getMessage(), }))); //$NON-NLS-1$
+-----&gt;8-----
+
+
+In my opinion, this should be: 
+
+-----8&lt;-----
+AcceleoUIActivator.getDefault().getLog().log(
+    new Status(IStatus.ERROR, AcceleoUIActivator.PLUGIN_ID,
+        AcceleoUIMessages.getString(
+            &quot;AcceleoLaunchDelegate.ProfileModelError&quot;, 
+			new Object[] {e.getMessage(), }))); //$NON-NLS-1$
+-----&gt;8-----
+
+-----------------------------------------------------------------
+
+-----8&lt;-----
+IPath relativePath = fileEMTL.removeFileExtension().addFileExtension(
+    IAcceleoConstants.MTL_FILE_EXTENSION).removeFirstSegments(
+    folder.getFullPath().segmentCount());
+-----&gt;8-----
+-----8&lt;-----
+IPath relativePath = fileEMTL.removeFileExtension()
+    .addFileExtension(IAcceleoConstants.MTL_FILE_EXTENSION)
+    .removeFirstSegments(folder.getFullPath().segmentCount());
+-----&gt;8-----
+
+I think in this case the new formatter get it right.
+
+-----------------------------------------------------------------
+
+-----8&lt;-----
+proposals.add(createTemplateProposal(name, offset - start.length(),
+start.length(),
+    name.length(), AcceleoUIActivator.getDefault().getImage(
+        &quot;icons/template-editor/completion/Type.gif&quot;), eClassifier //$NON-NLS-1$
+        .getName(), null, name));
+-----&gt;8-----
+-----8&lt;-----
+proposals.add(createTemplateProposal(
+    name,
+    offset - start.length(),
+    start.length(),
+    name.length(),
+    AcceleoUIActivator.getDefault().getImage(
+        &quot;icons/template-editor/completion/Type.gif&quot;), eClassifier //$NON-NLS-1$
+        .getName(), null, name));
+-----&gt;8-----
+
+I think the correct way to format this is: 
+
+proposals.add(createTemplateProposal(name, offset - start.length(),
+    start.length(), name.length(), 
+	AcceleoUIActivator.getDefault()
+	    .getImage(&quot;icons/template-editor/completion/Type.gif&quot;), eClassifier //$NON-NLS-1$
+            .getName()
+	        , null, name));
+-----&gt;8-----
+
+-----------------------------------------------------------------</pre>
+    </div>
+
+    <div id="c58" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c58">Comment 58</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Frederic Fusier</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=frederic_fusier&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=frederic_fusier&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-05-19 09:03:08 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=59891#c48">comment #48</a>)
+(In reply to <a href="show_bug.cgi?id=59891#c56">comment #56</a>)
+
+I'll add a new preference.
+
+<span class="quote">&gt; I guess Frederic is in the best position to come up with a good name for the
+&gt; preference that describes the new behavior (e.g.  or ?).</span >
+
+As now lot of people react on this bug (I'd rather prefer have feedbacks before I released the patch...), I'm really interested to have some inputs about the better name for this preference...
+
+Here are some initial proposals:
+- Markus' ones:
+  + &quot;Avoid wrapping nested expressions if possible&quot;
+  + &quot;Try to keep nested expressions on one line&quot;
+- mine:
+  + &quot;Allow aesthetic wrapping&quot; (general)
+  + &quot;Improve message sends wrapping&quot; (msg send specific)
+
+Be quick if you want to propose name(s) as the patch will be released for the next RC2 build (ie. tomorrow at 8:00am EDT). That means that the choice will be done before 6:00am...</pre>
+    </div>
+
+    <div id="c59" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c59">Comment 59</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Frederic Fusier</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=frederic_fusier&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=frederic_fusier&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-05-19 09:06:39 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=59891#c52">comment #52</a>)
+(In reply to <a href="show_bug.cgi?id=59891#c57">comment #57</a>
+
+As now a new preference will be added (see my previous comment), could you kindly open a new bug for the remaining issue in the new behavior?
+
+Then we'll use this new bug to still improve the formatter in this area (see also <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - [formatter] problem in line wrapping in nested method calls"
+   href="show_bug.cgi?id=310642">bug 310642</a>)?</pre>
+    </div>
+
+    <div id="c60" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c60">Comment 60</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Laurent Goubet</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=laurent.goubet&#64;obeo.fr" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=laurent.goubet&#64;obeo.fr" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-05-19 09:17:34 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=59891#c58">comment #58</a>)
+<span class="quote">&gt; (In reply to <a href="show_bug.cgi?id=59891#c48">comment #48</a>)
+&gt; (In reply to <a href="show_bug.cgi?id=59891#c56">comment #56</a>)
+&gt; 
+&gt; I'll add a new preference.</span >
+
+Thanks, I guess I can stop trying to figure out a way to cope with this. 
+
+<span class="quote">&gt; 
+&gt; &gt; I guess Frederic is in the best position to come up with a good name for the
+&gt; &gt; preference that describes the new behavior (e.g.  or ?).
+&gt; 
+&gt; As now lot of people react on this bug (I'd rather prefer have feedbacks before
+&gt; I released the patch...), I'm really interested to have some inputs about the
+&gt; better name for this preference...</span >
+
+Sorry, as I mentionned earlier, I really only figured out there was a bug such as this one after being struck (when giving a try to RC1). We can't follow all bugs :). Yet I believe you'd get a lot of reactions if asking for reviews of things as central as the JDT's formatter (Eclipse isn't a Java IDE ... but it is used as such by a vast majority of its users). 
+
+<span class="quote">&gt; 
+&gt; Here are some initial proposals:
+&gt; - Markus' ones:
+&gt;   + &quot;Avoid wrapping nested expressions if possible&quot;
+&gt;   + &quot;Try to keep nested expressions on one line&quot;
+&gt; - mine:
+&gt;   + &quot;Allow aesthetic wrapping&quot; (general)
+&gt;   + &quot;Improve message sends wrapping&quot; (msg send specific)
+&gt; 
+&gt; Be quick if you want to propose name(s) as the patch will be released for the
+&gt; next RC2 build (ie. tomorrow at 8:00am EDT). That means that the choice will be
+&gt; done before 6:00am...</span >
+
+As mentionned above I couldn't pinpoint the new formatting rules, so I can't really propose a meaningful name here. Something like &quot;Improve message sends wrapping&quot; seems too specific ... wouldn't &quot;Improve nested calls wrapping&quot; be more explicit?
+
+Otherwise I'd go for Markus' &quot;Try to keep nested expressions on one line&quot; as it isn't pejorative for either &quot;use&quot; or &quot;don't&quot; as most of the other preferences are.</pre>
+    </div>
+
+    <div id="c61" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c61">Comment 61</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Laurent Goubet</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=laurent.goubet&#64;obeo.fr" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=laurent.goubet&#64;obeo.fr" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-05-19 09:41:42 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=59891#c59">comment #59</a>)
+<span class="quote">&gt; (In reply to <a href="show_bug.cgi?id=59891#c52">comment #52</a>)
+&gt; (In reply to <a href="show_bug.cgi?id=59891#c57">comment #57</a>
+&gt; 
+&gt; As now a new preference will be added (see my previous comment), could you
+&gt; kindly open a new bug for the remaining issue in the new behavior?
+&gt; 
+&gt; Then we'll use this new bug to still improve the formatter in this area (see
+&gt; also <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED DUPLICATE - [formatter] problem in line wrapping in nested method calls"
+   href="show_bug.cgi?id=310642">bug 310642</a>)?</span >
+
+I'll try and go through all of our code base to try and nail down the samples for which the new formatting is obviously failing. Nanda's thoughts on <a href="show_bug.cgi?id=59891#c57">comment 57</a> should help a bunch.</pre>
+    </div>
+
+    <div id="c62" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c62">Comment 62</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mauro Molinari</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mauromol&#64;tiscali.it" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mauromol&#64;tiscali.it" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-05-19 09:46:48 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=59891#c58">comment #58</a>)
+<span class="quote">&gt; Here are some initial proposals:
+&gt; - Markus' ones:
+&gt;   + &quot;Avoid wrapping nested expressions if possible&quot;
+&gt;   + &quot;Try to keep nested expressions on one line&quot;
+&gt; - mine:
+&gt;   + &quot;Allow aesthetic wrapping&quot; (general)
+&gt;   + &quot;Improve message sends wrapping&quot; (msg send specific)</span >
+
+Markus's suggestions sound more user-friendly to me (I would prefer &quot;Try to keep nested expressions on one line&quot;). However, Frederic's ones are more specific and describe more precisely the behaviour of the formatter. 
+
+So, how about a mix? 
+&quot;Improve message sends wrapping (tries to keep nested expressions on one line)&quot;</pre>
+    </div>
+
+    <div id="c63" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c63">Comment 63</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Dani Megert</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=daniel_megert&#64;ch.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=daniel_megert&#64;ch.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-05-19 09:49:55 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Using words like &quot;improve&quot; or &quot;aesthetic&quot; can't be used as this bug nicely shows: everyone has a different understanding on whether the new stuff is indeed better or not. Therefore I also agree to use 
+[ ] Try to keep nested expressions on one line</pre>
+    </div>
+
+    <div id="c64" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=59891#c64">Comment 64</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Dani Megert</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=daniel_megert&#64;ch.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=daniel_megert&#64;ch.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-05-19 09:57:57 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Given this bug here is fixed and verified I opened <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - [formatter] Add preference for improved lines wrapping in nested method calls"
+   href="show_bug.cgi?id=313524">bug 313524</a> to track the work of adding a preference for it. Interested parties please add yourself to the cc-list of said bug.</pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=59891">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=59891">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=59891">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=59891&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=59891" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>

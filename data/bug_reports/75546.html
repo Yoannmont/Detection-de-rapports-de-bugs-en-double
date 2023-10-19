@@ -1,0 +1,2549 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>75546 &ndash; hang during debug session</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "75546 – hang during debug session",
+                             "show_bug.cgi?id=75546" );
+        document.title = "75546 – hang during debug session";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "75546 – hang during debug session", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_VERIFIED
+                 bz_product_Platform
+                 bz_component_Debug
+                 bz_bug_75546 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;75546</span>
+
+        <span id="subtitle" class="subheader">hang during debug session</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2004-11-29 11:07:11 EST</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=75546&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=75546" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2004-11-29 11:07:11">
+  <input type="hidden" name="id" value="75546">
+  <input type="hidden" name="token" value="1629852593-IAaJXJcM0Ve2XsPLnxh2feGEsBGlv_00m8vaxfmW-T8">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=75546"><b>Bug&nbsp;75546</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">hang during debug session</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span>hang during debug session
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      'hang during debug session' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">VERIFIED
+          FIXED
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >Platform
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >Eclipse Project
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=Platform"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >Debug
+
+  (<a href="buglist.cgi?component=Debug&amp;product=Platform&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>3.0 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">PC
+        Windows XP
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P3
+       critical<span id="votes_container">
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=75546#vote_75546">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>3.1 M3 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">Kevin Barnes</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=cocoakevin&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=cocoakevin&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard">
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'platform-debug-inbox\x40eclipse.org',
+        '');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          <tr>
+    <th class="field_label">
+      <label>Duplicates (4)</label>:
+    </th>
+    <td class="field_value">
+      <span id="duplicates"><a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - deadlock stopping JUnit tests"
+   href="show_bug.cgi?id=74998">74998</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Deadlock in RuntimeProcess.isTerminated()"
+   href="show_bug.cgi?id=76591">76591</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Terminating an operation in the console causes a deadlock"
+   href="show_bug.cgi?id=76755">76755</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - eclipse deadlocks when I terminate a debugged program"
+   href="show_bug.cgi?id=79366">79366</a> 
+      </span>
+      (<a href="buglist.cgi?bug_id=74998,76591,76755,79366">view as bug list</a>)
+    </td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+
+  </td>
+  </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2004-10-03 14:23 EDT by <span class="vcard"><span class="fn">Jean-Michel Lemieux</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jean-michel_lemieux&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jean-michel_lemieux&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2004-11-29 11:07 EST
+      (<a href="show_activity.cgi?id=75546">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>4 
+          users
+          <span id="cc_edit_area_showhide_container" class="bz_default_hidden">
+            (<a href="#" id="cc_edit_area_showhide">show</a>)
+          </span>
+        <div id="cc_edit_area">
+          <br>
+            <select id="cc" multiple="multiple" size="5" >
+                <option value="eclipse">eclipse</option>
+                <option value="ed.burnette">ed.burnette</option>
+                <option value="public">public</option>
+                <option value="Tod_Creasey">Tod_Creasey</option>
+            </select>
+        </div>
+          <script type="text/javascript">
+            hideEditableField( 'cc_edit_area_showhide_container', 
+                               'cc_edit_area', 
+                               'cc_edit_area_showhide', 
+                               '', 
+                               '');  
+          </script>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" >
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <a href="attachment.cgi?bugid=75546&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=75546&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=75546#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jean-Michel Lemieux</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jean-michel_lemieux&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jean-michel_lemieux&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-10-03 14:23:49 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">3.1 M2
+I was debugging an application and Eclipse froze. The stack dump suggests debug 
+is guilty. The main thread is bloked updating a label while trying to determine 
+if the running process is terminated.
+
+========
+
+Full thread dump Java HotSpot(TM) Client VM (1.4.2_05-b04 mixed mode):
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x04df4300 
+nid=0x1630 in Object.wait() [539f000..539fd8c]
+        at java.lang.Object.wait(Native Method)
+        at 
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run
+(AbstractReconciler.java:176)
+        - locked &lt;0x1a103540&gt; (a 
+org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;Packet Send Manager&quot; prio=5 tid=0x04a77860 nid=0x119c in Object.wait() 
+[602f000..602fd8c]
+        at java.lang.Object.wait(Native Method)
+        at java.lang.Object.wait(Unknown Source)
+        at 
+org.eclipse.jdi.internal.connect.PacketSendManager.sendAvailablePackets
+(PacketSendManager.java:94)
+        - locked &lt;0x19e83ef0&gt; (a 
+org.eclipse.jdi.internal.connect.PacketSendManager)
+        at org.eclipse.jdi.internal.connect.PacketSendManager.run
+(PacketSendManager.java:54)
+        at java.lang.Thread.run(Unknown Source)
+
+&quot;Packet Receive Manager&quot; prio=5 tid=0x04d9f0d0 nid=0x1434 runnable 
+[5fef000..5fefd8c]
+        at java.net.SocketInputStream.socketRead0(Native Method)
+        at java.net.SocketInputStream.read(Unknown Source)
+        at java.net.SocketInputStream.read(Unknown Source)
+        at java.io.DataInputStream.readInt(Unknown Source)
+        at org.eclipse.jdi.internal.jdwp.JdwpPacket.read(JdwpPacket.java:125)
+        at 
+org.eclipse.jdi.internal.connect.PacketReceiveManager.readAvailablePacket
+(PacketReceiveManager.java:224)
+        at org.eclipse.jdi.internal.connect.PacketReceiveManager.run
+(PacketReceiveManager.java:70)
+        at java.lang.Thread.run(Unknown Source)
+
+&quot;Input Stream Monitor&quot; prio=5 tid=0x04914c90 nid=0x128c in Object.wait() 
+[5f6f000..5f6fd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x19e83fd0&gt; (a java.lang.Object)
+        at java.lang.Object.wait(Unknown Source)
+        at org.eclipse.debug.internal.core.InputStreamMonitor.writeNext
+(InputStreamMonitor.java:124)
+        - locked &lt;0x19e83fd0&gt; (a java.lang.Object)
+        at org.eclipse.debug.internal.core.InputStreamMonitor.write
+(InputStreamMonitor.java:99)
+        at org.eclipse.debug.internal.core.InputStreamMonitor$1.run
+(InputStreamMonitor.java:75)
+        at java.lang.Thread.run(Unknown Source)
+
+&quot;Output Stream Monitor&quot; prio=5 tid=0x04d07d48 nid=0xa5c runnable 
+[5f2f000..5f2fd8c]
+        at java.io.FileInputStream.readBytes(Native Method)
+        at java.io.FileInputStream.read(Unknown Source)
+        at org.eclipse.debug.internal.core.OutputStreamMonitor.read
+(OutputStreamMonitor.java:132)
+        at org.eclipse.debug.internal.core.OutputStreamMonitor.access$1
+(OutputStreamMonitor.java:124)
+        at org.eclipse.debug.internal.core.OutputStreamMonitor$1.run
+(OutputStreamMonitor.java:179)
+        at java.lang.Thread.run(Unknown Source)
+
+&quot;Output Stream Monitor&quot; prio=5 tid=0x049a3410 nid=0x708 runnable 
+[5eef000..5eefd8c]
+        at java.io.FileInputStream.readBytes(Native Method)
+        at java.io.FileInputStream.read(Unknown Source)
+        at java.io.BufferedInputStream.read1(Unknown Source)
+        at java.io.BufferedInputStream.read(Unknown Source)
+        - locked &lt;0x19e88120&gt; (a java.io.BufferedInputStream)
+        at java.io.FilterInputStream.read(Unknown Source)
+        at org.eclipse.debug.internal.core.OutputStreamMonitor.read
+(OutputStreamMonitor.java:132)
+        at org.eclipse.debug.internal.core.OutputStreamMonitor.access$1
+(OutputStreamMonitor.java:124)
+        at org.eclipse.debug.internal.core.OutputStreamMonitor$1.run
+(OutputStreamMonitor.java:179)
+        at java.lang.Thread.run(Unknown Source)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x03514d40 
+nid=0x1204 in Object.wait() [5a5f000..5a5fd8c]
+        at java.lang.Object.wait(Native Method)
+        at 
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run
+(AbstractReconciler.java:176)
+        - locked &lt;0x19cdd8e0&gt; (a 
+org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x04c863e0 
+nid=0xc04 in Object.wait() [5c3f000..5c3fd8c]
+        at java.lang.Object.wait(Native Method)
+        at 
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run
+(AbstractReconciler.java:176)
+        - locked &lt;0x19c44d20&gt; (a 
+org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x03894a40 
+nid=0x17e0 in Object.wait() [5bff000..5bffd8c]
+        at java.lang.Object.wait(Native Method)
+        at 
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run
+(AbstractReconciler.java:176)
+        - locked &lt;0x19c44d80&gt; (a 
+org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x03672f00 
+nid=0xcc4 in Object.wait() [5bbf000..5bbfd8c]
+        at java.lang.Object.wait(Native Method)
+        at 
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run
+(AbstractReconciler.java:176)
+        - locked &lt;0x19aa3118&gt; (a 
+org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x04d8e0d0 
+nid=0x1614 in Object.wait() [5b3f000..5b3fd8c]
+        at java.lang.Object.wait(Native Method)
+        at 
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run
+(AbstractReconciler.java:176)
+        - locked &lt;0x19aa3178&gt; (a 
+org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x04a6da10 
+nid=0x115c in Object.wait() [5a9f000..5a9fd8c]
+        at java.lang.Object.wait(Native Method)
+        at 
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run
+(AbstractReconciler.java:176)
+        - locked &lt;0x19aa31d8&gt; (a 
+org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;Worker-264&quot; prio=5 tid=0x04e14008 nid=0x130c in Object.wait() 
+[5a1f000..5a1fd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x19e88170&gt; (a 
+org.eclipse.ui.console.IOConsoleInputStream)
+        at java.lang.Object.wait(Unknown Source)
+        at org.eclipse.ui.console.IOConsoleInputStream.waitForData
+(IOConsoleInputStream.java:139)
+        at org.eclipse.ui.console.IOConsoleInputStream.read
+(IOConsoleInputStream.java:85)
+        - locked &lt;0x19e88170&gt; (a org.eclipse.ui.console.IOConsoleInputStream)
+        at org.eclipse.ui.console.IOConsoleInputStream.read
+(IOConsoleInputStream.java:110)
+        at 
+org.eclipse.debug.internal.ui.views.console.ProcessConsole$InputReadJob.run
+(ProcessConsole.java:474)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:66)
+
+&quot;Worker-262&quot; prio=5 tid=0x04ac9978 nid=0x6c8 in Object.wait() [599f000..599fd8c]
+        at java.lang.Object.wait(Native Method)
+        at org.eclipse.core.internal.jobs.WorkerPool.sleep(WorkerPool.java:166)
+        - locked &lt;0x13861798&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.startJob
+(WorkerPool.java:193)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:59)
+
+&quot;Worker-259&quot; prio=5 tid=0x04b41598 nid=0xb3c in Object.wait() [535f000..535fd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x19e860b8&gt; (a java.lang.Thread)
+        at java.lang.Thread.join(Unknown Source)
+        - locked &lt;0x19e860b8&gt; (a java.lang.Thread)
+        at java.lang.Thread.join(Unknown Source)
+        at org.eclipse.debug.internal.core.OutputStreamMonitor.close
+(OutputStreamMonitor.java:94)
+        at org.eclipse.debug.internal.core.StreamsProxy.close
+(StreamsProxy.java:67)
+        at org.eclipse.debug.core.model.RuntimeProcess.terminated
+(RuntimeProcess.java:220)
+        - locked &lt;0x19e94d10&gt; (a org.eclipse.debug.core.model.RuntimeProcess)
+        at org.eclipse.debug.core.model.RuntimeProcess$ProcessMonitorJob.run
+(RuntimeProcess.java:368)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:66)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x04ca1a50 
+nid=0x8c in Object.wait() [591f000..591fd8c]
+        at java.lang.Object.wait(Native Method)
+        at 
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run
+(AbstractReconciler.java:176)
+        - locked &lt;0x19333218&gt; (a 
+org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x04d68008 
+nid=0x107c in Object.wait() [56bf000..56bfd8c]
+        at java.lang.Object.wait(Native Method)
+        at 
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run
+(AbstractReconciler.java:176)
+        - locked &lt;0x182b07a0&gt; (a 
+org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x04bedd40 
+nid=0x102c in Object.wait() [567f000..567fd8c]
+        at java.lang.Object.wait(Native Method)
+        at 
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run
+(AbstractReconciler.java:176)
+        - locked &lt;0x182b0800&gt; (a 
+org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x03445da8 
+nid=0xdec in Object.wait() [55df000..55dfd8c]
+        at java.lang.Object.wait(Native Method)
+        at 
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run
+(AbstractReconciler.java:176)
+        - locked &lt;0x18238b18&gt; (a 
+org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x04c43358 
+nid=0xb98 in Object.wait() [531f000..531fd8c]
+        at java.lang.Object.wait(Native Method)
+        at 
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run
+(AbstractReconciler.java:176)
+        - locked &lt;0x18173960&gt; (a 
+org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x0498aac0 
+nid=0x974 in Object.wait() [52df000..52dfd8c]
+        at java.lang.Object.wait(Native Method)
+        at 
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run
+(AbstractReconciler.java:176)
+        - locked &lt;0x181739c0&gt; (a 
+org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x039daa10 
+nid=0x2ec in Object.wait() [529f000..529fd8c]
+        at java.lang.Object.wait(Native Method)
+        at 
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run
+(AbstractReconciler.java:176)
+        - locked &lt;0x180f88d8&gt; (a 
+org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x04a95be0 
+nid=0x10f0 in Object.wait() [519f000..519fd8c]
+        at java.lang.Object.wait(Native Method)
+        at 
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run
+(AbstractReconciler.java:176)
+        - locked &lt;0x180f8938&gt; (a 
+org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x04c6f898 
+nid=0x1198 in Object.wait() [511f000..511fd8c]
+        at java.lang.Object.wait(Native Method)
+        at 
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run
+(AbstractReconciler.java:176)
+        - locked &lt;0x1809d700&gt; (a 
+org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x04d00d60 
+nid=0x14a8 in Object.wait() [50df000..50dfd8c]
+        at java.lang.Object.wait(Native Method)
+        at 
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run
+(AbstractReconciler.java:176)
+        - locked &lt;0x180588d8&gt; (a 
+org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x04d05d80 
+nid=0x1284 in Object.wait() [555f000..555fd8c]
+        at java.lang.Object.wait(Native Method)
+        at 
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run
+(AbstractReconciler.java:176)
+        - locked &lt;0x180078c8&gt; (a 
+org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;Worker-237&quot; prio=5 tid=0x04d2d528 nid=0xf58 waiting for monitor entry 
+[559f000..559fd8c]
+        at org.eclipse.debug.core.model.RuntimeProcess.isTerminated
+(RuntimeProcess.java:177)
+        - waiting to lock &lt;0x19e94d10&gt; (a 
+org.eclipse.debug.core.model.RuntimeProcess)
+        at org.eclipse.debug.core.Launch.isTerminated(Launch.java:201)
+        at org.eclipse.debug.internal.ui.DefaultLabelProvider.getText
+(DefaultLabelProvider.java:204)
+        at 
+org.eclipse.debug.internal.ui.DelegatingModelPresentation.getDefaultText
+(DelegatingModelPresentation.java:213)
+        at org.eclipse.debug.internal.ui.DelegatingModelPresentation.getText
+(DelegatingModelPresentation.java:183)
+        at 
+org.eclipse.debug.internal.ui.views.DebugViewLabelDecorator$LabelJob.run
+(DebugViewLabelDecorator.java:326)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:66)
+
+&quot;Reference Cleaner - 6&quot; prio=7 tid=0x0376b818 nid=0x13d8 in Object.wait() 
+[468f000..468fd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x1489ee98&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(Unknown Source)
+        - locked &lt;0x1489ee98&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(Unknown Source)
+        at org.eclipse.jface.resource.ImageCache$ReferenceCleanerThread.run
+(ImageCache.java:161)
+
+&quot;Reference Cleaner - 5&quot; prio=7 tid=0x034c88f0 nid=0x94c in Object.wait() 
+[464f000..464fd8c]
+        at java.lang.Object.wait(Native Method)
+        at java.lang.ref.ReferenceQueue.remove(Unknown Source)
+        - locked &lt;0x1489ef78&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(Unknown Source)
+        at org.eclipse.jface.resource.ImageCache$ReferenceCleanerThread.run
+(ImageCache.java:161)
+
+&quot;Reference Cleaner - 4&quot; prio=7 tid=0x034c5178 nid=0x12fc in Object.wait() 
+[460f000..460fd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x1489ef30&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(Unknown Source)
+        - locked &lt;0x1489ef30&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(Unknown Source)
+        at org.eclipse.jface.resource.ImageCache$ReferenceCleanerThread.run
+(ImageCache.java:161)
+
+&quot;Java indexing&quot; daemon prio=4 tid=0x034c5560 nid=0xcbc in Object.wait() 
+[45cf000..45cfd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x148a9f18&gt; (a 
+org.eclipse.jdt.internal.core.search.indexing.IndexManager)
+        at java.lang.Object.wait(Unknown Source)
+        at org.eclipse.jdt.internal.core.search.processing.JobManager.run
+(JobManager.java:345)
+        - locked &lt;0x148a9f18&gt; (a 
+org.eclipse.jdt.internal.core.search.indexing.IndexManager)
+        at java.lang.Thread.run(Unknown Source)
+
+&quot;Reference Cleaner - 3&quot; prio=7 tid=0x00a3e908 nid=0x1488 in Object.wait() 
+[447f000..447fd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x148a0c98&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(Unknown Source)
+        - locked &lt;0x148a0c98&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(Unknown Source)
+        at org.eclipse.jface.resource.ImageCache$ReferenceCleanerThread.run
+(ImageCache.java:161)
+
+&quot;Reference Cleaner - 2&quot; prio=7 tid=0x035175a0 nid=0x1480 in Object.wait() 
+[443f000..443fd8c]
+        at java.lang.Object.wait(Native Method)
+        at java.lang.ref.ReferenceQueue.remove(Unknown Source)
+        - locked &lt;0x148a0d08&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(Unknown Source)
+        at org.eclipse.jface.resource.ImageCache$ReferenceCleanerThread.run
+(ImageCache.java:161)
+
+&quot;Reference Cleaner - 1&quot; prio=7 tid=0x034853d8 nid=0x1150 in Object.wait() 
+[43ff000..43ffd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x148a0d78&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(Unknown Source)
+        - locked &lt;0x148a0d78&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(Unknown Source)
+        at org.eclipse.jface.resource.ImageCache$ReferenceCleanerThread.run
+(ImageCache.java:161)
+
+&quot;Start Level Event Dispatcher&quot; daemon prio=5 tid=0x00a5cb98 nid=0xb5c in 
+Object.wait() [364f000..364fd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x138417a8&gt; (a 
+org.eclipse.osgi.framework.eventmgr.EventThread)
+        at java.lang.Object.wait(Unknown Source)
+        at org.eclipse.osgi.framework.eventmgr.EventThread.getNextEvent
+(EventThread.java:162)
+        - locked &lt;0x138417a8&gt; (a 
+org.eclipse.osgi.framework.eventmgr.EventThread)
+        at org.eclipse.osgi.framework.eventmgr.EventThread.run
+(EventThread.java:100)
+
+&quot;Framework Event Dispatcher&quot; daemon prio=5 tid=0x035059a0 nid=0x988 in 
+Object.wait() [360f000..360fd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x138417f8&gt; (a 
+org.eclipse.osgi.framework.eventmgr.EventThread)
+        at java.lang.Object.wait(Unknown Source)
+        at org.eclipse.osgi.framework.eventmgr.EventThread.getNextEvent
+(EventThread.java:162)
+        - locked &lt;0x138417f8&gt; (a 
+org.eclipse.osgi.framework.eventmgr.EventThread)
+        at org.eclipse.osgi.framework.eventmgr.EventThread.run
+(EventThread.java:100)
+
+&quot;Signal Dispatcher&quot; daemon prio=10 tid=0x009baed8 nid=0x1514 waiting on 
+condition [0..0]
+
+&quot;YJP CPU Sampler&quot; daemon prio=5 tid=0x009f9b98 nid=0x1550 runnable [0..0]
+
+&quot;YJP RequestServer&quot; daemon prio=5 tid=0x009f9638 nid=0x12ec runnable 
+[328f000..328fd8c]
+        at java.net.PlainSocketImpl.socketAccept(Native Method)
+        at java.net.PlainSocketImpl.accept(Unknown Source)
+        - locked &lt;0x138419a0&gt; (a java.net.PlainSocketImpl)
+        at java.net.ServerSocket.implAccept(Unknown Source)
+        at java.net.ServerSocket.accept(Unknown Source)
+        at com.yourkit.runtime.RequestServer.startServerImpl
+(RequestServer.java:257)
+        at com.yourkit.runtime.RequestServer.access$000(RequestServer.java:17)
+        at com.yourkit.runtime.RequestServer$1.run(RequestServer.java:56)
+
+&quot;Finalizer&quot; daemon prio=9 tid=0x009b7c00 nid=0xd3c in Object.wait() 
+[2e0f000..2e0fd8c]
+        at java.lang.Object.wait(Native Method)
+        at java.lang.ref.ReferenceQueue.remove(Unknown Source)
+        - locked &lt;0x13841ae0&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(Unknown Source)
+        at java.lang.ref.Finalizer$FinalizerThread.run(Unknown Source)
+
+&quot;Reference Handler&quot; daemon prio=10 tid=0x009b6880 nid=0x15b4 in Object.wait() 
+[2dcf000..2dcfd8c]
+        at java.lang.Object.wait(Native Method)
+        at java.lang.Object.wait(Unknown Source)
+        at java.lang.ref.Reference$ReferenceHandler.run(Unknown Source)
+        - locked &lt;0x13841b48&gt; (a java.lang.ref.Reference$Lock)
+
+&quot;main&quot; prio=5 tid=0x00035cb0 nid=0x15c0 waiting for monitor entry [7e000..7fc3c]
+        at org.eclipse.debug.core.model.RuntimeProcess.isTerminated
+(RuntimeProcess.java:177)
+        - waiting to lock &lt;0x19e94d10&gt; (a 
+org.eclipse.debug.core.model.RuntimeProcess)
+        at org.eclipse.debug.internal.ui.DefaultLabelProvider.getImageKey
+(DefaultLabelProvider.java:120)
+        at org.eclipse.debug.internal.ui.DefaultLabelProvider.getImage
+(DefaultLabelProvider.java:56)
+        at 
+org.eclipse.debug.internal.ui.DelegatingModelPresentation.getDefaultImage
+(DelegatingModelPresentation.java:220)
+        at org.eclipse.debug.internal.ui.DelegatingModelPresentation.getImage
+(DelegatingModelPresentation.java:147)
+        at 
+org.eclipse.debug.internal.ui.views.DebugViewInterimLabelProvider.getImage
+(DebugViewInterimLabelProvider.java:58)
+        at org.eclipse.jface.viewers.DecoratingLabelProvider.getImage
+(DecoratingLabelProvider.java:82)
+        at org.eclipse.debug.internal.ui.views.launch.LaunchViewer.doUpdateItem
+(LaunchViewer.java:92)
+        at 
+org.eclipse.jface.viewers.AbstractTreeViewer$UpdateItemSafeRunnable.run
+(AbstractTreeViewer.java:86)
+        at org.eclipse.core.internal.runtime.InternalPlatform.run
+(InternalPlatform.java:616)
+        at org.eclipse.core.runtime.Platform.run(Platform.java:747)
+        at org.eclipse.jface.viewers.AbstractTreeViewer.doUpdateItem
+(AbstractTreeViewer.java:488)
+        at org.eclipse.jface.viewers.StructuredViewer$UpdateItemSafeRunnable.run
+(StructuredViewer.java:135)
+        at org.eclipse.core.internal.runtime.InternalPlatform.run
+(InternalPlatform.java:616)
+        at org.eclipse.core.runtime.Platform.run(Platform.java:747)
+        at org.eclipse.jface.viewers.StructuredViewer.updateItem
+(StructuredViewer.java:1432)
+        at org.eclipse.jface.viewers.AbstractTreeViewer.updateChildren
+(AbstractTreeViewer.java:1601)
+        at org.eclipse.jface.viewers.AbstractTreeViewer.internalRefreshStruct
+(AbstractTreeViewer.java:1091)
+        at org.eclipse.jface.viewers.AbstractTreeViewer.internalRefreshStruct
+(AbstractTreeViewer.java:1098)
+        at org.eclipse.jface.viewers.AbstractTreeViewer.internalRefresh
+(AbstractTreeViewer.java:1068)
+        at org.eclipse.jface.viewers.AbstractTreeViewer.internalRefresh
+(AbstractTreeViewer.java:1033)
+        at org.eclipse.jface.viewers.AbstractTreeViewer.internalRefresh
+(AbstractTreeViewer.java:1020)
+        at org.eclipse.jface.viewers.StructuredViewer$7.run
+(StructuredViewer.java:964)
+        at org.eclipse.jface.viewers.StructuredViewer.preservingSelection
+(StructuredViewer.java:901)
+        at org.eclipse.jface.viewers.StructuredViewer.refresh
+(StructuredViewer.java:962)
+        at org.eclipse.debug.internal.ui.views.launch.LaunchViewer.refresh
+(LaunchViewer.java:110)
+        at org.eclipse.jface.viewers.StructuredViewer.refresh
+(StructuredViewer.java:921)
+        at org.eclipse.debug.internal.ui.views.AbstractDebugEventHandler.refresh
+(AbstractDebugEventHandler.java:146)
+        at 
+org.eclipse.debug.internal.ui.views.AbstractDebugEventHandler.viewBecomesVisible
+(AbstractDebugEventHandler.java:235)
+        at 
+org.eclipse.debug.internal.ui.views.AbstractDebugEventHandlerView.becomesVisible
+(AbstractDebugEventHandlerView.java:69)
+        at org.eclipse.debug.internal.ui.views.launch.LaunchView.becomesVisible
+(LaunchView.java:1235)
+        at 
+org.eclipse.debug.ui.AbstractDebugView$DebugViewPartListener.partVisible
+(AbstractDebugView.java:162)
+        at org.eclipse.ui.internal.PartListenerList2$7.run
+(PartListenerList2.java:148)
+        at org.eclipse.core.internal.runtime.InternalPlatform.run
+(InternalPlatform.java:616)
+        at org.eclipse.core.runtime.Platform.run(Platform.java:747)
+        at org.eclipse.ui.internal.PartListenerList2.firePartVisible
+(PartListenerList2.java:146)
+        at org.eclipse.ui.internal.WorkbenchPage$1.propertyChange
+(WorkbenchPage.java:160)
+        at org.eclipse.ui.internal.LayoutPart.setVisible(LayoutPart.java:292)
+        at org.eclipse.ui.internal.PartPane.setVisible(PartPane.java:327)
+        at org.eclipse.ui.internal.ViewPane.setVisible(ViewPane.java:607)
+        at org.eclipse.ui.internal.presentations.PresentablePart.setVisible
+(PresentablePart.java:123)
+        at 
+org.eclipse.ui.examples.presentation.wrappedtabs.WrappedTabsPartPresentation.sel
+ectPart(WrappedTabsPartPresentation.java:7
+        at org.eclipse.ui.internal.PartStack.refreshPresentationSelection
+(PartStack.java:1025)
+        at org.eclipse.ui.internal.PartStack.setSelection(PartStack.java:999)
+        at org.eclipse.ui.internal.PartStack.presentationSelectionChanged
+(PartStack.java:715)
+        at org.eclipse.ui.internal.PartStack.access$0(PartStack.java:701)
+        at org.eclipse.ui.internal.PartStack$1.selectPart(PartStack.java:93)
+        at 
+org.eclipse.ui.examples.presentation.wrappedtabs.WrappedTabsPartPresentation$4.w
+idgetSelected(WrappedTabsPartPresentation.
+        at org.eclipse.swt.widgets.TypedListener.handleEvent
+(TypedListener.java:89)
+        at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:82)
+        at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:796)
+        at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:2783)
+        at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:2442)
+        at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:1443)
+        at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:1414)
+        at org.eclipse.ui.internal.Workbench.createAndRunWorkbench
+(Workbench.java:271)
+        at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:144)
+        at org.eclipse.ui.internal.ide.IDEApplication.run
+(IDEApplication.java:102)
+        at org.eclipse.core.internal.runtime.PlatformActivator$1.run
+(PlatformActivator.java:335)
+        at org.eclipse.core.runtime.adaptor.EclipseStarter.run
+(EclipseStarter.java:273)
+        at org.eclipse.core.runtime.adaptor.EclipseStarter.run
+(EclipseStarter.java:129)
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+        at java.lang.reflect.Method.invoke(Unknown Source)
+        at org.eclipse.core.launcher.Main.basicRun(Main.java:185)
+        at org.eclipse.core.launcher.Main.run(Main.java:704)
+        at org.eclipse.core.launcher.Main.main(Main.java:688)
+
+&quot;VM Thread&quot; prio=5 tid=0x009f71d0 nid=0x448 runnable
+
+&quot;VM Periodic Task Thread&quot; prio=10 tid=0x00a0e2f0 nid=0x1578 waiting on condition
+&quot;Suspend Checker Thread&quot; prio=10 tid=0x009f9d90 nid=0x16a4 runnable</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=75546#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Darin Wright</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=darin.eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=darin.eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-10-04 10:21:12 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The main thread is waiting for a lock, but the code it is waiting on should 
+not be blocking long or indenfintely. Needs investigation. Are you able to 
+reproduce this problem?</pre>
+    </div>
+
+    <div id="c2" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=75546#c2">Comment 2</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jean-Michel Lemieux</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jean-michel_lemieux&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jean-michel_lemieux&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-10-04 10:30:49 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Not reproduceable yet, but I did have to kill Eclipse after around 10 minutes of
+waiting.</pre>
+    </div>
+
+    <div id="c3" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=75546#c3">Comment 3</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jean-Michel Lemieux</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jean-michel_lemieux&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jean-michel_lemieux&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-10-11 21:41:22 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Just happened again, exactly the same stack trace I think. Lost work this time
+:( My fault for not saving... Marking as critical since it has happened to me 3
+times in the last two weeks.
+
+!MESSAGE Authentication error: com.jcraft.jsch.JSchException: Session.connect:
+java.net.ConnectException: Connection timed out: connect
+Full thread dump Java HotSpot(TM) Client VM (1.4.2_05-b04 mixed mode):
+
+&quot;Input Stream Monitor&quot; prio=5 tid=0x048a8740 nid=0x17c0 in Object.wait()
+[650f000..650fd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x103c3378&gt; (a java.lang.Object)
+        at java.lang.Object.wait(Unknown Source)
+        at
+org.eclipse.debug.internal.core.InputStreamMonitor.writeNext(InputStreamMonitor.java:124)
+        - locked &lt;0x103c3378&gt; (a java.lang.Object)
+        at
+org.eclipse.debug.internal.core.InputStreamMonitor.write(InputStreamMonitor.java:99)
+        at
+org.eclipse.debug.internal.core.InputStreamMonitor$1.run(InputStreamMonitor.java:75)
+        at java.lang.Thread.run(Unknown Source)
+
+&quot;Output Stream Monitor&quot; prio=5 tid=0x04921c40 nid=0x15c4 runnable [64cf000..64cfd8c]
+        at java.io.FileInputStream.readBytes(Native Method)
+        at java.io.FileInputStream.read(Unknown Source)
+        at
+org.eclipse.debug.internal.core.OutputStreamMonitor.read(OutputStreamMonitor.java:132)
+        at
+org.eclipse.debug.internal.core.OutputStreamMonitor.access$1(OutputStreamMonitor.java:124)
+        at
+org.eclipse.debug.internal.core.OutputStreamMonitor$1.run(OutputStreamMonitor.java:179)
+        at java.lang.Thread.run(Unknown Source)
+
+&quot;Output Stream Monitor&quot; prio=5 tid=0x048a08f0 nid=0x6b4 runnable [648f000..648fd8c]
+        at java.io.FileInputStream.readBytes(Native Method)
+        at java.io.FileInputStream.read(Unknown Source)
+        at java.io.BufferedInputStream.read1(Unknown Source)
+        at java.io.BufferedInputStream.read(Unknown Source)
+        - locked &lt;0x103c0ae0&gt; (a java.io.BufferedInputStream)
+        at java.io.FilterInputStream.read(Unknown Source)
+        at
+org.eclipse.debug.internal.core.OutputStreamMonitor.read(OutputStreamMonitor.java:132)
+        at
+org.eclipse.debug.internal.core.OutputStreamMonitor.access$1(OutputStreamMonitor.java:124)
+        at
+org.eclipse.debug.internal.core.OutputStreamMonitor$1.run(OutputStreamMonitor.java:179)
+        at java.lang.Thread.run(Unknown Source)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x048a0668
+nid=0x9f8 in Object.wait() [644f000..644fd8c]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:176)
+        - locked &lt;0x21682b40&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;Worker-94&quot; prio=5 tid=0x048ab060 nid=0x14f0 runnable [640f000..640fd8c]
+        at java.lang.Win32Process.waitFor(Native Method)
+        at
+org.eclipse.debug.core.model.RuntimeProcess$ProcessMonitorJob.run(RuntimeProcess.java:362)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:66)
+
+&quot;Worker-93&quot; prio=5 tid=0x048b3008 nid=0x12cc in Object.wait() [63cf000..63cfd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x103c3c78&gt; (a org.eclipse.ui.console.IOConsoleInputStream)
+        at java.lang.Object.wait(Unknown Source)
+        at
+org.eclipse.ui.console.IOConsoleInputStream.waitForData(IOConsoleInputStream.java:139)
+        at
+org.eclipse.ui.console.IOConsoleInputStream.read(IOConsoleInputStream.java:85)
+        - locked &lt;0x103c3c78&gt; (a org.eclipse.ui.console.IOConsoleInputStream)
+        at
+org.eclipse.ui.console.IOConsoleInputStream.read(IOConsoleInputStream.java:110)
+        at
+org.eclipse.debug.internal.ui.views.console.ProcessConsole$InputReadJob.run(ProcessConsole.java:474)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:66)
+
+&quot;Worker-92&quot; prio=5 tid=0x048a4008 nid=0x146c in Object.wait() [60df000..60dfd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x103c3ad0&gt; (a org.eclipse.ui.internal.Semaphore)
+        at org.eclipse.ui.internal.Semaphore.acquire(Semaphore.java:41)
+        - locked &lt;0x103c3ad0&gt; (a org.eclipse.ui.internal.Semaphore)
+        at org.eclipse.ui.internal.UISynchronizer.syncExec(UISynchronizer.java:45)
+        at org.eclipse.swt.widgets.Display.syncExec(Display.java:3107)
+        at
+org.eclipse.debug.internal.ui.views.console.ProcessConsoleManager.launchChanged(ProcessConsoleManager.java:147)
+        at
+org.eclipse.debug.internal.core.LaunchManager$LaunchNotifier.run(LaunchManager.java:1336)
+        at
+org.eclipse.core.internal.runtime.InternalPlatform.run(InternalPlatform.java:616)
+        at org.eclipse.core.runtime.Platform.run(Platform.java:747)
+        at
+org.eclipse.debug.internal.core.LaunchManager$LaunchNotifier.notify(LaunchManager.java:1355)
+        at
+org.eclipse.debug.internal.core.LaunchManager.fireUpdate(LaunchManager.java:363)
+        at org.eclipse.debug.core.Launch.fireChanged(Launch.java:399)
+        at org.eclipse.debug.core.Launch.addProcess(Launch.java:362)
+        at
+org.eclipse.debug.core.model.RuntimeProcess.&lt;init&gt;(RuntimeProcess.java:115)
+        at org.eclipse.debug.core.DebugPlugin.newProcess(DebugPlugin.java:534)
+        at
+org.eclipse.jdt.launching.AbstractVMRunner.newProcess(AbstractVMRunner.java:110)
+        at
+org.eclipse.jdt.internal.launching.StandardVMDebugger.run(StandardVMDebugger.java:210)
+        at
+org.eclipse.pde.internal.ui.launcher.WorkbenchLaunchConfigurationDelegate.launch(WorkbenchLaunchConfigurationDelegate.java:74)
+        at
+org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:569)
+        at
+org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:720)
+        at org.eclipse.debug.internal.ui.DebugUIPlugin$6.run(DebugUIPlugin.java:892)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:66)
+
+&quot;Packet Send Manager&quot; prio=5 tid=0x048a52c8 nid=0xc50 in Object.wait()
+[638f000..638fd8c]
+        at java.lang.Object.wait(Native Method)
+        at java.lang.Object.wait(Unknown Source)
+        at
+org.eclipse.jdi.internal.connect.PacketSendManager.sendAvailablePackets(PacketSendManager.java:94)
+        - locked &lt;0x215a2588&gt; (a org.eclipse.jdi.internal.connect.PacketSendManager)
+        at
+org.eclipse.jdi.internal.connect.PacketSendManager.run(PacketSendManager.java:54)
+        at java.lang.Thread.run(Unknown Source)
+
+&quot;Packet Receive Manager&quot; prio=5 tid=0x048a5168 nid=0x1734 runnable
+[634f000..634fd8c]
+        at java.net.SocketInputStream.socketRead0(Native Method)
+        at java.net.SocketInputStream.read(Unknown Source)
+        at java.net.SocketInputStream.read(Unknown Source)
+        at java.io.DataInputStream.readInt(Unknown Source)
+        at org.eclipse.jdi.internal.jdwp.JdwpPacket.read(JdwpPacket.java:125)
+        at
+org.eclipse.jdi.internal.connect.PacketReceiveManager.readAvailablePacket(PacketReceiveManager.java:224)
+        at
+org.eclipse.jdi.internal.connect.PacketReceiveManager.run(PacketReceiveManager.java:70)
+        at java.lang.Thread.run(Unknown Source)
+
+&quot;Input Stream Monitor&quot; prio=5 tid=0x0485aef8 nid=0x1604 in Object.wait()
+[609f000..609fd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x215a26b8&gt; (a java.lang.Object)
+        at java.lang.Object.wait(Unknown Source)
+        at
+org.eclipse.debug.internal.core.InputStreamMonitor.writeNext(InputStreamMonitor.java:124)
+        - locked &lt;0x215a26b8&gt; (a java.lang.Object)
+        at
+org.eclipse.debug.internal.core.InputStreamMonitor.write(InputStreamMonitor.java:99)
+        at
+org.eclipse.debug.internal.core.InputStreamMonitor$1.run(InputStreamMonitor.java:75)
+        at java.lang.Thread.run(Unknown Source)
+
+&quot;Output Stream Monitor&quot; prio=5 tid=0x049440d0 nid=0x1744 runnable [605f000..605fd8c]
+        at java.io.FileInputStream.readBytes(Native Method)
+        at java.io.FileInputStream.read(Unknown Source)
+        at
+org.eclipse.debug.internal.core.OutputStreamMonitor.read(OutputStreamMonitor.java:132)
+        at
+org.eclipse.debug.internal.core.OutputStreamMonitor.access$1(OutputStreamMonitor.java:124)
+        at
+org.eclipse.debug.internal.core.OutputStreamMonitor$1.run(OutputStreamMonitor.java:179)
+        at java.lang.Thread.run(Unknown Source)
+
+&quot;Output Stream Monitor&quot; prio=5 tid=0x04891ae8 nid=0xd10 runnable [44ef000..44efd8c]
+        at java.io.FileInputStream.readBytes(Native Method)
+        at java.io.FileInputStream.read(Unknown Source)
+        at java.io.BufferedInputStream.read1(Unknown Source)
+        at java.io.BufferedInputStream.read(Unknown Source)
+        - locked &lt;0x215a6808&gt; (a java.io.BufferedInputStream)
+        at java.io.FilterInputStream.read(Unknown Source)
+        at
+org.eclipse.debug.internal.core.OutputStreamMonitor.read(OutputStreamMonitor.java:132)
+        at
+org.eclipse.debug.internal.core.OutputStreamMonitor.access$1(OutputStreamMonitor.java:124)
+        at
+org.eclipse.debug.internal.core.OutputStreamMonitor$1.run(OutputStreamMonitor.java:179)
+        at java.lang.Thread.run(Unknown Source)
+
+&quot;Worker-91&quot; prio=5 tid=0x04983818 nid=0x9b8 in Object.wait() [5ecf000..5ecfd8c]
+        at java.lang.Object.wait(Native Method)
+        at org.eclipse.core.internal.jobs.WorkerPool.sleep(WorkerPool.java:166)
+        - locked &lt;0x13864258&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.startJob(WorkerPool.java:193)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:59)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x04848458
+nid=0x1324 in Object.wait() [5f7f000..5f7fd8c]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:176)
+        - locked &lt;0x20fed7b0&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x047c9c20
+nid=0xf3c in Object.wait() [5e8f000..5e8fd8c]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:176)
+        - locked &lt;0x2048e2e0&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x0398f400
+nid=0x6a4 in Object.wait() [5e1f000..5e1fd8c]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:176)
+        - locked &lt;0x2021bc28&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x038cc0f0
+nid=0x1384 in Object.wait() [5ddf000..5ddfd8c]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:176)
+        - locked &lt;0x1feb2528&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x0475e9f8
+nid=0x43c in Object.wait() [5d9f000..5d9fd8c]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:176)
+        - locked &lt;0x1feb2588&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x047916a0
+nid=0x1630 in Object.wait() [57cf000..57cfd8c]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:176)
+        - locked &lt;0x1feb25e8&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;Worker-90&quot; prio=5 tid=0x03a4d0c8 nid=0x14c0 in Object.wait() [5d5f000..5d5fd8c]
+        at java.lang.Object.wait(Native Method)
+        at org.eclipse.core.internal.jobs.WorkerPool.sleep(WorkerPool.java:166)
+        - locked &lt;0x13864258&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.startJob(WorkerPool.java:193)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:59)
+
+&quot;Worker-89&quot; prio=5 tid=0x0383eb78 nid=0x724 in Object.wait() [5d1f000..5d1fd8c]
+        at java.lang.Object.wait(Native Method)
+        at org.eclipse.core.internal.jobs.WorkerPool.sleep(WorkerPool.java:166)
+        - locked &lt;0x13864258&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.startJob(WorkerPool.java:193)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:59)
+
+&quot;Worker-88&quot; prio=5 tid=0x045ed520 nid=0x12d4 in Object.wait() [5cdf000..5cdfd8c]
+        at java.lang.Object.wait(Native Method)
+        at org.eclipse.core.internal.jobs.WorkerPool.sleep(WorkerPool.java:166)
+        - locked &lt;0x13864258&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.startJob(WorkerPool.java:193)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:59)
+
+&quot;org.eclipse.jface.text.reconciler.MonoReconciler&quot; daemon prio=2 tid=0x039a9e60
+nid=0x140c in Object.wait() [5c1f000..5c1fd8c]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:176)
+        - locked &lt;0x1f4963c0&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jface.text.reconciler.MonoReconciler&quot; daemon prio=2 tid=0x04766810
+nid=0x134c in Object.wait() [598f000..598fd8c]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:176)
+        - locked &lt;0x1f496420&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;Worker-86&quot; prio=5 tid=0x038a5a10 nid=0x10d8 in Object.wait() [563f000..563fd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x215a47a0&gt; (a java.lang.Thread)
+        at java.lang.Thread.join(Unknown Source)
+        - locked &lt;0x215a47a0&gt; (a java.lang.Thread)
+        at java.lang.Thread.join(Unknown Source)
+        at
+org.eclipse.debug.internal.core.OutputStreamMonitor.close(OutputStreamMonitor.java:94)
+        at org.eclipse.debug.internal.core.StreamsProxy.close(StreamsProxy.java:67)
+        at
+org.eclipse.debug.core.model.RuntimeProcess.terminated(RuntimeProcess.java:220)
+        - locked &lt;0x215a6870&gt; (a org.eclipse.debug.core.model.RuntimeProcess)
+        at
+org.eclipse.debug.core.model.RuntimeProcess$ProcessMonitorJob.run(RuntimeProcess.java:368)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:66)
+
+&quot;Worker-84&quot; prio=5 tid=0x0348ba10 nid=0xcb0 in Object.wait() [5c5f000..5c5fd8c]
+        at java.lang.Object.wait(Native Method)
+        at org.eclipse.core.internal.jobs.WorkerPool.sleep(WorkerPool.java:166)
+        - locked &lt;0x13864258&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.startJob(WorkerPool.java:193)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:59)
+
+&quot;Worker-82&quot; prio=5 tid=0x03942328 nid=0x12c8 in Object.wait() [5b6f000..5b6fd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x215a6900&gt; (a org.eclipse.ui.console.IOConsoleInputStream)
+        at java.lang.Object.wait(Unknown Source)
+        at
+org.eclipse.ui.console.IOConsoleInputStream.waitForData(IOConsoleInputStream.java:139)
+        at
+org.eclipse.ui.console.IOConsoleInputStream.read(IOConsoleInputStream.java:85)
+        - locked &lt;0x215a6900&gt; (a org.eclipse.ui.console.IOConsoleInputStream)
+        at
+org.eclipse.ui.console.IOConsoleInputStream.read(IOConsoleInputStream.java:110)
+        at
+org.eclipse.debug.internal.ui.views.console.ProcessConsole$InputReadJob.run(ProcessConsole.java:474)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:66)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x038976a0
+nid=0xa60 in Object.wait() [55ff000..55ffd8c]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:176)
+        - locked &lt;0x1eff4ea8&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x045e1420
+nid=0x904 in Object.wait() [5acf000..5acfd8c]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:176)
+        - locked &lt;0x1ef761f0&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x046511e8
+nid=0x174c in Object.wait() [59ff000..59ffd8c]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:176)
+        - locked &lt;0x1ed284a0&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x0474fe18
+nid=0x1424 in Object.wait() [5a3f000..5a3fd8c]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:176)
+        - locked &lt;0x1ed28500&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x04766fa8
+nid=0xcb4 in Object.wait() [594f000..594fd8c]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:176)
+        - locked &lt;0x1eb899b0&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x03897d68
+nid=0x17f0 in Object.wait() [578f000..578fd8c]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:176)
+        - locked &lt;0x1e1b6240&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x04792100
+nid=0xaec in Object.wait() [590f000..590fd8c]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:176)
+        - locked &lt;0x1e0ffb48&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x048256c8
+nid=0x9bc in Object.wait() [574f000..574fd8c]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:176)
+        - locked &lt;0x1e09e3d0&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x04679390
+nid=0xf9c in Object.wait() [570f000..570fd8c]
+        at java.lang.Object.wait(Native Method)
+        at
+org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:176)
+        - locked &lt;0x1df07318&gt; (a org.eclipse.jface.text.reconciler.DirtyRegionQueue)
+
+&quot;Reference Cleaner - 6&quot; prio=7 tid=0x0372a410 nid=0xed0 in Object.wait()
+[43af000..43afd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x14a3c590&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(Unknown Source)
+        - locked &lt;0x14a3c590&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(Unknown Source)
+        at
+org.eclipse.jface.resource.ImageCache$ReferenceCleanerThread.run(ImageCache.java:161)
+
+&quot;Reference Cleaner - 5&quot; prio=7 tid=0x036e9380 nid=0x928 in Object.wait()
+[436f000..436fd8c]
+        at java.lang.Object.wait(Native Method)
+        at java.lang.ref.ReferenceQueue.remove(Unknown Source)
+        - locked &lt;0x14a3c670&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(Unknown Source)
+        at
+org.eclipse.jface.resource.ImageCache$ReferenceCleanerThread.run(ImageCache.java:161)
+
+&quot;Reference Cleaner - 4&quot; prio=7 tid=0x034f4b98 nid=0xe18 in Object.wait()
+[421f000..421fd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x14a3c628&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(Unknown Source)
+        - locked &lt;0x14a3c628&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(Unknown Source)
+        at
+org.eclipse.jface.resource.ImageCache$ReferenceCleanerThread.run(ImageCache.java:161)
+
+&quot;Java indexing&quot; daemon prio=4 tid=0x00a32c28 nid=0xbb4 in Object.wait()
+[41df000..41dfd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x14aa3e30&gt; (a
+org.eclipse.jdt.internal.core.search.indexing.IndexManager)
+        at java.lang.Object.wait(Unknown Source)
+        at
+org.eclipse.jdt.internal.core.search.processing.JobManager.run(JobManager.java:345)
+        - locked &lt;0x14aa3e30&gt; (a
+org.eclipse.jdt.internal.core.search.indexing.IndexManager)
+        at java.lang.Thread.run(Unknown Source)
+
+&quot;Reference Cleaner - 3&quot; prio=7 tid=0x034654c0 nid=0xfbc in Object.wait()
+[405f000..405fd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x14935898&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(Unknown Source)
+        - locked &lt;0x14935898&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(Unknown Source)
+        at
+org.eclipse.jface.resource.ImageCache$ReferenceCleanerThread.run(ImageCache.java:161)
+
+&quot;Reference Cleaner - 2&quot; prio=7 tid=0x033d0900 nid=0x2e0 in Object.wait()
+[401f000..401fd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x14935908&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(Unknown Source)
+        - locked &lt;0x14935908&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(Unknown Source)
+        at
+org.eclipse.jface.resource.ImageCache$ReferenceCleanerThread.run(ImageCache.java:161)
+
+&quot;Reference Cleaner - 1&quot; prio=7 tid=0x00a69d10 nid=0x9e4 in Object.wait()
+[3fdf000..3fdfd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x14935978&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(Unknown Source)
+        - locked &lt;0x14935978&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(Unknown Source)
+        at
+org.eclipse.jface.resource.ImageCache$ReferenceCleanerThread.run(ImageCache.java:161)
+
+&quot;Start Level Event Dispatcher&quot; daemon prio=5 tid=0x035268e0 nid=0xbc8 in
+Object.wait() [364f000..364fd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x138440f0&gt; (a
+org.eclipse.osgi.framework.eventmgr.EventThread)
+        at java.lang.Object.wait(Unknown Source)
+        at
+org.eclipse.osgi.framework.eventmgr.EventThread.getNextEvent(EventThread.java:162)
+        - locked &lt;0x138440f0&gt; (a org.eclipse.osgi.framework.eventmgr.EventThread)
+        at org.eclipse.osgi.framework.eventmgr.EventThread.run(EventThread.java:100)
+
+&quot;Framework Event Dispatcher&quot; daemon prio=5 tid=0x00a29410 nid=0xd80 in
+Object.wait() [360f000..360fd8c]
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x13844140&gt; (a
+org.eclipse.osgi.framework.eventmgr.EventThread)
+        at java.lang.Object.wait(Unknown Source)
+        at
+org.eclipse.osgi.framework.eventmgr.EventThread.getNextEvent(EventThread.java:162)
+        - locked &lt;0x13844140&gt; (a org.eclipse.osgi.framework.eventmgr.EventThread)
+        at org.eclipse.osgi.framework.eventmgr.EventThread.run(EventThread.java:100)
+
+&quot;Signal Dispatcher&quot; daemon prio=10 tid=0x009bafa8 nid=0xb18 waiting on condition
+[0..0]
+
+&quot;YJP CPU Sampler&quot; daemon prio=5 tid=0x009f9b98 nid=0xea8 runnable [0..0]
+
+&quot;YJP RequestServer&quot; daemon prio=5 tid=0x009f9638 nid=0x9d4 runnable
+[328f000..328fd8c]
+        at java.net.PlainSocketImpl.socketAccept(Native Method)
+        at java.net.PlainSocketImpl.accept(Unknown Source)
+        - locked &lt;0x138442e8&gt; (a java.net.PlainSocketImpl)
+        at java.net.ServerSocket.implAccept(Unknown Source)
+        at java.net.ServerSocket.accept(Unknown Source)
+        at com.yourkit.runtime.RequestServer.startServerImpl(RequestServer.java:257)
+        at com.yourkit.runtime.RequestServer.access$000(RequestServer.java:17)
+        at com.yourkit.runtime.RequestServer$1.run(RequestServer.java:56)
+
+&quot;Finalizer&quot; daemon prio=9 tid=0x009b7d78 nid=0xf14 in Object.wait()
+[2e0f000..2e0fd8c]
+        at java.lang.Object.wait(Native Method)
+        at java.lang.ref.ReferenceQueue.remove(Unknown Source)
+        - locked &lt;0x13844428&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(Unknown Source)
+        at java.lang.ref.Finalizer$FinalizerThread.run(Unknown Source)
+
+&quot;Reference Handler&quot; daemon prio=10 tid=0x009b69f8 nid=0x9ac in Object.wait()
+[2dcf000..2dcfd8c]
+        at java.lang.Object.wait(Native Method)
+        at java.lang.Object.wait(Unknown Source)
+        at java.lang.ref.Reference$ReferenceHandler.run(Unknown Source)
+        - locked &lt;0x13844490&gt; (a java.lang.ref.Reference$Lock)
+
+&quot;main&quot; prio=7 tid=0x00035d48 nid=0xc84 waiting for monitor entry [7f000..7fc3c]
+        at
+org.eclipse.debug.core.model.RuntimeProcess.isTerminated(RuntimeProcess.java:177)
+        - waiting to lock &lt;0x215a6870&gt; (a
+org.eclipse.debug.core.model.RuntimeProcess)
+        at org.eclipse.debug.core.Launch.isTerminated(Launch.java:201)
+        at
+org.eclipse.debug.internal.ui.views.console.ProcessConsoleManager.removeTerminatedLaunches(ProcessConsoleManager.java:136)
+        at
+org.eclipse.debug.internal.ui.views.console.ProcessConsoleManager$1.run(ProcessConsoleManager.java:169)
+        at
+org.eclipse.ui.internal.UILockListener.doPendingWork(UILockListener.java:145)
+        at org.eclipse.ui.internal.UISynchronizer$1.run(UISynchronizer.java:36)
+        at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+        at
+org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:106)
+        - locked &lt;0x103c3af8&gt; (a org.eclipse.swt.widgets.RunnableLock)
+        at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:2760)
+        at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:2445)
+        at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:1443)
+        at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:1414)
+        at
+org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:271)
+        at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:144)
+        at org.eclipse.ui.internal.ide.IDEApplication.run(IDEApplication.java:102)
+        at
+org.eclipse.core.internal.runtime.PlatformActivator$1.run(PlatformActivator.java:335)
+        at
+org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:273)
+        at
+org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:129)
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+        at java.lang.reflect.Method.invoke(Unknown Source)
+        at org.eclipse.core.launcher.Main.basicRun(Main.java:185)
+        at org.eclipse.core.launcher.Main.run(Main.java:704)
+        at org.eclipse.core.launcher.Main.main(Main.java:688)
+
+&quot;VM Thread&quot; prio=5 tid=0x009f7348 nid=0xf90 runnable
+
+&quot;VM Periodic Task Thread&quot; prio=10 tid=0x009f82e0 nid=0xbd0 waiting on condition
+&quot;Suspend Checker Thread&quot; prio=10 tid=0x009f9d90 nid=0xf94 runnable</pre>
+    </div>
+
+    <div id="c4" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=75546#c4">Comment 4</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jean-Michel Lemieux</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jean-michel_lemieux&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jean-michel_lemieux&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-10-11 21:45:19 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Eclipse actually came back to life after a couple of minutes, but when I
+switched to the debug view it froze update images. It's been stuck like this for
+a couple of minutes now... UI won't paint.
+
+&quot;main&quot; prio=7 tid=0x00035d48 nid=0xc84 waiting for monitor entry [7e000..7fc3c]
+        at
+org.eclipse.debug.core.model.RuntimeProcess.isTerminated(RuntimeProcess.java:177)
+        - waiting to lock &lt;0x111f43d0&gt; (a
+org.eclipse.debug.core.model.RuntimeProcess)
+        at
+org.eclipse.debug.internal.ui.DefaultLabelProvider.getImageKey(DefaultLabelProvider.java:120)
+        at
+org.eclipse.debug.internal.ui.DefaultLabelProvider.getImage(DefaultLabelProvider.java:56)
+        at
+org.eclipse.debug.internal.ui.DelegatingModelPresentation.getDefaultImage(DelegatingModelPresentation.java:220)
+        at
+org.eclipse.debug.internal.ui.DelegatingModelPresentation.getImage(DelegatingModelPresentation.java:147)
+        at
+org.eclipse.debug.internal.ui.views.DebugViewInterimLabelProvider.getImage(DebugViewInterimLabelProvider.java:58)
+        at
+org.eclipse.jface.viewers.DecoratingLabelProvider.getImage(DecoratingLabelProvider.java:82)
+        at
+org.eclipse.debug.internal.ui.views.launch.LaunchViewer.doUpdateItem(LaunchViewer.java:92)
+        at
+org.eclipse.jface.viewers.AbstractTreeViewer$UpdateItemSafeRunnable.run(AbstractTreeViewer.java:86)
+        at
+org.eclipse.core.internal.runtime.InternalPlatform.run(InternalPlatform.java:616)
+        at org.eclipse.core.runtime.Platform.run(Platform.java:747)
+        at
+org.eclipse.jface.viewers.AbstractTreeViewer.doUpdateItem(AbstractTreeViewer.java:488)
+        at
+org.eclipse.jface.viewers.StructuredViewer$UpdateItemSafeRunnable.run(StructuredViewer.java:135)
+        at
+org.eclipse.core.internal.runtime.InternalPlatform.run(InternalPlatform.java:616)
+        at org.eclipse.core.runtime.Platform.run(Platform.java:747)
+        at
+org.eclipse.jface.viewers.StructuredViewer.updateItem(StructuredViewer.java:1432)
+        at
+org.eclipse.jface.viewers.AbstractTreeViewer.updateChildren(AbstractTreeViewer.java:1601)
+        at
+org.eclipse.jface.viewers.AbstractTreeViewer.internalRefreshStruct(AbstractTreeViewer.java:1091)
+        at
+org.eclipse.jface.viewers.AbstractTreeViewer.internalRefreshStruct(AbstractTreeViewer.java:1098)
+        at
+org.eclipse.jface.viewers.AbstractTreeViewer.internalRefresh(AbstractTreeViewer.java:1068)
+        at
+org.eclipse.jface.viewers.AbstractTreeViewer.internalRefresh(AbstractTreeViewer.java:1033)
+        at
+org.eclipse.jface.viewers.AbstractTreeViewer.internalRefresh(AbstractTreeViewer.java:1020)
+        at
+org.eclipse.jface.viewers.StructuredViewer$7.run(StructuredViewer.java:964)
+        at
+org.eclipse.jface.viewers.StructuredViewer.preservingSelection(StructuredViewer.java:901)
+        at
+org.eclipse.jface.viewers.StructuredViewer.refresh(StructuredViewer.java:962)
+        at
+org.eclipse.debug.internal.ui.views.launch.LaunchViewer.refresh(LaunchViewer.java:110)
+        at
+org.eclipse.jface.viewers.StructuredViewer.refresh(StructuredViewer.java:921)
+        at
+org.eclipse.debug.internal.ui.views.AbstractDebugEventHandler.refresh(AbstractDebugEventHandler.java:146)
+        at
+org.eclipse.debug.internal.ui.views.AbstractDebugEventHandler.viewBecomesVisible(AbstractDebugEventHandler.java:235)
+        at
+org.eclipse.debug.internal.ui.views.AbstractDebugEventHandlerView.becomesVisible(AbstractDebugEventHandlerView.java:69)
+        at
+org.eclipse.debug.internal.ui.views.launch.LaunchView.becomesVisible(LaunchView.java:1235)
+        at
+org.eclipse.debug.ui.AbstractDebugView$DebugViewPartListener.partVisible(AbstractDebugView.java:162)
+        at
+org.eclipse.ui.internal.PartListenerList2$7.run(PartListenerList2.java:148)
+        at
+org.eclipse.core.internal.runtime.InternalPlatform.run(InternalPlatform.java:616)
+        at org.eclipse.core.runtime.Platform.run(Platform.java:747)
+        at
+org.eclipse.ui.internal.PartListenerList2.firePartVisible(PartListenerList2.java:146)
+        at
+org.eclipse.ui.internal.WorkbenchPage$1.propertyChange(WorkbenchPage.java:160)
+        at org.eclipse.ui.internal.LayoutPart.setVisible(LayoutPart.java:292)
+        at org.eclipse.ui.internal.PartPane.setVisible(PartPane.java:327)
+        at org.eclipse.ui.internal.ViewPane.setVisible(ViewPane.java:607)
+        at
+org.eclipse.ui.internal.presentations.PresentablePart.setVisible(PresentablePart.java:123)
+        at
+org.eclipse.ui.examples.presentation.wrappedtabs.WrappedTabsPartPresentation.selectPart(WrappedTabsPartPresentation.java:715)
+        at
+org.eclipse.ui.internal.PartStack.refreshPresentationSelection(PartStack.java:1025)
+        at org.eclipse.ui.internal.PartStack.setSelection(PartStack.java:999)
+        at
+org.eclipse.ui.internal.PartStack.presentationSelectionChanged(PartStack.java:715)
+        at org.eclipse.ui.internal.PartStack.access$0(PartStack.java:701)
+        at org.eclipse.ui.internal.PartStack$1.selectPart(PartStack.java:93)
+        at
+org.eclipse.ui.examples.presentation.wrappedtabs.WrappedTabsPartPresentation$4.widgetSelected(WrappedTabsPartPresentation.java:154)
+        at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:89)
+        at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:82)
+        at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:796)
+        at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:2783)
+        at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:2442)
+        at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:1443)
+        at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:1414)
+        at
+org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:271)
+        at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:144)
+        at org.eclipse.ui.internal.ide.IDEApplication.run(IDEApplication.java:102)
+        at
+org.eclipse.core.internal.runtime.PlatformActivator$1.run(PlatformActivator.java:335)
+        at
+org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:273)
+        at
+org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:129)
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+        at java.lang.reflect.Method.invoke(Unknown Source)
+        at org.eclipse.core.launcher.Main.basicRun(Main.java:185)
+        at org.eclipse.core.launcher.Main.run(Main.java:704)
+        at org.eclipse.core.launcher.Main.main(Main.java:688)</pre>
+    </div>
+
+    <div id="c5" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=75546#c5">Comment 5</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Darin Wright</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=darin.eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=darin.eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-10-12 17:37:44 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I think this problem was introduced by the fix to <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - RuntimeProcess.isTerminated() replies &quot;false&quot; if process segfaults"
+   href="show_bug.cgi?id=75454">bug 75454</a>, which added 
+synchronization.</pre>
+    </div>
+
+    <div id="c6" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=75546#c6">Comment 6</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Darin Wright</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=darin.eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=darin.eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-10-12 17:38:08 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Sorry, by <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - RuntimeProcess.isTerminated() replies &quot;false&quot; if process segfaults"
+   href="show_bug.cgi?id=75454">bug 75454</a>.</pre>
+    </div>
+
+    <div id="c7" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=75546#c7">Comment 7</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Darin Wright</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=darin.eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=darin.eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-10-12 17:38:39 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(oops, got it right both times :-)</pre>
+    </div>
+
+    <div id="c8" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=75546#c8">Comment 8</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Darin Wright</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=darin.eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=darin.eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-10-12 18:03:42 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Fixed in 3.1. Removed uneeded sync's.</pre>
+    </div>
+
+    <div id="c9" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=75546#c9">Comment 9</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Darin Wright</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=darin.eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=darin.eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-10-12 18:03:57 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Please verify, Kevin.</pre>
+    </div>
+
+    <div id="c10" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=75546#c10">Comment 10</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Darin Wright</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=darin.eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=darin.eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-10-13 11:42:24 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - deadlock stopping JUnit tests"
+   href="show_bug.cgi?id=74998">Bug 74998</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c11" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=75546#c11">Comment 11</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Kevin Barnes</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=cocoakevin&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=cocoakevin&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-10-13 14:23:30 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">verified</pre>
+    </div>
+
+    <div id="c12" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=75546#c12">Comment 12</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Darin Wright</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=darin.eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=darin.eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-10-19 15:07:43 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Deadlock in RuntimeProcess.isTerminated()"
+   href="show_bug.cgi?id=76591">Bug 76591</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c13" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=75546#c13">Comment 13</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Darin Wright</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=darin.eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=darin.eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-10-21 11:45:35 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - Terminating an operation in the console causes a deadlock"
+   href="show_bug.cgi?id=76755">Bug 76755</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c14" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=75546#c14">Comment 14</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Nobody - feel free to take it</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=nobody&#64;eclipse.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=nobody&#64;eclipse.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2004-11-29 11:07:11 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - eclipse deadlocks when I terminate a debugged program"
+   href="show_bug.cgi?id=79366">Bug 79366</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=75546">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=75546">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=75546">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=75546&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=75546" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>

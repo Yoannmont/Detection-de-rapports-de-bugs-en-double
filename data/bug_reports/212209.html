@@ -1,0 +1,2793 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>212209 &ndash; provide a flexible bug reporting facility</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "212209 – provide a flexible bug reporting facility",
+                             "show_bug.cgi?id=212209" );
+        document.title = "212209 – provide a flexible bug reporting facility";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "212209 – provide a flexible bug reporting facility", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_RESOLVED
+                 bz_product_Mylyn
+                 bz_component_Tasks
+                 bz_bug_212209 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;212209</span>
+
+        <span id="subtitle" class="subheader">provide a flexible bug reporting facility</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2009-05-28 14:38:07 EDT</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=212209&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=212209" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2009-05-28 14:38:07">
+  <input type="hidden" name="id" value="212209">
+  <input type="hidden" name="token" value="1629879532-6HusHHC3A213vnx1ezJdRjggUN-eHpF0QthuEtzNYWE">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=212209"><b>Bug&nbsp;212209</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">provide a flexible bug reporting facility</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span>provide a flexible bug reporting facility
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      'provide a flexible bug reporting facility' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">RESOLVED
+          FIXED
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >Mylyn
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >Mylyn
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=Mylyn"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >Tasks
+
+  (<a href="buglist.cgi?component=Tasks&amp;product=Mylyn&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>unspecified &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">PC
+        Windows Vista
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P3
+       enhancement<span id="votes_container">
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=212209#vote_212209">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>3.2 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard">
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'mylyn-inbox\x40eclipse.org',
+        '');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >noteworthy, plan
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          <tr>
+    <th class="field_label">
+      <label>Duplicates (1)</label>:
+    </th>
+    <td class="field_value">
+      <span id="duplicates"><a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - make bug reporting integration more flexible and more usable"
+   href="show_bug.cgi?id=211141">211141</a> 
+      </span>
+      (<a href="buglist.cgi?bug_id=211141">view as bug list</a>)
+    </td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+<a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [api] associate plugins with task repositories and products"
+   href="show_bug.cgi?id=150278">150278</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - automate product and component selection for integrated bug reporting"
+   href="show_bug.cgi?id=183606">183606</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - support automatically determining the plug-in version for the new bug editor"
+   href="show_bug.cgi?id=199706">199706</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [api] support reporting bugs to places other than task repositories"
+   href="show_bug.cgi?id=277401">277401</a> 
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+<a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - Remove Subversive menu in Help"
+   href="show_bug.cgi?id=229495">229495</a> 
+  </td>
+  </tr>
+
+    <tr>
+      <th>&nbsp;</th>
+
+      <td id="show_dependency_tree_or_graph">
+        Show dependency <a href="showdependencytree.cgi?id=212209&amp;hide_resolved=1">tree</a>
+
+      </td>
+    </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2007-12-06 17:03 EST by <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2009-05-28 14:38 EDT
+      (<a href="show_activity.cgi?id=212209">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>10 
+          users
+          <span id="cc_edit_area_showhide_container" class="bz_default_hidden">
+            (<a href="#" id="cc_edit_area_showhide">show</a>)
+          </span>
+        <div id="cc_edit_area">
+          <br>
+            <select id="cc" multiple="multiple" size="5" >
+                <option value="a.gurov">a.gurov</option>
+                <option value="contact">contact</option>
+                <option value="eclipse">eclipse</option>
+                <option value="hbershadskaya">hbershadskaya</option>
+                <option value="mknauer">mknauer</option>
+                <option value="mober.at+eclipse">mober.at+eclipse</option>
+                <option value="overholt">overholt</option>
+                <option value="shawn.minto">shawn.minto</option>
+                <option value="tomasz.zarna">tomasz.zarna</option>
+                <option value="wmitsuda">wmitsuda</option>
+            </select>
+        </div>
+          <script type="text/javascript">
+            hideEditableField( 'cc_edit_area_showhide_container', 
+                               'cc_edit_area', 
+                               'cc_edit_area_showhide', 
+                               '', 
+                               '');  
+          </script>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" >
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+      <tr id="a1" class="bz_contenttype_image_jpeg">
+        <td>
+            <a href="attachment.cgi?id=88104"
+               title="View the content of the attachment">
+          <b>picture of the proposed architecture</b></a>
+
+          <span class="bz_attach_extra_info">
+              (753.81 KB,
+                image/jpeg)
+
+            <br>
+            <a href="#attach_88104"
+               title="Go to the comment associated with the attachment">2008-01-29 02:54 EST</a>,
+
+            <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=88104&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a2" class="bz_contenttype_image_png">
+        <td>
+            <a href="attachment.cgi?id=136117"
+               title="View the content of the attachment">
+          <b>support wizard - first page</b></a>
+
+          <span class="bz_attach_extra_info">
+              (19.48 KB,
+                image/png)
+
+            <br>
+            <a href="#attach_136117"
+               title="Go to the comment associated with the attachment">2009-05-17 03:18 EDT</a>,
+
+            <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=136117&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a3" class="bz_contenttype_image_png">
+        <td>
+            <a href="attachment.cgi?id=136118"
+               title="View the content of the attachment">
+          <b>support wizard - second page</b></a>
+
+          <span class="bz_attach_extra_info">
+              (20.67 KB,
+                image/png)
+
+            <br>
+            <a href="#attach_136118"
+               title="Go to the comment associated with the attachment">2009-05-17 03:19 EDT</a>,
+
+            <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=136118&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a4" class="bz_contenttype_image_gif">
+        <td>
+            <a href="attachment.cgi?id=137379"
+               title="View the content of the attachment">
+          <b>bug banner for wizard</b></a>
+
+          <span class="bz_attach_extra_info">
+              (3.80 KB,
+                image/gif)
+
+            <br>
+            <a href="#attach_137379"
+               title="Go to the comment associated with the attachment">2009-05-27 14:28 EDT</a>,
+
+            <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=137379&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a5" class="bz_contenttype_image_gif">
+        <td>
+            <a href="attachment.cgi?id=137381"
+               title="View the content of the attachment">
+          <b>bug icon</b></a>
+
+          <span class="bz_attach_extra_info">
+              (359 bytes,
+                image/gif)
+
+            <br>
+            <a href="#attach_137381"
+               title="Go to the comment associated with the attachment">2009-05-27 14:42 EDT</a>,
+
+            <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=137381&amp;action=edit">Details</a>
+        </td>
+      </tr>
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <span class="bz_attach_view_hide">
+            <a id="view_all" href="attachment.cgi?bugid=212209&amp;action=viewall">View All</a>
+        </span>
+        <a href="attachment.cgi?bugid=212209&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=212209&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-12-06 17:03:46 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Mylyn currently has a rudimentary Report as Bug facility in the Error Log view and Help menu that allows the user to select any task repository as the target for a bug.  This has a few problems:
+* Any task repository can be selected, even one that's not used for bug reporting.
+* The user has to know which product and component to use, which can be difficult for large repositories with multiple projects.
+* We do not honor the split between plug-in produces and distributors.  For example, a distributor of Eclipse might want to handle all Eclipse bugs.</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-12-06 17:10:08 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - make bug reporting integration more flexible and more usable"
+   href="show_bug.cgi?id=211141">Bug 211141</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c2" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c2">Comment 2</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Alexander Gurov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=a.gurov&#64;i-ween.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=a.gurov&#64;i-ween.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-12-17 09:42:13 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Hi, 
+
+This item relates to my tasks. So, I think I could share my opinion about the problem here.
+
+All previous versions of the Subversive plug-in, which were distributed not from Eclipse.org, contain their own bug reporting system. Now the tracker of our project has migrated to Eclipse.org Bugzilla and we perform some work in order to substitute Subversive bug and tip reporting system with the Mylyn based one.
+
+1)
+So, Mik is absolutely right about the main requirement for this feature: user should not interact with any additional UI if it could be omitted due to some automation. For example, in the Subversive project we have our own error handling mechanism which allows to make decision what errors should be treated as &quot;normal&quot; (network failures etc.) and what exceptions shoud be reported as bugs. So, we known all minimally required information for posting the bug report:
+1) what repository is required
+2) what project should be used for this report
+3) product environment and configuration, versions
+etc.
+Also when user select our menus to send bug or tip report to our product we also can use the same information automatically.
+
+Practically, concrete product will detect if the issue should be reported, then it will configure RepositoryTaskData (in the Mylyn API terms), then it will ask Mylyn to open the bug report editor for preconfigured task data. So, now user only should press &quot;Submit&quot; button and it could, optionally, specify additional information in the description field.
+
+2)
+Also I think &quot;Report as Bug facility in the Error Log view&quot; is not a rudimentary one, but it could be greatly improved.
+Why is not a rudimentary one? 
+For example, initially in the Subversive we have two reporting mechanisms - first serves all plug-in logic which represents most of the plug-in features, second listens for any logged errors and if it corresponds to some conditions this mechanism automatically asks user to report the issue. I.e. the second mechanism is very useful in order to detect UI issues which are catched by UI thread. After several development iterations when our plug-in reached more stable state we switched off the error log listener in order to reduce IDE load and prevent false reports when unrelated exceptions are contained in its stack trace information which will cause reporting issue to our tracker. Now, using the &quot;Report as Bug&quot; facility user may post the related issue from the Error Log view to our tracker nevertheless automated listener is disabled.
+How it could be improved?
+Mylyn could provide API which allows to ask loaded extension points about the logged IStatus object if this status should be reported for the concrete product or not. 
+If the status declined by all products we have 2 variants:
+- disable the &quot;Report as Bug&quot; facility for the status
+- propose user to enter all required information manually (as it works now)
+If only one extension point accepted this status, then do as described in the point 1).
+If several extension points accepted the status then we again have two choices:
+- send report to all products
+- ask user to which product really relates the issue.
+
+3)
+Another side of the problem is that not all products could have trackers connected to Mylyn due to different reasons:
+- project has no tracker
+- project tracker has no connector for the Mylyn
+- project does not allow reporting issues from not authorized sources
+etc.
+These projects could work with mailing lists (as earlier version of Subversive, for example). So, it would be great if Mylyn also could allow mail reporting for these projects. AFAIK SUN's Mail API library license is compatible with the EPL and it allows to implement mail reporter relatively easy.
+
+What do you think about it?</pre>
+    </div>
+
+    <div id="c3" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c3">Comment 3</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-01-29 02:52:53 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Thank you for adding your requirements and your input Alexander. It's great to hear that the Subversive project is interested in leveraging Mylyn for bug submission. I think it would be a great benefit to the user and Eclipse community to have a unified bug reporting facility for Eclipse projects that is easier to use than what Mylyn currently offers and more extensible. I discussed the API with Mik and I'll try to summarize the architecture we came up with.
+
+The error handling code will take IStatus objects as inputs that may be provided from different sources:
+
+ * through &quot;Report as Bug from the&quot; error log
+ * by invoking org.eclipse.mylyn.monitor.core.StatusHandler.fail(IStatus)
+ * by an implementation of ILogListener that listens to platform logging events
+
+These status objects are passed to classes that implement AbstractErrorReporter:
+
+ class AbstractErrorReporter {
+
+	public static int PRIORITY_NONE = -1;
+
+	public int getPriority(IStatus status); 
+	
+	public void handle(IStatus status);
+	
+ }
+
+Implementations of the class are discovered through a new extension point provided by Mylyn. The handle() method of the error reporter that returns the highest priority for a status object will be invoked. If all reporters return PRIORITY_NONE nothing happens. If two or more reporters return the same priority that is higher than any other priority returned the user is prompted to select an error reporter.
+
+The error reporter determines how to handle the error, e.g. send it via email, post it to a news group etc.
+
+Mylyn provides a default TaskErrorReporter that uses the task editor to report bugs. To minimize the amount of input required by the user Mylyn provides an extension point to specify properties for populating the editor (<a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [api] associate plugins with task repositories and products"
+   href="show_bug.cgi?id=150278">bug 150278</a>). The extension point maps plug-in ids to a repository and to a list of semi-colon separated attributes:
+
+ &lt;extension point=&quot;org.eclipse.mylyn.tasks.pluginRepositoryMappings&quot;&gt;
+      &lt;pluginRepositoryMapping
+      		pluginIdPrefix=&quot;org.eclipse.mylyn.tasks&quot;
+      		repositoryUrl=&quot;<a href="https://bugs.eclipse.org">https://bugs.eclipse.org</a>&quot;
+            repositoryKind=&quot;bugzilla&quot;
+	        attributes=&quot;product=Mylyn;component=Tasks&quot;/&gt;
+   &lt;/extension&gt;
+
+The TaskErrorReporter will use the plug-in id of a status object to determine the best mapping. It will collect attributes by iterating over the list of extensions that specify a matching prefix. In the case of an error in org.eclipse.mylyn.tasks.ui it might find the following:
+
+ org.eclipse.mylyn.tasks.ui =&gt; component=Tasks
+ org.eclipse.mylyn            =&gt; product=Mylyn
+ org.eclipse                     =&gt; repository=<a href="https://bugs.eclipse.org">https://bugs.eclipse.org</a>
+
+If enough information is available to initialize a TaskData object a pre-populated editor will be opened that will only prompt the user to provide additional details in the description. If the information collected from the plugRepositoryMapping extensions was not sufficient to initialize a TaskData object the user will be prompted to select the repository/product etc.
+
+The current plan is to implementing the outlined architecture as a first step for Mylyn 2.3 and then iterate over the API and extension points in Mylyn 3.0 (Ganymede).</pre>
+    </div>
+
+    <div id="c4" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c4">Comment 4</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-01-29 02:54:19 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=88104" name="attach_88104" title="picture of the proposed architecture">attachment 88104</a> <a href="attachment.cgi?id=88104&amp;action=edit" title="picture of the proposed architecture">[details]</a></span>
+picture of the proposed architecture</pre>
+    </div>
+
+    <div id="c5" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c5">Comment 5</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-01-29 03:20:16 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Alexander, see below for more specific responses to your suggestions and how they were accounted for into the proposed architecture.
+
+ (In reply to <a href="show_bug.cgi?id=212209#c2">comment #2</a>)
+<span class="quote">&gt; So, we known all minimally required information for posting the bug
+&gt; report:
+&gt; 1) what repository is required
+&gt; 2) what project should be used for this report
+&gt; 3) product environment and configuration, versions</span >
+
+It should be possible to specify these properties through the pluginRepositoryMappings extension point or get them from the platform.
+
+<span class="quote">&gt; Practically, concrete product will detect if the issue should be reported, then
+&gt; it will configure RepositoryTaskData (in the Mylyn API terms), then it will ask
+&gt; Mylyn to open the bug report editor for preconfigured task data. So, now user
+&gt; only should press &quot;Submit&quot; button and it could, optionally, specify additional
+&gt; information in the description field.</span >
+
+Yes, in most cases it should be possible to determine the required information to pre-populate the task editor. The user certainly needs to have an option to open the editor to review the data that is transmitted.
+
+<span class="quote">&gt; For example, initially in the Subversive we have two reporting mechanisms -
+&gt; first serves all plug-in logic which represents most of the plug-in features,
+&gt; second listens for any logged errors and if it corresponds to some conditions
+&gt; this mechanism automatically asks user to report the issue. I.e. the second
+&gt; mechanism is very useful in order to detect UI issues which are catched by UI
+&gt; thread. After several development iterations when our plug-in reached more
+&gt; stable state we switched off the error log listener in order to reduce IDE load
+&gt; and prevent false reports when unrelated exceptions are contained in its stack
+&gt; trace information which will cause reporting issue to our tracker. </span >
+[...]
+<span class="quote">&gt; Mylyn could provide API which allows to ask loaded extension points about the
+&gt; logged IStatus object if this status should be reported for the concrete product
+&gt; or not.</span >
+
+Subversive could feed these error to Mylyn by registering an ILogListener that invokes the Mylyn StatusHandler. I am not sure if Mylyn will provide a default ILogListener for reporting bugs. The current mechanism that requires the user to explicitly report the bug from the error log is very unintrusive and will only require very few clicks with proposed architecture. 
+
+<span class="quote">&gt; If the status declined by all products we have 2 variants:
+&gt; - disable the &quot;Report as Bug&quot; facility for the status</span >
+
+I think it could be confusing to the user if the menu item is enabled on some items but not on others therefore I would rather always allow it.
+
+<span class="quote">&gt; - propose user to enter all required information manually (as it works now)
+&gt; If only one extension point accepted this status, then do as described in the
+&gt; point 1).
+&gt; If several extension points accepted the status then we again have two choices:
+&gt; - send report to all products
+&gt; - ask user to which product really relates the issue.</span >
+
+In terms of the proposed API that would mean that multiple pluginRepositoryMappings specify conflicting attributes. In that case the selection in the task editor would point to whichever extension is read last.
+ 
+<span class="quote">&gt; 3)
+&gt; Another side of the problem is that not all products could have trackers
+&gt; connected to Mylyn due to different reasons:
+&gt; - project has no tracker
+&gt; - project tracker has no connector for the Mylyn
+&gt; - project does not allow reporting issues from not authorized sources
+&gt; etc.
+&gt; These projects could work with mailing lists (as earlier version of Subversive,
+&gt; for example). So, it would be great if Mylyn also could allow mail reporting for
+&gt; these projects. AFAIK SUN's Mail API library license is compatible with the EPL
+&gt; and it allows to implement mail reporter relatively easy.</span >
+
+This would be possible by extending AbstractErrorReporter. It is currently out of the scope of the Mylyn project to provide error reporting through Email but the proposed API would enable this through the an extension point for 3rd parties to implement.
+</pre>
+    </div>
+
+    <div id="c6" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c6">Comment 6</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eugene Kuleshov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ekuleshov&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ekuleshov&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-02-01 11:06:04 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Steffen, I see you are replacing all old StatusHandler calls with something like this:
+
+StatusHandler.fail(new Status(IStatus.ERROR, JiraUiPlugin.PLUGIN_ID, &quot;Error updating attributes&quot;, e));
+
+wouldn't it be better to move redundant creation of the status object into the StatusHandler.fail() method? So call can be shortened like this:
+
+StatusHandler.fail(IStatus.ERROR, JiraUiPlugin.PLUGIN_ID, &quot;Error updating attributes&quot;, e);</pre>
+    </div>
+
+    <div id="c7" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c7">Comment 7</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-02-01 12:11:36 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I prefer the current implementation that limits the API that needs to be maintained for Mylyn to a single call rather than creating a fail() and log() method for each of the numerous constructors of the 
+Status class.</pre>
+    </div>
+
+    <div id="c8" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c8">Comment 8</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eugene Kuleshov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ekuleshov&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ekuleshov&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-02-01 14:58:51 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">That still would be one method, taking optional parameters same way as Status class does. The important point that it would look less verbose in the caller's code, which I believe is more important for the clean api.</pre>
+    </div>
+
+    <div id="c9" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c9">Comment 9</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-02-03 03:49:15 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Helen, I have replaced the deprecated calls to the StatusHandler in the XPlanner code. That also caused the imports to get organized in some files (this is enabled by default on save now). Please review if the changes I made are okay. </pre>
+    </div>
+
+    <div id="c10" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c10">Comment 10</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Helen Bershadskaya</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=hbershadskaya&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=hbershadskaya&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-02-04 14:50:38 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Steffen, thanks for letting me know.  The changes look good from what I could see.
+
+thanks
+</pre>
+    </div>
+
+    <div id="c11" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c11">Comment 11</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Alexander Gurov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=a.gurov&#64;i-ween.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=a.gurov&#64;i-ween.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-02-06 08:14:11 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=212209#c5">comment #5</a>)
+
+<span class="quote">&gt; It should be possible to specify these properties through the
+&gt; pluginRepositoryMappings extension point or get them from the platform.</span >
+.....
+<span class="quote">&gt; Yes, in most cases it should be possible to determine the required information
+&gt; to pre-populate the task editor. The user certainly needs to have an option to
+&gt; open the editor to review the data that is transmitted.</span >
+Extension point looks very good.
+
+<span class="quote">&gt; Subversive could feed these error to Mylyn by registering an ILogListener that
+&gt; invokes the Mylyn StatusHandler. I am not sure if Mylyn will provide a default
+&gt; ILogListener for reporting bugs. The current mechanism that requires the user
+&gt; to explicitly report the bug from the error log is very unintrusive and will
+&gt; only require very few clicks with proposed architecture. </span >
+Yes, definitely. I mean that installing ILogListener is not a good idea at all. Instead user can select &quot;Report as bug&quot; action (which is added to log by Mylyn) in the pop-up menu and extension point proposed in your architecture vision will provide all required information in order to pre-populate task editor. So, I hope there are no plans to remove such menu item?
+
+<span class="quote">&gt; I think it could be confusing to the user if the menu item is enabled on some
+&gt; items but not on others therefore I would rather always allow it.</span >
+I agree.
+
+<span class="quote">&gt; pluginRepositoryMappings specify conflicting attributes. In that case the
+&gt; selection in the task editor would point to whichever extension is read last.</span >
+But may be the situation is the reason to show a list of projects filtered by &quot;pluginRepositoryMappings&quot; to which a report can be sent? After user selects one of products editor can be pre-populated by corresponding &quot;pluginRepositoryMappings&quot;.
+
+<span class="quote">&gt; This would be possible by extending AbstractErrorReporter. It is currently out
+&gt; of the scope of the Mylyn project to provide error reporting through Email but
+&gt; the proposed API would enable this through the an extension point for 3rd
+&gt; parties to implement.</span >
+Ok.
+
+And few more questions...
+1) 
+Now we include into generated report information which cannot be specified by proposed extension point because it can be changed at run-time. The information are:
+- id of used SVN connector
+- filtered JVM properties (allow to automatically detect many issues related to environment).
+So, is it possible to introduce some interface related to specified extension point which will provide additional dynamically generated information in order to include it into the generated report?
+
+2) 
+The same relates to sending a tips for improvement (dynamically generated information). So, is it possible to access the same extension point in order to ask the information even if user simply wants to report enhancement (i.e. no stack traces available, but product is selected manually)?</pre>
+    </div>
+
+    <div id="c12" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c12">Comment 12</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-02-13 01:24:53 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text"> (In reply to <a href="show_bug.cgi?id=212209#c11">comment #11</a>)
+<span class="quote">&gt; Yes, definitely. I mean that installing ILogListener is not a good idea at all.
+&gt; Instead user can select &quot;Report as bug&quot; action (which is added to log by Mylyn)
+&gt; in the pop-up menu and extension point proposed in your architecture vision will
+&gt; provide all required information in order to pre-populate task editor. So, I
+&gt; hope there are no plans to remove such menu item?</span >
+
+No, we'll keep the current action but make it extensible through the described extension point.
+
+<span class="quote">&gt; &gt; pluginRepositoryMappings specify conflicting attributes. In that case the
+&gt; &gt; selection in the task editor would point to whichever extension is read last.
+&gt; But may be the situation is the reason to show a list of projects filtered by
+&gt; &quot;pluginRepositoryMappings&quot; to which a report can be sent? After user selects one
+&gt; of products editor can be pre-populated by corresponding
+&gt; &quot;pluginRepositoryMappings&quot;.</span >
+
+Yes, that's a good idea. I am not sure if we'll be able to implement this in the first pass but it's certainly an enhancement that could be added later.
+
+<span class="quote">&gt; 1)
+&gt; Now we include into generated report information which cannot be specified by
+&gt; proposed extension point because it can be changed at run-time. The information
+&gt; are:
+&gt; - id of used SVN connector
+&gt; - filtered JVM properties (allow to automatically detect many issues related to
+&gt; environment).
+&gt; So, is it possible to introduce some interface related to specified extension
+&gt; point which will provide additional dynamically generated information in order
+&gt; to include it into the generated report?</span >
+
+Yes, it could be too difficult to specify all this information as text in an extension particularly if part of it is generated from configuration details that depend on the runtime environment. We could add an extension point that invokes a class to add additional text to the report, e.g. 
+
+ITaskReportContributor {
+
+ String getErrorText(IStatus status)
+
+ /** see below */
+ String getFeatureText(IStatus status)
+ 
+}
+
+<span class="quote">&gt; The same relates to sending a tips for improvement (dynamically generated
+&gt; information). So, is it possible to access the same extension point in order to
+&gt; ask the information even if user simply wants to report enhancement (i.e. no
+&gt; stack traces available, but product is selected manually)?</span >
+
+Great idea, we haven't thought much about how to pre-populate bugs for feature requests: <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - automate product and component selection for integrated bug reporting"
+   href="show_bug.cgi?id=183606">bug 183606</a>. How about using the same extension point as (1)?
+</pre>
+    </div>
+
+    <div id="c13" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c13">Comment 13</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Alexander Gurov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=a.gurov&#64;i-ween.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=a.gurov&#64;i-ween.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-02-13 05:13:16 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=212209#c12">comment #12</a>)
+<span class="quote">&gt; ... How about using the same extension point as (1)?</span >
+I think it will be good. So... we await for availability of this great extension point. :)</pre>
+    </div>
+
+    <div id="c14" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c14">Comment 14</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eugene Kuleshov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ekuleshov&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ekuleshov&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-02-18 13:48:56 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">By the way, is this facility been proven on connectors other then bugzilla? It would be nice to verify how this API works with other connectors. For instance, there are several projects integrating with Mylyn that are not using Bugzilla as their issue trackers.</pre>
+    </div>
+
+    <div id="c15" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c15">Comment 15</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Alexander Gurov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=a.gurov&#64;i-ween.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=a.gurov&#64;i-ween.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-05 06:32:36 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Hello All, 
+
+We have requests about removing of redundant menu items in Help-&gt;Subversive-&gt;Send ... but solving of this issue depends on existance of API which is discussed here. Unfortunately I can't find in the Mylyn release schedule when these APIs will be available for integrators. So, could anybody say is there any progress on this task and when can we try this feature?</pre>
+    </div>
+
+    <div id="c16" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c16">Comment 16</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-06 23:24:15 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Alexander: the bug to track general progress on is <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - track Mylyn 3.0 API creation and migration"
+   href="show_bug.cgi?id=227660">bug 227660</a>.  I'll lest Steffen reply with an ETA for the API addition in question (we are currently focused on changes of existing APIs, and will move to additions after those are completed).</pre>
+    </div>
+
+    <div id="c17" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c17">Comment 17</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-07 00:07:01 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Sorry for the slow progress on this Alexander. Refactoring the current Mylyn APIs turned out to be more extensive than expected so I haven't had a chance to finalize the error reporting API. We'll take a pass through the remaining priorities for Mylyn 3.0 early next week and should be able to give you an estimate then.</pre>
+    </div>
+
+    <div id="c18" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c18">Comment 18</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Alexander Gurov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=a.gurov&#64;i-ween.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=a.gurov&#64;i-ween.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-07 07:13:40 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Hello Mik, Steffen, 
+
+Thank you very much for quick and informative reply.</pre>
+    </div>
+
+    <div id="c19" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c19">Comment 19</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-06-10 17:27:41 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*sigh* need to defer finalizing the API to 3.1. The extension points are in org.eclipse.mylyn.tasks.bugs internal and the API is  provisional. I still expect changes to the abstract classes that provide details about errors once the UI for the bug reporting is streamlined.
+
+Alexander, it is probably best to keep Subversive's current approach for bug reporting that invokes the Mylyn tasks API (or internals) directly. Please let me know if you need any help porting the existing Subversive bug reporting to the Mylyn 3.0 APIs.</pre>
+    </div>
+
+    <div id="c20" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c20">Comment 20</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-07-30 15:55:08 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Would anybody want to give an update about this feature on the next EAC call, Aug 14? I'd be interested in exploring possibilities how Eclipse components (Galileo) could adopt this.
+<a href="http://wiki.eclipse.org/Architecture_Council/Minutes_August_14_2008">http://wiki.eclipse.org/Architecture_Council/Minutes_August_14_2008</a></pre>
+    </div>
+
+    <div id="c21" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c21">Comment 21</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-08-04 19:54:34 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Yup, I would be happy to do that.  It would be great to have Galileo components using this.  In terms of rollout, Mylyn could update the Java package accordingly (we maintain it) and then encourage other package maintainers to do the same.</pre>
+    </div>
+
+    <div id="c22" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c22">Comment 22</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-08-04 19:55:00 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Steffen: could you post a short summary of the status of the API?</pre>
+    </div>
+
+    <div id="c23" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c23">Comment 23</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-08-06 02:38:26 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The API allows to specify mappings from plug-in ids to bug repositories through an extension point. If a bug is reported from the error log and a matching mapping is found a task editor for this repository is opened. If no match is found the user is prompted to select a repository.
+
+Additionally clients may provide an implementation of AbstractTaskContributor to specify properties for the created tasks based on an IStatus object that is created from the error log entry. This includes setting any of the attributes in the attribute section such as the version or component or adding content to the description.
+
+The extension point and API is provisional and I still expect changes for the 3.1 release.
+
+<a class="bz_bug_link 
+          bz_status_NEW "
+   title="NEW - Include EPP packaging names in bug reports"
+   href="show_bug.cgi?id=205196">Bug 205196</a> has further discussion about improving the integrated bug reporting for Eclipse distributions. Martin, please feel free to add your ideas or requirements to any of these bugs.</pre>
+    </div>
+
+    <div id="c24" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c24">Comment 24</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Alexei Goncharov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=alexei.goncharov&#64;polarion.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=alexei.goncharov&#64;polarion.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-08-28 12:31:26 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Hello, Steffen.
+I have a question about taskContributors extension point and implementing AbstractTaskContributor.
+
+Firstly, which tag should be used to specify the implementation of AbstractTaskContributor? I've tried &lt;taskContributor class = &quot;org....&quot;/&gt; but is does not work. Sorry, if it's written somewhere, but I can't find it.
+
+And the second point is what should be put in the map as keys and values for getAttributes() method. I logically thought that these are the atribute names and values from the editor. Tried to return a map containing one entity &lt;&quot;priority&quot;, &quot;p1&quot;&gt;... But I can't even test it cause I can't make the task contributor to be launched.
+
+Sorry, if this is documented somewhere and I simply was to lasy to spend more time for searching.
+
+Hope to get the answer ASAP.
+
+Best regards, Alexei Goncharov. (Subversive Team)</pre>
+    </div>
+
+    <div id="c25" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c25">Comment 25</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Alexei Goncharov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=alexei.goncharov&#64;polarion.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=alexei.goncharov&#64;polarion.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-08-29 03:55:05 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Oh, sorry.
+I've just updated Mylyn to 3.0.1 and the scheme is found. The implementation is launched. And so where can I find valid keys and values for attributes to return map?</pre>
+    </div>
+
+    <div id="c26" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c26">Comment 26</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Alexei Goncharov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=alexei.goncharov&#64;polarion.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=alexei.goncharov&#64;polarion.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-08-29 04:05:40 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I've tried:
+
+public Map&lt;String, String&gt; getAttributes(IStatus arg0) {
+		Map&lt;String, String&gt; map = new HashMap&lt;String, String&gt;();
+		map.put(BugzillaAttribute.BUG_SEVERITY.getKey(), &quot;enhancement&quot;);
+		return map;
+	}
+	
+Didn't help:(...</pre>
+    </div>
+
+    <div id="c27" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c27">Comment 27</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-09-04 14:13:01 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Alexei: Fyi, Steffen will be back from vacation next week and should be able to answer your question then.</pre>
+    </div>
+
+    <div id="c28" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c28">Comment 28</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Alexei Goncharov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=alexei.goncharov&#64;polarion.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=alexei.goncharov&#64;polarion.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-09-05 05:27:33 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Thanks for info, Mik.</pre>
+    </div>
+
+    <div id="c29" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c29">Comment 29</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Alexei Goncharov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=alexei.goncharov&#64;polarion.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=alexei.goncharov&#64;polarion.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-09-18 09:47:19 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Steffen, any comments?</pre>
+    </div>
+
+    <div id="c30" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c30">Comment 30</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-09-18 19:18:58 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Sorry for the slow respone Alexei. The only attributes that are currently supported by getAttributes() are defined in IRepositoryConstants: component, description and product. Other attributes that are returned by getAttributes() will be ignored. 
+
+I will take a look at the current implementation as part of the Mylyn 3.1 release cycle and extend it to support other task attributes as well. Not that severity is currently not part of Mylyn's common task schema but we should consider adding it to support your use-case.</pre>
+    </div>
+
+    <div id="c31" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c31">Comment 31</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Alexei Goncharov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=alexei.goncharov&#64;polarion.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=alexei.goncharov&#64;polarion.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-09-19 08:36:05 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Thanks, Steffen.</pre>
+    </div>
+
+    <div id="c32" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c32">Comment 32</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-02-10 18:58:26 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Due to other unexpected priorities I'll have to push this of to the next milestone.</pre>
+    </div>
+
+    <div id="c33" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c33">Comment 33</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-05-17 03:18:34 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=136117" name="attach_136117" title="support wizard - first page">attachment 136117</a> <a href="attachment.cgi?id=136117&amp;action=edit" title="support wizard - first page">[details]</a></span>
+support wizard - first page</pre>
+    </div>
+
+    <div id="c34" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c34">Comment 34</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-05-17 03:19:30 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=136118" name="attach_136118" title="support wizard - second page">attachment 136118</a> <a href="attachment.cgi?id=136118&amp;action=edit" title="support wizard - second page">[details]</a></span>
+support wizard - second page</pre>
+    </div>
+
+    <div id="c35" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c35">Comment 35</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Shawn Minto</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=shawn.minto&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=shawn.minto&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-05-19 13:18:56 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Steffen, this hasn't been backported to 3.3 yet, correct?  The o.e.m.bugzilla.ide plugin.xml has errors for me.</pre>
+    </div>
+
+    <div id="c36" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c36">Comment 36</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-05-19 15:28:01 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">No, not yet. I have that planned for Wednesday before the Galileo drop.</pre>
+    </div>
+
+    <div id="c37" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c37">Comment 37</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-05-20 23:01:04 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The current release that is available from the weekly site now has a new extension point org.eclipse.mylyn.tasks.bugs.support which replaces the previous pluginRepositoryMappings extension point. <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [api] associate plugins with task repositories and products"
+   href="show_bug.cgi?id=150278">Bug 150278</a> and the org.eclipse.mylyn.bugzilla.ide plug-in have examples how to use the extension point.
+
+Priority, severity and version can now be modified through a taskContributors extension.  when a task is created from the error log (<a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - support automatically determining the plug-in version for the new bug editor"
+   href="show_bug.cgi?id=199706">bug 199706</a>) and a corresponding productRepository mapping specifies a featureId the default contributor will pre-select the version in the task editor based on the installed version.
+
+Please don't hesitate to file additional bugs if you need further extensibility.</pre>
+    </div>
+
+    <div id="c38" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c38">Comment 38</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-05-27 14:28:43 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=137379" name="attach_137379" title="bug banner for wizard">attachment 137379</a> <a href="attachment.cgi?id=137379&amp;action=edit" title="bug banner for wizard">[details]</a></span>
+bug banner for wizard
+
+Steffen: Would this be a better banner image?</pre>
+    </div>
+
+    <div id="c39" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c39">Comment 39</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-05-27 14:42:50 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=137381" name="attach_137381" title="bug icon">attachment 137381</a> <a href="attachment.cgi?id=137381&amp;action=edit" title="bug icon">[details]</a></span>
+bug icon
+
+This could work well for the Error Log contribution?</pre>
+    </div>
+
+    <div id="c40" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c40">Comment 40</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-05-27 16:27:15 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Yes, these icons look great. Can you integrate them?
+
+Do you have ideas for the &quot;Rpeort Bug or Enhancement&quot; icon? The blue bug over the blue repository doesn't have that much contrast and makes it hard to pick out what the icon stands for.</pre>
+    </div>
+
+    <div id="c41" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c41">Comment 41</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-05-27 16:52:37 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">We could use the same icon as attached on this bug?  If you could give that and the banner a try I can iterate on the design after you show me what it looks like.</pre>
+    </div>
+
+    <div id="c42" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c42">Comment 42</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-05-27 20:42:09 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=212209#c37">comment #37</a>)
+<span class="quote">&gt; The current release that is available from the weekly site now has a new
+&gt; extension point org.eclipse.mylyn.tasks.bugs.support which replaces the
+&gt; previous pluginRepositoryMappings extension point.</span >
+
+Here is a viewCVS link to the mentioned examples for the new extension point:
+<a href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.mylyn/org.eclipse.mylyn.bugzilla.ide/plugin.xml?revision=1.27&amp;root=Tools_Project&amp;view=markup">http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.mylyn/org.eclipse.mylyn.bugzilla.ide/plugin.xml?revision=1.27&amp;root=Tools_Project&amp;view=markup</a>
+
+In order to be present in the JEE package, I'd like to request adding TM/RSE as a provider. Here is the code that I figure should be in there:
+
+&lt;product id=&quot;org.eclipse.rse&quot; providerId=&quot;org.eclipse&quot; 
+         featureId=&quot;org.eclipse.rse.core&quot; /&gt;
+&lt;mapping namespace=&quot;org.eclipse.rse&quot; productId=&quot;org.eclipse.rse&quot;&gt;
+	&lt;property name=&quot;product&quot; value=&quot;Target Management&quot;/&gt;
+	&lt;property name=&quot;component&quot; value=&quot;RSE&quot;/&gt;
+&lt;/mapping&gt;
+&lt;mapping namespace=&quot;org.eclipse.tm.terminal&quot; productId=&quot;org.eclipse.rse&quot;&gt;
+	&lt;property name=&quot;component&quot; value=&quot;Terminal&quot;/&gt;
+&lt;/mapping&gt;
+
+How should I proceed? Just put this into my plugins, or file a separate bug, or can you pick it up from this comment?</pre>
+    </div>
+
+    <div id="c43" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c43">Comment 43</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-05-28 00:01:48 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Martin: We shied away from doing the JEE package for Galileo as per David William's suggestion at the F2F Architecture Council meeting at EclipseCon.  So we haven't considered any mappings for that package yet and only did the Java package which we're responsible for.  Would you like to explore adding the TM/RSE anyway?  My concern is that you would end up with too many bugs that people meant to report for WTP.  Fyi, we've been wondering the same thing regarding listing Mylyn in the JEE package, which is why we ended up leaning to waiting for the next release cycle to do all the packages.  But it's certainly open for debate, and it's not that much work to add the mappings.</pre>
+    </div>
+
+    <div id="c44" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c44">Comment 44</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-05-28 00:58:39 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Martin, you should be able to add the extension to one of your plug-ins without introducing a dependency on Mylyn. Let me know if you run into any problems.
+
+Mik, I have committed the icons. For the Report Bug or Enhancement action we could also try a bug-only icon without overlaying the new task icon.</pre>
+    </div>
+
+    <div id="c45" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c45">Comment 45</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Martin Oberhuber</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mober.at+eclipse&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mober.at+eclipse&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-05-28 01:40:28 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=212209#c43">comment #43</a>)
+<span class="quote">&gt; Martin: We shied away from doing the JEE package for Galileo as per David
+&gt; William's suggestion at the F2F Architecture Council meeting at EclipseCon.</span >
+
+Ok, I see... Guess I was confused because I just tried out jee RC1 and saw many support providers defined and usable, so I wanted to be part of the party.
+
+My guess is that avoiding rogue bugs is all a matter of having a &quot;good&quot; selection of support providers. If JDT, WTP, RSE are the only providers then people may probably file DTP bugs against RSE... but if we'd manage to get all the major areas covered with few providers, chances are not so bad to get good bug reports.
+
+I find that having the stack trace duplicate detection only optional and kinda hidden in the UI is a larger risk of getting lots of dupes, but then you guys in Mylyn have probably much more experience with a high volume of bugs than I do.
+</pre>
+    </div>
+
+    <div id="c46" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=212209#c46">Comment 46</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-05-28 14:38:07 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=212209#c45">comment #45</a>)
+<span class="quote">&gt; I find that having the stack trace duplicate detection only optional and kinda
+&gt; hidden in the UI is a larger risk of getting lots of dupes, but then you guys in
+&gt; Mylyn have probably much more experience with a high volume of bugs than I do.</span >
+
+I agree that we need to address that and incorporate better duplicate detection in the workflow. We have some ideas but won't be able to get that done in time for Galileo.</pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=212209">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=212209">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=212209">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=212209&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=212209" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>

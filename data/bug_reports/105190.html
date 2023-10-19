@@ -1,0 +1,2064 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>105190 &ndash; Bad save/update performance with webtools 0.7rc3 with a running Apache Tomcat</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "105190 – Bad save\/update performance with webtools 0.7rc3 with a running Apache Tomcat",
+                             "show_bug.cgi?id=105190" );
+        document.title = "105190 – Bad save\/update performance with webtools 0.7rc3 with a running Apache Tomcat";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "105190 – Bad save\/update performance with webtools 0.7rc3 with a running Apache Tomcat", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_CLOSED
+                 bz_product_WTP_ServerTools
+                 bz_component_jst.server
+                 bz_bug_105190 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;105190</span>
+
+        <span id="subtitle" class="subheader">Bad save/update performance with webtools 0.7rc3 with a running Apache Tomcat</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2017-10-11 15:50:18 EDT</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=105190&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=105190" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2017-10-11 15:50:18">
+  <input type="hidden" name="id" value="105190">
+  <input type="hidden" name="token" value="1629878164-JfalkqDOPDL6RJbdQUT9IBVp0QDmjNjyvKvjV0uPyRA">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=105190"><b>Bug&nbsp;105190</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">Bad save/update performance with webtools 0.7rc3 with a running Apache Tomcat</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span>Bad save/update performance with webtools 0.7rc3 with a running Apache Tomcat
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      'Bad save\/update performance with webtools 0.7rc3 with a running Apache Tomcat' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">CLOSED
+          FIXED
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >WTP ServerTools
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >WebTools
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=WTP ServerTools"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >jst.server
+
+  (<a href="buglist.cgi?component=jst.server&amp;product=WTP%20ServerTools&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>1.5 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">PC
+        Windows 2000
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P2
+       normal<span id="votes_container">
+      with
+      <a href="page.cgi?id=voting/bug.html&amp;bug_id=105190">3 
+            votes</a>
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=105190#vote_105190">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>1.5 M5 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">Tim deBoer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=deboer&#64;redhat.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=deboer&#64;redhat.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard">
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'jst.server-inbox\x40eclipse.org',
+        'eyuen7\x40gmail.com');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          <tr>
+    <th class="field_label">
+      <label>Duplicates (2)</label>:
+    </th>
+    <td class="field_value">
+      <span id="duplicates"><a class="bz_bug_link 
+          bz_status_CLOSED  bz_closed"
+   title="CLOSED DUPLICATE - [perf] Add and remove projects to Server Uses CPU for very long"
+   href="show_bug.cgi?id=105814">105814</a> <a class="bz_bug_link 
+          bz_status_CLOSED  bz_closed"
+   title="CLOSED DUPLICATE - Critical performance problem related to server / publish info"
+   href="show_bug.cgi?id=111522">111522</a> 
+      </span>
+      (<a href="buglist.cgi?bug_id=105814,111522">view as bug list</a>)
+    </td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+
+  </td>
+  </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2005-07-26 13:27 EDT by <span class="vcard"><span class="fn">Philipp Jurewicz</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Philipp.Jurewicz&#64;gmx.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Philipp.Jurewicz&#64;gmx.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2017-10-11 15:50 EDT
+      (<a href="show_activity.cgi?id=105190">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>3 
+          users
+          <span id="cc_edit_area_showhide_container" class="bz_default_hidden">
+            (<a href="#" id="cc_edit_area_showhide">show</a>)
+          </span>
+        <div id="cc_edit_area">
+          <br>
+            <select id="cc" multiple="multiple" size="5" >
+                <option value="codex69">codex69</option>
+                <option value="ehrann.mehdan">ehrann.mehdan</option>
+                <option value="fgiust">fgiust</option>
+            </select>
+        </div>
+          <script type="text/javascript">
+            hideEditableField( 'cc_edit_area_showhide_container', 
+                               'cc_edit_area', 
+                               'cc_edit_area_showhide', 
+                               '', 
+                               '');  
+          </script>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" ><ul class="bug_urls">
+          <li><img src="//dev.eclipse.org/images/gerrit-16x16.gif"> <a href="https://git.eclipse.org/r/107384">
+        Gerrit Change</a>
+          </li>
+          <li><img src="//dev.eclipse.org/images/gerrit-16x16.gif"> <a href="https://git.eclipse.org/r/107391">
+        Gerrit Change</a>
+          </li>
+          <li><img src="//dev.eclipse.org/images/gerrit-16x16.gif"> <a href="https://git.eclipse.org/r/107390">
+        Gerrit Change</a>
+          </li></ul>
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+      <tr id="a1" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=27870"
+               title="View the content of the attachment">
+          <b>Patch for WTP 0.7 M8</b></a>
+
+          <span class="bz_attach_extra_info">
+              (11.42 KB,
+                patch)
+
+            <br>
+            <a href="#attach_27870"
+               title="Go to the comment associated with the attachment">2005-10-05 11:52 EDT</a>,
+
+            <span class="vcard"><span class="fn">Tim deBoer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=deboer&#64;redhat.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=deboer&#64;redhat.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=27870&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=27870&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <span class="bz_attach_view_hide">
+            <a id="view_all" href="attachment.cgi?bugid=105190&amp;action=viewall">View All</a>
+        </span>
+        <a href="attachment.cgi?bugid=105190&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=105190&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105190#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Philipp Jurewicz</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Philipp.Jurewicz&#64;gmx.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Philipp.Jurewicz&#64;gmx.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-07-26 13:27:00 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I'm only a medium experienced programmer and I'm trying to write a semantic web
+application with your nice tools.
+I recently upgraded to webtool 0.7rc3 and now I run into some
+usability/perforamce issues.
+
+Before that I worked with a Version: 3.1.0 Build id: 200412162000 (M4)  (with
+Java 1.4) (Win2k) and the coresponding webtools release
+
+When I changed simple things (within this IDE) in the WebContent folder, like a
+jsp or css file, the update was instant.
+
+Now I updated to Eclipse 3.1.0 final
+webtools 0.7rc3 (with Java 1.5) (Win2k)
+
+Beside of the fact that the .deployable seems to have an important role which I
+couldn't find much information about. (If I'm right that the running environment
+for the app server).
+I have the following problem now: When I have my Apache Tomcat 5.5 running and I
+change anything inside the WebContent folder the updated takes very long time
+(Ok just a centrino1.5 notebook). Eclipse is doing for about 10 seconds
+something on 100% CPU without any feedback right after hitting Ctrl+S for save.
+Then the &quot;Building Workspace Process&quot; takes again about 10 to 20 seconds on 100%
+CPU to finish. This is true for a jsp file as well as for a simple txt file
+which lies in the context root.
+This only happens when I have my Apache Tomcat 5.5 running (controlled by Eclipse)
+
+This is of course not nice to work and a usability issue for me.
+
+I tried to increase startup memory for eclipse.exe with no effect
+I tried to turn off some of the &quot;Builders&quot; with no effect (on the 100% CPU
+issue)(including Validation)
+caching for external resources is enabled. (do I need to add stuff manually?)
+I tried to not auto-deploy the app server with no result.
+
+I switched back to Eclipse 3.1 M4 and deployed the exactly same application with
+no performance issues at all when altering it.</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105190#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Alex</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=agum34&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=agum34&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-08-02 15:48:22 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I have the same problem on a P4 2.4GHz with 1 GB of memory Windows 2K.  Just 
+initiating the save takes 100% of the CPU for 5-10 seconds.  I am using Tomcat 
+5.0.28 eclipse 3.1 with WTP 0.7. </pre>
+    </div>
+
+    <div id="c2" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105190#c2">Comment 2</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Ehrann Mehdan</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ehrann.mehdan&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ehrann.mehdan&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-08-03 04:07:00 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">P4 windows XP tomcat 5.0 JDK j2sdk1.4.2_06 WTP 0.7 (29 July Release) + Eclipse 
+3.1; same problem, 
+
+Steps to recreate - 
+create a Dynamic Web Project. 
+Create a web server (tomcat 5.0)
+Before assinging the project to the server, open any file (even a js file) 
+change it and save. it takes seconds.
+now assing the project to the tomcat server and do the same thing. I get more 
+than 10 seconds of complete freeze. 
+this is by the way the only reason the whole team doens't move to eclipse 3.1, 
+otherwise I didn't see even 1 significant bug (except that you can't refactor 
+and rename the JavaSource and WebContent folders without breaking everything)
+</pre>
+    </div>
+
+    <div id="c3" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105190#c3">Comment 3</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Alex</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=agum34&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=agum34&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-08-03 16:50:12 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I have two projects both Dynamic Web Projects.  One has &quot;-debug start&quot; for the 
+runtime program arguments and the other has &quot;start&quot; for program arguments.  The 
+project with &quot;-debug&quot; freezes and the other doesn't.  Not sure if this has 
+anything to do with this but maybe check your program args?</pre>
+    </div>
+
+    <div id="c4" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105190#c4">Comment 4</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Philipp Jurewicz</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Philipp.Jurewicz&#64;gmx.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Philipp.Jurewicz&#64;gmx.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-08-03 17:30:04 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=105190#c3">comment #3</a>)
+<span class="quote">&gt; I have two projects both Dynamic Web Projects.  One has &quot;-debug start&quot; for the 
+&gt; runtime program arguments and the other has &quot;start&quot; for program arguments.  The 
+&gt; project with &quot;-debug&quot; freezes and the other doesn't.  Not sure if this has 
+&gt; anything to do with this but maybe check your program args?</span >
+
+hmmm, that is havening very strange behaviour for me.
+After your pst I just went t the Runtime parameter to check if I have this
+&quot;-debug start&quot; but I didn't. It said &quot;start&quot; only.
+(I accidently hit the variables button and added a runtime variable and removed
+it immediatly, I don't think it should have any effect on this bug, just want to
+mention it)
+I started my tomcat 5.5 server via the Server-View and suddenly it does not
+freeze for the above describe ten seconds when I changed my dummy.txt file in
+the WebContent folder.
+
+I just added the &quot;-debug start&quot; runtime attribute and the freeze ist back again.
+and this time even bigger freezes for approximatly triple the time (by intuitive
+metrics)
+I will check if I can recreate the bug as descirbed in #2 or find another
+pattern to it and report it here.</pre>
+    </div>
+
+    <div id="c5" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105190#c5">Comment 5</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Philipp Jurewicz</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Philipp.Jurewicz&#64;gmx.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Philipp.Jurewicz&#64;gmx.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-08-03 19:00:39 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Setting still the same: 3.1final 0.7rc3 tomcat 5.5.7 (using jre build
+1.5.0_01-b08 to run tomcat) on win2k
+
+Unfortunatly I can not reproduce this bug as described in #2
+The js file does not freeze.
+
+I also can't find any pattern when and when not this freeze bug appears in my
+real app. On some rare occasion it does not freeze, then when I try to
+reproduces this situation it does the opposite. But most of the time (80%) it
+freezes.
+
+Maybe it helps to tell a bit about my app: HP Jena Framework + Spring Framework
++ Spring MVC
+
+last thing: the tiny globe icon in my package explorer disappears and appears
+</pre>
+    </div>
+
+    <div id="c6" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105190#c6">Comment 6</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Philip Barr</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=p.barr&#64;lbs-ltd.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=p.barr&#64;lbs-ltd.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-08-05 12:30:21 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I and my colleague both have this problem. Saving after adding and deleting a
+space in a document takes at least six seconds. I've noticed that this seems to
+be related to publishing to the server.
+Steps to recreate:
+1. Start / restart Eclipse
+2. Edit and save a document (eg. a JSP page but it can be anything) to
+demonstrate normal save time.
+3. Publish to server.
+4. Edit and save a document (eg. a JSP page but it can be anything) to
+demonstrate lengthy delay in save time.
+
+Workaround:
+1. Go to Windows - Preferences - Server and uncheck all of the top 3 boxes
+(anything to do with automatically publishing)
+2. Add projects and set up server preferences.
+3. Publish the Server configuration.
+4. Restart Eclipse.
+5. Don't publish anything even when it says &quot;republish&quot;. If you need to add
+projects or make changes to the server settings then do so, then publish, then
+restart.
+
+I'm using:
+Win XP Pro
+Eclipse 3.1 and WTP 0.7 (wtp-all-in-one-0.7-win32.zip)
+VSS Plugin (vssplugin.sourceforge.net)
+Fat Jar (fjep.sourceforge.net)</pre>
+    </div>
+
+    <div id="c7" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105190#c7">Comment 7</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Philip Barr</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=p.barr&#64;lbs-ltd.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=p.barr&#64;lbs-ltd.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-08-08 10:06:26 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Additionally, it only appears to happen in &quot;big&quot; projects. Small projects are
+not affected. Possibly the first &quot;publish to servers&quot; sets up WTP to do some
+unnecessary checks on all files in the project with each Save operation, so the
+bigger the project the longer the delay.</pre>
+    </div>
+
+    <div id="c8" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105190#c8">Comment 8</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Dux</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=smcilroy&#64;stillsecure.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=smcilroy&#64;stillsecure.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-08-11 17:32:29 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Same problem here, takes about 15 seconds to save with Build Automatically
+unchecked.
+
+- Eclipse 3.1 final
+- WTP 0.7
+- Tomcat 5.5.9
+- Java 1.5 update 3
+- Ubuntu Hoary (Linux 2.6.10)
+- 2.8GHz P4, 1GB RAM
+- 181 JSP files in project</pre>
+    </div>
+
+    <div id="c9" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105190#c9">Comment 9</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Dux</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=smcilroy&#64;stillsecure.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=smcilroy&#64;stillsecure.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-08-11 18:00:48 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Here's a stack trace.  I grabbed a few while saving, the active thread was
+always in ArrayList.contains() called from ServerPublishInfo.java:238
+
+&quot;main&quot; prio=1 tid=0x0805b9e0 nid=0x38af runnable [0xbfffa000..0xbfffd428]
+        at
+org.eclipse.wst.server.core.internal.ModuleFile.equals(ModuleFile.java:58)
+        at java.util.ArrayList.indexOf(ArrayList.java:221)
+        at java.util.ArrayList.contains(ArrayList.java:202)
+        at
+org.eclipse.wst.server.core.internal.ServerPublishInfo.getDelta(ServerPublishInfo.java:238)
+        at
+org.eclipse.wst.server.core.internal.ServerPublishInfo.getDelta(ServerPublishInfo.java:252)
+        at
+org.eclipse.wst.server.core.internal.ServerPublishInfo.getDelta(ServerPublishInfo.java:223)
+        at
+org.eclipse.wst.server.core.internal.Server.getPublishedResourceDelta(Server.java:792)
+        at org.eclipse.wst.server.core.internal.Server$1.visit(Server.java:403)
+        at org.eclipse.wst.server.core.internal.Server.visitModule(Server.java:1989)
+        at org.eclipse.wst.server.core.internal.Server.visit(Server.java:1973)
+        at
+org.eclipse.wst.server.core.internal.Server.handleModuleProjectChange(Server.java:427)
+        at
+org.eclipse.wst.server.core.internal.ResourceManager.publishHandleProjectChange(ResourceManager.java:952)
+        at
+org.eclipse.wst.server.core.internal.ResourceManager$2.visit(ResourceManager.java:165)
+        at
+org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:68)
+        at
+org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:77)
+        at
+org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:49)
+        at
+org.eclipse.wst.server.core.internal.ResourceManager$PublishResourceChangeListener.resourceChanged(ResourceManager.java:159)
+        at
+org.eclipse.core.internal.events.NotificationManager$2.run(NotificationManager.java:276)
+        at
+org.eclipse.core.internal.runtime.InternalPlatform.run(InternalPlatform.java:1044)
+        at org.eclipse.core.runtime.Platform.run(Platform.java:783)
+        at
+org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:270)
+        at
+org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:144)
+        at
+org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:180)
+        at
+org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:914)
+        at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:1728)
+        at
+org.eclipse.ui.actions.WorkspaceModifyOperation.run(WorkspaceModifyOperation.java:110)
+        - locked &lt;0x7f20fbe0&gt; (a
+org.eclipse.ui.actions.WorkspaceModifyDelegatingOperation)
+        at
+org.eclipse.ui.internal.editors.text.WorkspaceOperationRunner.run(WorkspaceOperationRunner.java:73)
+        at
+org.eclipse.ui.internal.editors.text.WorkspaceOperationRunner.run(WorkspaceOperationRunner.java:63)
+        at
+org.eclipse.ui.editors.text.TextFileDocumentProvider.executeOperation(TextFileDocumentProvider.java:441)
+        at
+org.eclipse.ui.editors.text.TextFileDocumentProvider.saveDocument(TextFileDocumentProvider.java:700)
+        at
+org.eclipse.ui.texteditor.AbstractTextEditor.performSave(AbstractTextEditor.java:3736)
+        at
+org.eclipse.ui.texteditor.AbstractTextEditor.doSave(AbstractTextEditor.java:3525)
+        at
+org.eclipse.wst.sse.ui.internal.StructuredTextEditor.doSave(StructuredTextEditor.java:1154)
+        at org.eclipse.ui.internal.SaveableHelper$1.run(SaveableHelper.java:95)
+        at org.eclipse.ui.internal.SaveableHelper$2.run(SaveableHelper.java:116)
+        at
+org.eclipse.jface.operation.ModalContext.runInCurrentThread(ModalContext.java:346)
+        at org.eclipse.jface.operation.ModalContext.run(ModalContext.java:291)
+        at
+org.eclipse.jface.window.ApplicationWindow$1.run(ApplicationWindow.java:624)
+        at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:69)
+        at
+org.eclipse.jface.window.ApplicationWindow.run(ApplicationWindow.java:621)
+        at org.eclipse.ui.internal.WorkbenchWindow.run(WorkbenchWindow.java:2134)
+        at
+org.eclipse.ui.internal.SaveableHelper.runProgressMonitorOperation(SaveableHelper.java:122)
+        at org.eclipse.ui.internal.SaveableHelper.savePart(SaveableHelper.java:100)
+        at org.eclipse.ui.internal.EditorManager.savePart(EditorManager.java:1149)
+        at org.eclipse.ui.internal.WorkbenchPage.savePart(WorkbenchPage.java:2673)
+        at org.eclipse.ui.internal.WorkbenchPage.saveEditor(WorkbenchPage.java:2686)
+        at org.eclipse.ui.internal.SaveAction.run(SaveAction.java:69)
+        at org.eclipse.jface.action.Action.runWithEvent(Action.java:996)
+        at org.eclipse.jface.commands.ActionHandler.execute(ActionHandler.java:117)
+        at org.eclipse.core.commands.Command.execute(Command.java:311)
+        at
+org.eclipse.core.commands.ParameterizedCommand.execute(ParameterizedCommand.java:396)
+        at
+org.eclipse.ui.internal.keys.WorkbenchKeyboard.executeCommand(WorkbenchKeyboard.java:459)
+        at
+org.eclipse.ui.internal.keys.WorkbenchKeyboard.press(WorkbenchKeyboard.java:781)
+        at
+org.eclipse.ui.internal.keys.WorkbenchKeyboard.processKeyEvent(WorkbenchKeyboard.java:828)
+        at
+org.eclipse.ui.internal.keys.WorkbenchKeyboard.filterKeySequenceBindings(WorkbenchKeyboard.java:550)
+        at
+org.eclipse.ui.internal.keys.WorkbenchKeyboard.access$3(WorkbenchKeyboard.java:493)
+        at
+org.eclipse.ui.internal.keys.WorkbenchKeyboard$KeyDownFilter.handleEvent(WorkbenchKeyboard.java:117)
+        at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+        at org.eclipse.swt.widgets.Display.filterEvent(Display.java:1252)
+        at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1020)
+        at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1045)
+        at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1030)
+        at org.eclipse.swt.widgets.Widget.sendKeyEvent(Widget.java:1057)
+        at org.eclipse.swt.widgets.Widget.gtk_key_press_event(Widget.java:621)
+        at org.eclipse.swt.widgets.Control.gtk_key_press_event(Control.java:1964)
+        at org.eclipse.swt.widgets.Composite.gtk_key_press_event(Composite.java:560)
+        at org.eclipse.swt.widgets.Widget.windowProc(Widget.java:1365)
+        at org.eclipse.swt.widgets.Display.windowProc(Display.java:3442)
+        at org.eclipse.swt.internal.gtk.OS._gtk_main_do_event(Native Method)
+        at org.eclipse.swt.internal.gtk.OS.gtk_main_do_event(OS.java:4777)
+        at org.eclipse.swt.widgets.Display.eventProc(Display.java:1067)
+        at org.eclipse.swt.internal.gtk.OS._g_main_context_iteration(Native Method)
+        at org.eclipse.swt.internal.gtk.OS.g_main_context_iteration(OS.java:1158)
+        at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:2570)
+        at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:1699)
+        at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:1663)
+        at
+org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:367)
+        at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:143)
+        at org.eclipse.ui.internal.ide.IDEApplication.run(IDEApplication.java:103)
+        at
+org.eclipse.core.internal.runtime.PlatformActivator$1.run(PlatformActivator.java:226)
+        at
+org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:376)
+        at
+org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:163)
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at
+sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+        at
+sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+        at java.lang.reflect.Method.invoke(Method.java:585)
+        at org.eclipse.core.launcher.Main.invokeFramework(Main.java:334)
+        at org.eclipse.core.launcher.Main.basicRun(Main.java:278)
+        at org.eclipse.core.launcher.Main.run(Main.java:973)
+        at org.eclipse.core.launcher.Main.main(Main.java:948)
+</pre>
+    </div>
+
+    <div id="c10" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105190#c10">Comment 10</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Alex</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=agum34&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=agum34&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-09-06 16:28:17 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I have noticed that Eclipse will only lockup after publishing the server.  All 
+saves made before publishing are immediate and all saves after publishing 
+cause Eclipse to be non-responsive.  Note - Under task manager two 
+applications are shown for Eclipse and both are in status of Not Responding.  
+I am wondering if other alternatives exist for publishing the content.  My 
+guess is Eclipse is &quot;stuck&quot; coping files to the .deployables dir when a save 
+is initiated?  Could that happen on a save or only during a build?  Is there 
+anyone noticing this with another web app server other than Apache Tomcat?</pre>
+    </div>
+
+    <div id="c11" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105190#c11">Comment 11</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tim Glenister</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tglenist&#64;hotmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tglenist&#64;hotmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-09-13 17:19:46 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The issue I have is that Eclipse freezes completely on saving a JSP when the
+publication to the server occurs.  I am forced to kill the processes in the Task
+Manager (on Windows.)  I am trying to isolate the issue.  The workaround I used
+is like the one listed in <a href="show_bug.cgi?id=105190#c6">Comment #6</a>.  Obviously that workaround is pretty annoying.</pre>
+    </div>
+
+    <div id="c12" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105190#c12">Comment 12</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Christopher Hamilton</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=chamilton-eclipse&#64;compucafe.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=chamilton-eclipse&#64;compucafe.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-09-22 08:36:26 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">My observation is that this problem occurs when you have a file that uses a 
+DOCTYPE that references a DTD that is not available for some reason.
+Example:
+&lt;!DOCTYPE web-app
+    PUBLIC &quot;-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN&quot;
+    &quot;<a href="http://java.sun.com/dtd/web-app_2_3.dtd">http://java.sun.com/dtd/web-app_2_3.dtd</a>&quot;&gt;
+
+I am behind a firewall/proxy and no matter how I config a proxy in the Internet 
+config I get these delays. The &quot;Progress&quot; view says caching remote resources. 
+It looks like a connection attempt is being made to the java.sun.com server and 
+once that times out, eclipse saves the file. If you stop the caching part the 
+file will not save!</pre>
+    </div>
+
+    <div id="c13" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105190#c13">Comment 13</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Christopher Hamilton</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=chamilton-eclipse&#64;compucafe.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=chamilton-eclipse&#64;compucafe.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-09-22 08:38:39 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Important note I left out:
+If I remove the DOCTYPE line from the files that have them, they save instantly.</pre>
+    </div>
+
+    <div id="c14" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105190#c14">Comment 14</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tim deBoer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=deboer&#64;redhat.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=deboer&#64;redhat.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-09-28 11:04:44 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Fix dropped to HEAD.</pre>
+    </div>
+
+    <div id="c15" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105190#c15">Comment 15</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tim deBoer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=deboer&#64;redhat.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=deboer&#64;redhat.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-10-04 18:07:18 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_CLOSED  bz_closed"
+   title="CLOSED DUPLICATE - Critical performance problem related to server / publish info"
+   href="show_bug.cgi?id=111522">Bug 111522</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c16" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105190#c16">Comment 16</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tim deBoer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=deboer&#64;redhat.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=deboer&#64;redhat.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-10-05 11:01:45 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_CLOSED  bz_closed"
+   title="CLOSED DUPLICATE - [perf] Add and remove projects to Server Uses CPU for very long"
+   href="show_bug.cgi?id=105814">Bug 105814</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c17" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105190#c17">Comment 17</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tim deBoer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=deboer&#64;redhat.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=deboer&#64;redhat.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-10-05 11:14:37 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Fixed and tagged for the weekly I-build. The problems I found are as follows:
+
+1) There were two separate server resource change listeners, which should be
+merged to reduce workload on the Eclipse runtime. Not a major issue, but fixed.
+
+2) The resource change listeners did not filter changes that they are never
+interested in, e.g. marker updates, duplicate change events, etc. Fixed.
+
+3) The J2EE APIs for getting lists of modules has greatly degraded performance -
+this is the bit that caused the actual performance issue to show. Not fixed.
+
+4) The optimizations for project structure change (i.e. new module added, module
+removed from EAR, etc.) had been removed when the J2EE team moved to the
+flexible project structure, thus causing server tools to request updates when it
+wasn't necessary. New optimizations have been added in. Fixed.
+
+Although the underlying performance problem is still there, the results of these
+fixes and optimizations is that we call this code very rarely - once the first
+time it is used, and then only when .wtpmodules files change. There is still a
+delay in these cases, but it is much less that the previous delay that was on
+just about every action in the workspace. As a result, I don't have any
+performance problems when testing with a large workspace that was previously
+unusable.
+
+FYI, I've already followed up with the J2EE team and we'll be monitoring the
+underlying module operations as well.</pre>
+    </div>
+
+    <div id="c18" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105190#c18">Comment 18</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tim deBoer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=deboer&#64;redhat.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=deboer&#64;redhat.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-10-05 11:52:09 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=27870&amp;action=diff" name="attach_27870" title="Patch for WTP 0.7 M8">attachment 27870</a> <a href="attachment.cgi?id=27870&amp;action=edit" title="Patch for WTP 0.7 M8">[details]</a></span>
+Patch for WTP 0.7 M8</pre>
+    </div>
+
+    <div id="c19" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105190#c19">Comment 19</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Ehrann Mehdan</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ehrann.mehdan&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ehrann.mehdan&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-11-29 05:56:42 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">This is either a reopen, or a new bug.
+
+Using WTP M9, the problem still occurs!
+It has nothing to do with tomcat!
+When I have &quot;build automatically&quot; set on, every time I change a Java file, I need to wait a few seconds, regardless of the server.
+I even removed all validations.
+When I remove the build automatically feature, the save is instantaneous.
+
+With Jsp files, there is no problem. You save and can edit the next second. On Java files, you save, wait a few seconds and only then can continue working. There are no words to describe how annoying it is. What I would expect is that after I save the file. All validation and other things will be happening in the background, asynchronously. And I can get my editor back into getting input. I can't work when every save (which I do on every few lines) freezes my environment. This doesn't happen in WSAD for instance. 
+
+By the way, this is the only reason me and the whole team don't upgrade to WTP!
+
+</pre>
+    </div>
+
+    <div id="c20" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105190#c20">Comment 20</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tim deBoer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=deboer&#64;redhat.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=deboer&#64;redhat.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-11-29 09:21:05 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Ehrann,
+This particular bug is definitely fixed in current builds. If you are still seeing performance issues with M9, please open up a new bug with the appropriate severity. Any information you can include about how to reproduce (e.g. do you need to have a server, or does it happen even on a new workspace without servers? how many projects/files do you have in your workspace?) would be appreciated.</pre>
+    </div>
+
+    <div id="c21" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105190#c21">Comment 21</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Ehrann Mehdan</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ehrann.mehdan&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ehrann.mehdan&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-11-30 04:26:57 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Tim,
+I have opened a new bug (118409)
+with exact steps to reproduce
+
+<a class="bz_bug_link 
+          bz_status_CLOSED  bz_closed"
+   title="CLOSED DUPLICATE - Eclipse freezes when saving java files on large dynamic web projects"
+   href="show_bug.cgi?id=118409">https://bugs.eclipse.org/bugs/show_bug.cgi?id=118409</a>
+
+Thanks 
+Ehrann</pre>
+    </div>
+
+    <div id="c22" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105190#c22">Comment 22</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">David Williams</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=david_williams&#64;acm.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=david_williams&#64;acm.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-03-04 01:04:59 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">This change is a bulk update of all _un_targeted, fixed, resolved bugs upon release of M5. This particular bug _might_ have been fixed earlier than M5. (Feel free to correct). 
+
+</pre>
+    </div>
+
+    <div id="c23" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105190#c23">Comment 23</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tim deBoer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=deboer&#64;redhat.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=deboer&#64;redhat.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-11-21 14:26:10 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Closing old bugs.</pre>
+    </div>
+
+    <div id="c24" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105190#c24">Comment 24</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eclipse Genie</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=genie&#64;eclipse.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=genie&#64;eclipse.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2017-10-11 15:50:10 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">New Gerrit change created: <a href="https://git.eclipse.org/r/107384">https://git.eclipse.org/r/107384</a></pre>
+    </div>
+
+    <div id="c25" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105190#c25">Comment 25</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eclipse Genie</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=genie&#64;eclipse.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=genie&#64;eclipse.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2017-10-11 15:50:16 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">New Gerrit change created: <a href="https://git.eclipse.org/r/107391">https://git.eclipse.org/r/107391</a></pre>
+    </div>
+
+    <div id="c26" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=105190#c26">Comment 26</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eclipse Genie</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=genie&#64;eclipse.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=genie&#64;eclipse.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2017-10-11 15:50:18 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">New Gerrit change created: <a href="https://git.eclipse.org/r/107390">https://git.eclipse.org/r/107390</a></pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=105190">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=105190">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=105190">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=105190&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=105190" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>

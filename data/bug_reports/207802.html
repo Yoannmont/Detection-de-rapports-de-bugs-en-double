@@ -1,0 +1,2111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>207802 &ndash; [prov] Add multi-threaded download and mirror selection into p2's artifact retrieval</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "207802 – [prov] Add multi-threaded download and mirror selection into p2\'s artifact retrieval",
+                             "show_bug.cgi?id=207802" );
+        document.title = "207802 – [prov] Add multi-threaded download and mirror selection into p2\'s artifact retrieval";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "207802 – [prov] Add multi-threaded download and mirror selection into p2\'s artifact retrieval", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_RESOLVED
+                 bz_product_Equinox
+                 bz_component_p2
+                 bz_bug_207802 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;207802</span>
+
+        <span id="subtitle" class="subheader">[prov] Add multi-threaded download and mirror selection into p2's artifact retrieval</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2008-05-15 13:59:30 EDT</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=207802&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=207802" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2008-05-15 13:59:30">
+  <input type="hidden" name="id" value="207802">
+  <input type="hidden" name="token" value="1629852762-Bjnhd2mR6IH6yYV8y6TTBIN6S25yqSbW40ApFPUJeck">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=207802"><b>Bug&nbsp;207802</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">[prov] Add multi-threaded download and mirror selection into p2's artifact retrieval</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span><span title="[prov] Add multi-threaded download and mirror selection into p2's artifact retrieval">[prov] Add multi-threaded download and mirror selection into p2's artifact re...
+        </span>
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      '[prov] Add multi-threaded download and mirror selection into p2\'s artifact retrieval' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">RESOLVED
+          FIXED
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >Equinox
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >Eclipse Project
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=Equinox"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >p2
+
+  (<a href="buglist.cgi?component=p2&amp;product=Equinox&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>3.4 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">All
+        All
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P3
+       normal<span id="votes_container">
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=207802#vote_207802">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>3.4 M6 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard">
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'equinox.p2-inbox\x40eclipse.org',
+        '');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          <tr>
+    <th class="field_label">
+      <label>Duplicates (2)</label>:
+    </th>
+    <td class="field_value">
+      <span id="duplicates"><a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - [prov] download of artifacts should be done in parallel"
+   href="show_bug.cgi?id=194011">194011</a> <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - [prov] Support for mirror"
+   href="show_bug.cgi?id=215930">215930</a> 
+      </span>
+      (<a href="buglist.cgi?bug_id=194011,215930">view as bug list</a>)
+    </td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+
+  </td>
+  </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2007-10-29 11:46 EDT by <span class="vcard"><span class="fn">Timothy Webb</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tim-at-eclipse&#64;trwebb.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tim-at-eclipse&#64;trwebb.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2008-05-15 13:59 EDT
+      (<a href="show_activity.cgi?id=207802">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>6 
+          users
+          <span id="cc_edit_area_showhide_container" class="bz_default_hidden">
+            (<a href="#" id="cc_edit_area_showhide">show</a>)
+          </span>
+        <div id="cc_edit_area">
+          <br>
+            <select id="cc" multiple="multiple" size="5" >
+                <option value="dennis.vaughn">dennis.vaughn</option>
+                <option value="eclipse-bugzilla">eclipse-bugzilla</option>
+                <option value="jeffmcaffer">jeffmcaffer</option>
+                <option value="pascal">pascal</option>
+                <option value="slewis">slewis</option>
+                <option value="Stefan.Liebig">Stefan.Liebig</option>
+            </select>
+        </div>
+          <script type="text/javascript">
+            hideEditableField( 'cc_edit_area_showhide_container', 
+                               'cc_edit_area', 
+                               'cc_edit_area_showhide', 
+                               '', 
+                               '');  
+          </script>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" >
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+      <tr id="a1" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=81472"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Patch for IDownloadStrategy</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (28.05 KB,
+                patch)
+
+            <br>
+            <a href="#attach_81472"
+               title="Go to the comment associated with the attachment">2007-10-29 11:46 EDT</a>,
+
+            <span class="vcard"><span class="fn">Timothy Webb</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tim-at-eclipse&#64;trwebb.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tim-at-eclipse&#64;trwebb.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=81472&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=81472&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a2" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=83572"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Patch updated to HEAD</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (26.90 KB,
+                patch)
+
+            <br>
+            <a href="#attach_83572"
+               title="Go to the comment associated with the attachment">2007-11-22 14:56 EST</a>,
+
+            <span class="vcard"><span class="fn">Pascal Rapicault</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pascal&#64;rapicorp.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pascal&#64;rapicorp.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=83572&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=83572&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a3" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=88433"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Patch to SimpleArtifactRepository (phase 1)</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (9.62 KB,
+                patch)
+
+            <br>
+            <a href="#attach_88433"
+               title="Go to the comment associated with the attachment">2008-01-31 13:01 EST</a>,
+
+            <span class="vcard"><span class="fn">Timothy Webb</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tim-at-eclipse&#64;trwebb.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tim-at-eclipse&#64;trwebb.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=88433&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=88433&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a4" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=88919"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Threaded downloads and mirror lookups</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (30.56 KB,
+                patch)
+
+            <br>
+            <a href="#attach_88919"
+               title="Go to the comment associated with the attachment">2008-02-05 14:02 EST</a>,
+
+            <span class="vcard"><span class="fn">Timothy Webb</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tim-at-eclipse&#64;trwebb.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tim-at-eclipse&#64;trwebb.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=88919&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=88919&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <span class="bz_attach_view_hide">
+            <a href="#a0" onclick="return toggle_display(this);">Show
+              Obsolete</a> (4)
+            <a id="view_all" href="attachment.cgi?bugid=207802&amp;action=viewall&amp;hide_obsolete=1">View All</a>
+        </span>
+        <a href="attachment.cgi?bugid=207802&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=207802&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207802#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Timothy Webb</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tim-at-eclipse&#64;trwebb.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tim-at-eclipse&#64;trwebb.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-29 11:46:47 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=81472&amp;action=diff" name="attach_81472" title="Patch for IDownloadStrategy">attachment 81472</a> <a href="attachment.cgi?id=81472&amp;action=edit" title="Patch for IDownloadStrategy">[details]</a></span>
+Patch for IDownloadStrategy
+
+Create the concept of download strategies to be supported by the p2 download manager.  The idea is that different strategies will understand how to optimize access to software from different artifact repositoryes -- for instance, in Maynstall there is an algorithm that optimizes access by multi-threading requests to HTTP repositories.  The download strategies should be able to determine which one is better in situations where there are multiple download strategies for a given artifact repository.
+
+Attached is my first attempt to implement the idea of IDownloadStrategy though I'm stuck a bit in getting the artifact repositories to have an API that will work.  In essence, the SimpleDownloadStrategy should be able to work with the current SimpleArtifactRepository.  The ThreadedDownloadStrategy will need additional APIs from a given ArtifactRepository such as the ability to start a download in the middle or to monitor the current download rate of the transfer to be able to switch to another mirror if the current one is slow.  I'm thinking of alternate interfaces like IArtifactRepositoryWith... that would provide additional APIs -- though since for a given get operation you need to potentially use WithDownloadRateReporting along with WithRangeSupport, the API doesn't look very clean.
+
+Any suggestions for ways to have the IArtifactRepository API extensible in such a way that more advanced strategies would be able to get the information they need?  (Note that the intention is not to have a 1 to 1 pairing of different ArtifactRepository implementations and IDownloadStrategies though that is certainly one albeit ulgy route I could take.</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207802#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pascal Rapicault</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pascal&#64;rapicorp.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pascal&#64;rapicorp.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-30 20:37:41 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">We will be looking into integrating this as soon as we are done with M3.</pre>
+    </div>
+
+    <div id="c2" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207802#c2">Comment 2</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pascal Rapicault</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pascal&#64;rapicorp.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pascal&#64;rapicorp.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-20 16:51:41 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - [prov] download of artifacts should be done in parallel"
+   href="show_bug.cgi?id=194011">Bug 194011</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c3" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207802#c3">Comment 3</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pascal Rapicault</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pascal&#64;rapicorp.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pascal&#64;rapicorp.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-20 16:54:07 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The patch still applies nicely to the exception of the build.properties and
+manifest.mf but this is not a big deal.</pre>
+    </div>
+
+    <div id="c4" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207802#c4">Comment 4</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Scott Lewis</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=slewis&#64;composent.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=slewis&#64;composent.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-21 01:03:34 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=207802#c3">comment #3</a>)
+<span class="quote">&gt; The patch still applies nicely to the exception of the build.properties and
+&gt; manifest.mf but this is not a big deal.
+&gt; </span >
+
+I applied this patch to a newly downloaded copy of p2 (Nov 20) and get a number of rather strange compile errors.  Is there some trick to applying this patch at this point?
+
+
+
+
+</pre>
+    </div>
+
+    <div id="c5" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207802#c5">Comment 5</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pascal Rapicault</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pascal&#64;rapicorp.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pascal&#64;rapicorp.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-22 14:56:37 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=83572&amp;action=diff" name="attach_83572" title="Patch updated to HEAD">attachment 83572</a> <a href="attachment.cgi?id=83572&amp;action=edit" title="Patch updated to HEAD">[details]</a></span>
+Patch updated to HEAD
+
+This patch should be able to apply nicely on HEAD. There is still 2 compile errors around Multistatus that I did not fix but this is not really important.
+Let me know if you have any problem.</pre>
+    </div>
+
+    <div id="c6" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207802#c6">Comment 6</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Timothy Webb</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tim-at-eclipse&#64;trwebb.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tim-at-eclipse&#64;trwebb.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-26 08:36:35 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Any thoughts so far on how to provide the hints from the artifact repositories?  As I mentioned in the post, there are a few different approaches I could take.  The easiest would be to have a custom interface called something like IArtifactRepositoryForThreadedStrategy that would be used by the ThreadedDownloadStrategy.  We would then switch the SimpleArtifactRepository to also support that interface.  One of the calls on the interface would still need to indicate whether the threaded download strategy could be used.  Also, as mentioned in the first message on this bug report, there are additional APIs that we will need for the threaded support.  Please advise.</pre>
+    </div>
+
+    <div id="c7" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207802#c7">Comment 7</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-26 13:59:07 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Another possibility is to create a richer set of IArtifactRequest subtypes, such as ChunkMirrorRequest for mirroring a chunk of a file. Then we would just need a generic method like IArtifactRepository.canPerform(IArtifactRequest) to introspect a repository to see if it supports that form of request.</pre>
+    </div>
+
+    <div id="c8" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207802#c8">Comment 8</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Timothy Webb</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tim-at-eclipse&#64;trwebb.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tim-at-eclipse&#64;trwebb.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-27 11:41:40 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Part of the issue is in the reporting, in that the download strategy uses ongoing information from the download to make subsequent determinations.  This involves having information exposed from ECF and then providing control back to the download strategy.  Using different ArtifactDescriptor types could certainly help but I'm not really sure how to relate that to the ongoing progress that's needed in the strategy.</pre>
+    </div>
+
+    <div id="c9" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207802#c9">Comment 9</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Stefan Liebig</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Stefan.Liebig&#64;compeople.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Stefan.Liebig&#64;compeople.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-12-04 09:47:17 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">With the ProcessingSteps the download strategy may also address:
+- memory requirements/availability (the jbdiff based processing steps are memory intensive)
+- processor speed
+- an artifact descriptor (having a delta based processing step in it) may refuse to run because a prerequisite (a special previous version of the artifact) is not available
+
+The time and space requirements must be given within the artifact descriptor (processing steps) so that a download strategy can take them into account. The prerequisite of a previous version is currently part of the processing step data property and it is interpreted by the concrete processing step. This requires the processing steps to be instantiated and initialized. The initialization phase detects whether the required version is available.
+</pre>
+    </div>
+
+    <div id="c10" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207802#c10">Comment 10</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Scott Lewis</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=slewis&#64;composent.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=slewis&#64;composent.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-12-05 13:00:18 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I would like to clarify where we are with this enhancement...for me and for others that don't have the other Equinox communication channels (e.g. f2f).
+
+Is the patch <span class="bz_obsolete"><a href="attachment.cgi?id=83572&amp;action=diff" name="attach_83572" title="Patch updated to HEAD">attachment 83572</a> <a href="attachment.cgi?id=83572&amp;action=edit" title="Patch updated to HEAD">[details]</a></span> been committed to HEAD?  Is it going in before M4 (i.e. this week)?
+
+Tim in <a href="show_bug.cgi?id=207802#c6">comment #6</a> you imply that perhaps more/other file transfer meta-data is needed from ECF for feedback to the download strategy.  I would like to know what/other meta-data about the actual file transfer (or partial transfer) is desired/required, so that I can get access to those data in the ECF API.  Presently available is the obvious:  bytes downloaded, expected total size (and therefore percentage), the original range specification (if not the entire file), whether the transfer is pausable (i.e. if protocol/impl supports), the original URL.  There may be others that we/you are specifically interested in? (e.g. about time...but that could also be calculated within the download strategy I expect).
+
+As John says in <a href="show_bug.cgi?id=207802#c7">comment #7</a>, it would seem to make sense to have some introspection API on the artifact repository.  Perhaps that is already present...if not will it be added? (sorry...I've not been able to have all source in workspace over past few weeks)
+
+As per Stephan's <a href="show_bug.cgi?id=207802#c9">comment #9</a>, it seems that we will need some means to convey both download hints and processing hints...my question is do we have a way of providing such hints in the artifact repository/artifact descriptor?
+
+My apologies if these questions seem sort of 'out of it'.  Due to other commitments, I haven't been able to keep up with the day-to-day developments of p2 APIs recently but I expect that to be changing.
+
+
+
+</pre>
+    </div>
+
+    <div id="c11" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207802#c11">Comment 11</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Stefan Liebig</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Stefan.Liebig&#64;compeople.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Stefan.Liebig&#64;compeople.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-12-06 02:41:29 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">There are properties (a map) within the ArtifactDescriptor that could hold such information. These properties are already used for the download size and the result size. The properties (time/space requirements) I mentioned in <a href="show_bug.cgi?id=207802#c9">comment 9</a> are not yet stored. Responsible for storing these properties are the optimizers.</pre>
+    </div>
+
+    <div id="c12" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207802#c12">Comment 12</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Timothy Webb</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tim-at-eclipse&#64;trwebb.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tim-at-eclipse&#64;trwebb.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-12-18 15:07:18 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Circling back a bit, here are a couple of the assumptions that were made when we decided to have a download strategy:
+
+ - artifact repositories should be simple
+ - there is one artifact repository per traditional update site mirror
+ - different artifact repositories need different kinds of download strategies
+
+The sticking point in this implementation is that different artifact repositories  and underlying transports have very different needs in the strategy.  The implementation of a smart strategy is really tied to the underlying transports such as needing particular status information to be provided back from ECF for ECF-based repositories.
+
+I would like to propose that the cleaner way to address this issue is to move the complexity of the download strategy behind the artifact repository implementation where it can reside closer to the underlying transports.  In addition, for artifact repositories that can retrieve the same artifact from multiple remote replicas (traditional eclipse update site mirrors), that the list of mirrors and selection of mirror be isolated behind the artifact repository.  
+
+Restructuring the brains behind the download this way has the following benefits:
+ 
+ - different types of artifact repositories can be optimized particular to the style of artifact binary retrieval for the supported transports (CDRom, HTTP, BitTorrent, ...)
+ - constructs like multi-threading are closer to the transports, such that if something like ECF already starts jobs, you would need to know that to not burn duplicate threads as you do with today's APIs
+
+In regards to some of the other comments:
+
+This change makes <a href="show_bug.cgi?id=207802#c9">comment #9</a> more straight forward in some aspects, but the list of processing steps would still need to be understood.  We may want to have some base cost-analysis logic that can be shared across repository implementations.
+
+Regarding <a href="show_bug.cgi?id=207802#c10">comment #10</a> and <a href="show_bug.cgi?id=207802#c11">comment #11</a>, we would still need a way to encapsulate some information, but not necessarily standardized across all system.
+
+One final question I have is (assuming you buy into this logic) whether the knowledge of such activities as automatic mirror selection should occur in the transport or in the artifact repository.
+
+If you don't agree with this thought process, we can continue on using the artifact descriptor's ability to store extra data to be the trigger for how we handle processing in the download strategy a suggested in <a href="show_bug.cgi?id=207802#c11">comment #11</a> though we will need to still determine what sort of API model re <a href="show_bug.cgi?id=207802#c8">comment #8</a> we are going to implement that allows different sort of progress information based on the type of strategies that need to monitor information such as ongoing download rates, etc.</pre>
+    </div>
+
+    <div id="c13" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207802#c13">Comment 13</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Scott Lewis</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=slewis&#64;composent.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=slewis&#64;composent.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-12-18 18:19:34 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Hi Tim,
+
+(In reply to <a href="show_bug.cgi?id=207802#c12">comment #12</a>)
+<span class="quote">&gt; Circling back a bit, here are a couple of the assumptions that were made when
+&gt; we decided to have a download strategy:
+&gt; 
+&gt;  - artifact repositories should be simple
+&gt;  - there is one artifact repository per traditional update site mirror
+&gt;  - different artifact repositories need different kinds of download strategies
+&gt; 
+&gt; The sticking point in this implementation is that different artifact
+&gt; repositories  and underlying transports have very different needs in the
+&gt; strategy.  The implementation of a smart strategy is really tied to the
+&gt; underlying transports such as needing particular status information to be
+&gt; provided back from ECF for ECF-based repositories.</span >
+
+ECF's IFileID is based upon/created by an URL.  So I think that using an URL to 'reason' about a download strategy (e.g. url.getProtocol()) would make the most sense...unless I'm missing something.
+
+Of course there are limits to the ability to reason based upon just a protocol spec (e.g. &quot;http&quot; or &quot;scp&quot;)...for example, whether a file transfer is 'pausable' or not...is only known after an initial request to the target URL/fileID has been issued, since http 1.1 servers support pausing and http 1.0 servers do not.  With ECF, once a request has been issued, the IIncomingFileTransfer instance can be consulted for whether or not it is pausable (by whether or not it returns a non-null instance to iift.getAdapter(IFileTransferPauseable.class).
+
+So in any event, I think there are things in the download strategy that can be deduced via URL.getProtocol(), but there are other things that need a real transfer instance to measure/record (e.g. whether pausable...throughput...etc).
+
+<span class="quote">&gt; 
+&gt; I would like to propose that the cleaner way to address this issue is to move
+&gt; the complexity of the download strategy behind the artifact repository
+&gt; implementation where it can reside closer to the underlying transports.  </span >
+
+So wouldn't this make it harder for artifact repositories to use/reuse download strategies?  For example, let's say we produce some download strategies for http/https...assuming the ability to do (1.1) partial downloads and pause/resume.
+
+Wouldn't it be better to enable repository builders to reuse these strategies (probably something that repository builders will want to do, as assuming we do a good job of some reasonable http/https strategies that people will want to reimplement such things).  Would this be possible with the download strategies 'behind' the artifact repository API?  (i.e. part of the artifact repo impl)?
+
+
+<span class="quote">&gt;In
+&gt; addition, for artifact repositories that can retrieve the same artifact from
+&gt; multiple remote replicas (traditional eclipse update site mirrors), that the
+&gt; list of mirrors and selection of mirror be isolated behind the artifact
+&gt; repository.  
+&gt; 
+&gt; Restructuring the brains behind the download this way has the following
+&gt; benefits:
+&gt; 
+&gt;  - different types of artifact repositories can be optimized particular to the
+&gt; style of artifact binary retrieval for the supported transports (CDRom, HTTP,
+&gt; BitTorrent, ...)
+&gt;  - constructs like multi-threading are closer to the transports, such that if
+&gt; something like ECF already starts jobs, you would need to know that to not burn
+&gt; duplicate threads as you do with today's APIs</span >
+
+
+Although I see the optimization advantages, it seems like it would make re-use much harder.  Or maybe I'm not understanding.
+
+
+<span class="quote">&gt; 
+&gt; In regards to some of the other comments:
+&gt; 
+&gt; This change makes <a href="show_bug.cgi?id=207802#c9">comment #9</a> more straight forward in some aspects, but the
+&gt; list of processing steps would still need to be understood.  We may want to
+&gt; have some base cost-analysis logic that can be shared across repository
+&gt; implementations.</span >
+
+Yes...I think cost analysis (recording measurements of throughput, etc), as well as policies specific to protocols (e.g. break http transfers of more than 5 megabytes into X parts to download in parallel...unless there are other http transfers going on at same time, etc) would want to be shared across repository implementations as well.  
+
+<span class="quote">&gt; 
+&gt; Regarding <a href="show_bug.cgi?id=207802#c10">comment #10</a> and <a href="show_bug.cgi?id=207802#c11">comment #11</a>, we would still need a way to encapsulate
+&gt; some information, but not necessarily standardized across all system.
+&gt; 
+&gt; One final question I have is (assuming you buy into this logic) whether the
+&gt; knowledge of such activities as automatic mirror selection should occur in the
+&gt; transport or in the artifact repository.</span >
+
+
+I'm not a big fan of having the mirror selection logic be in the transport (i.e. in the ECF provider)...for reasons of separation of concerns, but also because it adds to the complexity of a filetransfer API like ECF...which I'm willing to do if people require it...but seems more appropriate for something like a download strategy.
+
+<span class="quote">&gt; 
+&gt; If you don't agree with this thought process, we can continue on using the
+&gt; artifact descriptor's ability to store extra data to be the trigger for how we
+&gt; handle processing in the download strategy a suggested in <a href="show_bug.cgi?id=207802#c11">comment #11</a> though we
+&gt; will need to still determine what sort of API model re <a href="show_bug.cgi?id=207802#c8">comment #8</a> we are going
+&gt; to implement that allows different sort of progress information based on the
+&gt; type of strategies that need to monitor information such as ongoing download
+&gt; rates, etc.</span >
+
+So I should take this opportunity to ask...what sort of API were you expecting to get runtime info...e.g. throughput, etc?
+
+Currently, the IIncomingFileTransfer class has:
+
+long getBytesReceived();
+double getPercentComplete();
+
+But this interface (IIncomingFileTransfer) implements IAdaptable, so we can easily add new interfaces (which only some providers may implement) that will allow queries for other information.
+
+But another way would be for the download strategy to keep track of local system time and occasionally ask the IIncomingFileTransfer instance for getBytesReceived info...and then compute average download rate as desired.  Then this info could be aggregated by URL (or by protocol, host, etc) and/or by URL and range specification (if the download was broken into multiple parts).
+
+But if a specific API is desired for ECF (e.g. IIncomingFileTransferDetails) let me know what you think are the right method calls and we can/will add it.
+
+</pre>
+    </div>
+
+    <div id="c14" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207802#c14">Comment 14</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Timothy Webb</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tim-at-eclipse&#64;trwebb.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tim-at-eclipse&#64;trwebb.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-12-18 20:52:41 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Scott, regarding <a href="show_bug.cgi?id=207802#c13">comment #13</a>, with last things first...
+
+To implement the equivalent algorithm we were doing in Maynstall can definitely be built using the system time and then doing polling.  We had done the algorithm by having a listener get notified from the download thread which could then notify the download to complete.  In the ECF model, we can request a cancel of the download and then startup the transfer from another location -- so I don't believe we will need a IIncomingFileTransferDetails interface via adaptable.  The only benefit though to doing so is that we could have it be a bit cleaner for operations such as accessing the download rate, however, if not all implementations will support that, we might as well just handle that within the strategy.
+
+So your main concern seems to be around the re-use of the download strategy by different users.  The question would be what is the best structure to provide a rich capability without requiring each repository implementor implement an intelligent strategy.  One option might be to provide an abstract implementation that implementors could extend or provide an extra interface and then delegate operations to the download strategy.  If we can generally buy into the artifact repository doing the intelligence as opposed to something sitting on top, probably the easiest is to try and put together a simple implementation of an intelligent abstract repository and then abstract out either a utility download strategy class or abstract base class.
+
+The main disadvantage that I see with having the download strategy inside the artifact repository is that a consumer of p2 wouldn't have the option of dropping in a different download strategy.  Scott, do you see it making sense to expose information such as download transfer status and bytes processed in the artifact repository API such that the download strategy can be outside?  If so, we would need all of the operations such as cancel, etc. to also be exposed at this level.
+
+Alternatively, if we could make the DownloadStategyService have APIs to be called form ArtifactRepository instead of from the current download manager as the initial implementation approach was taking.
+
+Truthfully, once we can find the right way to connect these boxes, I have a feeling the implementation will go very quickly ... and the most direct solution I see given the need to have knowledge of the transports is to work this code into the artifact repository...</pre>
+    </div>
+
+    <div id="c15" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207802#c15">Comment 15</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Timothy Webb</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tim-at-eclipse&#64;trwebb.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tim-at-eclipse&#64;trwebb.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-01-31 13:00:38 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">OK, based on our discussions a couple weeks ago, we decided to work the notion of multi-threaded download into the SimpleArtifactRepository instead of having a separate download strategy.  To that end, I've created a new patch that adds initially minimum multi-threading support to SimpleArtifactRepository.
+
+The second phase of the implementation will be leveraging a mirror service that provides alternate download URLs for the main URL registered as part of the artifact repository.
+
+The final phase, if time permits, will be intelligently switching between mirrors based on performance of each mirror dynamically while a transfer is in progress.</pre>
+    </div>
+
+    <div id="c16" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207802#c16">Comment 16</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Timothy Webb</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tim-at-eclipse&#64;trwebb.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tim-at-eclipse&#64;trwebb.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-01-31 13:01:21 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=88433&amp;action=diff" name="attach_88433" title="Patch to SimpleArtifactRepository (phase 1)">attachment 88433</a> <a href="attachment.cgi?id=88433&amp;action=edit" title="Patch to SimpleArtifactRepository (phase 1)">[details]</a></span>
+Patch to SimpleArtifactRepository (phase 1)</pre>
+    </div>
+
+    <div id="c17" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207802#c17">Comment 17</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Timothy Webb</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tim-at-eclipse&#64;trwebb.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tim-at-eclipse&#64;trwebb.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-02-05 14:02:38 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=88919&amp;action=diff" name="attach_88919" title="Threaded downloads and mirror lookups">attachment 88919</a> <a href="attachment.cgi?id=88919&amp;action=edit" title="Threaded downloads and mirror lookups">[details]</a></span>
+Threaded downloads and mirror lookups
+
+Updated patch that supplies a property on the artifact repository to control the number of threads that should be used when downloading multiple artifacts.  Also checks to see if the artifact repository is local, and if so doesn't use threaded downloads.
+
+Patch also exposes IArtifactTransport in the API allowing for plugging in of alternate transport types.  To support mirroring, we would need to use a different implementation of ECFTransport (or one that wraps on top).  Ultimately I believe we should have the transport factory exposed as an optional service allowing for different implementations of the download portion.  
+
+The transport factory allows registration of IDownloadMirrorsDelegates that can determine a mirror to use for a particular download.  Upon completion of a download (success or failure), the download mirror gets status reported back which could be used to aide in determination of which mirror to use on subsequent requests.</pre>
+    </div>
+
+    <div id="c18" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207802#c18">Comment 18</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-02-07 23:01:57 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I'll take this to review/release once HEAD is reopen for business after M5.</pre>
+    </div>
+
+    <div id="c19" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207802#c19">Comment 19</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-02-08 17:57:55 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I have applied the phase 1 patch with some minor changes.  I reviewed the second patch with mirror support, but I'm unsure of the direction. It seems overly complicated to introduce transport interface and factories, a new mirror transport, etc, just to implement mirrors. Mirroring just involves replacing the &quot;location&quot; where the download comes from - it doesn't require a new transport implementation. I'm picturing this as a simple change in SimpleArtifactRepository (location = mirrorService.findMirror(location)).  </pre>
+    </div>
+
+    <div id="c20" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207802#c20">Comment 20</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Timothy Webb</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tim-at-eclipse&#64;trwebb.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tim-at-eclipse&#64;trwebb.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-02-08 18:28:14 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The reason I split out the Transport was that to implement better logic around retries, mirror selection, etc. you need to have some of that logic within the transport.  As opposed to having one single transport that has all of that logic built into it, I was proposing splitting out the transport to allow different implementations.  We can start with the base transport working with just selecting a mirror from the list at random, but the benefit to having the transport be pluggable is that we can develop alternate implementations and when stable (or depending on a given deployment model), those transports can then be dropped in.  
+
+Separately, in the original p2 design weren't transports intended to be pluggable?</pre>
+    </div>
+
+    <div id="c21" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207802#c21">Comment 21</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Scott Lewis</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=slewis&#64;composent.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=slewis&#64;composent.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-02-08 19:20:46 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=207802#c20">comment #20</a>)
+&lt;stuff deleted&gt;
+ 
+<span class="quote">&gt; Separately, in the original p2 design weren't transports intended to be
+&gt; pluggable?</span >
+
+Yes, but I think this was using a different notion of 'transport'.  
+
+WRT file transfer protocols, ECF delivers pluggable transports.
+
+Your use of 'transports' also includes retries and mirror selection.  I don't have any objection to having a pluggable strategy for those things as well (or even calling it 'transports'), I'm just pointing out that it's a different usage of the term.  At least as I understood the requirement for pluggable transports for p2, it was for pluggable protocols (e.g. http, bittorrent, etc)...but in my view plugability is a pretty generic good...so I suppose it should be applied here too.
+
+Maybe it would help if it was called something more specific, like 'RetrievalStrategy'.
+
+
+
+
+</pre>
+    </div>
+
+    <div id="c22" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207802#c22">Comment 22</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pascal Rapicault</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pascal&#64;rapicorp.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pascal&#64;rapicorp.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-02-08 20:11:07 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text"><span class="quote">&gt; At least as I understood the requirement for pluggable transports for p2, it was for pluggable protocols (e.g. http, bittorrent, etc)...</span >
+  This is what we had always described as pluggable transport.</pre>
+    </div>
+
+    <div id="c23" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207802#c23">Comment 23</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jeff McAffer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jeffmcaffer&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jeffmcaffer&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-02-08 20:16:19 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Indeed. I've not looked at the patch in detail but I recall the direction as having a repo object have (at least logically) multiple locations (one for each mirror).  Then whoever is doing the download optimization strategy picks from these.  That selection could be implemented somewhere in/behind the repo if needed but or outside but logically it is distinct from both the repo and the transport to keep the concerns separate and indeed support high pluggability.</pre>
+    </div>
+
+    <div id="c24" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207802#c24">Comment 24</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-02-12 20:57:58 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">*** <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED DUPLICATE - [prov] Support for mirror"
+   href="show_bug.cgi?id=215930">Bug 215930</a> has been marked as a duplicate of this bug. ***</pre>
+    </div>
+
+    <div id="c25" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207802#c25">Comment 25</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-02-12 21:43:10 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">As discussed in the p2 call this week, in the spirit of getting the simple stuff working I have released some simple mirror support modeled on what we had in update manager:
+
+ - In the Generator, mirrorsURL property from site.xml is added as a property in p2 repositories
+ - Just before calling transport to perform download in SimpleArtifactRepository, check for mirrors, and pick the best mirror if available
+ - If the mirror fails, revert automatically to the base repository
+ - Bit rate and failure count are recorded for each mirror, and mirror list is re-sorted after each download
+
+I need to do some more testing with real repositories that have mirrors, so for now you have to enable it by setting the system property &quot;eclipse.p2.mirrors=true&quot;. There are some .options values in org.eclipse.p2.core for tracing mirror selection and mirror sorting.
+
+Review and input on mirror selection algorithm would be appreciated.</pre>
+    </div>
+
+    <div id="c26" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207802#c26">Comment 26</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-02-13 13:28:56 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I'll throw out one problem I was facing to see if anyone has ideas. Currently each download selects the &quot;best&quot; mirror from the list - the mirror with the least failures and highest Bps rate.  I have a feeling this isn't optimal in the face of concurrent downloads. I.e., at the start, every download thread selects the same mirror. 
+
+My theory is it's better to spread the load of concurrent downloads across multiple mirrors. I was thinking of adding some randomness in the mirror selection - some function with a probability distribution that heavily favours &quot;better&quot; mirrors, but has some chance of selecting other mirrors as well. This wouldn't be optimal in my corporate environment, where I have a full mirror on the LAN that is overwhelmingly faster than any others, but may achieve better overall throughput in an environment where there are several mirrors available of similar speed.</pre>
+    </div>
+
+    <div id="c27" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207802#c27">Comment 27</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-02-18 22:19:18 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">After further testing, I found the ECF transfer can hang indefinitely if we hit a mirror that is not responsive (<a class="bz_bug_link 
+          bz_status_CLOSED  bz_closed"
+   title="CLOSED FIXED - Indefinite hang on HTTP connection to unresponsive site"
+   href="show_bug.cgi?id=219368">bug 219368</a>). Until we have a fix for this I will leave mirroring disabled by default (requires setting system property as described above).</pre>
+    </div>
+
+    <div id="c28" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207802#c28">Comment 28</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-02-28 11:43:45 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The ECF problem has been fixed, and mirroring is now enabled by default.</pre>
+    </div>
+
+    <div id="c29" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207802#c29">Comment 29</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-05-15 13:59:30 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Removing contributed keyword since this patch was not released.</pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=207802">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=207802">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=207802">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=207802&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=207802" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>

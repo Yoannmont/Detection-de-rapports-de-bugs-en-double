@@ -1,0 +1,4150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>87775 &ndash; Overcoming classloading issues with third party libraries</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "87775 – Overcoming classloading issues with third party libraries",
+                             "show_bug.cgi?id=87775" );
+        document.title = "87775 – Overcoming classloading issues with third party libraries";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "87775 – Overcoming classloading issues with third party libraries", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_RESOLVED
+                 bz_product_Platform
+                 bz_component_Runtime
+                 bz_bug_87775 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;87775</span>
+
+        <span id="subtitle" class="subheader">Overcoming classloading issues with third party libraries</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2008-11-28 12:53:45 EST</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=87775&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=87775" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2008-11-28 12:53:45">
+  <input type="hidden" name="id" value="87775">
+  <input type="hidden" name="token" value="1629850605-P1k5LFU7An1QCpJBhT593MWIs7kgtoHZvHZ4xbPpghU">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=87775"><b>Bug&nbsp;87775</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">Overcoming classloading issues with third party libraries</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span>Overcoming classloading issues with third party libraries
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      'Overcoming classloading issues with third party libraries' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">RESOLVED
+          FIXED
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >Platform
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >Eclipse Project
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=Platform"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >Runtime
+
+  (<a href="buglist.cgi?component=Runtime&amp;product=Platform&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>3.1 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">PC
+        Windows XP
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P3
+       normal<span id="votes_container">
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=87775#vote_87775">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>3.1 M7 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">Pascal Rapicault</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pascal&#64;rapicorp.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pascal&#64;rapicorp.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard">
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'platform-runtime-inbox\x40eclipse.org',
+        '');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+
+  </td>
+  </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2005-03-11 10:31 EST by <span class="vcard"><span class="fn">Jeff McAffer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jeffmcaffer&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jeffmcaffer&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2008-11-28 12:53 EST
+      (<a href="show_activity.cgi?id=87775">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>13 
+          users
+          <span id="cc_edit_area_showhide_container" class="bz_default_hidden">
+            (<a href="#" id="cc_edit_area_showhide">show</a>)
+          </span>
+        <div id="cc_edit_area">
+          <br>
+            <select id="cc" multiple="multiple" size="5" >
+                <option value="bob">bob</option>
+                <option value="bogofilter+eclipse.org">bogofilter+eclipse.org</option>
+                <option value="clg-business">clg-business</option>
+                <option value="eclipse">eclipse</option>
+                <option value="gunnar">gunnar</option>
+                <option value="igor">igor</option>
+                <option value="m">m</option>
+                <option value="manderse">manderse</option>
+                <option value="n.a.edgar">n.a.edgar</option>
+                <option value="pascal">pascal</option>
+                <option value="slewis">slewis</option>
+                <option value="some_guy_coding">some_guy_coding</option>
+                <option value="steen.lehmann">steen.lehmann</option>
+            </select>
+        </div>
+          <script type="text/javascript">
+            hideEditableField( 'cc_edit_area_showhide_container', 
+                               'cc_edit_area', 
+                               'cc_edit_area_showhide', 
+                               '', 
+                               '');  
+          </script>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" >
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+      <tr id="a1" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=19513"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Implementation of a mechanism to lookup classes without having strong dependencies</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (10.85 KB,
+                patch)
+
+            <br>
+            <a href="#attach_19513"
+               title="Go to the comment associated with the attachment">2005-04-04 10:39 EDT</a>,
+
+            <span class="vcard"><span class="fn">Pascal Rapicault</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pascal&#64;rapicorp.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pascal&#64;rapicorp.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=19513&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=19513&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a2" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=19569"
+               title="View the content of the attachment">
+          <b>Patch implementing the full support for buddy loading</b></a>
+
+          <span class="bz_attach_extra_info">
+              (23.08 KB,
+                patch)
+
+            <br>
+            <a href="#attach_19569"
+               title="Go to the comment associated with the attachment">2005-04-05 18:16 EDT</a>,
+
+            <span class="vcard"><span class="fn">Pascal Rapicault</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pascal&#64;rapicorp.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pascal&#64;rapicorp.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=19569&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=19569&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <span class="bz_attach_view_hide">
+            <a href="#a0" onclick="return toggle_display(this);">Show
+              Obsolete</a> (1)
+            <a id="view_all" href="attachment.cgi?bugid=87775&amp;action=viewall&amp;hide_obsolete=1">View All</a>
+        </span>
+        <a href="attachment.cgi?bugid=87775&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=87775&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jeff McAffer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jeffmcaffer&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jeffmcaffer&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-03-11 10:31:14 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">This bug is an umbrella for gathering solutions to integrating various third 
+party libraries (e.g., hibernate, log4j, prevayler, ...) into Eclipse.  Various 
+of these use the context classloader or reflection to load classes.  These are 
+sometimes at odds with the Eclipse/OSGi component model's desire to structure 
+classloading.  While there are typically ways around the issues, they are 
+sometimes not obvious to newcomers and so represent a barrier to adoption.  
+Further, in the 3.1 timeframe we are actively looking at ways for the runtime 
+to make life easier.
+
+Please attach your comments, directions and code snippets to this bug.  The 
+runtime team will correlate them and add them the RCP website 
+(<a href="http://eclipse.org/rcp">http://eclipse.org/rcp</a>).
+
+Thanks</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Bob Foster</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=bob&#64;objfac.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=bob&#64;objfac.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-03-11 13:45:39 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Since pre-2.0 I have used a URLClassloader subclass to force the loading of
+particular versions of Xerces, Saxon, etc. which I include as jar files in my
+plugin. This still works in 3.1M5a but does not work when the plugin is used in
+an RCP app built on 3.1M5a. The interference is apparently caused by some osgi
+classloader code. Below is the complete source code for the classloader:
+
+public class JarClassLoader extends URLClassLoader {
+	public JarClassLoader(URL[] urls, ClassLoader parent) {
+		super(urls, parent);
+	}
+	
+	protected Class findClass(String name) throws ClassNotFoundException {
+		Class c = super.findClass(name);
+		return c;
+	}
+	
+	protected Class loadClass(String name, boolean resolve) throws
+ClassNotFoundException {
+		
+		// All non-Xerces classes handled normally
+		
+		if
+(!name.startsWith(&quot;com.objfac.xmleditor.xerces.&quot;)//XMLPlugin.XERCES_VALIDATOR_CLASS)
+				&amp;&amp; !name.startsWith(&quot;org.apache.xerces.&quot;)
+				&amp;&amp; !name.startsWith(&quot;org.xml.sax.&quot;)
+				&amp;&amp; !name.startsWith(&quot;javax.xml.&quot;)
+				&amp;&amp; !name.startsWith(&quot;net.sf.saxon.&quot;)
+				&amp;&amp; !name.startsWith(&quot;com.thaiopensource.&quot;)
+				&amp;&amp; !name.startsWith(&quot;org.w3c.dom.&quot;)
+				&amp;&amp; !name.equals(&quot;META-INF/services/javax.xml.parsers.SAXParserFactory&quot;)) {
+			return super.loadClass(name, resolve);
+		}
+		
+		// Other versions of Xerces classes may already be
+		// loaded. Make sure we don't get any of these by
+		// trying to load locally first.
+		
+		Class c = (Class) fMap.get(name);
+		
+		if (c == null) {
+			c = findClass(name);
+		
+			if (c != null)
+				fMap.put(name, c);
+			else {
+				c = super.loadClass(name);
+			}
+		}
+		
+		if (c != null &amp;&amp; resolve)
+			resolveClass(c);
+			
+		return c;
+	}
+	
+	HashMap fMap = new HashMap();
+
+	private static final byte[] xercesFactory =
+&quot;org.apache.xerces.jaxp.SAXParserFactoryImpl&quot;.getBytes();
+	
+	public InputStream getResourceAsStream(String name) {
+		if (!name.equals(&quot;META-INF/services/javax.xml.parsers.SAXParserFactory&quot;))
+			return super.getResourceAsStream(name);
+		return new ByteArrayInputStream(xercesFactory);
+	}
+}
+
+The problem is _not_ that Java packages are sealed, etc. This may seem a little
+funky but it works fine outside RCP.
+
+When I reported this on the newsgroup, Pascal asked exactly what happens on RCP.
+Sadly, to move on I worked around the issue by renaming all the affected
+packages (!). It would require a lot of effort to go backwards.</pre>
+    </div>
+
+    <div id="c2" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c2">Comment 2</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Scott Lewis</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=slewis&#64;composent.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=slewis&#64;composent.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-03-14 11:15:23 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=87775#c1">comment #1</a>)
+<span class="quote">&gt; Since pre-2.0 I have used a URLClassloader subclass to force the loading of
+&gt; particular versions of Xerces, Saxon, etc. which I include as jar files in my
+&gt; plugin. This still works in 3.1M5a but does not work when the plugin is used in
+&gt; an RCP app built on 3.1M5a. The interference is apparently caused by some osgi
+&gt; classloader code. Below is the complete source code for the classloader:
+&gt; 
+&gt; public class JarClassLoader extends URLClassLoader {
+&gt; 	public JarClassLoader(URL[] urls, ClassLoader parent) {
+&gt; 		super(urls, parent);
+&gt; 	}
+&gt; 	
+&gt; 	protected Class findClass(String name) throws ClassNotFoundException {
+&gt; 		Class c = super.findClass(name);
+&gt; 		return c;
+&gt; 	}
+&gt; 	
+&gt; 	protected Class loadClass(String name, boolean resolve) throws
+&gt; ClassNotFoundException {
+&gt; 		
+&gt; 		// All non-Xerces classes handled normally
+&gt; 		
+&gt; 		if</span >
+&gt;
+(!name.startsWith(&quot;com.objfac.xmleditor.xerces.&quot;)//XMLPlugin.XERCES_VALIDATOR_CLASS)
+<span class="quote">&gt; 				&amp;&amp; !name.startsWith(&quot;org.apache.xerces.&quot;)
+&gt; 				&amp;&amp; !name.startsWith(&quot;org.xml.sax.&quot;)
+&gt; 				&amp;&amp; !name.startsWith(&quot;javax.xml.&quot;)
+&gt; 				&amp;&amp; !name.startsWith(&quot;net.sf.saxon.&quot;)
+&gt; 				&amp;&amp; !name.startsWith(&quot;com.thaiopensource.&quot;)
+&gt; 				&amp;&amp; !name.startsWith(&quot;org.w3c.dom.&quot;)
+&gt; 				&amp;&amp; !name.equals(&quot;META-INF/services/javax.xml.parsers.SAXParserFactory&quot;)) {
+&gt; 			return super.loadClass(name, resolve);
+&gt; 		}
+&gt; 		
+&gt; 		// Other versions of Xerces classes may already be
+&gt; 		// loaded. Make sure we don't get any of these by
+&gt; 		// trying to load locally first.
+&gt; 		
+&gt; 		Class c = (Class) fMap.get(name);
+&gt; 		
+&gt; 		if (c == null) {
+&gt; 			c = findClass(name);
+&gt; 		
+&gt; 			if (c != null)
+&gt; 				fMap.put(name, c);
+&gt; 			else {
+&gt; 				c = super.loadClass(name);
+&gt; 			}
+&gt; 		}
+&gt; 		
+&gt; 		if (c != null &amp;&amp; resolve)
+&gt; 			resolveClass(c);
+&gt; 			
+&gt; 		return c;
+&gt; 	}
+&gt; 	
+&gt; 	HashMap fMap = new HashMap();
+&gt; 
+&gt; 	private static final byte[] xercesFactory =
+&gt; &quot;org.apache.xerces.jaxp.SAXParserFactoryImpl&quot;.getBytes();
+&gt; 	
+&gt; 	public InputStream getResourceAsStream(String name) {
+&gt; 		if (!name.equals(&quot;META-INF/services/javax.xml.parsers.SAXParserFactory&quot;))
+&gt; 			return super.getResourceAsStream(name);
+&gt; 		return new ByteArrayInputStream(xercesFactory);
+&gt; 	}
+&gt; }
+&gt; 
+&gt; The problem is _not_ that Java packages are sealed, etc. This may seem a little
+&gt; funky but it works fine outside RCP.
+&gt; 
+&gt; When I reported this on the newsgroup, Pascal asked exactly what happens on RCP.
+&gt; Sadly, to move on I worked around the issue by renaming all the affected
+&gt; packages (!). It would require a lot of effort to go backwards.</span ></pre>
+    </div>
+
+    <div id="c3" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c3">Comment 3</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Scott Lewis</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=slewis&#64;composent.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=slewis&#64;composent.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-03-14 11:21:43 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=87775#c1">comment #1</a>)
+
+We on the ECF team have another case where OSGI classloading creates a bit of an
+issue: object serialization.  Jeff McAffer asked me to attach the following use
+case to this bug and he and Pascal will correlate with the other object
+serialization discussions/reports for the Equinox effort.  
+
+Here's a use case that shows problems with classloading during object
+(de)serialization...caused by the way that classes are loaded across bundles in
+OSGI, and the way that packages are exported.  Send any requests for more
+information about this issue to <a href="mailto:slewis&#64;composent.com">slewis&#64;composent.com</a>.  We have example
+code/bundles that show the behavior described below.
+
+The situation:  three plugins/bundles (labelled A, B, C).  Each plugin is
+assumed to be duplicated on a remote process (with plugins labelled A', B', C'
+on the remote process).   Below is a brief description of the relevant
+characteristics of the three plugins.  The plugin names and class names in
+parens are ones that actually show this behavior with the ECF codebase (using
+EMF to implement a shared EMF editor).
+
+1) Plugin A (org.eclipse.emf.ecore.sdo):  Declares serializable class
+(EChangeSummaryImpl) and exposes this class via the Eclipse plugin &quot;export&quot;
+declaration like this:
+
+&lt;runtime&gt;
+  &lt;library name=&quot;runtime/ecore.sdo.jar&quot;&gt;
+    &lt;export name=&quot;*&quot;/&gt;
+  &lt;/library&gt;
+&lt;/runtime&gt;
+
+This *EMF plugin* (and of course any others like it) does *not* expose itself
+through the OSGI manifest.mf, but rather through the Eclipse plugin mechanisms
+(only).  Although I'm not sure, I believe that &lt;export name=&quot;*&quot;/&gt; is actually
+implemented as an OSGI 'Provide-Package', and *not* an 'Export-Package'.
+
+2) Plugin B (org.eclipse.ecf.provider):  Creates ObjectOutputStream (for
+sending) and ObjectInputStream (for receiving) for a given container.  Also
+declares DynamicPackage-Import: *, so that it's classloader (and the classloader
+for ObjectInputStream) will see any packages that have been exported via OSGI
+Export-Package.  Using DynamicPackage-Import: * is kind of clumsy and
+inefficient (as it means that the ObjectInputStream's classloader may consider
+lots of classes that it shouldn't), but it works in OSGI 3.0.
+
+3) Plugin C (org.eclipse.ecf.sdo):  Creates actual instances of
+EChangeSummaryImpl and serializes them using an ECF container instance
+created/loaded by plugin B.  The sender classloader (C) can see the
+EChangeSummaryImpl class because of the Eclipse package export, and the
+ObjectOutputStream (created by B's classloader) already has the classloaded (by
+C's classloader).
+
+Here's the ACTUAL RUNTIME BEHAVIOR:   C sends via objectoutputstream created by
+B an instance of EChangeSummaryImpl (from A) to other process(es).
+
+on other side of the object stream are three plugins A', B', C' that are assumed
+to have the same code as A, B, C.
+
+Plugin B''s ObjectInputStream tries to find the serialized class
+EChangeSummaryImpl.  B' has DynamicPackage-Import: *, so it looks for and will
+find *any class that has been exposed via Export-Package*.  BUT A' has *not*
+exposed EChangeSummaryImpl via Export-Package (only via Provide-Package), and so
+the classloader fails to find EChangeSummaryImpl, and the deserialization will
+fail also.
+
+In general, this object serialization problem is this:   There could be a lot of
+other plugins (ours and others) that are like Plugin A, in that they provide
+serializable classes, are *not* produced/built by the ECF that creates the
+objectinput/output stream, but which are createable, etc by ECF plugins B (and
+C, D, etc) because of the (static) plugin dependencies, but are *not* available
+to ObjectInputStream's classloader because they haven't declared Export-Package
+in their manifest.mf, and the OSGI classloader (EclipseClassLoader) only looks
+for/finds packages (at runtime) that are exposed via
+Export-Package....Sooo...the classloader for the ObjectInputStream fails to
+find/load these classes, and the deserialization fails.
+</pre>
+    </div>
+
+    <div id="c4" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c4">Comment 4</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pascal Rapicault</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pascal&#64;rapicorp.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pascal&#64;rapicorp.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-03-16 10:27:07 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">For regular serialization issues: <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - Support for serialization"
+   href="show_bug.cgi?id=85116">bug #85116</a>.</pre>
+    </div>
+
+    <div id="c5" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c5">Comment 5</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Walter Harley</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse&#64;cafewalter.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse&#64;cafewalter.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-03-16 15:09:49 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The BEA team working on annotation processing has the following use case:  our 
+plugin code depends on tools.jar from the 1.5 JDK.  We don't know at manifest 
+authoring time where that file will live on the user's machine; and in fact, 
+we'd like to dynamically discover it on the basis of whichever JRE is selected 
+in Eclipse.  However, we also need to expose it to the plugins that depend on 
+us (annotation processors); so it is not sufficient to simply create our own 
+classloader.
+
+Our solution at present is to ask the user to manually copy the jar file into 
+the plugin directory during plugin installation.  But that's ugly.</pre>
+    </div>
+
+    <div id="c6" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c6">Comment 6</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jeff McAffer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jeffmcaffer&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jeffmcaffer&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-03-16 15:41:27 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">please open separate bug reports for separate problems.  This bug is to collect 
+up solutions in one handy spot.  Feel free to make this bug depend on the new 
+bugs</pre>
+    </div>
+
+    <div id="c7" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c7">Comment 7</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Max Rydahl Andersen</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=manderse&#64;redhat.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=manderse&#64;redhat.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-03-24 19:18:12 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">
+Visiting the Context classloader and then the frameworks classloader afterwards 
+is the most compatible way of accessing classes. 
+
+I know osgi has issues with doing this since they cant control the boundaries on 
+when separate plugins are running in the same thread.
+
+Is there something these frameworks should/could do to integrate easier/better ?
+
+
+</pre>
+    </div>
+
+    <div id="c8" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c8">Comment 8</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pascal Rapicault</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pascal&#64;rapicorp.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pascal&#64;rapicorp.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-04 10:39:07 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=19513&amp;action=diff" name="attach_19513" title="Implementation of a mechanism to lookup classes without having strong dependencies">attachment 19513</a> <a href="attachment.cgi?id=19513&amp;action=edit" title="Implementation of a mechanism to lookup classes without having strong dependencies">[details]</a></span>
+Implementation of a mechanism to lookup classes without having strong dependencies
+
+The attached patch implements buddy classloading.
+This mechanism allows bundles to see classes that are not in their prereq list.
+
+By default we provide two policies. One is: search in the dependents and it is
+expressed by adding in the manifest.mf Eclipse-BuddyLoader:
+org.eclipse.osgi.dependentBuddy. The other is: search in all the exported
+classes expressed by Eclipse-BuddyLoader: org.eclipse.osgi.globalBuddy.
+
+Questions:
+Do we want the dependentBuddy to be softly cached within the bundleloader.
+Do we want the dependentBuddy to lookup the exported packages first.
+The global buddy only consults the exported packages, do we want it to consult
+all the bundles one by one, in decreasing order of bundle id?
+
+This patch does not address problems with context classloader. Working on it
+now.</pre>
+    </div>
+
+    <div id="c9" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c9">Comment 9</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pascal Rapicault</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pascal&#64;rapicorp.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pascal&#64;rapicorp.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-05 18:16:15 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=19569&amp;action=diff" name="attach_19569" title="Patch implementing the full support for buddy loading">attachment 19569</a> <a href="attachment.cgi?id=19569&amp;action=edit" title="Patch implementing the full support for buddy loading">[details]</a></span>
+Patch implementing the full support for buddy loading
+
+The questions from <a href="show_bug.cgi?id=87775#c8">comment #8</a> are still open.
+Here is an extra one:
+- How should loadResources() be implemented: Should it search exaustively
+across all the exporter or depenedent or stop after the first match?</pre>
+    </div>
+
+    <div id="c10" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c10">Comment 10</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pascal Rapicault</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pascal&#64;rapicorp.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pascal&#64;rapicorp.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-05 18:17:09 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Note that the code is not final and must be cleaned up, tuned, etc. </pre>
+    </div>
+
+    <div id="c11" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c11">Comment 11</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Bob Foster</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=bob&#64;objfac.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=bob&#64;objfac.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-05 21:22:23 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">What problems are this solution intended to address? All I see is a bunch of
+scattered use cases and some code. What's the thinking on this?</pre>
+    </div>
+
+    <div id="c12" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c12">Comment 12</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Scott Lewis</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=slewis&#64;composent.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=slewis&#64;composent.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-05 23:09:23 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=87775#c11">comment #11</a>)
+<span class="quote">&gt; What problems are this solution intended to address? All I see is a bunch of
+&gt; scattered use cases and some code. What's the thinking on this?</span >
+
+Hi Bob.  From the point of view of the Eclipse Communication Framework, the
+solution is intended to solve the problem created by each plugin having it's own
+classloader instance.  When serializing/deserializing an object, the
+classloader-per-plugin model results in situations where a plugin that's
+deserializing an object from a stream cannot find a class that is outside of
+that plugins class namespace (because the class of the object to be deserialized
+actually lives in a plugin other than the one that's making the call to
+objectinputstream.readObject()).  
+
+So with this solution, it is possible for plugins to express that they need to
+load classes from other plugin's class namespace...which will allow object
+deserialization to work as expected (i.e. not throw ClassNotFoundException's
+when deserializing an object with a class provided by another plugin).
+
+A related solution that this change provides is support for third-party
+libraries that load classes with Class.forName(&quot;whatever&quot;)...i.e. so that the
+&quot;whatever&quot; class can be found, even if not in the same class namespace as the
+code that is making the Class.forName call.
+
+
+
+</pre>
+    </div>
+
+    <div id="c13" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c13">Comment 13</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Bob Foster</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=bob&#64;objfac.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=bob&#64;objfac.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-06 11:14:30 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=87775#c12">comment #12</a>)
+<span class="quote">&gt; ...When serializing/deserializing an object, the
+&gt; classloader-per-plugin model results in situations where a plugin that's
+&gt; deserializing an object from a stream cannot find a class ...
+&gt; because the class [was loaded by] a [another] plugin...  
+&gt; 
+&gt; So with this solution, it is possible for plugins to express that they need to
+&gt; load classes from other plugin's class namespace...</span >
+
+Got this part. In the absence of dynamically created classloaders, this can be
+done by tagging the serialized class with the id of the plugin that loaded it
+and a mechanism to obtain that plugin's classloader at deserialize time.
+
+<span class="quote">&gt; A related solution that this change provides is support for third-party
+&gt; libraries that load classes with Class.forName(&quot;whatever&quot;)...i.e. so that the
+&gt; &quot;whatever&quot; class can be found, even if not in the same class namespace as the
+&gt; code that is making the Class.forName call.</span >
+
+Is this part of the serialize/deserialize problem? Does it address loading a
+class *instead of* a class that may already be loaded in the plugin's namespace?
+In other words, how does this solution improve on just making a URLClassLoader
+and using it to load the arbitrary class?
+
+Also, my <a href="show_bug.cgi?id=87775#c1">comment #1</a> requires that Eclipse adds no restrictions to arbitrary
+classloaders created by plugins. How is that addressed?</pre>
+    </div>
+
+    <div id="c14" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c14">Comment 14</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Craig Setera</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=craigsfnet&#64;setera.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=craigsfnet&#64;setera.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-07 08:54:19 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Our usecase for this is using Castor serialization and deserialization for
+speaking web services to the backend.  We have various web services and their
+generated code and would like to keep those different services in a number of
+different plugins.  Unfortunately deserialization does not work when the
+implementor of the class is in a different plugin than the Castor jar.  For the
+moment, we are adding the web service jars to the &quot;root&quot; plugin, but this is not
+a scaleable solution as it requires other plugins into our application to alter
+the root plugin.  
+
+Our short-term plan is to use fragments to work around this.  We will provide
+the web service jars to the root jar by adding new fragments.  Because these
+classes are not visible for compilation, we will also have to add them as
+non-plugin jars to the projects that depend on them.   Although this appears to
+work, it is ugly and PDE does the wrong thing with &quot;Update Classpath...&quot;,
+removing the non-plugin jars and requiring manual maintenance of the project
+classpath.
+
+The mechanism that Pascal mentions appears like it would solve our problems. 
+Unfortunately, we need to ship our RCP application before 3.1 will be available,
+so we can't use it for this release.  Is there any chance that some of this
+might be backported to 3.0.x?
+
+</pre>
+    </div>
+
+    <div id="c15" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c15">Comment 15</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pascal Rapicault</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pascal&#64;rapicorp.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pascal&#64;rapicorp.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-07 09:22:11 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Craig, do you know how Castor find the classes? Does it use context class
+loader, or class.forName()?
+
+Backporting the buddy mechanism to 3.0.x won't be done.</pre>
+    </div>
+
+    <div id="c16" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c16">Comment 16</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Max Rydahl Andersen</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=manderse&#64;redhat.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=manderse&#64;redhat.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-07 09:30:13 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=87775#c15">comment #15</a>)
+<span class="quote">&gt; Craig, do you know how Castor find the classes? Does it use context class
+&gt; loader, or class.forName()?</span >
+
+I don't have the answer but will just say that if it behaves nice
+in a j2ee environment it will first contact the context classloader and if that 
+fails use class.forName()...anything else would really surprise me ,)
+
+/max</pre>
+    </div>
+
+    <div id="c17" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c17">Comment 17</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pascal Rapicault</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pascal&#64;rapicorp.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pascal&#64;rapicorp.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-07 09:40:44 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">If this is the case, the workaround in eclipse 3.0 is to wrap calls to Castor by
+setting the contextClassLoader.</pre>
+    </div>
+
+    <div id="c18" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c18">Comment 18</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Max Rydahl Andersen</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=manderse&#64;redhat.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=manderse&#64;redhat.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-07 09:43:07 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=87775#c17">comment #17</a>)
+<span class="quote">&gt; If this is the case, the workaround in eclipse 3.0 is to wrap calls to Castor </span >
+by
+<span class="quote">&gt; setting the contextClassLoader.</span >
+
+Is there a better way in eclipse 3.1 ? (the above can be very intrusive on 
+existing code - unless you use aop, but that also has limitations inside eclipse 
+because of the non-contextclassloader classloading)
+
+/max</pre>
+    </div>
+
+    <div id="c19" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c19">Comment 19</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pascal Rapicault</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pascal&#64;rapicorp.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pascal&#64;rapicorp.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-07 09:45:56 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The buddy classloading mechanism that is being proposed here.</pre>
+    </div>
+
+    <div id="c20" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c20">Comment 20</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Max Rydahl Andersen</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=manderse&#64;redhat.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=manderse&#64;redhat.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-07 09:53:07 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Maybe i'm blind but the buddy classloading only seem to solve serialization 
+issues and reduce the amount of classloaders for statically plugin dependencies
+...
+
+It does not solve the issue of being able to dynamically add jars to a plugins 
+classloader (like tools.jar, jdbc drivers, user provided classes etc.).
+
+Or am i not understanding it correctly?</pre>
+    </div>
+
+    <div id="c21" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c21">Comment 21</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pascal Rapicault</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pascal&#64;rapicorp.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pascal&#64;rapicorp.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-07 18:01:54 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Correct.</pre>
+    </div>
+
+    <div id="c22" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c22">Comment 22</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jeff McAffer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jeffmcaffer&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jeffmcaffer&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-07 23:31:42 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Max: &quot;Or am I not understanding it correctly?&quot;
+Pascal: &quot;Correct&quot;
+
+With communication like that who needs classloaders to confuse things? :-)
+</pre>
+    </div>
+
+    <div id="c23" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c23">Comment 23</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pascal Rapicault</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pascal&#64;rapicorp.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pascal&#64;rapicorp.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-08 08:38:38 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Correct :)
+To clarify:
+The buddy classloading does not solve the issue of being able to dynamically add
+jars.
+
+Could you describe scenarios where such support is needed?</pre>
+    </div>
+
+    <div id="c24" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c24">Comment 24</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Walter Harley</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipse&#64;cafewalter.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipse&#64;cafewalter.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-08 19:42:19 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Re Pascal's request for scenarios: Basically, any time someone wants to write a 
+plugin around a third-party product - e.g., the drivers of a commercial 
+database product, etc.  
+
+Much interesting functionality exists in libraries that have to be dynamically 
+discovered, because they cannot be shipped with the plugin.  Even within the 
+purely open-source part of the world, it is not always desirable or practical 
+to redistribute jar files as part of a plugin, because of concerns about 
+versioning and disk space and because those jar files themselves may make 
+assumptions about where they live relative to other files.  It seems a shame 
+that Eclipse makes it so hard to expose this sort of functionality to users.
+</pre>
+    </div>
+
+    <div id="c25" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c25">Comment 25</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Bob Foster</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=bob&#64;objfac.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=bob&#64;objfac.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-08 19:49:45 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=87775#c23">comment #23</a>)
+<span class="quote">&gt; Could you describe scenarios where such support is needed?</span >
+
+Walter has a good one, too, but my scenario is just the opposite. I need to ship
+a third party products with my own and I must be absolutely certain I am using
+my version and not some other that pops in through a plugin dependency or the
+user adds to the system.
+</pre>
+    </div>
+
+    <div id="c26" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c26">Comment 26</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Max Rydahl Andersen</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=manderse&#64;redhat.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=manderse&#64;redhat.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-09 07:56:59 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=87775#c23">comment #23</a>)
+<span class="quote">&gt; Correct :)
+&gt; To clarify:
+&gt; The buddy classloading does not solve the issue of being able to dynamically </span >
+add
+<span class="quote">&gt; jars.
+&gt; 
+&gt; Could you describe scenarios where such support is needed?</span >
+
+- loading jdbc drivers
+- loading users classes to add additonal/custom behavior (e.g. log4j appenders, 
+hibernate rev.eng. filters, etc.)
+- for simple instantiation to load them as a result of a query ()
+
+And I actually think that Ant integration has the same needs. (AFAIR they handle 
+it via custom classloading, but that is &quot;easy&quot; since they can just set 
+classpath, run ant, unload classpath. With jdbc drivers and custom behavior 
+usercode the boundaries are not that clear cut)
+
+And i actually don't know how this can be solved nicely.
+
+In J2EE its solved by application &quot;boundaries&quot;, but these does not exist in 
+eclipse (plugins are to fine grained and the &quot;whole&quot; of eclipse is to coarse 
+grained).
+
+A way could be to decide which classes are visibile dependent on the class 
+stack, but that might be a tad to ineffecient (but maybe one can do some clever 
+things with e.g. runAs() or similar)
+
+
+/max
+
+
+
+</pre>
+    </div>
+
+    <div id="c27" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c27">Comment 27</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">C. Lamont Gilbert</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=clg-business&#64;rigidsoftware.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=clg-business&#64;rigidsoftware.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-28 15:23:41 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I am having trouble understanding some of the issues here.  I have a 
+main &quot;MAIN&quot; and a second plugin &quot;SECOND.&quot;  SECOND has some classes that are 
+serialized by MAIN.  MAIN does not have a problem deserializing classes defined 
+by SECOND, so long as SECOND 'exports' those classes in its plugin.xml file.
+
+But it seems to be said here that this does not work?
+
+Also I am using class.forName to load a jdbc driver.  Am I to understand that 
+this driver is not guaranteed to be from the jar file which is included within 
+my plugin?</pre>
+    </div>
+
+    <div id="c28" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c28">Comment 28</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Max Rydahl Andersen</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=manderse&#64;redhat.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=manderse&#64;redhat.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-28 18:54:42 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The problem does not exist for dependencies that is known at build/deployment 
+time - its when you want to have dynamically loading of e.g. jdbc.jar or you 
+want to dynamically load other classes.</pre>
+    </div>
+
+    <div id="c29" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c29">Comment 29</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">C. Lamont Gilbert</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=clg-business&#64;rigidsoftware.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=clg-business&#64;rigidsoftware.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-29 09:03:16 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I think I see now.  This is for when the plugin SECOND loads dynamically some
+class, and the plugin MAIN serializes this class.  Then in a subsequent
+invocation of Eclipse, MAIN tries to deserialize this class, and it cant find it
+because it lacks the knowledge that SECOND has about how/when/where to load it?
+
+Also, it seems as if some want to ship a plugin, then add a jar file, such as a
+library, into the classpath of Eclipse itself, or the /ext folder, as opposed to
+adding this jar file as an additional plugin?
+
+I am reading these posts, and I hope Im not detracting, but Im trying to see
+where the assistance of the Eclipse architecture is required.  I am personally
+using class.forName to load a jdbc driver without issue, and am hoping i'm not
+missing something!?</pre>
+    </div>
+
+    <div id="c30" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c30">Comment 30</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Scott Lewis</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=slewis&#64;composent.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=slewis&#64;composent.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-29 11:26:44 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=87775#c29">comment #29</a>)
+<span class="quote">&gt; I think I see now.  This is for when the plugin SECOND loads dynamically some
+&gt; class, and the plugin MAIN serializes this class.  Then in a subsequent
+&gt; invocation of Eclipse, MAIN tries to deserialize this class, and it cant find it
+&gt; because it lacks the knowledge that SECOND has about how/when/where to load it?</span >
+
+Basically right.  The problematic cases are those where a class is
+serialized/deserialized by a plugin that is not the plugin that created the
+ObjectInput/output stream.  Serialization occurs just fine, because of the
+package export declarations and statically defined package relationships,
+deserialization (classloading) fails, however, because the
+ObjectInputStrea.loadClass doesn't necessarily 'know' about packages/classes
+defined in another plugin's namespace.  It might know (if
+Dynamic-ImportPackage/Export-Package is specified to tell it), but it might not
+(if these are not specified on both 'ends').
+
+Of course it's even *more* problematic if there are more than two relevant
+plugins...i.e. if A defines a serializable class, B loads uses the class, and C
+serializes/deserializes the class. It's not at all necessary/required that A
+expose the class to C's classloader for deserialization.
+
+But I think that the 'buddy' solutions proposed by Pascal will likely solve
+these problems in practice...I hope transitively (for buddys of buddys).  Now I
+just wonder what OSGI 4.0 is going to do about this...if anything.  Pascal any
+recent thoughts/comments?</pre>
+    </div>
+
+    <div id="c31" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c31">Comment 31</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Max Rydahl Andersen</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=manderse&#64;redhat.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=manderse&#64;redhat.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-29 11:28:48 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">yes but your jdbc driver is already known by your plugin correct ? the jar file 
+is *in* your plugin.xml/manifest.mf ?
+
+</pre>
+    </div>
+
+    <div id="c32" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c32">Comment 32</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">C. Lamont Gilbert</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=clg-business&#64;rigidsoftware.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=clg-business&#64;rigidsoftware.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-29 13:59:46 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">OK.  Then since I don't have this problem let me explain my defacto solution.
+
+Have Plugin A, which has an extension point that you wish to extend.  
+
+1.  If you create a plugin PB for this extension then you will incur the
+serialization/deserialization issue.
+2.  If you create a fragment FB for this extension then you won't have any
+issues but you will have FB using the same classloader as A. Plus you have
+dedicated your extension to use only by A.
+
+My solution is this;  I create a fragment of A that extends the extension point.
+ This fragment is essentially empty.  It simply 'requires' a seperate plugin C.
+ C exports its library parts.  So my classloader for C will be different than
+that for A, but A still knows how to get classes exported by C.
+
+This means any users of C, will have to have a fragment exist that 'requires'
+the C plugin.
+
+This is based on my assumption that the classpath of a fragment is automatically
+added to the plugin its fragging even if the fragment's other resources are
+never needed.
+
+
+So this is my solution to serialization issue.  I still don't understand the
+other classloader issue.  It seems to come from people trying to extend eclipse
+without using the eclipse extension mechanism!?</pre>
+    </div>
+
+    <div id="c33" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c33">Comment 33</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">C. Lamont Gilbert</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=clg-business&#64;rigidsoftware.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=clg-business&#64;rigidsoftware.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-29 14:05:16 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=87775#c31">comment #31</a>)
+<span class="quote">&gt; yes but your jdbc driver is already known by your plugin correct ? the jar file 
+&gt; is *in* your plugin.xml/manifest.mf ?
+&gt; 
+&gt; </span >
+
+Yes it is.  Where else would it be?
+</pre>
+    </div>
+
+    <div id="c34" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c34">Comment 34</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Max Rydahl Andersen</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=manderse&#64;redhat.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=manderse&#64;redhat.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-29 16:38:51 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">It comes from people that cant require to have people package their jdbc drivers 
+etc. as plugins. I am not allow to distribute jdbc drivers so i cant even do it 
+and it does not really make sense to add it as a plugin.
+
+Furthermore its for applications that does dynamic loading of classes which is a 
+very common situation for plugins that want to actually load the users java 
+classes and naturally I have no way to use eclipse plugin extension to do this 
+since the class and packagenames is not known at deployment/compile time.
+</pre>
+    </div>
+
+    <div id="c35" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c35">Comment 35</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Max Rydahl Andersen</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=manderse&#64;redhat.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=manderse&#64;redhat.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-29 16:42:31 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">
+<span class="quote">&gt; 
+&gt; Yes it is.  Where else would it be?</span >
+
+I want to provide a plugin that provides a generic interface to the database 
+(like WTP or hibernate tools) and Im not allowed nor capable of distributing
+every thinkable combination of database drivers in the world - this is something 
+the user must point out ....and here the current classloader schema falls short
+...and it also fall short when you use libraries that want to load your classes 
+dynamically.
+
+</pre>
+    </div>
+
+    <div id="c36" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c36">Comment 36</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">C. Lamont Gilbert</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=clg-business&#64;rigidsoftware.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=clg-business&#64;rigidsoftware.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-01 13:22:35 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Interesting.  So you allow the user to supply whatever driver they want.
+
+This seems like a pretty specific problem.  How to tell the user a place to put
+a driver or dynamically loaded set of classes, and ensure Eclipse will respect
+the desire of your plugin to load classes exclusively from that location.
+
+But then what of secondary classes?  Do they come from the exclusive location or
+the general eclipse classpath?  Or do they check exclusive first and then
+general, or do they fail if class is not in exclusive?
+
+Is this what the Buddyloader is meant to address.  Seems like a lot of people
+entered this bug report with an understanding that I lack.
+
+</pre>
+    </div>
+
+    <div id="c37" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c37">Comment 37</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">C. Lamont Gilbert</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=clg-business&#64;rigidsoftware.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=clg-business&#64;rigidsoftware.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-01 13:27:58 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">If we look at the ant plugin its structured like so
+
+/
+/bin
+/lib
+
+Can't you just tell end users to put the driver in the /lib folder of your
+plugin? or even create a /drivers folder so its clear what the intention is of
+this place?  Now you dont have any issues with knowing exactly which version of
+a driver the user intended to be used by your plugin, and also no issues with
+loading the classes.
+
+The end user _has_ to put the library somewhere.
+</pre>
+    </div>
+
+    <div id="c38" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c38">Comment 38</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Bob Foster</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=bob&#64;objfac.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=bob&#64;objfac.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-02 00:34:46 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=87775#c37">comment #37</a>)
+There are a couple of really good reasons why this isn't a good solution. Some
+installations are on read-only network drives. The next time the user updates
+the plugin, the lib will be blown away.</pre>
+    </div>
+
+    <div id="c39" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c39">Comment 39</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">C. Lamont Gilbert</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=clg-business&#64;rigidsoftware.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=clg-business&#64;rigidsoftware.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-02 09:05:44 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I understand Bob.  But the proposal in general is to give the user a specific
+place to install the driver which is outside of the eclipse classpath.  
+
+I am not sure how well it will work to tell the user to install some classes in
+the Eclipse classpath, and not expect this installation to influence the whole
+of the Eclipse installation itself (in ways your plugin can neither predict nor
+protect against.)
+
+Eclipse has an extension mechanism for its plugins, and that AFAIK is only other
+plugins.  When you put something in the Eclipse classpath you are effectively
+extending Eclipse itself, and subverting the plugin extension mechanism no?
+
+(I do recognize now that my solution of packaging the driver within a plugin is
+not scalable)</pre>
+    </div>
+
+    <div id="c40" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c40">Comment 40</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jeff McAffer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jeffmcaffer&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jeffmcaffer&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-02 10:03:43 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">There are several issues here but none involve putting things on the &quot;Eclipse 
+classpath&quot;.  
+- buddy loading: policies for searching other places when a plugin can't find 
+what it wants.  Other places = other plugins
+- absolute paths in the plugin manifest.  This allows plugins to wrapper jars 
+that are assumed to exist on the machine alread.
+
+I think the latter one is causing some confusion.  We are not expecting to tell 
+users to install some bits here and some bits there.  Rather, user HAVE some 
+bits here and there.  We are trying to allow Eclipse to adapt to that.  This is 
+absolutely not ideal but until Eclipse rules the world, we have to accomodate 
+other configurations.
+
+That's the intent of the facilities we are looking at.  What others do with it 
+is up to them.</pre>
+    </div>
+
+    <div id="c41" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c41">Comment 41</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">C. Lamont Gilbert</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=clg-business&#64;rigidsoftware.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=clg-business&#64;rigidsoftware.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-02 11:37:28 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Ok, if I may restate
+
+1. Recreating classes which originated in other plugins without strong dependencies.
+   a. deserialization
+2. loading classes from specific locations defined in the plugin manifest, to
+the exclusion of classes loaded from other places.
+   a. runtime class loading (class.forName, etc.)
+   b. runtime class creation/compilation
+   c. regular class instantiation (new, etc.)
+3. loading classes from specific locations defined at runtime, to the exclusion
+of classes loaded from other places.
+   a. runtime class loading (class.forName, etc.)
+   b. runtime class creation/compilation
+   c. regular class instantiation (new, etc.)
+4. solutions to making happy some 3rd party libraries that use the context class
+loader.
+
+
+Buddyloading addresses 1 &amp; 2, not sure about 3.  
+
+It seems as if 1.a also has another solution proposed involving tagging the
+classes in <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - Support for serialization"
+   href="show_bug.cgi?id=85116">bug 85116</a>?</pre>
+    </div>
+
+    <div id="c42" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c42">Comment 42</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Bob Foster</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=bob&#64;objfac.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=bob&#64;objfac.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-02 14:07:58 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=87775#c40">comment #40</a>)
+<span class="quote">&gt; There are several issues here but none involve putting things on the &quot;Eclipse 
+&gt; classpath&quot;.  
+&gt; - buddy loading: policies for searching other places when a plugin can't find 
+&gt; what it wants.  Other places = other plugins
+&gt; - absolute paths in the plugin manifest.  This allows plugins to wrapper jars 
+&gt; that are assumed to exist on the machine alread.</span >
+
+Those are solutions to somebody's problem, no doubt. But my &quot;classloading issue&quot;
+is very simple and isn't addressed by either. I want Eclipse to stay the heck
+out of the way when I use my own URLClassLoader to load classes _in preference
+to_ classes in the JRE. This works fine in a plugin in 3.0.1, but
+problematically running under PDE in 3.0.1 (sometimes it works, sometimes not)
+and not at all in RCP in 3.1M5a. In the latter case, I get a security violation
+that originates in some OSGI appendage to the classloader. In the PDE case, I
+sporadically get classloader conflicts just like the bad old days when Xerces
+was on everybody's classpath. I am very concerned that you evidently don't test
+this case and therefore I am liable to be broken in every release by the latest
+stab at getting classloading right.</pre>
+    </div>
+
+    <div id="c43" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c43">Comment 43</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jeff McAffer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jeffmcaffer&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jeffmcaffer&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-02 21:33:11 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">re <a href="show_bug.cgi?id=87775#c41">comment 41</a>. We are on a path to handling 1, 2 and 4.  Not sure what 3 is.  
+If you mean putting something on the Java classpath, sure, that is already 
+possible (using osgi.parentClassloader= app | ext).  If you mean something like 
+<a href="show_bug.cgi?id=87775#c42">comment 42</a>, read on...
+
+re <a href="show_bug.cgi?id=87775#c42">comment 42</a>: 
+
+<span class="quote">&gt;I want Eclipse to stay the heck
+&gt;out of the way when I use my own URLClassLoader to load classes _in preference
+&gt;to_ classes in the JRE. </span >
+
+Subclass Main (not API) and have it create a different URL classloader for 
+running the framework.  This classloader can do whatever the heck you like.  
+Hook it in by setting:
+  osgi.parentClassloader=fwk
+  org.osgi.framework.bootdelegation= &lt;I really mean nothing after the '='&gt;
+
+If you are looking to supply your own classloader for individual plugins, 
+sorry.  Not in the cards. This may have worked in the past but was certainly 
+not a) a design point b) api c) tested d) supported.
+
+<span class="quote">&gt;This works fine in a plugin in 3.0.1, but</span >
+Please open a separate bug report with steps/code to reproduce scenario that is 
+*supported* in 3.0 and not in 3.1.  
+
+<span class="quote">&gt;I am very concerned that you evidently don't test
+&gt;this case and therefore I am liable to be broken in every release by the latest
+&gt;stab at getting classloading right.</span >
+Please open a separate bug report highlighting the API that is broken in 3.1 vs 
+3.0.  If it isn't API, then yes, you may well be broken from release to 
+release.  That's what &quot;not API&quot; means.
+
+Also please let us know if there is an API that is not being tested.  
+</pre>
+    </div>
+
+    <div id="c44" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c44">Comment 44</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Bob Foster</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=bob&#64;objfac.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=bob&#64;objfac.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-02 22:54:47 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=87775#c43">comment #43</a>)
+<span class="quote">&gt; Subclass Main (not API) and have it create a different URL classloader for 
+&gt; running the framework.  This classloader can do whatever the heck you like.</span >
+
+Why should I have to subclass anything, much less something not API? If I took
+that advice, the next release you'd be coming back with *not* *supported*.
+ 
+<span class="quote">&gt; Hook it in by setting:
+&gt;   osgi.parentClassloader=fwk
+&gt;   org.osgi.framework.bootdelegation= &lt;I really mean nothing after the '='&gt;</span >
+
+How about a smidgen of explanation what these incantations are supposed to
+accomplish? (I'm afraid to ask if this stuff is API.)
+
+<span class="quote">&gt; If you are looking to supply your own classloader for individual plugins, 
+&gt; sorry.  Not in the cards. This may have worked in the past but was certainly 
+&gt; not a) a design point b) api c) tested d) supported.</span >
+
+No. All I want to do is a) Create a URL class loader with the plugin class
+loader as parent, b) use it to load a class by name, c) create an instance of
+the class, d) the instance does all the references to my libraries and makes
+_no_ references to any classes that might have been previously loaded by my
+plugin. I shouldn't need any &quot;API&quot;, should I? This should just work.
+
+<span class="quote">&gt; 
+&gt; &gt;This works fine in a plugin in 3.0.1, but
+&gt; Please open a separate bug report with steps/code to reproduce scenario that is 
+&gt; *supported* in 3.0 and not in 3.1.</span >
+
+Ok, I will.
+
+&lt;rant&gt;Not to pick on you, but about now I'm getting a little annoyed with all
+these stern references to *API* and *supported*. I've been around here for
+awhile. Eclipse documents about 10% of the assumptions its public, external
+interfaces make, about 0% of things like classloading it does under the covers
+hoping no one will notice. To break running code and defend it by not being part
+of some mythical, undocumented API is pure Eclipse hubris. Believe me I know
+what API means. It means there is a contract, which implies something written
+down. The Eclipse style is to leave out the written down part and then claim
+that anything not written down is not API.&lt;/p&gt;</pre>
+    </div>
+
+    <div id="c45" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c45">Comment 45</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jeff McAffer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jeffmcaffer&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jeffmcaffer&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-02 23:59:18 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=87775#c44">comment #44</a>)
+<span class="quote">&gt; Why should I have to subclass anything, much less something not API? If I took
+&gt; that advice, the next release you'd be coming back with *not* *supported*.</span >
+
+My comments were intended to explore the possibilities to better understand 
+what your usecase needs and how it might be solved.  Please ignore the 
+suggestion.
+
+<span class="quote">&gt; No. All I want to do is a) Create a URL class loader with the plugin class
+&gt; loader as parent, b) use it to load a class by name, c) create an instance of
+&gt; the class, d) the instance does all the references to my libraries and makes
+&gt; _no_ references to any classes that might have been previously loaded by my
+&gt; plugin. I shouldn't need any &quot;API&quot;, should I? This should just work.</span >
+&gt;
+<span class="quote">&gt; &gt; &gt;This works fine in a plugin in 3.0.1, but
+&gt; &gt; Please open a separate bug report with steps/code to reproduce scenario </span >
+that is 
+<span class="quote">&gt; &gt; *supported* in 3.0 and not in 3.1.
+&gt; Ok, I will.</span >
+
+Not sure I understood d) but assume the upcoming bug report will provide 
+detail/code.  
+
+<span class="quote">&gt; &lt;rant&gt;Not to pick on you, but about now I'm getting a little annoyed with all
+&gt; these stern references to *API* and *supported*. I've been around here for
+&gt; awhile. Eclipse documents about 10% of the assumptions its public, external
+&gt; interfaces make, about 0% of things like classloading it does under the covers
+&gt; hoping no one will notice. To break running code and defend it by not being </span >
+part
+<span class="quote">&gt; of some mythical, undocumented API is pure Eclipse hubris. Believe me I know
+&gt; what API means. It means there is a contract, which implies something written
+&gt; down. The Eclipse style is to leave out the written down part and then claim
+&gt; that anything not written down is not API.&lt;/p&gt;</span >
+
+One of the benefits of moving to OSGi is that Eclipse gains a well-reasoned, 
+well-documented specification for classloading etc.  The new version (R4) of 
+that spec is due out later this year.  Our plan is for Eclipse to be an OSGi R4 
+compliant implementation.  </pre>
+    </div>
+
+    <div id="c46" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c46">Comment 46</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Scott Lewis</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=slewis&#64;composent.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=slewis&#64;composent.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-03 00:27:05 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">
+<span class="quote">&gt; No. All I want to do is a) Create a URL class loader with the plugin class
+&gt; loader as parent, b) use it to load a class by name, c) create an instance of
+&gt; the class, d) the instance does all the references to my libraries and makes
+&gt; _no_ references to any classes that might have been previously loaded by my
+&gt; plugin. I shouldn't need any &quot;API&quot;, should I? This should just work.</span >
+
+Yes, it should (just work).  I think your needs here are addressed simply by
+doing exactly as you say...creating an URL classloader and passing in your
+plugin's class loader as parent...then using that classloader to load a given
+class (which must be in the namespace defined by your classloader's URLS OR in
+it's parent's...i.e. the plugin classloader).  If all your classes are in the
+namespace of your plugin or your URLclassloader (given you give it some URLs
+with paths to other classes), then you've got few worries.  Actually, there's an
+article in Dr. Dobbs May 2005 &quot;Eclipse and Custom Classloaders&quot; by Greg
+Bednarek...he does exactly this.  Unless I'm misunderstanding your needs as
+expressed I don't think the OSGI classloading scheme (with or without buddy
+loading) is even germane.
+
+I believe the cases where the buddy loader approach are needed are those that
+require loading classes *outside* the given plugin classloader's namespace but
+in the namespace of some subset of plugins...i.e. classes exposed by other
+plugins...e.g. for object serialization OR for accessing classes loaded via
+Class.forName...and assumed to be on the classpath (e.g. db sql drivers for a
+hibernate plugin).  
+
+Of course you will also have to concern yourself about threading as well with
+your URLClassloader.loadClass(...).newInstance().run() approach...but that's
+another matter.
+
+Hope this helps.
+
+
+</pre>
+    </div>
+
+    <div id="c47" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c47">Comment 47</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Bob Foster</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=bob&#64;objfac.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=bob&#64;objfac.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-03 02:59:32 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I left out one detail of the URL class loader I am referring to. The normal
+operation of classloaders is to dive all the way down the parent chain for every
+class, then let the child classloaders do their loading on the recursive way
+back up. So a parent is always preferred over a child. In my classloader,
+certain packages do not get delegated to the parent but are instead loaded by
+it. With such a classloader, it should not be possible for a class from one of
+these packages previously loaded by another classloader to satisfy a load
+request, yet in PDE 3.0.1 it sometimes happens. The issues with 3.1M5a RCP
+remain a mystery to me.</pre>
+    </div>
+
+    <div id="c48" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c48">Comment 48</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Igor Fedorenko</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=igor&#64;ifedorenko.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=igor&#64;ifedorenko.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-03 08:42:36 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=87775#c47">comment #47</a>)
+<span class="quote">&gt; I left out one detail of the URL class loader I am referring to. The normal
+&gt; operation of classloaders is to dive all the way down the parent chain for every
+&gt; class, then let the child classloaders do their loading on the recursive way
+&gt; back up. So a parent is always preferred over a child. In my classloader,
+&gt; certain packages do not get delegated to the parent but are instead loaded by
+&gt; it. With such a classloader, it should not be possible for a class from one of
+&gt; these packages previously loaded by another classloader to satisfy a load
+&gt; request, yet in PDE 3.0.1 it sometimes happens. The issues with 3.1M5a RCP
+&gt; remain a mystery to me.</span >
+
+I tried your classloader from <a href="show_bug.cgi?id=87775#c1">comment #1</a> in recent I-build and it worked as I
+thought it would, i.e. I was able to access two versions of Xerces, one that
+comes from IBM JDK and another that comes from my specified location. Here is a
+code snippet
+
+&lt;code&gt;
+URL[] cp = {
+new URL(&quot;file:/S:/workspaces/eclipsetest/cltest/lib/xercesImpl.jar&quot;)
+};
+JarClassLoader cl = new JarClassLoader(cp, JarClassLoader.class.getClassLoader());
+Class clazz = cl.loadClass(&quot;org.apache.xerces.impl.Version&quot;);
+Method m = clazz.getMethod(&quot;getVersion&quot;, new Class[0]);
+System.out.println(m.invoke(null, new Object[0]));
+System.out.println(Version.getVersion());
+&lt;/code&gt;
+
+Can you show an example that demonstrates the problem that you see?</pre>
+    </div>
+
+    <div id="c49" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c49">Comment 49</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pascal Rapicault</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pascal&#64;rapicorp.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pascal&#64;rapicorp.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-03 08:54:12 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">FYI the article from Dr. Dobbs May 2005 &quot;Eclipse and Custom Classloaders&quot;, is
+based on eclipse 2.1.</pre>
+    </div>
+
+    <div id="c50" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c50">Comment 50</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Bob Foster</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=bob&#64;objfac.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=bob&#64;objfac.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-03 09:03:25 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=87775#c48">comment #48</a>)
+<span class="quote">&gt; Can you show an example that demonstrates the problem that you see?</span >
+
+Did you try it in an RCP app?</pre>
+    </div>
+
+    <div id="c51" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c51">Comment 51</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Igor Fedorenko</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=igor&#64;ifedorenko.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=igor&#64;ifedorenko.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-03 09:28:31 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=87775#c50">comment #50</a>)
+<span class="quote">&gt; (In reply to <a href="show_bug.cgi?id=87775#c48">comment #48</a>)
+&gt; &gt; Can you show an example that demonstrates the problem that you see?
+&gt; 
+&gt; Did you try it in an RCP app?</span >
+
+Yes, I call this code from ApplicationWorkbenchWindowAdvisor#preWindowOpen
+method of &quot;Hello RCP&quot; sample.</pre>
+    </div>
+
+    <div id="c52" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c52">Comment 52</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Bob Foster</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=bob&#64;objfac.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=bob&#64;objfac.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-03 10:13:31 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Good news so far! What version of RCP? (This will tell me whether to spend time
+changing my code back the way it was or generating test cases. Thanks.)</pre>
+    </div>
+
+    <div id="c53" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c53">Comment 53</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">C. Lamont Gilbert</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=clg-business&#64;rigidsoftware.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=clg-business&#64;rigidsoftware.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-03 10:49:31 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=87775#c43">comment #43</a>)
+<span class="quote">&gt; re <a href="show_bug.cgi?id=87775#c41">comment 41</a>. We are on a path to handling 1, 2 and 4.  Not sure what 3 is.  
+&gt; If you mean putting something on the Java classpath, sure, that is already 
+&gt; possible (using osgi.parentClassloader= app | ext).  If you mean something like 
+&gt; <a href="show_bug.cgi?id=87775#c42">comment 42</a>, read on...
+&gt; </span >
+
+Lets take a 2nd look at 2 and 3.
+
+<span class="quote">&gt;2. loading classes from specific locations defined in the plugin manifest, to
+&gt;the exclusion of classes loaded from other places.</span >
+
+Loading classes from specific locations already happens.  If you put a location
+in your manifest, you get that added to your classpath.  If you put an import of
+another plugin in your manifest you get classes exported from that plugin added
+to your classpath as well.
+
+The part that does not happen is the exclusion part.  If I import 'Plugin B'
+which exports Xerces, and I also include a Xerces library of my own in my
+manifest, which takes precedence?  Is this even allowed?  First loaded wins?
+What is the effect of the buddyloader on this?
+
+
+<span class="quote">&gt;3. loading classes from specific locations defined at runtime, to the exclusion
+&gt;of classes loaded from other places.</span >
+
+This should really be called 'loading classes not defined in the manifest, to
+the exclusion of classes loaded from other places.'  This is Bob's condition as
+well as the jdbc driver condition, etc.</pre>
+    </div>
+
+    <div id="c54" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c54">Comment 54</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">C. Lamont Gilbert</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=clg-business&#64;rigidsoftware.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=clg-business&#64;rigidsoftware.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-12 12:12:41 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text"><span class="quote">&gt; (In reply to <a href="show_bug.cgi?id=87775#c23">comment #23</a>)
+&gt; &gt; Could you describe scenarios where such support is needed?
+&gt; Walter has a good one, too, but my scenario is just the opposite. I need to </span >
+ship
+<span class="quote">&gt; a third party products with my own and I must be absolutely certain I am using
+&gt; my version and not some other that pops in through a plugin dependency or the
+&gt; user adds to the system.</span >
+
+This is an interesting issue.  I want what both Walter and Bob want.
+
+1. the user pick the driver to be used
+2. Eclipse guarantees to load this driver from the users picked location.
+
+Bob's Jar loader works well but it becomes a problem when you let the user pick 
+the library file.  When that happens you don't know what class names/package 
+names to filter on.
+
+
+Also one question for you Bob
+In the following code from your loader
+
+Class c = (Class) fMap.get(name);
+if (c == null) {
+   c = findClass(name);
+   if (c != null)
+      fMap.put(name, c);
+   else
+      c = super.loadClass(name);
+}
+
+if findClass fails, it throws CNFE, so whats the point of 
+'if(c != null)'
+
+And sinde you cant get c==null, there is no point in either the if statement or 
+the super.loadClass(name) statement.  If findClass fails you have appearantly 
+forgotten to include one of the jars that contain the hardcoded package names 
+in your classpath, and its an error on Bob, and not the program itself so to 
+speak.  
+
+Perhaps this if-else should really be a try-catch?</pre>
+    </div>
+
+    <div id="c55" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c55">Comment 55</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Bob Foster</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=bob&#64;objfac.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=bob&#64;objfac.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-12 12:51:57 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=87775#c54">comment #54</a>)
+<span class="quote">&gt; Perhaps this if-else should really be a try-catch?</span >
+
+Yes, you're right. Note that there is a do-nothing findClass() method.
+Originally, it was written to return null, later eviscerated and the caller was
+never changed. So as written, the enumerated packages can _only_ be loaded by
+this class loader. That's probably a better idea, anyway. If you reach down into
+a parent to get one class in a package chances are very good it will have
+dependencies that will also be resolved by the parent, causing conflicts. For
+this to work, it needs to be all-or-nothing.</pre>
+    </div>
+
+    <div id="c56" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c56">Comment 56</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">C. Lamont Gilbert</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=clg-business&#64;rigidsoftware.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=clg-business&#64;rigidsoftware.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-13 09:50:46 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Is the buddy loader meant to read its classpath from things in manifests?  Or 
+is it a class that my plugin can subclass and return?
+
+Basically, will I be able to dynamically extend the classpath at runtime using 
+the buddy loader?  Or is it only info known at build time?</pre>
+    </div>
+
+    <div id="c57" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c57">Comment 57</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pascal Rapicault</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pascal&#64;rapicorp.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pascal&#64;rapicorp.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-13 11:01:01 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The buddy mechanism has been released for M7.
+It provides a mechanism to integrate existing extensible libraries in eclipse
+with limited headaches regarding visibility among classloaders.
+
+General description
+===================
+What is an &quot;extensible library&quot;: It is a library that needs to see classes or
+resources provided by user code. It is also a library you can't change the code
+of. I you can, you should consider having a layer that uses extension and
+extension points.
+How do I know if something is an &quot;extensible library&quot;:
+- if you are the producer you should now that. A good litmus test is to check
+for the usage of Class.forName() or the context classloader
+- if you are a consumer you should check the API
+
+How does buddy loading help?
+The buddy mechanism allows a bundle to indicate that it needs assistance to load
+classes or resources when it can not find them among its prerequisites. 
+
+How does a bundle declare it needs a buddy?
+In the manifest put 
+    Eclipse-BuddyPolicy: &lt;value&gt;
+The value refers to the policy used to look for the buddy. Here are the
+supported policies:
+  - registered -  this indicates that the buddy mechanism will consult bundles
+that have been registered to it. Bundle willing to be registered to a particular
+  bundle add in their manifest: &quot;Eclipse-RegisterBuddy: &lt;bundleSymbolicName&gt;&quot;.
+  - global - this indicates that the classes/resources will be looked up in the
+global pool of exported package.
+  - dependent - this indicates that the classes/resources will be looked up
+transitively in all the dependent of the bundle
+  - app - this indicates that the app classloader will be consulted
+  - ext - this indicates that the ext classloader will be consulted
+  - boot - this indicates that the boot classloader will be consulted
+
+
+Here is an example of the problem
+=================================
+Hibernate is a library that provides Object to DB mapping facilities. Its
+implementation needs to see user classes as well as mapping files to generate
+database tables and SQL statements. Since those classes and files are domain
+specific, they are not part of Hibernate.  As such, Hibernate searches for those
+artifacts using the context classloader or reflection. This approach requires
+that all required system, user and library classes are available on the classpath.
+
+Using Hibernate in Eclipse requires:
+- Create a Hibernate plug-in 
+- Create a plug-in A that contains the domain specific code (mapping files and
+classes) and depends on the Hibernate plug-in – A can see classes from Hibernate
+but not the reverse.
+
+At runtime, Hibernate’s context classloader query for the needed classes fails
+because the default context classloader is the application classloader.  In
+Eclipse this classloader has very little interesting code.  Next Class.forName()
+is used.  However, Hibernate cannot see A’s code so this lookup also fails. 
+
+
+Solution to the problem using buddy mechanism
+=============================================
+The Hibernate code remains unchanged, however its manifest as the line:
+	&quot;Eclipse-BuddyPolicy: registered&quot;
+A’s code simply uses Hibernate’s normal API calls and does not setup the context
+classloader or any other infrastructure, it adds to its manifest
+&quot;Eclipse-RegisterBuddy: hibernate&quot;. At runtime Hibernate starts loading mapping
+files and classes by consulting the context classloader.  With the buddy
+mechanism, A's classes will be found.</pre>
+    </div>
+
+    <div id="c58" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c58">Comment 58</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pascal Rapicault</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pascal&#64;rapicorp.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pascal&#64;rapicorp.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-13 11:01:24 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Closing</pre>
+    </div>
+
+    <div id="c59" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c59">Comment 59</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">C. Lamont Gilbert</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=clg-business&#64;rigidsoftware.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=clg-business&#64;rigidsoftware.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-13 12:18:18 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">For 2 plugins.
+
+Plugin A creates classes defined by Plugin B. (through 
+Class.forName/serialization)
+Plugin B contains classes which are not 'exported', but are intended to be 
+creatable by other Plugins which are known beforehand.
+
+One current solution is for plugin B to be hidden by a Fragment C.  Fragment C 
+is dependent upon plugin B.  So when plugin A gets extended by Fragment C, 
+plugin A inherits the imports of Fragment C.  Thus plugin B gets added to 
+Plugin A's classpath.  In this case Plugin A is capable of knowing Plugin B is 
+the owner of these classes.  Eventhough it has done nothing special to gain 
+this knowledge.  Still Plugin B must export the classes in question.
+
+New solution is for Plugin A to know about Plugin B based on information 
+provided by plugin B through buddyloader architecture.  And Plugin B no longer 
+needs to export the classes in question.  But if im not mistaken, plugin A has 
+to play an active role in this by filling some buddyloader parameters.
+
+
+
+So 2 things have happened
+1. Plugin A got to know plugin B through the buddy loader
+2. Plugin A was given access to Plugin B's unexported classes through the buddy 
+loader. (subverting export mechanism?)
+
+Is the only difference, that the buddyloader exports exclusively to a 
+particular plugin as opposed to all plugins?  And that the export is runtime 
+and not compile time?
+
+Next step is to allow plugins to provide their own BuddyLoader instance?
+</pre>
+    </div>
+
+    <div id="c60" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c60">Comment 60</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Max Rydahl Andersen</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=manderse&#64;redhat.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=manderse&#64;redhat.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-13 16:40:54 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">This stuff looks really interesting.
+
+I can see how it helps frameworks like hibernate that needs to dynamically load 
+classes.
+
+But one thing I still cant see solved here (maybe it cant) is how does a plugin 
+load e.g. a not-known-at-start-time jdbc driver dynamically ?
+
+Here we still need to use a classloader right ?</pre>
+    </div>
+
+    <div id="c61" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c61">Comment 61</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Bob Foster</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=bob&#64;objfac.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=bob&#64;objfac.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-13 17:30:35 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">This is the first time that Eclipse has mucked with the contextClassLoader.
+Does/can this feature have any effect on plugins that don't signal their intent
+to use it through Eclipse-BuddyPolicy?</pre>
+    </div>
+
+    <div id="c62" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c62">Comment 62</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">C. Lamont Gilbert</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=clg-business&#64;rigidsoftware.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=clg-business&#64;rigidsoftware.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-16 09:12:33 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">To Max;  yes this should help frameworks like Hibernate.  It will certainly help
+me with JDO to a degree.  It will allow me to link at runtime to jpox.jar
+instead of at compile time.  Before the only way was a compile time linking to
+jpox.jar because the only way to get in at runtime was to be there at compile time.
+
+Nevertheless, it still requires foreknowledge of the requirement.  So to the 2nd
+part of your question, while it does not require compile time classpath linking,
+it does require build time 'eclipse linking,' for lack of a better term.
+
+Unfortunately I think m7 is the last release before 3.1, and this is only a nice
+first step...
+
+I suppose its time to open a new bug/enhancement for the dynamic portion of this
+issue?</pre>
+    </div>
+
+    <div id="c63" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c63">Comment 63</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Max Rydahl Andersen</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=manderse&#64;redhat.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=manderse&#64;redhat.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-16 09:39:36 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">So, if I get this right eclipse does now install a context classloader for the 
+first time ever....
+
+This will make some current code break out there! Especially code that deals 
+with loading classes dynamically from jdbc drivers etc.
+
+I hope that will be at least documented how vendors should deal with this 
+context classloader so they know how to safely load the classes (I guess mainly 
+by only installing classloaders that has the eclipse classloader as a parent, 
+and only do it in isolated code that will not call out to others who could think 
+of installing another classloader)
+
+
+
+</pre>
+    </div>
+
+    <div id="c64" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c64">Comment 64</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">C. Lamont Gilbert</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=clg-business&#64;rigidsoftware.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=clg-business&#64;rigidsoftware.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-16 09:59:18 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I have seen no evidence this enhancement will affect or use the
+contextClassloader!  What makes you say that?  I though this was extending the
+classpath of the PluginClassloader or is it affecting that of the parent of the
+PluginClassloader?  Is either of those the parent of the context classloader?
+
+P.S. to Max:  I think for the time being the solution proposed in <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - Support for serialization"
+   href="show_bug.cgi?id=85116">bug 85116</a> is
+more dynamic.  Is there any condition of classpath resolution of dynamically
+loaded classes that is not brought about through serialization?
+
+</pre>
+    </div>
+
+    <div id="c65" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c65">Comment 65</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Max Rydahl Andersen</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=manderse&#64;redhat.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=manderse&#64;redhat.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-16 10:07:31 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">From the patch:
+
+setContextClassLoader.invoke(Thread.currentThread(), new Object[] 
+{newContextLoader}); (if the patch is what is included in M7 they do set it)
+
+And from the description on how it would work:
+
+&quot;At runtime Hibernate starts loading mapping
+files and classes by consulting the context classloader.  With the buddy
+mechanism, A's classes will be found.&quot; (hinting to me eclipse must have 
+installed a context classloader)
+
+I haven't found any issues with how it works with the code I have written that 
+uses a programmatically-installed context classloader since I'm still at M6 for 
+the rest of my dependencies ;)
+</pre>
+    </div>
+
+    <div id="c66" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c66">Comment 66</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pascal Rapicault</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pascal&#64;rapicorp.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pascal&#64;rapicorp.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-16 14:27:55 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Eclipse and context classloader --&gt; No worry !
+
+The context classloader installed by eclipse always delegates to the context
+classloader that was installed before. Usually it is the app classloader.
+Therefore the system will behave the same if the class was in the context
+classloder. It is only if the classload fails that you will see new behavior.
+
+If you have code that sets and unsets the context classloader then you are fine.
+</pre>
+    </div>
+
+    <div id="c67" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c67">Comment 67</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">C. Lamont Gilbert</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=clg-business&#64;rigidsoftware.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=clg-business&#64;rigidsoftware.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-16 14:33:46 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I'm confused.  The buddy loader is setting the context classloader?  One already
+has to setup this loader manually. 
+
+The more important thing to do is to extend the applicaiton classloader because
+this addresses 
+
+1. new
+2. Class.forName
+3. ObjectInputStream.readObject()
+
+I want to assume that both the context loader AND the application loader must
+have been extended with the buddy loader.  And if so, I hope I can chose which
+does and does not get extended?  Pascal?</pre>
+    </div>
+
+    <div id="c68" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c68">Comment 68</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Max Rydahl Andersen</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=manderse&#64;redhat.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=manderse&#64;redhat.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-16 14:46:36 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">oh - i assumed this context classloader only were installed once (when eclipse 
+started), but your comment hint otherwise.
+
+Can you tell me when eclipse install/uninstall its context thread classloader ?
+
+</pre>
+    </div>
+
+    <div id="c69" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=87775#c69">Comment 69</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jeff McAffer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jeffmcaffer&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jeffmcaffer&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-16 23:24:08 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The solution that Pascal implemented comes in two parts, the buddy loading 
+mechanism and what we call the ContextFinder.  The buddy loading mechanism 
+bascially allows bundled code that uses Class.forName() loading to expand its 
+horizons.  As observed, there are some patterns that it does not address.  
+Those are on the list for 3.2.
+
+The ContextFinder is a psuedo-classloader that gets installed as the context 
+classloader once, when Eclipse first starts.  It is intended to work roughly as 
+follows:
+
+1) delegate to the original context classloader from the time that the finder 
+was initialized
+2) search down the current call stack to find a classloader that can give 
+context to the operation (thus the name)
+3) delegate to that classloader
+
+Typically the discovered context is the plugin that initiated the context 
+classload operation.  The net effect of this is, *very* roughly speaking, to 
+convert a context classloader use to a Class.forName() style lookup.  
+
+In combination with the buddy classloading mechanism, you get some interesting 
+behaviors.
+
+As for interactions between this use of context classloading and other uses, if 
+a piece of code has a context that is useful for loading classes, it can supply 
+it by setting the context classloader and loading classes.  Inherent in this is 
+the assumptoin that the context supplied is powerful enough to find the desired 
+classes.  That code has the option of delegating to the original parent (as we 
+do) or going it on their own.  
+
+In short, the code either works today or it doesn't.  The ContextFinder does 
+not change this for the worse and may improve things if delegation is done.
+</pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=87775">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=87775">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=87775">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=87775&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=87775" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>

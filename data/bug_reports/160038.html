@@ -1,0 +1,3086 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>160038 &ndash; [debug view] Multi-threaded app support</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "160038 – [debug view] Multi-threaded app support",
+                             "show_bug.cgi?id=160038" );
+        document.title = "160038 – [debug view] Multi-threaded app support";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "160038 – [debug view] Multi-threaded app support", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_CLOSED
+                 bz_product_CDT
+                 bz_component_cdt-debug-dsf-gdb
+                 bz_bug_160038 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;160038</span>
+
+        <span id="subtitle" class="subheader">[debug view] Multi-threaded app support</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2009-01-07 17:16:55 EST</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=160038&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=160038" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2009-01-07 17:16:55">
+  <input type="hidden" name="id" value="160038">
+  <input type="hidden" name="token" value="1629861143-DDrWE1jy4mSJhZDXgj-28_s1XYkrHPT-mQwesDXt7IE">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=160038"><b>Bug&nbsp;160038</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">[debug view] Multi-threaded app support</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span>[debug view] Multi-threaded app support
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      '[debug view] Multi-threaded app support' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">CLOSED
+          FIXED
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >CDT
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >Tools
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=CDT"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >cdt-debug-dsf-gdb
+
+  (<a href="buglist.cgi?component=cdt-debug-dsf-gdb&amp;product=CDT&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>0 DD 1.0 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">PC
+        All
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P3
+       enhancement<span id="votes_container">
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=160038#vote_160038">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>DD 1.0 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">Francois Chouinard</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=fchouinard&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=fchouinard&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard">
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'cdt-debug-dsf-gdb-inbox\x40eclipse.org',
+        'jonah\x40kichwacoders.com');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >contributed
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+<a class="bz_bug_link 
+          bz_status_CLOSED  bz_closed"
+   title="CLOSED FIXED - [commands] Extends command cache to support multiple contexts."
+   href="show_bug.cgi?id=200614">200614</a> <a class="bz_bug_link 
+          bz_status_CLOSED  bz_closed"
+   title="CLOSED FIXED - [debug view] Add thread started/exited detection for GDB."
+   href="show_bug.cgi?id=200615">200615</a> 
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+<a class="bz_bug_link 
+          bz_status_CLOSED  bz_closed"
+   title="CLOSED FIXED - Implementation of debugger services connecting to GDB back end."
+   href="show_bug.cgi?id=187863">187863</a> 
+  </td>
+  </tr>
+
+    <tr>
+      <th>&nbsp;</th>
+
+      <td id="show_dependency_tree_or_graph">
+        Show dependency <a href="showdependencytree.cgi?id=160038&amp;hide_resolved=1">tree</a>
+
+      </td>
+    </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2006-10-06 11:15 EDT by <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2009-01-07 17:16 EST
+      (<a href="show_activity.cgi?id=160038">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>2 
+          users
+          <span id="cc_edit_area_showhide_container" class="bz_default_hidden">
+            (<a href="#" id="cc_edit_area_showhide">show</a>)
+          </span>
+        <div id="cc_edit_area">
+          <br>
+            <select id="cc" multiple="multiple" size="5" >
+                <option value="dd.general-inbox">dd.general-inbox</option>
+                <option value="veenu.verma">veenu.verma</option>
+            </select>
+        </div>
+          <script type="text/javascript">
+            hideEditableField( 'cc_edit_area_showhide_container', 
+                               'cc_edit_area', 
+                               'cc_edit_area_showhide', 
+                               '', 
+                               '');  
+          </script>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" >
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+      <tr id="a1" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=73200"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">First draft Functionality</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (52.29 KB,
+                patch)
+
+            <br>
+            <a href="#attach_73200"
+               title="Go to the comment associated with the attachment">2007-07-06 10:23 EDT</a>,
+
+            <span class="vcard"><span class="fn">Veenu Khanna</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veenu_khanna&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veenu_khanna&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=73200&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=73200&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a2" class="bz_contenttype_text_plain bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=73230"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">INativeProcess interface with suggested changes.</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (4.16 KB,
+                text/plain)
+
+            <br>
+            <a href="#attach_73230"
+               title="Go to the comment associated with the attachment">2007-07-06 20:08 EDT</a>,
+
+            <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=73230&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a3" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=73496"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Patch with the modified run control container events.</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (78.40 KB,
+                patch)
+
+            <br>
+            <a href="#attach_73496"
+               title="Go to the comment associated with the attachment">2007-07-10 19:55 EDT</a>,
+
+            <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=73496&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=73496&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a4" class="bz_contenttype_text_x-patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=73783"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Patch for correctly processing accumulated OOB records.</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (15.41 KB,
+                text/x-patch)
+
+            <br>
+            <a href="#attach_73783"
+               title="Go to the comment associated with the attachment">2007-07-13 19:04 EDT</a>,
+
+            <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=73783&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a5" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=73787"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Patch containing fixed event handling for ThreadLayoutNode</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (93.02 KB,
+                patch)
+
+            <br>
+            <a href="#attach_73787"
+               title="Go to the comment associated with the attachment">2007-07-13 23:16 EDT</a>,
+
+            <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=73787&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=73787&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a6" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=74251"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Handling of multiple threads (+committed,+logged)</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (99.97 KB,
+                patch)
+
+            <br>
+            <a href="#attach_74251"
+               title="Go to the comment associated with the attachment">2007-07-20 07:17 EDT</a>,
+
+            <span class="vcard"><span class="fn">Veenu Khanna</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veenu_khanna&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veenu_khanna&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+                  <span title="Pawel Piech">pawel.1.piech</span>:
+                iplog+
+                <br>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=74251&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=74251&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a7" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=74565"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Event Handling in MIRunControl</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (17.75 KB,
+                patch)
+
+            <br>
+            <a href="#attach_74565"
+               title="Go to the comment associated with the attachment">2007-07-25 10:15 EDT</a>,
+
+            <span class="vcard"><span class="fn">Veenu Khanna</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veenu_khanna&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veenu_khanna&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=74565&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=74565&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a8" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=74634"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Additional edits for event handling in MIRunControl</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (30.67 KB,
+                patch)
+
+            <br>
+            <a href="#attach_74634"
+               title="Go to the comment associated with the attachment">2007-07-25 18:18 EDT</a>,
+
+            <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=74634&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=74634&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a9" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=74701"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Thread exit event handling (+committed, +logged).</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (33.83 KB,
+                patch)
+
+            <br>
+            <a href="#attach_74701"
+               title="Go to the comment associated with the attachment">2007-07-26 11:23 EDT</a>,
+
+            <span class="vcard"><span class="fn">Veenu Khanna</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veenu_khanna&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veenu_khanna&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+                  <span title="Pawel Piech">pawel.1.piech</span>:
+                iplog+
+                <br>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=74701&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=74701&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a10" class="bz_contenttype_text_x-java bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=76222"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">ContainerLayoutNode.java changed</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (7.04 KB,
+                text/x-java)
+
+            <br>
+            <a href="#attach_76222"
+               title="Go to the comment associated with the attachment">2007-08-16 09:45 EDT</a>,
+
+            <span class="vcard"><span class="fn">Veenu Khanna</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veenu_khanna&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veenu_khanna&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=76222&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a11" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=76229"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">RunUntil and Execution Context awareness</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (45.78 KB,
+                patch)
+
+            <br>
+            <a href="#attach_76229"
+               title="Go to the comment associated with the attachment">2007-08-16 11:41 EDT</a>,
+
+            <span class="vcard"><span class="fn">Veenu Khanna</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veenu_khanna&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veenu_khanna&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=76229&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=76229&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a12" class="bz_contenttype_text_x-java">
+        <td>
+            <a href="attachment.cgi?id=76248"
+               title="View the content of the attachment">
+          <b>Updated ContainerLayoutNode.java</b></a>
+
+          <span class="bz_attach_extra_info">
+              (4.97 KB,
+                text/x-java)
+
+            <br>
+            <a href="#attach_76248"
+               title="Go to the comment associated with the attachment">2007-08-16 14:31 EDT</a>,
+
+            <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=76248&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a13" class="bz_contenttype_text_plain">
+        <td>
+            <a href="attachment.cgi?id=76307"
+               title="View the content of the attachment">
+          <b>Source program for multi threaded gdb application</b></a>
+
+          <span class="bz_attach_extra_info">
+              (578 bytes,
+                text/plain)
+
+            <br>
+            <a href="#attach_76307"
+               title="Go to the comment associated with the attachment">2007-08-17 10:42 EDT</a>,
+
+            <span class="vcard"><span class="fn">Veenu Khanna</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veenu_khanna&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veenu_khanna&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=76307&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a14" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=76645"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Thread exit event handling for GDB</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (80.89 KB,
+                patch)
+
+            <br>
+            <a href="#attach_76645"
+               title="Go to the comment associated with the attachment">2007-08-22 08:41 EDT</a>,
+
+            <span class="vcard"><span class="fn">Veenu Khanna</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veenu_khanna&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veenu_khanna&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=76645&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=76645&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a15" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=76769"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Update on previous one (+committed, +logged)</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (86.18 KB,
+                patch)
+
+            <br>
+            <a href="#attach_76769"
+               title="Go to the comment associated with the attachment">2007-08-23 10:13 EDT</a>,
+
+            <span class="vcard"><span class="fn">Veenu Khanna</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veenu_khanna&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veenu_khanna&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+                  <span title="Pawel Piech">pawel.1.piech</span>:
+                iplog+
+                <br>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=76769&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=76769&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a16" class="bz_contenttype_application_msword">
+        <td>
+            <a href="attachment.cgi?id=76923"
+               title="View the content of the attachment">
+          <b>Relationship between contexts</b></a>
+
+          <span class="bz_attach_extra_info">
+              (27.50 KB,
+                application/msword)
+
+            <br>
+            <a href="#attach_76923"
+               title="Go to the comment associated with the attachment">2007-08-24 12:26 EDT</a>,
+
+            <span class="vcard"><span class="fn">Veenu Khanna</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veenu_khanna&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veenu_khanna&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=76923&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a17" class="bz_contenttype_application_x-dia-diagram">
+        <td>
+            <a href="attachment.cgi?id=76933"
+               title="View the content of the attachment">
+          <b>DMCs diagram using DIA</b></a>
+
+          <span class="bz_attach_extra_info">
+              (1.90 KB,
+                application/x-dia-diagram)
+
+            <br>
+            <a href="#attach_76933"
+               title="Go to the comment associated with the attachment">2007-08-24 13:33 EDT</a>,
+
+            <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=76933&amp;action=edit">Details</a>
+        </td>
+      </tr>
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <span class="bz_attach_view_hide">
+            <a href="#a0" onclick="return toggle_display(this);">Show
+              Obsolete</a> (13)
+            <a id="view_all" href="attachment.cgi?bugid=160038&amp;action=viewall&amp;hide_obsolete=1">View All</a>
+        </span>
+        <a href="attachment.cgi?bugid=160038&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=160038&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-10-06 11:15:57 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Support for multi-threaded processes.  This work will require a lot of new code in the various services which currently assume only one thread.
+
+Effort Estimate: 12, 10</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Veenu Khanna</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veenu_khanna&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veenu_khanna&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-06 10:23:36 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=73200&amp;action=diff" name="attach_73200" title="First draft Functionality">attachment 73200</a> <a href="attachment.cgi?id=73200&amp;action=edit" title="First draft Functionality">[details]</a></span>
+First draft Functionality
+
+Hi Pawel 
+This is an initial patch for the service. Its incomplete and tries to achieve the following though not everything is achieved yet. Doesnt let you step-in properly at the moment
+
+1. Fetch thread ids using -thread-list-ids command. 
+
+2. Created ContainerLayoutNode.java and updated LaunchViewModelProvider.java to show the hierarchy launch-&gt; process -&gt; threads -&gt; Stack Frames in the debug view
+I know you had to create the node but I had some time and I wanted to see it in action, so did it myself but its incomplete. You are welcome to change it in any way u like. 
+
+3. -thread-select 
+Implemented in AbstractMIControl.java
+Also, getFrames() method in MIStack and DsfMIStackListFrames has been changed to accept IExecutionDMC as a parameter which will be needed to select the thread ID. 
+But there is a problem in finding the right IExecutionDMC while stepping etc because DMContexts.getAncestorOfType returns ServiceDMCs(IConatinerDMContext) as its the first ExecutionDMC found.
+
+4. GDBThreadDMC and GDBThreadData is added to GDBProcesses.java 
+getModelData() has been changed appropriately. 
+getThreadData() mehtod is still incomplete. Probably we will have to use CLI command &quot;info threads&quot; to fetch the information in this method. 
+getProcessData() - Do we have a command to fetch this information in case of GDB or the present implementation is good enuff. 
+
+MIRunControl.java
+Please check the initialization of container DMC. 
+Also, What would the execution DMC be ? 
+Im still confused regarding ExecutionDMC like for the following method
+    public void eventDispatched(DsfMIGDBExitEvent e) {
+        if (fTerminated) return;
+          getSession().dispatchEvent(new ExitedEvent(fServiceDmc, e, fExecutionDmc), getProperties());
+   }
+If fServiceDmc is the container DMC(ServiceDMC defined in MIRunControl class) then what would fExecutionDMC be ? Isnt ExecutionDMC a ContainerDMC for us.
+Or its something different and if its diff then what would it be ? 
+  
+Also, I have inserted some TODO: VK: in all the classes where I have done some minor changes. It will give u an idea about the changes made. Some of the TODOs are questions for you.
+
+Classes Changed: 
+INativeProcesses.java-  I have changed this interface. May be its not needed but I didnt know other way to achieve it.
+DsfMICommand - A constructor is added. Not a major change
+MIStack.java - getFrames changed so that it can use IExecutionDMC 
+AbstractMIControl.java - For thread-select
+DsfMIStackListFrames.java - To take executionDMC as parameter in constructor
+LaunchViewModelProvider.java - To add the container node in hierarchy
+ThreadLayoutNode.java - updateElementsInthreads changed to fetch thread ids from back end
+MIRunControl.java - IContainerContext concept is added and back end implementation of -thread-list-ids command
+GDBProcesses.java - getModelData() changed to fetch data according to the executionContext. getThreads() method added but still incomplete.
+New Classes Added:
+DsfCLIInfoThreads.java
+DsfMIThreadListIds.java
+DsfMIThreadSelect.java
+DsfCLIThreadsInfo.java
+DsfMIThreadListIdsInfo.java
+ContainerLayoutNode.java
+
+Veenu</pre>
+    </div>
+
+    <div id="c2" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c2">Comment 2</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-06 20:05:20 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Thank you for the patch, it looks like a very promising start.  This is a pretty large work item and it'll definitely take some time.
+
+I spent a couple of hours looking through the changes and I didn't see any major issues...  it looks to be on the right track :-)  I made some changes in the INativeProcesses interface to clarify it a bit and make it more extensible I'll attach it for you to look at).
+
+As far as your questions:
+
+ContainerDMC should have its own class (i.e. ServiceDMC should probably be renamed to something like MIContainerDMC).  
+The purpose of the container DMC is to have a context that represents the threads as a collection.  Some run control operations such as resume, suspend, and even step, may be executed on all the threads at the same time, and the container context provides a way to do that.  It is also useful in generating events (next comment).  In the default MI implementation, where the debugger is attached to a single process, the container represents the process and I think it makes sense to have this be an explicit object that is separate from the service DMC. 
+As far as events go.  The events about thread list changes (thread added, thread exited) are generated against the container.  This allows the view clients to update information about threads more efficiently.  However, in our model, the container is also an execution context, so if a container exits, I needed another container to generate the event on.  That's why I used the service DMC as the container.  I don't think it's a good solution and we need to think of something better.  Perhaps we could discuss this on Tuesday.
+
+I'm out of time today, but I have one more note: the change in AbstractDMContext should not be necessary.  If getServiceFilter() returns null, it's a bug.
+ 
+</pre>
+    </div>
+
+    <div id="c3" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c3">Comment 3</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-06 20:08:17 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=73230" name="attach_73230" title="INativeProcess interface with suggested changes.">attachment 73230</a> <a href="attachment.cgi?id=73230&amp;action=edit" title="INativeProcess interface with suggested changes.">[details]</a></span>
+INativeProcess interface with suggested changes.</pre>
+    </div>
+
+    <div id="c4" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c4">Comment 4</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-10 19:53:59 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Hi Veenu,
+I've spent a few hours looking at this patch today.  The error in the getFrames() was coming from the fact that the events were being generated on the container context, but were being treated by the threads and stack frame layout nodes, like they were on an execution context.
+
+I started rewriting the event handling so that it includes awarness of container events.  I think the changes are complete, but I didn't have time to debug it so when I started running I got some exceptions and the debug view didn't update on step.
+
+I also tried to deal with the service context being a container problem.  I ended up moving the exited event for the process out of the run control service and into the GdbProcesses service, and I got around this problem that way.  Now the GdbProcesses (INativeProcesses) will handle the process lifecycle events, and the run control service will only deal with life cycle events of threads.
+
+I'll attach the patch with my changes.</pre>
+    </div>
+
+    <div id="c5" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c5">Comment 5</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-10 19:55:08 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=73496&amp;action=diff" name="attach_73496" title="Patch with the modified run control container events.">attachment 73496</a> <a href="attachment.cgi?id=73496&amp;action=edit" title="Patch with the modified run control container events.">[details]</a></span>
+Patch with the modified run control container events.</pre>
+    </div>
+
+    <div id="c6" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c6">Comment 6</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Veenu Khanna</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veenu_khanna&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veenu_khanna&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-11 11:55:35 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Hi Pawel,
+Thanx for the patch. I just applied it and tested it a bit. 
+Still I see the problem that we saw tomorrow. When getFrames() is called on a stack frame selection, There are 3 container segments. 
+
+
+Another question - Since you have tackled the problem of ServiceContext, Can I get rid of ServiceDMC in MIRunControl and use the geenric ServiceDMContext instead ? 
+
+Also, while going through the changes I saw that you have defined
+     public static class ContainerSuspendedEvent extends ....
+        implements IRunControl.ISuspendedDMEvent
+Why is it implementing ISuspendedEvent and not IContainerSuspendedEvent ? 
+
+
+Thanx 
+Veenu
+
+
+
+
+
+
+</pre>
+    </div>
+
+    <div id="c7" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c7">Comment 7</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-11 12:08:24 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Yes, you should get rid of the custom ServiceDMC.
+
+I also saw the bad call to getFrames() as well as an exception (trace below), both of which happen during event processing.  I started looking at it, but I ran out of time, and unfortunately I won't be able to look at it probably until Friday.
+
+Uncaught exception in session executor thread: java.lang.IllegalStateException: RequestMonitor: RequestMonitor: Status OK: org.eclipse.core.runtime code=0 OK null, done() method called more than once
+	at org.eclipse.dd.dsf.concurrent.RequestMonitor.done(RequestMonitor.java:142)
+	at org.eclipse.dd.dsf.ui.viewmodel.AbstractVMLayoutNode$2$1.handleCompleted(AbstractVMLayoutNode.java:218)
+	at org.eclipse.dd.dsf.concurrent.RequestMonitor$1.run(RequestMonitor.java:148)
+	at org.eclipse.dd.dsf.concurrent.DefaultDsfExecutor$TracingWrapperRunnable.run(DefaultDsfExecutor.java:219)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:417)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:269)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:123)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$301(ScheduledThreadPoolExecutor.java:65)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:168)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:650)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:675)
+	at java.lang.Thread.run(Thread.java:595)
+
+
+You are correct, the ContainerSuspendedEvent should implement IContainerSuspendedDMEvent, it was my omission.  This may also help with the event processing.
+
+P.S. To see exceptions that happen in the dispatch thread, enable tracing in the java VM with the -ea option.</pre>
+    </div>
+
+    <div id="c8" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c8">Comment 8</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Veenu Khanna</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veenu_khanna&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veenu_khanna&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-13 12:14:47 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Hi Pawel,
+I tried a bit to locate the problem but not much progress. I think this needs to be sorted out before I can proceed further as I think now all the problems are related to having correct execution context. 
+I also looked into problem of parsing output from command &quot;info threads&quot;. This command is special as it has information spread out in 4 lines
+ &amp;&quot;info threads\n&quot;
+ ~&quot;* 1 Thread 1075198176 (LWP 11068)  main (argc=1, argv=0xbfffd824)\n&quot;
+ ~&quot;    at ../thread.c:18\n&quot;
+ ^done
+All these lines are OOBs which are processed as events except the last one which is a ResultRecord. 
+Looking at DsfMIOutput it gives the impression that output shall either contain a result record or an OOB. It cant be both as single line can either be a RR or an OOB. (If this impression is not right then probably the implementation of processMIOutput needs to be re-looked at.)
+Thus in cases where output is spanning multiple lines I guess we need to find another way of processing the output stream or change in GDB ? 
+Any ideas ?
+
+/ Veenu
+
+</pre>
+    </div>
+
+    <div id="c9" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c9">Comment 9</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-13 19:04:12 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=73783" name="attach_73783" title="Patch for correctly processing accumulated OOB records.">attachment 73783</a> <a href="attachment.cgi?id=73783&amp;action=edit" title="Patch for correctly processing accumulated OOB records.">[details]</a></span>
+Patch for correctly processing accumulated OOB records.
+
+I looked into the problem of OOB records, and I discovered that I did not port this functionality from CDI-MI implementation correctly.  The CDI-MI implementation contains some duplicate logic in this area which confused me at the time.  I'm attaching the patch that fixes the processing of accumulated OOB records.</pre>
+    </div>
+
+    <div id="c10" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c10">Comment 10</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-13 23:16:13 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=73787&amp;action=diff" name="attach_73787" title="Patch containing fixed event handling for ThreadLayoutNode">attachment 73787</a> <a href="attachment.cgi?id=73787&amp;action=edit" title="Patch containing fixed event handling for ThreadLayoutNode">[details]</a></span>
+Patch containing fixed event handling for ThreadLayoutNode
+
+I did some debugging of the event code, and made a couple of changes:
+1) I fixed how the DM Contexts relate to each other: MIContainerDMC has the service DMC as a parent, MIExecutionDMC has the container DMC as a parent.  The MIEexutionDMC does not need to have the service DMC, because it refers to it through the container DMC already.
+2) The ThreadsLayoutNode needs to do some special handling of the container events.  The main problem is that the IConatinerDMContext extends IExecutionDMContext and this is confusing the view model event handling logic, which is implemented in the base class AbstractDMVMLayoutNode.  I fixed the problem in ThreadsLayoutNode, but it shows the weakness in the current design where container DMC extends the exec DMC.  Also the changes made stepping really slow which needs to be investigated also.</pre>
+    </div>
+
+    <div id="c11" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c11">Comment 11</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Veenu Khanna</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veenu_khanna&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veenu_khanna&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-20 07:17:25 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=74251&amp;action=diff" name="attach_74251" title="Handling of multiple threads (+committed,+logged)">attachment 74251</a> <a href="attachment.cgi?id=74251&amp;action=edit" title="Handling of multiple threads (+committed,+logged)">[details]</a></span>
+Handling of multiple threads (+committed,+logged)
+
+This patch implements 
+* container layout node
+* Retrieve list of threads and information of threads from back end
+* Multiple threads in view
+* Selection of thread
+* Stack frames corresponding to the selected thread</pre>
+    </div>
+
+    <div id="c12" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c12">Comment 12</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-20 18:42:51 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Comment on <span class="bz_obsolete"><a href="attachment.cgi?id=74251&amp;action=diff" name="attach_74251" title="Handling of multiple threads (+committed,+logged)">attachment 74251</a> <a href="attachment.cgi?id=74251&amp;action=edit" title="Handling of multiple threads (+committed,+logged)">[details]</a></span>
+Handling of multiple threads (+committed,+logged)
+
+Hi Veenu,
+I committed your last patch.  The only change I made was remove the check for null IDMContext.getServiceFilter().  If there is a null service filter, it is a bug.
+
+The new issue that I saw, was the fact that the CLI console output prints a &quot;info threads&quot; with every step.  This message should be suppressed.</pre>
+    </div>
+
+    <div id="c13" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c13">Comment 13</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Veenu Khanna</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veenu_khanna&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veenu_khanna&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-25 10:15:25 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=74565&amp;action=diff" name="attach_74565" title="Event Handling in MIRunControl">attachment 74565</a> <a href="attachment.cgi?id=74565&amp;action=edit" title="Event Handling in MIRunControl">[details]</a></span>
+Event Handling in MIRunControl
+
+Hi Pawel,
+This patch does the following
+* Suppressed &quot;info threads&quot;
+* Reason for state is displayed on thread label. 
+* Handles DsfMIThreadCreatedEvent - At the moment its clearing the cache. Later when Cache is more smarter then we can probably remove few affected commands from the cache instead of clearing whole cache
+* DsfMIThreadExitEvent - I have implemented the skeleton in MIRunControl for it.
+Firing the event is yet to be done 
+Actually I could not figure out how does one know if a thread has exited. Couldn't find anything in GDB manual and  looked into CDT where it keeps track of new and old threads and fire exit events based on that. And this is done on every suspend.
+
+Or another idea I had was to track OOB event 
+~&quot;[Switching to Thread 1079401392 (LWP 10630)]\n&quot;
+A switch will surely take place on thread exit. So we can compare the old and new list only on switch and not on every suspend. 
+
+Do you have a better strategy for this ? 
+Veenu</pre>
+    </div>
+
+    <div id="c14" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c14">Comment 14</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-25 18:18:40 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=74634&amp;action=diff" name="attach_74634" title="Additional edits for event handling in MIRunControl">attachment 74634</a> <a href="attachment.cgi?id=74634&amp;action=edit" title="Additional edits for event handling in MIRunControl">[details]</a></span>
+Additional edits for event handling in MIRunControl
+
+Hi Veenu,
+I've reviewed the patch, and I have some notes plus a new version of the patch.  Although I didn't have time to test the patch too much.
+
+1) DsfMIThreadCreatedEvent
+The generating of DsfMIThreadCreatedEvent should be done inside GDBEventProcessor, since the implementation involves parsing GDB specific console stream output.  This is also where you could put in generating of the exited event.  Unfortunately, I don't have any better suggestions for detecting when a thread is exited.  So until GDB itself is changed to add support for these events, we'll have to live with hacks.
+
+2) For filtering the &quot;threads info&quot; echo from the CLI console, I added a generic mechanism.  When I first implemented CLIProcess I thought I took care of this problem, but it turned out that I missed the log output.  The generic mechanism mimics in a way what CDI-MI implementation does.
+
+3) It's nice to see the state change reason from the event, but I wonder why you have the setting of state change reason in handling of the CommandResumedEvent.
+
+4) I wonder why get rid of the cache reset call in public void eventDispatched(ContainerSuspendedEvent e)?  This seems to be causing some update issues for me.
+
+5) I think I got a little carried away with the event changes, but I wanted to save you time guessing and once I started making the changes it was hard to find a stopping point....
+I added tracking of the triggering context along with fStateChangeReason, so that we could report a correct state change reason to each thread.  I also added the triggering context to the resumed event, because I think it makes sense there also.  The thread-id for the resumed event comes from the context that was used to issue the command.</pre>
+    </div>
+
+    <div id="c15" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c15">Comment 15</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Veenu Khanna</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veenu_khanna&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veenu_khanna&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-26 07:53:17 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Hi Pawel,
+Thanx for the comments and changes. I welcome you going over board with the changes :)
+About ur comments
+1) Agreed. 
+2) Ya I thought that there should be a better way of doing this. I saw the way u have done. Its perfect.
+3) StateChangeReason in ContainerResumedEvent shd have been commented. It wasn't intended to be there.
+4) About clearing cache during each suspend - MY thinking ... Clearing cache during every suspend is an overhead especially when one STEPS. May be we can discuss this in our next meeting. For the time being I can keep it as I too have seen some update problems.
+5) Thanx a lot. I don't mind it.
+
+Veenu
+ </pre>
+    </div>
+
+    <div id="c16" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c16">Comment 16</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Veenu Khanna</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veenu_khanna&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veenu_khanna&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-26 11:23:19 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=74701&amp;action=diff" name="attach_74701" title="Thread exit event handling (+committed, +logged).">attachment 74701</a> <a href="attachment.cgi?id=74701&amp;action=edit" title="Thread exit event handling (+committed, +logged).">[details]</a></span>
+Thread exit event handling (+committed, +logged).
+
+Hi Pawel, 
+There is an event generated by GDB when thread exits. I was wrong there. So there is no need of hacks :)
+* Have implemented Exit event for threads - only clearing cache when thread exits
+* Removed all the un-wanted code from MIEventProcessor and CLIprocess
+* Also there was a NumberFormat bug. I have corrected it in DsfCLIThreadsInfo.
+
+I have tested your and my changes and it's running fine now. If you feel confident enuf then you can commit the patch.
+
+Veenu</pre>
+    </div>
+
+    <div id="c17" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c17">Comment 17</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-27 14:24:37 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Comment on <span class="bz_obsolete"><a href="attachment.cgi?id=74701&amp;action=diff" name="attach_74701" title="Thread exit event handling (+committed, +logged).">attachment 74701</a> <a href="attachment.cgi?id=74701&amp;action=edit" title="Thread exit event handling (+committed, +logged).">[details]</a></span>
+Thread exit event handling (+committed, +logged).
+
+Looks good to me :-)
+I applied the patch as is.</pre>
+    </div>
+
+    <div id="c18" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c18">Comment 18</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-27 14:27:32 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=160038#c14">comment #14</a>)
+<span class="quote">&gt; 3) It's nice to see the state change reason from the event, but I wonder why
+&gt; you have the setting of state change reason in handling of the
+&gt; CommandResumedEvent.</span >
+
+That's funny, this is actually opposite of what I was trying to say.  I DO think it makes sense to report state change reason for why a thread/process is running.  What do you think?</pre>
+    </div>
+
+    <div id="c19" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c19">Comment 19</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Veenu Khanna</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veenu_khanna&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veenu_khanna&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-31 07:49:27 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=160038#c18">comment #18</a>)
+Okie. I read CommandResumedEvent as ContainerResumedEvent. 
+
+Yes it makes sense to me too. I had put it in the beginning, then removed it coz i couldn't see any reason in CDT. 
+Anyways, I have un-commented in ContainerResumedEVent but I am unable to locate the &quot;CommandResumedEvent&quot;. 
+
+Veenu
+
+</pre>
+    </div>
+
+    <div id="c20" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c20">Comment 20</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-08-09 13:19:12 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">That was one poorly written note.  CommandResumeEvent was a typo it was supposed to be ContainerResumedEvent.
+</pre>
+    </div>
+
+    <div id="c21" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c21">Comment 21</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Veenu Khanna</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veenu_khanna&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veenu_khanna&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-08-16 09:45:39 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=76222" name="attach_76222" title="ContainerLayoutNode.java changed">attachment 76222</a> <a href="attachment.cgi?id=76222&amp;action=edit" title="ContainerLayoutNode.java changed">[details]</a></span>
+ContainerLayoutNode.java changed
+
+Hi Pawel,
+Problem that I saw  - when there are multiple threads say thread with ids 1,2,3,4 and any thread except the last one exits say 3, elements are updated for the container but labels are not updated. Though thread 3 has exited but the debug view will show 2,3 &amp; 4. Hence, no of elements are updated but the label's are not updated.
+
+updateLabelsInSessionThread is called only once. It should be called for all the threads in a container which according to me means buildDeltaForDMEvent(..) in case of ContainerLayoutNode should mark Container as changed (ie CONTENT) for ContainerSuspendEvent and ContainerResumeEvent.
+I have overridden the method and it seems to work fine. Please review the method and let me know if it's the right way or not. May be I haven't understood the concept completely.
+
+I also saw error &quot;mi_cmd_var_create&quot; from GDB in case of varibale creation. Don't know whether we can do something about it ? 
+Also, When program is running the debug buttons like step-in, step-over etc are not disabled. 
+
+Veenu
+Veenu</pre>
+    </div>
+
+    <div id="c22" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c22">Comment 22</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Veenu Khanna</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veenu_khanna&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veenu_khanna&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-08-16 11:41:18 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=76229&amp;action=diff" name="attach_76229" title="RunUntil and Execution Context awareness">attachment 76229</a> <a href="attachment.cgi?id=76229&amp;action=edit" title="RunUntil and Execution Context awareness">[details]</a></span>
+RunUntil and Execution Context awareness
+
+Hi Pawel,
+This patch contains the following.
+-&gt; Frame Context and Execution Context awareness in various command classes and Services. Have also modified the hierarchy in ExpressionService.java. Please check.
+-&gt; MIRunControl : runUntil implemented for Junit for the time being. We can discuss it's extensibility later.
+-&gt; MICommandCache - Modified to cache commands corresponding to multiple execution contexts. Those commands that do not have an execution context id will be stored against id = -1.
+
+Note:
+DsfMIExecRun is used from LaunchSequence.java where we don't have an execution dmc. For the time being I haven't removed the constructor DsfMIExecRun(String[]) 
+
+Changes in ContainerLayoutNode.java are not included. I will send another patch after your feedback.
+
+Veenu</pre>
+    </div>
+
+    <div id="c23" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c23">Comment 23</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-08-16 14:14:21 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=160038#c22">comment #22</a>)
+
+Hi Veenu, thank you for the quick patch.  Before I apply it, I have a couple of questions:
+
+- The variable commands -var-create -var-update, etc, all take IFrameDMContext as an argument.  This may be too restrictive as some expressions may not require a stack frame or even thread context for evaluation, (i.e. arithmetic expressions, functions, and global variables).  From the user's point of view, this means that the expressions in the expressions view should attempt to evaluate even if the user has the thread or container selected in debug view.  Thus I would expect three types of constructors in these commands:
+ 1. one that takes the MIContainerDMC,
+ 2. one that takes the MIThreadDMC
+ 3. one that takes MIFrameDMC.
+I would use the MI* types rather than the pure interfaces of these DMC, because at this level we can assume that the services are MI-implementation based, and the AbstractMIControl requires these types in order to generate the proper -thread-select and -stack-frame-select.
+
+- The methods in the ExpressionService need to handle the error condition where the required DMC is not found in the parameter context.  In those cases, the service should create an error status with code IDsfService.INVALID_HANDLE and return it to the client.
+
+- The MIRunControl.getExecutionContexts() has a bug in that if the RequestMonitor.setData is never called then an error should be set with setStatus().  In this case, an error status with IDsfService.INVALID_HANDLE would be appropriate.
+
+- I assume that the commented out code eventDispatched() handlers for Started/Exited events will get cleaned up.
+
+- I was hoping that MICommandCache could remain generic and be moved to the org.eclipse.dd.dsf.debug.service.command package.  This way it could be a powerful building block for non-MI based debugger back ends.  To this end I would like to see if it is possible to avoid references to the MI-specific stuff.  What I thought would make sense is to key the separate caches (in fCachedResults) using the DMC's themselves.  DMC's are light weight immutable handles and are appropriate to use as keys.  
+The tricky part comes when figuring out which caches should be cleared.  For this, I think we could use the hierarchical nature of DMCs, so that a method for resetting a cache for a given context would look like this:
+
+/**
+ * Clears the cache entries for given context.  Clears the whole cache if 
+ * context parameter is null.
+ */
+    private Map&lt;IDMContext&lt;?&gt;, HashMap&lt;CommandInfo, ICommandResult&gt;&gt; fCachedContexts = new HashMap&lt;IDMContext&lt;?&gt;, HashMap&lt;CommandInfo, ICommandResult&gt;&gt;();
+
+public void CommandCache.reset(IDMContext&lt;?&gt; dmc) {
+    if (dmc == null) {
+        fCachedContexts.clear();
+    }
+
+    for (Iterator&lt;IDMContext&lt;?&gt;&gt; itr = fCachedContexts.keySet().iterator(); dmcKeyItr.hasNext();) {
+        IDMContext&lt;?&gt; keyDmc = itr.next();
+        if (keyDmc != null &amp;&amp; DMContexts.isAncestorOf(keyDmc, contextToReset) {
+           itr.remove();
+        }
+    }
+}
+
+
+I'm also not sure if it would make sense to require that all MI commands have an IDMContext parameter (it could default to MIContainerDMC).  That way the above code wouldn't have to guard against the null values.
+</pre>
+    </div>
+
+    <div id="c24" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c24">Comment 24</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-08-16 14:31:48 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=76248" name="attach_76248" title="Updated ContainerLayoutNode.java">attachment 76248</a> <a href="attachment.cgi?id=76248&amp;action=edit" title="Updated ContainerLayoutNode.java">[details]</a></span>
+Updated ContainerLayoutNode.java
+
+(In reply to <a href="show_bug.cgi?id=160038#c21">comment #21</a>)
+The ContainerLayoutNode event processing can be quite a bit simpler than the event processing in ThreadLayoutNode.  ThreadLayoutNode has to account for the fact that IContainerDMContexts extends IExecutionDMContext which confuses the standard DM event processing in AbstractDMVMLayoutNode.buildDeltaForDMEvent().  
+
+ContainerLayoutNode also does not need to process the IResumedDMEvent/ISuspendedDMEvent, which indicate state change of individual threads.  So what is left are two types of events to be handled:
+
+1) IContainerSuspendedDMEvent/IContainerResumedDMEvent - Issue an IModelDelta.STATE for these.  Even though the icon or label of the container node may not change in Debug view, if the user has this node selected, the run control actions should update their state.
+
+2) IExitedDMEvnet/IStartedDMEvent - These indicate that a thread was added/removed, so IModelDelta.CONTAIENR event is sent to repaint the whole sub-tree under the container.
+
+I'm attaching the updated ContainerLayoutNode.  Please test it in your environment.  Also if possible, please attach the source for the multi-thread testing program that you use?</pre>
+    </div>
+
+    <div id="c25" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c25">Comment 25</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-08-16 14:37:01 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=160038#c21">comment #21</a>)
+<span class="quote">&gt; I also saw error &quot;mi_cmd_var_create&quot; from GDB in case of varibale creation.
+&gt; Don't know whether we can do something about it ? </span >
+This is probably related to bugs in ExpressionService.  I think we can let Marc sort this out when he gets up to speed on this service.
+
+<span class="quote">&gt; Also, When program is running the debug buttons like step-in, step-over etc are
+&gt; not disabled. </span >
+When stepping, the step buttons are intentionally left enabled so that the user could queue-up several step commands.  But when running to a breakpoint, all the run control commands should be updated.  It is possible though that the breakpoint is hit so fast that by the time the commands are being refreshed, the program is stopped already.  How are you testing this?
+
+</pre>
+    </div>
+
+    <div id="c26" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c26">Comment 26</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Veenu Khanna</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veenu_khanna&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veenu_khanna&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-08-17 10:42:27 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=76307" name="attach_76307" title="Source program for multi threaded gdb application">attachment 76307</a> <a href="attachment.cgi?id=76307&amp;action=edit" title="Source program for multi threaded gdb application">[details]</a></span>
+Source program for multi threaded gdb application
+
+(In reply to <a href="show_bug.cgi?id=160038#c24">comment #24</a>)
+
+<span class="quote">&gt; The ContainerLayoutNode event processing can be quite a bit simpler </span >
+You are right. I understand your point here. 
+
+<span class="quote">&gt; 1) IContainerSuspendedDMEvent/IContainerResumedDMEvent - Issue an
+&gt; IModelDelta.STATE for these.  Even though the icon or label of the container
+&gt; node may not change in Debug view, if the user has this node selected, the run
+&gt; control actions should update their state.
+&gt; 
+&gt; 2) IExitedDMEvnet/IStartedDMEvent - These indicate that a thread was
+&gt; added/removed, so IModelDelta.CONTAIENR event is sent to repaint the whole
+&gt; sub-tree under the container.</span >
+
+Theoretically it should be like this but practically it doesn't work.
+The problem with GDB is that though the exit event is fired but commands  -thread-list-ids and &quot;info threads&quot;  keep returning the thread that just exited,     for quite some time. There is a gap between the fired event and the values returned by these commands. 
+Only way GDB indicates is via an exit event and in &quot;info threads&quot; command
+like (Note Exiting against the thread)
+ ~&quot;* 2 Thread 1078250416 (LWP 6058) (Exiting)  0x4003ed9a in start_thread ()\n&quot;
+~&quot;   from /lib/tls/libpthread.so.0\n&quot;
+but -thread-list-ids won't reflect this.
+Our problem is that elements are painted according to -thread-list-ids and labels are painted using &quot;info threads&quot;. 
+And it's info threads and not -thread-list-ids which has the exit information.
+
+So either we use IModelDelta.CONTAINER event on IContainerSuspendEvent or some other kinda hack ?? 
+
+<span class="quote">&gt; Also if possible, please attach the source for the multi-thread
+&gt; testing program that you use? </span >
+Source file attached.</pre>
+    </div>
+
+    <div id="c27" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c27">Comment 27</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-08-17 12:51:44 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=160038#c26">comment #26</a>)
+
+This is pretty horrible on GDB's part :-(  I know that CDI/MI issues an &quot;info threads&quot; on every step command and it is a major drag on its performance when debugging applications with large # of threads.  
+Given this I'm not sure what the best solution is, however I think it would be better to keep whatever hack is needed inside of the service.  For example you could issue a -thread-list-ids inside the service following every suspended event, and issue an exited/started event when you see a change in the returned data.  As an optimization, we could offer the user an option in the UI of having a manual refresh mode, where the automatic -thread-list-ids would not be generated.  These hacks should be implemented in GDBRunControl though, because they are GDB-specific.
+
+Generating a ModelDelta.CONTAINER on every suspend would make it impossible to optimize stepping performance.  Also the ContainerLayoutNode is meant to be shared with other debugger implementations, although you do have the option to override that in gdb.ui plugin.  
+
+</pre>
+    </div>
+
+    <div id="c28" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c28">Comment 28</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Piotr Kundu</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=piotr.kundu&#64;beemobile.se" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=piotr.kundu&#64;beemobile.se" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-08-20 09:01:33 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">A similar issue has been reported from a Solaris 8 user (has not yet been reproduced on Solaris 9 or 10), running CDT 3.1.2:
+
+&quot;In the Debug view, all the threads are listed in Debug window, source
+code can be viewed in the Code window. While debugging, if the control
+jumps from one thread to another, neither the Debug window, nor the Code
+window will focus on the newly activated thread. The user needs to
+manually search the thread list in the Debug window, and select the
+thread, to redeem focus. The bug appears sporadically. 
+
+The 'Debug' window does not scale well for systems with many (&gt;50)
+processes. The threads are ordered by a unique identifier rather than
+name, or process entry point, and it is not possible to hide subsets of
+processes. Also, the limited window size is occupied by the word
+'Thread' for every target thread.&quot;
+
+The above happens once of out three times, which is surprising since, according to this bug, it shouldn't be working at all.
+
+The first question would be; &quot;Is <a class="bz_bug_link 
+          bz_status_CLOSED  bz_closed"
+   title="CLOSED FIXED - [debug view] Multi-threaded app support"
+   href="show_bug.cgi?id=160038">Bug# 160038</a> related to CDT 4.0 or all versions of CDT&quot;?
+
+The second question, since a few of you have made several changes, &quot;Can someone provide a combine patch and some hints were to continue the debugging?&quot; - we would like to help out on this one.</pre>
+    </div>
+
+    <div id="c29" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c29">Comment 29</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Veenu Khanna</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veenu_khanna&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veenu_khanna&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-08-22 08:41:22 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=76645&amp;action=diff" name="attach_76645" title="Thread exit event handling for GDB">attachment 76645</a> <a href="attachment.cgi?id=76645&amp;action=edit" title="Thread exit event handling for GDB">[details]</a></span>
+Thread exit event handling for GDB
+
+Hi Pawel,
+Here is a new patch according to your feedback above.
+Also it solves the thread exit event handling problem in GDB.
+Asterisk marked in GDB info threads command is according to the -thread-select. So it shdn't be a problem for us. 
+DsfMIThreadExitEvent is called only once. Im keeping track of the exited threads.
+
+For all -var-... commands, Is it necessary to have a DMC ? Shouldn't it be possible to use these var commands without DMC ? 
+I have left few commands. Will update it later as we use those.
+
+Veenu</pre>
+    </div>
+
+    <div id="c30" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c30">Comment 30</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-08-22 13:36:02 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Hi Veenu,
+Thank you for your patch, but could you update your view and re-post it?  I applied Mark's patches first and there were some conflict.  The patch-apply dialog doesn't offer any help for merging while the CVS update one does.
+
+The patch looks good.  I have a few comments:
+- I like the way you added the assert :-)  Although it would be nice if the comamnd constructors didn't have so much duplication of string literals.  Modifying one of those in the future could be rather error prone. 
+- There are a lot of commented out statements that need to be cleaned up.
+- Why reset the cache after StartedDMEvent and ExitedDMEvent?  I guess it makes sense to clean up the cache for the thread that exited, but I can't think of a reason for the other cases.
+- In MIRunControl.resume() and step(), there are tests such as:
+    if (!(context instanceof MIExecutionDMC)) ...
+Instead the test should be:
+    if (DMContexts.getAncestorOfType(context, MIExecutionDMC.class) == null) ...
+This way the client (such as UI) can pass a context which has the execution context as a parent, such as a frame, and the command will still work.
+- In makeExecutionDMCs() when GDB doesn't report any thread IDs, a single thread is created with ID=0.  Is value 0 used to indicate &quot;no thread ID&quot;, and if that's the case does AbstractMIControl ignore it and not issue a -thread-select?  If so, it would be good to define it as a documented constant in the MIRunControl class.
+- I don't quite understand how the -var-create/-var-evaluate-expression/-var-delete work with respect to -thread-select and -stack-frame-select.  Is one variable created and then shared between all different threads?  Or does one need to create a separate variable for each context?  If it's the former, which I think is the case, then the expression service will probably just use the container context in all -var-create calls.  It will only need to perform a -thread-select for the evaluation part.  This will be pretty complicated, but that's the expression service's problem.  In any case, the changes you made in ExpressionService, effectively restrict it to work only in context of a stack frame, which is not correct because global variables and etc. could be evaluated in context of a container.  But the proper solution is definitely more complicated and outside of scope of your changes.  We will need to work with Mark to make sure we get it right.
+- In GDBRunControl you do not need a fRunCtrl service reference.  Since GDBRunControl extends MIRunControl, you can just call super().  This way in GDBRunControl.getExecutionContexts() you could instead call super.getExecutionContexts() and simply remove the exited thread DMCs from the returned array, which would require less duplication of code from MIRunControl. 
+
+
+I guess that was more than a view comments, but I hope it helps :-)</pre>
+    </div>
+
+    <div id="c31" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c31">Comment 31</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Veenu Khanna</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veenu_khanna&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veenu_khanna&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-08-23 09:25:09 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=160038#c30">comment #30</a>)
+<span class="quote">&gt; - Why reset the cache after StartedDMEvent and ExitedDMEvent?  I guess it &gt; makes sense to clean up the cache for the thread that exited, but I can't think &gt; of a reason for the other cases.</span >
+For thread exit, its okie to only clean the cache for the thread that exited. But for creation we don't have a straight way today. We can discuss this.
+
+<span class="quote">&gt; - I don't quite understand how the
+&gt; -var-create/-var-evaluate-expression/-var-delete work with respect to
+&gt; -thread-select and -stack-frame-select.  Is one variable created and then
+&gt; shared between all different threads?  Or does one need to create a separate
+&gt; variable for each context?  </span >
+I dont know either. I think we can update the class and Commands when Marc starts.
+ 
+<span class="quote">&gt; - In GDBRunControl you do not need a fRunCtrl service reference.  Since
+&gt; GDBRunControl extends MIRunControl, you can just call super().  This way in
+&gt; GDBRunControl.getExecutionContexts() you could instead call
+&gt; super.getExecutionContexts() and simply remove the exited thread DMCs from the
+&gt; returned array, which would require less duplication of code from IRunControl. </span >
+You are right. Doesn't make sense. to duplicate the code. 
+While doing this I stumbled into another GDB related problem. 
+-thread-list-ids : Lists thread number assigned by GDB
+info threads: displays 
+1. the thread number assigned by GDB
+2. the target system's thread identifier (systag)
+3. the current stack frame summary for that thread 
+
+Thread created and Exited event:
+~&quot;[New Thread 1084554160 (LWP 6924)]\n&quot;
+~&quot;[Thread 1078250416 (LWP 6852) exited]\n&quot;
+These events don't report thread number assigned by GDB on a Linux system
+
+So we will have mismatch in context creation. For getExecutionContext() we are using GDB assigned thread ID as we don't have info about system's thread id and for events we don't have the info about GDB assigned thread id so we are using system thread id.
+
+This will also be a problem when clearing cache corresponding to a context for  ThreadExited events.
+
+Veenu</pre>
+    </div>
+
+    <div id="c32" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c32">Comment 32</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Veenu Khanna</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veenu_khanna&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veenu_khanna&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-08-23 10:13:19 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=76769&amp;action=diff" name="attach_76769" title="Update on previous one (+committed, +logged)">attachment 76769</a> <a href="attachment.cgi?id=76769&amp;action=edit" title="Update on previous one (+committed, +logged)">[details]</a></span>
+Update on previous one (+committed, +logged)
+
+Hi Pawel,
+Here is the patch after an updated view.
+
+Have also updated the patch with your feedback point no 2,4 &amp; 5
+1,3,6 &amp; 7 are open points and we can discuss it in our next meeting.
+
+Veenu</pre>
+    </div>
+
+    <div id="c33" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c33">Comment 33</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-08-23 12:39:28 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Thank you Veenu for the patch.
+
+I applied it with a minor change in MIRunControl.  For further discussion on thread started/exited events, I would like to use <a class="bz_bug_link 
+          bz_status_CLOSED  bz_closed"
+   title="CLOSED FIXED - [debug view] Add thread started/exited detection for GDB."
+   href="show_bug.cgi?id=200615">bug 200615</a>.</pre>
+    </div>
+
+    <div id="c34" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c34">Comment 34</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-08-23 13:04:17 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=160038#c31">comment #31</a>)
+<span class="quote">&gt; &gt; - I don't quite understand how the
+&gt; &gt; -var-create/-var-evaluate-expression/-var-delete work with respect to
+&gt; &gt; -thread-select and -stack-frame-select.  Is one variable created and then
+&gt; &gt; shared between all different threads?  Or does one need to create a separate
+&gt; &gt; variable for each context?  
+&gt; I dont know either. I think we can update the class and Commands when Marc
+&gt; starts.</span >
+I created <a class="bz_bug_link 
+          bz_status_CLOSED  bz_closed"
+   title="CLOSED FIXED - [variables] Add syupport for managing multiple contexts in ExpressionService."
+   href="show_bug.cgi?id=200968">bug 200968</a> for this issue, and assigned it to Marc.
+</pre>
+    </div>
+
+    <div id="c35" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c35">Comment 35</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Veenu Khanna</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=veenu_khanna&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=veenu_khanna&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-08-24 12:26:10 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=76923" name="attach_76923" title="Relationship between contexts">attachment 76923</a> <a href="attachment.cgi?id=76923&amp;action=edit" title="Relationship between contexts">[details]</a></span>
+Relationship between contexts
+
+Hi Pawel,
+There has been some confusion about DMCs hierarchy and association so we should discuss this in our next meeting on Tuesday.
+Here is a small diagram which according to us shows the hierarchy and can also show an association between different DMCs. 
+
+What I'm trying to depict here is the
+1. Ancestors of different contexts like Container-&gt;Execution-&gt;Frame-&gt;Variable.
+2. Contexts that can be used to evaluate data for a given context.  Ex. Expression DMC can accept either of frameDMC, executionDMC and ContainerDMC to evaluate expression but not MemoryDMC for instance. May be it can also accept RegisterDMC ? 
+
+Probably we can also depict association between contexts like Expression and Variable...
+I think the idea is to have a diagram for this whole context relationship. 
+Will also be helpful in clearing the MICommands package and for further work in respective services.
+
+Veenu</pre>
+    </div>
+
+    <div id="c36" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c36">Comment 36</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-08-24 13:33:54 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=76933" name="attach_76933" title="DMCs diagram using DIA">attachment 76933</a> <a href="attachment.cgi?id=76933&amp;action=edit" title="DMCs diagram using DIA">[details]</a></span>
+DMCs diagram using DIA
+
+Hi Veenu,
+I think starting a diagram collection to document relationship between DMCs is an excellent idea, and a good start to building documentation for DSF.  But I wonder if we could use DIA (see <a href="http://www.gnome.org/projects/dia/">http://www.gnome.org/projects/dia/</a>).  It's kind of a quirky program, but it's very powerful and it's free and it runs on linux and windows.  I attached the equivalent diagram of execution DMCs as an example.
+
+The relationship between run control, memory, modules, and symbols contexts is kind of a challenging topic.  It also goes along with figuring out how to properly implement the INativeProcesses service.  Perhaps we could try to discuss it as part of the coding camp... if you are able to attend.</pre>
+    </div>
+
+    <div id="c37" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c37">Comment 37</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-06-16 17:02:12 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I'm closing out this umbrella bug.  Remaining issues are captured by <a class="bz_bug_link 
+          bz_status_CLOSED  bz_closed"
+   title="CLOSED FIXED - [debug view] Add thread started/exited detection for GDB."
+   href="show_bug.cgi?id=200615">bug 200615</a>, <a class="bz_bug_link 
+          bz_status_ASSIGNED "
+   title="ASSIGNED - [debug view] Delayed selection change in debug view causes un-necessary refreshes in variables and other views."
+   href="show_bug.cgi?id=208273">bug 208273</a>, <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [debug view][threads] After resuming a process, the threads are not shown in Debug view."
+   href="show_bug.cgi?id=234464">bug 234464</a>, <a class="bz_bug_link 
+          bz_status_ASSIGNED "
+   title="ASSIGNED - [debug view][update policy] When stepping fast, sometimes the selection is lost in Debug view."
+   href="show_bug.cgi?id=235268">bug 235268</a>, <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [run control][debug view][cdi] Threads are listed in reverse order."
+   href="show_bug.cgi?id=225996">bug 225996</a>.
+
+Francois, please confirm.</pre>
+    </div>
+
+    <div id="c38" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c38">Comment 38</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-06-16 17:05:42 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Nice job Veenu... in case you're still reading these :-)</pre>
+    </div>
+
+    <div id="c39" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c39">Comment 39</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Francois Chouinard</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=fchouinard&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=fchouinard&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-06-17 11:22:30 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Fine with me.
+
+The remaining issues are the ones I encountered/noticed while working on non-stop debugging. I won't have to create bugs for them!
+
+Nice work,
+/fc
+
+</pre>
+    </div>
+
+    <div id="c40" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=160038#c40">Comment 40</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Pawel Piech</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=pawel.1.piech&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=pawel.1.piech&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-08-13 13:05:16 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Closing out 1.0 bugs.</pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=160038">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=160038">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=160038">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=160038&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=160038" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>

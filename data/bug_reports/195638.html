@@ -1,0 +1,2293 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>195638 &ndash; [compiler][null][refactoring] Wrong error : &quot;Null pointer access: The variable xxx can only be null at this location &quot; with try..catch in loop</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "195638 – [compiler][null][refactoring] Wrong error : \"Null pointer access: The variable xxx can only be null at this location \" with try..catch in loop",
+                             "show_bug.cgi?id=195638" );
+        document.title = "195638 – [compiler][null][refactoring] Wrong error : \"Null pointer access: The variable xxx can only be null at this location \" with try..catch in loop";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "195638 – [compiler][null][refactoring] Wrong error : \"Null pointer access: The variable xxx can only be null at this location \" with try..catch in loop", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_VERIFIED
+                 bz_product_JDT
+                 bz_component_Core
+                 bz_bug_195638 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;195638</span>
+
+        <span id="subtitle" class="subheader">[compiler][null][refactoring] Wrong error : &quot;Null pointer access: The variable xxx can only be null at this location &quot; with try..catch in loop</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2014-12-09 10:29:58 EST</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=195638&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=195638" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2014-12-09 10:29:58">
+  <input type="hidden" name="id" value="195638">
+  <input type="hidden" name="token" value="1629874007-EPF-oAauooYDZT25AF8lz5PAVAv-j8GYtreogRl29X4">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=195638"><b>Bug&nbsp;195638</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">[compiler][null][refactoring] Wrong error : &quot;Null pointer access: The variable xxx can only be null at this location &quot; with try..catch in loop</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span><span title="[compiler][null][refactoring] Wrong error : &quot;Null pointer access: The variable xxx can only be null at this location &quot; with try..catch in loop">[compiler][null][refactoring] Wrong error : &quot;Null pointer access: The variabl...
+        </span>
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      '[compiler][null][refactoring] Wrong error : \"Null pointer access: The variable xxx can only be null at this location \" with try..catch in loop' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">VERIFIED
+          DUPLICATE
+            of <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - [compiler][null][loop] Improve null analysis for loops"
+   href="show_bug.cgi?id=453483">bug 453483</a>
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >JDT
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >Eclipse Project
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=JDT"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >Core
+
+  (<a href="buglist.cgi?component=Core&amp;product=JDT&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>3.3 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">PC
+        Windows XP
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P5
+       normal<span id="votes_container">
+      with
+      <a href="page.cgi?id=voting/bug.html&amp;bug_id=195638">2 
+            votes</a>
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=195638#vote_195638">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>4.5 M4 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">Stephan Herrmann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=stephan.herrmann&#64;berlin.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=stephan.herrmann&#64;berlin.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">Ayushman Jain</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=amj87.iitr&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=amj87.iitr&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'jdt-core-inbox\x40eclipse.org',
+        '');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+
+  </td>
+  </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2007-07-06 05:49 EDT by <span class="vcard"><span class="fn">Patrick Brühlmann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=patrick.bruehlmann&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=patrick.bruehlmann&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2014-12-09 10:29 EST
+      (<a href="show_activity.cgi?id=195638">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>11 
+          users
+          <span id="cc_edit_area_showhide_container" class="bz_default_hidden">
+            (<a href="#" id="cc_edit_area_showhide">show</a>)
+          </span>
+        <div id="cc_edit_area">
+          <br>
+            <select id="cc" multiple="multiple" size="5" >
+                <option value="amj87.iitr">amj87.iitr</option>
+                <option value="dhdev">dhdev</option>
+                <option value="eclipsebugs">eclipsebugs</option>
+                <option value="greg.hutchinson">greg.hutchinson</option>
+                <option value="manpalat">manpalat</option>
+                <option value="nikolaymetchev">nikolaymetchev</option>
+                <option value="robert.wenner">robert.wenner</option>
+                <option value="schierlm">schierlm</option>
+                <option value="shankhba">shankhba</option>
+                <option value="shaun.spiller">shaun.spiller</option>
+                <option value="stephan.herrmann">stephan.herrmann</option>
+            </select>
+        </div>
+          <script type="text/javascript">
+            hideEditableField( 'cc_edit_area_showhide_container', 
+                               'cc_edit_area', 
+                               'cc_edit_area_showhide', 
+                               '', 
+                               '');  
+          </script>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" >
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <a href="attachment.cgi?bugid=195638&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=195638&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=195638#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Patrick Brühlmann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=patrick.bruehlmann&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=patrick.bruehlmann&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-06 05:49:31 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Build ID: I20070625-1500
+
+Steps To Reproduce:
+The following &quot;dummy&quot; code sample gives a compilation error :
+
+      String str = null;
+      for (int i = 0; i &lt; 2; i++) {
+        try {
+          str = new String(&quot;Test&quot;);
+        } catch (Exception ex) {
+          ex.printStackTrace();
+        }
+        str.charAt(i); // Error : &quot;Null pointer access: The
+                       // variable str can only be null at 
+                       // this location&quot;
+        str = null;
+      }
+
+
+More information:
+In my point of view, this compilation error should be replaced with a warning (if so configured) that the variable str COULD be null (in case of catched exception).</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=195638#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Maxime Daniel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=maxime_daniel&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=maxime_daniel&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-07-06 07:46:28 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Reproduced with 3.3.</pre>
+    </div>
+
+    <div id="c2" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=195638#c2">Comment 2</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Maxime Daniel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=maxime_daniel&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=maxime_daniel&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-09-10 03:46:02 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The diagnostic is right, we should have a may be null diagnostic here.
+Released NullReferenceTest#746 (inactive) and 747 to illustrate the issue.
+
+If you contrast the original test case with the following, which behaves as expected:
+      String str = null;
+      for (int i = 0; i &lt; 2; i++) {
+        try {
+          str = new String(&quot;Test&quot;);
+        } catch (Exception ex) {
+          ex.printStackTrace();
+        }
+        str.charAt(i); // Error : &quot;Null pointer access: The
+                       // variable str can only be null at 
+                       // this location&quot;
+        // str = null;
+      }
+you get the key for the bug. In fact, the checks for str.charAt are deferred (since we are within a loop), and the deferred check mistakenly considers that str can only be null - which is true at the end of the loop, but not when charAt is called.
+This is shading light to yet another limit of our current implementation, that is not easy to overcome. The current plans have no allowance for the corresponding investments, hence moving to P5.</pre>
+    </div>
+
+    <div id="c3" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=195638#c3">Comment 3</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Nikolay Metchev</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=nikolaymetchev&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=nikolaymetchev&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-01-25 09:50:00 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The following code exhibits the same behavior. Should I file a separate bug report?
+
+import java.sql.Connection;
+  void m() throws SQLException
+  {
+    Connection conn = null;
+    try
+    {
+      conn = createConnection();
+
+      for (; ; )
+      {
+        throwSomething();
+      }
+    }
+    catch (MyException e)
+    {
+      conn.rollback(); //The variable can never be null here...
+    }
+  }
+
+  private void throwSomething() throws MyException
+  {
+    throw new MyException();
+  }
+
+  class MyException extends Exception
+  {
+
+  }
+
+  private Connection createConnection()
+  {
+    return ...;
+  }</pre>
+    </div>
+
+    <div id="c4" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=195638#c4">Comment 4</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Maxime Daniel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=maxime_daniel&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=maxime_daniel&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-01-28 02:28:26 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Since we do not plan to invest in that area for now, my take would be to keep your additional test case here. If we undertake a major effort in the null diagnostics area and tackle this bug, it will be soon enough to double-check whether your test case is a variation of the same bug or a separate one.
+Thanks for sharing the test case anyway.</pre>
+    </div>
+
+    <div id="c5" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=195638#c5">Comment 5</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Michael Schierl</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=schierlm&#64;gmx.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=schierlm&#64;gmx.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-08-21 09:15:59 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Another test case where dummy can never be null:
+
+public class StrangeWarning {
+	public static void main(String[] args) {
+		String dummy = null;
+		for (int i = 0; i &lt; 10; i++) {
+			if (i % 2 == 1) {
+				dummy = &quot;Foo&quot;;
+			}
+			System.out.println(&quot;Hello&quot;);
+			if (i % 2 == 1) {
+				System.out.println(dummy.toLowerCase());
+			}
+			dummy = null;
+		}
+	}
+}
+
+Workaround to make the warning disappear (if you cannot remove the &quot;dummy = null&quot; code for any reason:
+
+public class StrangeWarningWorkaround {
+	public static void main(String[] args) {
+		String dummy = null;
+		for (int i = 0; i &lt; 10; i++) {
+			if (i % 2 == 1) {
+				dummy = &quot;Foo&quot;;
+			}
+			System.out.println(&quot;Hello&quot;);
+			if (dummy != null &amp;&amp; i % 2 == 1) {
+				System.out.println(dummy.toLowerCase());
+			}
+			dummy = null;
+		}
+	}
+}</pre>
+    </div>
+
+    <div id="c6" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=195638#c6">Comment 6</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Greg Hutchinson</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=greg.hutchinson&#64;fcc-fac.ca" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=greg.hutchinson&#64;fcc-fac.ca" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-08-22 10:22:04 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I think we have another case where this is not working correctly. In my opinion, this should be changed to &quot;could be null&quot;.  Actually, the way this method is written it can never be null...
+
+
+public class CanOnlyBeNullShouldBeMayBeNull {
+
+	private void method() {
+		String tblVarRpl = null;
+		while (true) {
+			boolean isOpenVariableMortageRateProduct = true;
+			boolean tblVarRplAllElementAddedIndicator = false;
+			if (isOpenVariableMortageRateProduct) {
+				if (tblVarRplAllElementAddedIndicator == false)
+					tblVarRpl = &quot;&quot;;
+				tblVarRpl.substring(1);	//Can only be null???
+				return; 
+			}
+		}
+	}
+}
+</pre>
+    </div>
+
+    <div id="c7" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=195638#c7">Comment 7</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Robert Wenner</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=robert.wenner&#64;gmx.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=robert.wenner&#64;gmx.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-04-10 12:02:47 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Yet another one:
+
+    public void doStuff() throws Exception {
+        Exception e = null;
+        try {
+            doOtherStuff();
+            return;
+        }
+        catch (Exception oops) {
+            oops = e;
+        }
+        throw e; // wrong warning here
+    }
+    
+    public void doOtherStuff() throws Exception {
+        //...
+    }
+</pre>
+    </div>
+
+    <div id="c8" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=195638#c8">Comment 8</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Robert Wenner</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=robert.wenner&#64;gmx.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=robert.wenner&#64;gmx.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-04-10 12:04:12 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Actually, with Ganymede, I get the &quot;may be null&quot; warning, but still it's a wrong and misleading warning.</pre>
+    </div>
+
+    <div id="c9" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=195638#c9">Comment 9</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Michael Schierl</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=schierlm&#64;gmx.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=schierlm&#64;gmx.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-04-10 13:58:29 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">In #7, the code should be
+
+e = oops;
+
+and not
+
+oops = e;
+
+shouldn't it? And in this case I don't get any warning.</pre>
+    </div>
+
+    <div id="c10" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=195638#c10">Comment 10</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Robert Wenner</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=robert.wenner&#64;gmx.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=robert.wenner&#64;gmx.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-04-15 09:45:20 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Sorry, I removed too much from the code. The code below triggers a &quot;Potential null pointer access: The variable e may be null at this location&quot; while that's impossible.
+
+    public void doStuff() throws Exception {
+        Exception e = null;
+        for (int i = 0; i &lt; 3; i++) {
+            try {
+                doOtherStuff();
+                return;
+            }
+            catch (Exception oops) {
+                e = oops;
+            }
+        }
+        throw e; // wrong warning here
+    }
+
+    public void doOtherStuff() throws Exception {
+        //...
+    }
+
+Robert</pre>
+    </div>
+
+    <div id="c11" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=195638#c11">Comment 11</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Peter Arrenbrecht</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eclipsebugs&#64;arrenbrecht.ch" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eclipsebugs&#64;arrenbrecht.ch" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-05-05 05:26:57 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Another case:
+
+package ch.arrenbrecht.test;
+
+import java.io.IOException;
+
+import junit.framework.TestCase;
+
+public class NullInferenceBug extends TestCase {
+
+	public void testNullRef() throws Exception {
+		doNullRef( true );
+	}
+
+	public void doNullRef( boolean fail ) throws Exception {
+		Object v = null;
+		try {
+			try {
+				v = &quot;Hello&quot;;
+			}
+			finally {
+				if (fail)
+					throw new IOException();
+			}
+		}
+		catch (IOException e) {
+			assertEquals( &quot;Hello&quot;, v.toString() );
+		}
+	}
+
+}
+</pre>
+    </div>
+
+    <div id="c12" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=195638#c12">Comment 12</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Michael Schierl</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=schierlm&#64;gmx.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=schierlm&#64;gmx.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-07-27 15:08:31 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">still present in 3.5 (for some strange bugzilla reason I cannot update the version number above...)</pre>
+    </div>
+
+    <div id="c13" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=195638#c13">Comment 13</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Ayushman Jain</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=amj87.iitr&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=amj87.iitr&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-12-11 06:52:25 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=195638#c6">comment #6</a>)
+<span class="quote">&gt; public class CanOnlyBeNullShouldBeMayBeNull {
+&gt; 
+&gt;     private void method() {
+&gt;         String tblVarRpl = null;
+&gt;         while (true) {
+&gt;             boolean isOpenVariableMortageRateProduct = true;
+&gt;             boolean tblVarRplAllElementAddedIndicator = false;
+&gt;             if (isOpenVariableMortageRateProduct) {
+&gt;                 if (tblVarRplAllElementAddedIndicator == false)
+&gt;                     tblVarRpl = &quot;&quot;;
+&gt;                 tblVarRpl.substring(1);    //Can only be null???
+&gt;                 return; 
+&gt;             }
+&gt;         }
+&gt;     }
+&gt; }</span >
+
+In the above case, the return statement is the one causing the problem. If it is removed, we get the correct warning. This is because the way static analysis proceeds is as follows: In a loop, all statements are analysed one by one, and all the null checks are deferred until we've analysed all statements. So here, when we encounter the if else block inside which tblVarRpl is initialised as &quot;&quot;, we do mark it as maybe null. Proceeding forward without the return statement would have invoked the deferred checks at the end of loop and correctly reported the maybe null status. Now, here, as soon as we hit the return statement, we mark the flowInfo of the block which contains the return statement as FlowInfo.DEAD_END ie. we assume that if are going ahead of that block in the execution then we wouldn't have entered the block at all. So with the marking of the flowInfo as DEAD_END, all the analysis for that block is rejected, effectively causing the maybe null status of tblVarRpl to be erased. So now when the deffered null check is done, it finds the status to be still NULL, coming from the declaration statement itself.
+
+A possible strategy to counter this would be to invoke the deferred null checks as soon as we hit the return statement. This would correctly report the maybe null status of tblVarRpl. However, it would break the following case : 
+
+public class X {
+	               void foo (boolean b) {
+			    Object o = null;
+			    for (int i = 0; i &lt; 25; i++) {
+			      if (b) {
+			        if (o == null) {   //should report always null
+			          o = new Object();
+			        }
+			        return;
+			      }
+			    }
+			  }
+			}
+
+This is because here after the if(o==null)... else... block the status of 'o' becomes surely not null and now if we invoke the deferred check at return statement itself, it'll act on the flowInfo of the if(b).. block  - which has 'o' set to non null. This gives a never null warning for 'o' in if(o == null). However, the ideal behavior should be to give an always null warning on 'o' in if(o == null).
+
+So the correct strategy would be to NOT defer the null check when we have a return statement in the block , and to defer it in case we don't. However, there's no way to predict that a return statement will be found ahead, and hence no easy to way fix this predicament.</pre>
+    </div>
+
+    <div id="c14" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=195638#c14">Comment 14</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Shaun Spiller</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=shaun.spiller&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=shaun.spiller&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-12-09 10:44:41 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Here is a very simple demonstration of the bug with no try/catch:
+
+	private void test() {
+		boolean x = true;
+		Object o = null;
+		
+		for (;;) {
+			if (x) o = new Object();
+			
+			o.toString(); // warning here
+			
+			o = null;
+		}
+	}
+
+If boolean x is made final or the if condition is otherwise made into a hard constant like 1 == 1, the problem disappears. If the o = null line at the end of the loop or the looping itself is removed, that also makes the problem disappear.</pre>
+    </div>
+
+    <div id="c15" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=195638#c15">Comment 15</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Ayushman Jain</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=amj87.iitr&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=amj87.iitr&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-12-09 14:32:41 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=195638#c14">comment #14</a>)
+<span class="quote">&gt; [..]</span >
+
+Thanks Shaun. This looks like a different case to me. Can you please file another bug report for this? Thanks!</pre>
+    </div>
+
+    <div id="c16" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=195638#c16">Comment 16</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Shaun Spiller</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=shaun.spiller&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=shaun.spiller&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-12-09 18:20:29 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=195638#c15">comment #15</a>)
+<span class="quote">&gt; Thanks Shaun. This looks like a different case to me. Can you please file
+&gt; another bug report for this? Thanks!</span >
+
+Someone can if they want, but it looks like exactly the same bug to me.</pre>
+    </div>
+
+    <div id="c17" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=195638#c17">Comment 17</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Ayushman Jain</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=amj87.iitr&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=amj87.iitr&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2010-12-10 00:12:40 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=195638#c16">comment #16</a>)
+<span class="quote">&gt; (In reply to <a href="show_bug.cgi?id=195638#c15">comment #15</a>)
+&gt; &gt; Thanks Shaun. This looks like a different case to me. Can you please file
+&gt; &gt; another bug report for this? Thanks!
+&gt; 
+&gt; Someone can if they want, but it looks like exactly the same bug to me.</span >
+
+The presence / absence of try catch block does make a difference in the static analysis, that why i suggested its better to investigate this issue separately. Anyway, i'll look into it and open a fresh bug if this indeed turns out to be different. Thanks.</pre>
+    </div>
+
+    <div id="c18" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=195638#c18">Comment 18</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Stephan Herrmann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=stephan.herrmann&#64;berlin.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=stephan.herrmann&#64;berlin.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2011-02-25 08:31:57 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=195638#c14">comment #14</a>)
+<span class="quote">&gt; Here is a very simple demonstration of the bug with no try/catch:
+&gt; 
+&gt;     private void test() {
+&gt;         boolean x = true;
+&gt;         Object o = null;
+&gt; 
+&gt;         for (;;) {
+&gt;             if (x) o = new Object();
+&gt; 
+&gt;             o.toString(); // warning here
+&gt; 
+&gt;             o = null;
+&gt;         }
+&gt;     }</span >
+
+This might be related to my recent findings in <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - [compiler][null] bogus warning &quot;redundant null check&quot; in condition of do {} while() loop"
+   href="show_bug.cgi?id=336428#c6">bug 336428 comment 6</a>:
+When analyzing the loop body, we don't have the information from
+x=true at hand (because we don't yet know whether this will also hold
+on subsequent iterations.
+
+In <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - [compiler][null] bogus warning &quot;redundant null check&quot; in condition of do {} while() loop"
+   href="show_bug.cgi?id=336428">bug 336428</a> I proposed to investigate this post 3.7, because in the
+current design not much can be done here.</pre>
+    </div>
+
+    <div id="c19" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=195638#c19">Comment 19</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Dwight Harm</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=dhdev&#64;harmfamily.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=dhdev&#64;harmfamily.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2014-03-25 15:13:19 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">This may be the same bug, but doesn't require try/catch and doesn't require &quot;x=null&quot; at bottom of loop. In any case, maybe an additional test case is worthwhile:
+
+	public void testIt() {
+	  Object aRole = null;
+	  for (;;) {
+	    aRole = new Object();
+	    if (aRole.toString() == null) {
+	      aRole = getObject(); // changing to &quot;new Object()&quot; makes warning disappear.
+	    }
+	    aRole.toString();
+	    // above line gets: &quot;Null pointer access: The variable aRole can only be null at this location&quot;
+	    break;
+	  }
+	}
+	private Object getObject() {
+	  return new Object();
+	}
+
+This is failing in 3.9.1.</pre>
+    </div>
+
+    <div id="c20" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=195638#c20">Comment 20</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Stephan Herrmann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=stephan.herrmann&#64;berlin.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=stephan.herrmann&#64;berlin.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2014-11-29 12:36:07 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text"><a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - [compiler][null][loop] Improve null analysis for loops"
+   href="show_bug.cgi?id=453483">Bug 453483</a> brings new hope for this old bug, too. At least the initial test NRT._test0746_for_try_catch passes with my pending changes. Other examples will be checked as we go.</pre>
+    </div>
+
+    <div id="c21" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=195638#c21">Comment 21</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Stephan Herrmann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=stephan.herrmann&#64;berlin.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=stephan.herrmann&#64;berlin.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2014-11-30 12:57:58 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Changing dependency to 'duplicate'. Additional examples still to be codified as tests.
+
+*** This bug has been marked as a duplicate of <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - [compiler][null][loop] Improve null analysis for loops"
+   href="show_bug.cgi?id=453483">bug 453483</a> ***</pre>
+    </div>
+
+    <div id="c22" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=195638#c22">Comment 22</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Stephan Herrmann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=stephan.herrmann&#64;berlin.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=stephan.herrmann&#64;berlin.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2014-11-30 17:05:12 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to Nikolay Metchev from <a href="show_bug.cgi?id=195638#c3">comment #3</a>)
+<span class="quote">&gt; The following code exhibits the same behavior. Should I file a separate bug
+&gt; report?
+&gt; 
+&gt; import java.sql.Connection;
+&gt;   void m() throws SQLException
+&gt;   {
+&gt;     Connection conn = null;
+&gt;     try
+&gt;     {
+&gt;       conn = createConnection();
+&gt; 
+&gt;       for (; ; )
+&gt;       {
+&gt;         throwSomething();
+&gt;       }
+&gt;     }
+&gt;     catch (MyException e)
+&gt;     {
+&gt;       conn.rollback(); //The variable can never be null here...
+&gt;     }
+&gt;   }
+&gt; 
+&gt;   private void throwSomething() throws MyException
+&gt;   {
+&gt;     throw new MyException();
+&gt;   }
+&gt; 
+&gt;   class MyException extends Exception
+&gt;   {
+&gt; 
+&gt;   }
+&gt; 
+&gt;   private Connection createConnection()
+&gt;   {
+&gt;     return ...;
+&gt;   }</span >
+
+This problem was already fixed in 3.6.2.
+
+It was likely resolved by the fix for <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - Dead Code detection removing code that isn't dead"
+   href="show_bug.cgi?id=332637">bug 332637</a>.</pre>
+    </div>
+
+    <div id="c23" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=195638#c23">Comment 23</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Stephan Herrmann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=stephan.herrmann&#64;berlin.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=stephan.herrmann&#64;berlin.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2014-11-30 17:08:36 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to Michael Schierl from <a href="show_bug.cgi?id=195638#c5">comment #5</a>)
+<span class="quote">&gt; Another test case where dummy can never be null:
+&gt; 
+&gt; public class StrangeWarning {
+&gt; 	public static void main(String[] args) {
+&gt; 		String dummy = null;
+&gt; 		for (int i = 0; i &lt; 10; i++) {
+&gt; 			if (i % 2 == 1) {
+&gt; 				dummy = &quot;Foo&quot;;
+&gt; 			}
+&gt; 			System.out.println(&quot;Hello&quot;);
+&gt; 			if (i % 2 == 1) {
+&gt; 				System.out.println(dummy.toLowerCase());
+&gt; 			}
+&gt; 			dummy = null;
+&gt; 		}
+&gt; 	}
+&gt; }</span >
+
+This would require for the compiler to understand the correlation between the two if statements. This is beyond the scope of our analysis.</pre>
+    </div>
+
+    <div id="c24" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=195638#c24">Comment 24</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Stephan Herrmann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=stephan.herrmann&#64;berlin.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=stephan.herrmann&#64;berlin.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2014-11-30 17:18:10 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to Robert Wenner from <a href="show_bug.cgi?id=195638#c10">comment #10</a>)
+<span class="quote">&gt; Sorry, I removed too much from the code. The code below triggers a
+&gt; &quot;Potential null pointer access: The variable e may be null at this location&quot;
+&gt; while that's impossible.
+&gt; 
+&gt;     public void doStuff() throws Exception {
+&gt;         Exception e = null;
+&gt;         for (int i = 0; i &lt; 3; i++) {
+&gt;             try {
+&gt;                 doOtherStuff();
+&gt;                 return;
+&gt;             }
+&gt;             catch (Exception oops) {
+&gt;                 e = oops;
+&gt;             }
+&gt;         }
+&gt;         throw e; // wrong warning here
+&gt;     }
+&gt; 
+&gt;     public void doOtherStuff() throws Exception {
+&gt;         //...
+&gt;     }
+&gt; 
+&gt; Robert</span >
+
+Needs investigation. I put a note into <a class="bz_bug_link 
+          bz_status_CLOSED  bz_closed"
+   title="CLOSED WONTFIX - [compiler][null] throw-catch analysis for null flow could be more precise"
+   href="show_bug.cgi?id=370424">bug 370424</a>.</pre>
+    </div>
+
+    <div id="c25" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=195638#c25">Comment 25</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Stephan Herrmann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=stephan.herrmann&#64;berlin.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=stephan.herrmann&#64;berlin.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2014-11-30 17:21:57 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to Peter Arrenbrecht from <a href="show_bug.cgi?id=195638#c11">comment #11</a>)
+<span class="quote">&gt; Another case:
+&gt; 
+&gt; package ch.arrenbrecht.test;
+&gt; 
+&gt; import java.io.IOException;
+&gt; 
+&gt; import junit.framework.TestCase;
+&gt; 
+&gt; public class NullInferenceBug extends TestCase {
+&gt; 
+&gt; 	public void testNullRef() throws Exception {
+&gt; 		doNullRef( true );
+&gt; 	}
+&gt; 
+&gt; 	public void doNullRef( boolean fail ) throws Exception {
+&gt; 		Object v = null;
+&gt; 		try {
+&gt; 			try {
+&gt; 				v = &quot;Hello&quot;;
+&gt; 			}
+&gt; 			finally {
+&gt; 				if (fail)
+&gt; 					throw new IOException();
+&gt; 			}
+&gt; 		}
+&gt; 		catch (IOException e) {
+&gt; 			assertEquals( &quot;Hello&quot;, v.toString() );
+&gt; 		}
+&gt; 	}
+&gt; 
+&gt; }</span >
+
+Likewise: This problem was already fixed in 3.6.2.
+
+It was likely resolved by the fix for <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - Dead Code detection removing code that isn't dead"
+   href="show_bug.cgi?id=332637">bug 332637</a>.</pre>
+    </div>
+
+    <div id="c26" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=195638#c26">Comment 26</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Michael Schierl</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=schierlm&#64;gmx.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=schierlm&#64;gmx.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2014-11-30 17:47:36 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to Stephan Herrmann from <a href="show_bug.cgi?id=195638#c23">comment #23</a>)
+<span class="quote">&gt; (In reply to Michael Schierl from <a href="show_bug.cgi?id=195638#c5">comment #5</a>)
+&gt; &gt; Another test case where dummy can never be null:
+&gt; &gt; 
+&gt; &gt; public class StrangeWarning {
+&gt; &gt; 	public static void main(String[] args) {
+&gt; &gt; 		String dummy = null;
+&gt; &gt; 		for (int i = 0; i &lt; 10; i++) {
+&gt; &gt; 			if (i % 2 == 1) {
+&gt; &gt; 				dummy = &quot;Foo&quot;;
+&gt; &gt; 			}
+&gt; &gt; 			System.out.println(&quot;Hello&quot;);
+&gt; &gt; 			if (i % 2 == 1) {
+&gt; &gt; 				System.out.println(dummy.toLowerCase());
+&gt; &gt; 			}
+&gt; &gt; 			dummy = null;
+&gt; &gt; 		}
+&gt; &gt; 	}
+&gt; &gt; }
+&gt; 
+&gt; This would require for the compiler to understand the correlation between
+&gt; the two if statements. This is beyond the scope of our analysis.</span >
+
+I am fine with a message that warns about `dummy` potentially being null. As of Luna (4.4.0) this complains that `dummy` can *only* be null at that location, which is definitely wrong and the opposite of what happens in reality.</pre>
+    </div>
+
+    <div id="c27" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=195638#c27">Comment 27</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Stephan Herrmann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=stephan.herrmann&#64;berlin.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=stephan.herrmann&#64;berlin.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2014-11-30 17:53:18 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">With <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - [compiler][null][loop] Improve null analysis for loops"
+   href="show_bug.cgi?id=453483">bug 453483</a> fixed I've released various examples from this bug as regression tests:
+
+<a href="http://git.eclipse.org/c/jdt/eclipse.jdt.core.git/commit/?id=2ce0d6de6bed41247718345892752d1c05e3cb7e">http://git.eclipse.org/c/jdt/eclipse.jdt.core.git/commit/?id=2ce0d6de6bed41247718345892752d1c05e3cb7e</a>
+
+Includes
+ - <a href="show_bug.cgi?id=195638#c3">comment 3</a>  - was already fixed in 3.6.2
+ - <a href="show_bug.cgi?id=195638#c6">comment 6</a>  - fixed via <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - [compiler][null][loop] Improve null analysis for loops"
+   href="show_bug.cgi?id=453483">bug 453483</a>
+ - <a href="show_bug.cgi?id=195638#c14">comment 14</a> - fixed via <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - [compiler][null][loop] Improve null analysis for loops"
+   href="show_bug.cgi?id=453483">bug 453483</a>
+ - <a href="show_bug.cgi?id=195638#c19">comment 19</a> - fixed via <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - [compiler][null][loop] Improve null analysis for loops"
+   href="show_bug.cgi?id=453483">bug 453483</a>
+
+(<a href="show_bug.cgi?id=195638#c0">Comment 0</a> already existed as NRT.test0746_for_try_catch).</pre>
+    </div>
+
+    <div id="c28" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=195638#c28">Comment 28</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Stephan Herrmann</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=stephan.herrmann&#64;berlin.de" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=stephan.herrmann&#64;berlin.de" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2014-11-30 17:55:48 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to Michael Schierl from <a href="show_bug.cgi?id=195638#c26">comment #26</a>)
+<span class="quote">&gt; (In reply to Stephan Herrmann from <a href="show_bug.cgi?id=195638#c23">comment #23</a>)
+&gt; &gt; (In reply to Michael Schierl from <a href="show_bug.cgi?id=195638#c5">comment #5</a>)
+&gt; &gt; &gt; Another test case where dummy can never be null:
+&gt; &gt; &gt; 
+&gt; &gt; &gt; public class StrangeWarning {
+&gt; &gt; &gt; 	public static void main(String[] args) {
+&gt; &gt; &gt; 		String dummy = null;
+&gt; &gt; &gt; 		for (int i = 0; i &lt; 10; i++) {
+&gt; &gt; &gt; 			if (i % 2 == 1) {
+&gt; &gt; &gt; 				dummy = &quot;Foo&quot;;
+&gt; &gt; &gt; 			}
+&gt; &gt; &gt; 			System.out.println(&quot;Hello&quot;);
+&gt; &gt; &gt; 			if (i % 2 == 1) {
+&gt; &gt; &gt; 				System.out.println(dummy.toLowerCase());
+&gt; &gt; &gt; 			}
+&gt; &gt; &gt; 			dummy = null;
+&gt; &gt; &gt; 		}
+&gt; &gt; &gt; 	}
+&gt; &gt; &gt; }
+&gt; &gt; 
+&gt; &gt; This would require for the compiler to understand the correlation between
+&gt; &gt; the two if statements. This is beyond the scope of our analysis.
+&gt; 
+&gt; I am fine with a message that warns about `dummy` potentially being null. As
+&gt; of Luna (4.4.0) this complains that `dummy` can *only* be null at that
+&gt; location, which is definitely wrong and the opposite of what happens in
+&gt; reality.</span >
+
+I just checked: the fix indeed changes the warning from &quot;can only&quot; to &quot;may be&quot;. So all looks well :)</pre>
+    </div>
+
+    <div id="c29" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=195638#c29">Comment 29</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">shankha banerjee</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=shankhba&#64;in.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=shankhba&#64;in.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2014-12-09 10:29:58 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Verified for 4.5M4 using I20141208-2000 build.</pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=195638">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=195638">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=195638">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=195638&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=195638" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>

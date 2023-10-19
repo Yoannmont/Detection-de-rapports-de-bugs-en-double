@@ -1,0 +1,6 @@
+# Détection des rapports de bugs en double
+
+En raison de la complexité des systèmes logiciels, les bugs logiciels sont répandus. Les entreprises, en particulier les grandes, utilisent généralement des systèmes de suivi des bugs (BTS), également appelés système de suivi des problèmes, pour gérer et suivre les enregistrements des bugs. Outre les développeurs et les testeurs, de nombreux projets, principalement des projets open source, permettent aux utilisateurs de signaler de nouveaux bugs dans leur BTS. Pour ce faire, les utilisateurs doivent remplir un formulaire avec plusieurs champs. Un sous-ensemble important de ces champs fournissent des données catégorielles et n'acceptent que les valeurs qui vont d'une liste fixe d’options (par exemple, composant, version et produit du système). Deux autres champs à remplir importants sont le résumé et la description. Les utilisateurs sont libres d'écrire tout ce qui peut décrire le bug au mieux dans les deux champs et la seule contrainte est le nombre de caractères. La soumission d'un formulaire crée une page, appelée rapport de bug ou rapport de problème, qui contient toutes les informations sur un bug.
+Le projet aborde la conception d'un modèle de régression qui détecte les doublons dans les rapports de bugs d'un site web.
+  
+  Pour plus de détails, cliquez sur [**Double-detector.ipynb**](Double-detector.ipynb).

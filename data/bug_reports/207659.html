@@ -1,0 +1,2718 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>207659 &ndash; [performance] optimize AbstractTaskContainer.contains()</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "207659 – [performance] optimize AbstractTaskContainer.contains()",
+                             "show_bug.cgi?id=207659" );
+        document.title = "207659 – [performance] optimize AbstractTaskContainer.contains()";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "207659 – [performance] optimize AbstractTaskContainer.contains()", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_RESOLVED
+                 bz_product_Mylyn
+                 bz_component_Tasks
+                 bz_bug_207659 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;207659</span>
+
+        <span id="subtitle" class="subheader">[performance] optimize AbstractTaskContainer.contains()</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2007-11-21 19:40:28 EST</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=207659&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=207659" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2007-11-21 19:40:28">
+  <input type="hidden" name="id" value="207659">
+  <input type="hidden" name="token" value="1629866758-f4gY2vFFpxuou7jZeDm-UJOWg6yPnIXwXehIQDFWxvc">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=207659"><b>Bug&nbsp;207659</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">[performance] optimize AbstractTaskContainer.contains()</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span>[performance] optimize AbstractTaskContainer.contains()
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      '[performance] optimize AbstractTaskContainer.contains()' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">RESOLVED
+          FIXED
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >Mylyn
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >Mylyn
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=Mylyn"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >Tasks
+
+  (<a href="buglist.cgi?component=Tasks&amp;product=Mylyn&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>unspecified &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">PC
+        Linux
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P1
+       critical<span id="votes_container">
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=207659#vote_207659">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>2.2 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard">
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'mylyn-inbox\x40eclipse.org',
+        '');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+
+  </td>
+  </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2007-10-27 02:35 EDT by <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2007-11-21 19:40 EST
+      (<a href="show_activity.cgi?id=207659">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>1 
+          user
+          <span id="cc_edit_area_showhide_container" class="bz_default_hidden">
+            (<a href="#" id="cc_edit_area_showhide">show</a>)
+          </span>
+        <div id="cc_edit_area">
+          <br>
+            <select id="cc" multiple="multiple" size="5" >
+                <option value="mjmeijer">mjmeijer</option>
+            </select>
+        </div>
+          <script type="text/javascript">
+            hideEditableField( 'cc_edit_area_showhide_container', 
+                               'cc_edit_area', 
+                               'cc_edit_area_showhide', 
+                               '', 
+                               '');  
+          </script>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" >
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+      <tr id="a1" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=81457"
+               title="View the content of the attachment">
+          <b>Applying brains to problem:</b></a>
+
+          <span class="bz_attach_extra_info">
+              (2.71 KB,
+                patch)
+
+            <br>
+            <a href="#attach_81457"
+               title="Go to the comment associated with the attachment">2007-10-29 10:26 EDT</a>,
+
+            <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=81457&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=81457&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a2" class="bz_contenttype_application_octet-stream">
+        <td>
+            <a href="attachment.cgi?id=81458"
+               title="View the content of the attachment">
+          <b>mylyn/context/zip</b></a>
+
+          <span class="bz_attach_extra_info">
+              (11.00 KB,
+                application/octet-stream)
+
+            <br>
+            <a href="#attach_81458"
+               title="Go to the comment associated with the attachment">2007-10-29 10:26 EDT</a>,
+
+            <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=81458&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a3" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=81482"
+               title="View the content of the attachment">
+          <b>patch with one call to getChildren removed.</b></a>
+
+          <span class="bz_attach_extra_info">
+              (3.20 KB,
+                patch)
+
+            <br>
+            <a href="#attach_81482"
+               title="Go to the comment associated with the attachment">2007-10-29 13:45 EDT</a>,
+
+            <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=81482&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=81482&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a4" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=81609"
+               title="View the content of the attachment">
+          <b>test case with cycle</b></a>
+
+          <span class="bz_attach_extra_info">
+              (1.53 KB,
+                patch)
+
+            <br>
+            <a href="#attach_81609"
+               title="Go to the comment associated with the attachment">2007-10-30 14:06 EDT</a>,
+
+            <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=81609&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=81609&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a5" class="bz_contenttype_application_octet-stream">
+        <td>
+            <a href="attachment.cgi?id=81610"
+               title="View the content of the attachment">
+          <b>mylyn/context/zip</b></a>
+
+          <span class="bz_attach_extra_info">
+              (17.25 KB,
+                application/octet-stream)
+
+            <br>
+            <a href="#attach_81610"
+               title="Go to the comment associated with the attachment">2007-10-30 14:06 EDT</a>,
+
+            <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=81610&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a6" class="bz_contenttype_image_jpeg">
+        <td>
+            <a href="attachment.cgi?id=81699"
+               title="View the content of the attachment">
+          <b>recursion, why doesn't Eclipse warn against this?</b></a>
+
+          <span class="bz_attach_extra_info">
+              (45.94 KB,
+                image/jpeg)
+
+            <br>
+            <a href="#attach_81699"
+               title="Go to the comment associated with the attachment">2007-10-31 04:45 EDT</a>,
+
+            <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=81699&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a7" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=81838"
+               title="View the content of the attachment">
+          <b>optimized contains()</b></a>
+
+          <span class="bz_attach_extra_info">
+              (11.15 KB,
+                patch)
+
+            <br>
+            <a href="#attach_81838"
+               title="Go to the comment associated with the attachment">2007-11-01 03:51 EDT</a>,
+
+            <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=81838&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=81838&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a8" class="bz_contenttype_application_octet-stream">
+        <td>
+            <a href="attachment.cgi?id=81839"
+               title="View the content of the attachment">
+          <b>mylyn/context/zip</b></a>
+
+          <span class="bz_attach_extra_info">
+              (44.21 KB,
+                application/octet-stream)
+
+            <br>
+            <a href="#attach_81839"
+               title="Go to the comment associated with the attachment">2007-11-01 03:51 EDT</a>,
+
+            <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=81839&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a9" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=82532"
+               title="View the content of the attachment">
+          <b>Resolving performance issue in contains()</b></a>
+
+          <span class="bz_attach_extra_info">
+              (3.02 KB,
+                patch)
+
+            <br>
+            <a href="#attach_82532"
+               title="Go to the comment associated with the attachment">2007-11-09 08:57 EST</a>,
+
+            <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=82532&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=82532&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a10" class="bz_contenttype_application_octet-stream">
+        <td>
+            <a href="attachment.cgi?id=82533"
+               title="View the content of the attachment">
+          <b>mylyn/context/zip</b></a>
+
+          <span class="bz_attach_extra_info">
+              (48.68 KB,
+                application/octet-stream)
+
+            <br>
+            <a href="#attach_82533"
+               title="Go to the comment associated with the attachment">2007-11-09 08:57 EST</a>,
+
+            <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=82533&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a11" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=82572"
+               title="View the content of the attachment">
+          <b>Changed AbstractTaskContainer plus test</b></a>
+
+          <span class="bz_attach_extra_info">
+              (12.05 KB,
+                patch)
+
+            <br>
+            <a href="#attach_82572"
+               title="Go to the comment associated with the attachment">2007-11-09 15:57 EST</a>,
+
+            <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=82572&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=82572&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a12" class="bz_contenttype_application_octet-stream">
+        <td>
+            <a href="attachment.cgi?id=82573"
+               title="View the content of the attachment">
+          <b>mylyn/context/zip</b></a>
+
+          <span class="bz_attach_extra_info">
+              (47.34 KB,
+                application/octet-stream)
+
+            <br>
+            <a href="#attach_82573"
+               title="Go to the comment associated with the attachment">2007-11-09 15:57 EST</a>,
+
+            <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=82573&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a13" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=82946"
+               title="View the content of the attachment">
+          <b>patch in case changes need to be reverted</b></a>
+
+          <span class="bz_attach_extra_info">
+              (6.10 KB,
+                patch)
+
+            <br>
+            <a href="#attach_82946"
+               title="Go to the comment associated with the attachment">2007-11-15 02:07 EST</a>,
+
+            <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=82946&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=82946&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a14" class="bz_contenttype_application_octet-stream">
+        <td>
+            <a href="attachment.cgi?id=82947"
+               title="View the content of the attachment">
+          <b>mylyn/context/zip</b></a>
+
+          <span class="bz_attach_extra_info">
+              (20.04 KB,
+                application/octet-stream)
+
+            <br>
+            <a href="#attach_82947"
+               title="Go to the comment associated with the attachment">2007-11-15 02:07 EST</a>,
+
+            <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=82947&amp;action=edit">Details</a>
+        </td>
+      </tr>
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <span class="bz_attach_view_hide">
+            <a id="view_all" href="attachment.cgi?bugid=207659&amp;action=viewall">View All</a>
+        </span>
+        <a href="attachment.cgi?bugid=207659&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=207659&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-27 02:35:28 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The task list spents a lot of CPU time in AbstractTaskContainter.contains() on refresh. AbstractTaskContainter.containsHelper() and AbstractTaskContainter.getChildren() need to be optimized.</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-29 09:57:33 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I see four callers of AbstractTaskContainer.contains(), can you tell me the main caller causing this?
+Perhaps the check for no cycles is performed more than once per iteration?</pre>
+    </div>
+
+    <div id="c2" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c2">Comment 2</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-29 10:26:09 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=81457&amp;action=diff" name="attach_81457" title="Applying brains to problem:">attachment 81457</a> <a href="attachment.cgi?id=81457&amp;action=edit" title="Applying brains to problem:">[details]</a></span>
+Applying brains to problem:
+
+3 out of 4 possible steps implemented, please test this.</pre>
+    </div>
+
+    <div id="c3" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c3">Comment 3</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-29 10:26:17 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=81458" name="attach_81458" title="mylyn/context/zip">attachment 81458</a> <a href="attachment.cgi?id=81458&amp;action=edit" title="mylyn/context/zip">[details]</a></span>
+mylyn/context/zip</pre>
+    </div>
+
+    <div id="c4" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c4">Comment 4</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eugene Kuleshov</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=ekuleshov&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=ekuleshov&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-29 12:13:01 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">BTW, I think contains() methods should not use getChildren() call, which will create a temporary collection that is thrown away after getting its size.</pre>
+    </div>
+
+    <div id="c5" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c5">Comment 5</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-29 13:20:41 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Maarten, could you please outline how your patch addresses the problem mentioned in the description?</pre>
+    </div>
+
+    <div id="c6" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c6">Comment 6</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-29 13:43:45 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text"> (In reply to <a href="show_bug.cgi?id=207659#c5">comment #5</a>)
+<span class="quote">&gt; Maarten, could you please outline how your patch addresses the problem mentioned
+&gt; in the description?</span >
+The helper contains superfluous tests and recurses only to return again. 
+I've tried to remove those, but I don't have access to a profiler: <a class="bz_bug_link 
+          bz_status_CLOSED  bz_closed"
+   title="CLOSED WONTFIX - Porting Agent Controller to MAC OS"
+   href="show_bug.cgi?id=68111">bug 68111</a> :-(.
+
+ (In reply to <a href="show_bug.cgi?id=207659#c4">comment #4</a>)
+<span class="quote">&gt; BTW, I think contains() methods should not use getChildren() call, which will
+&gt; create a temporary collection that is thrown away after getting its size.</span >
+I'll look at getChildren() next, it's called  twice now: once to see its not null, once to find the size.
+I cache the intermediate result to remve one call.
+
+After this I need to compare the performance with the new method countChildren, that does not allocate and dispose an intermediate result HashSet on every invocation, but just counts.
+Is a unit test already available for this as basis for a performance test??</pre>
+    </div>
+
+    <div id="c7" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c7">Comment 7</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-29 13:45:27 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=81482&amp;action=diff" name="attach_81482" title="patch with one call to getChildren removed.">attachment 81482</a> <a href="attachment.cgi?id=81482&amp;action=edit" title="patch with one call to getChildren removed.">[details]</a></span>
+patch with one call to getChildren removed.
+
+Thank you Eugene and Steffen for feedback</pre>
+    </div>
+
+    <div id="c8" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c8">Comment 8</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-29 14:02:52 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Maarten, it would help the review process and the project most if open questions were discussed first before patches are attached to an issue. The review of a complete and polished patch will require much less time than reviewing multiple incomplete patches and increase the chances a patch to get merged.
+
+I am not sure if these methods can be optimized without looking at the detailed profiling results. Please also note Eugene's comment on <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [performance] Task list refresh is slow"
+   href="show_bug.cgi?id=194430">bug 194430</a> .
+</pre>
+    </div>
+
+    <div id="c9" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c9">Comment 9</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-30 07:52:37 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Yesterday I created a junit test for this bug to test different implementations of the containsHelper() function.
+caching the result of getChildren gives a 50% improvement but still gives long times for large (dipe/wide) trees.
+This morning I woke up with the solution: this function must recurse when it hasChildren(), the count is irrelevant!
+And hasChildren() is cheap, it can return as soon as there is a single child!!
+
+	private boolean containsHelperB(String handle, int depth) {
+		if (depth &gt;= MAX_SUBTASK_DEPTH) {
+			return false;
+		} else {
+			depth++;
+			for (AbstractTask child : children) {
+				String childLabel = child.getHandleIdentifier();
+				if (handle.equals(childLabel)) {
+					return true;
+				} else if ( child.hasChildren()) {
+					if (((AbstractTaskContainer)child).containsHelperB(handle, depth)) {
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+	}
+
+	public boolean hasChildren() {
+		for (AbstractTask child : children) {
+			return true;
+		}
+		return false;
+	}
+
+When describing the problem properly, the method name reveals itself!
+
+The unit test gives the following results for a reasonably deep and wide test case: 
+
+Time spent with current contains()         : 54297 ms
+Time spent with caching containsA()        : 27835 ms
+Time spent with hasChildren(() containsB() : 642 ms
+
+How common are cyclic structures, do they need testing as well?</pre>
+    </div>
+
+    <div id="c10" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c10">Comment 10</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-30 13:38:44 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Maarten, thanks for investigating that. It looks like in the current implementation the list of children is indeed build up three times. It should be trivial to make that significantly faster with a simple fix.</pre>
+    </div>
+
+    <div id="c11" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c11">Comment 11</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-30 14:06:10 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=81609&amp;action=diff" name="attach_81609" title="test case with cycle">attachment 81609</a> <a href="attachment.cgi?id=81609&amp;action=edit" title="test case with cycle">[details]</a></span>
+test case with cycle
+
+Mik, it turns out that the code is also not working as expected. Please see the attached test case which has a cycle in the subtask hierarchy. It throws a StackOverflowError.</pre>
+    </div>
+
+    <div id="c12" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c12">Comment 12</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-30 14:06:12 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=81610" name="attach_81610" title="mylyn/context/zip">attachment 81610</a> <a href="attachment.cgi?id=81610&amp;action=edit" title="mylyn/context/zip">[details]</a></span>
+mylyn/context/zip</pre>
+    </div>
+
+    <div id="c13" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c13">Comment 13</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-30 17:45:25 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text"> (In reply to <a href="show_bug.cgi?id=207659#c11">comment #11</a>)
+<span class="quote">&gt; Mik, it turns out that the code is also not working as expected. Please see the
+&gt; attached test case which has a cycle in the subtask hierarchy. It throws a
+&gt; StackOverflowError.</span >
+No chocking with stack overflow on my modified code using hasChildren()...</pre>
+    </div>
+
+    <div id="c14" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c14">Comment 14</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-31 04:43:36 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text"> (In reply to <a href="show_bug.cgi?id=207659#c11">comment #11</a>)
+<span class="quote">&gt; It throws a StackOverflowError.</span >
+Well getChildren() calls contains() inside a loop AND contains() calls containsHelper() which calls getChildren() twice in the if test and calls itself recursively once.</pre>
+    </div>
+
+    <div id="c15" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c15">Comment 15</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-31 04:45:57 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=81699" name="attach_81699" title="recursion, why doesn't Eclipse warn against this?">attachment 81699</a> <a href="attachment.cgi?id=81699&amp;action=edit" title="recursion, why doesn't Eclipse warn against this?">[details]</a></span>
+recursion, why doesn't Eclipse warn against this?
+
+The source of the performance problems...</pre>
+    </div>
+
+    <div id="c16" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c16">Comment 16</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-31 06:00:58 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">getChildren() does NOT recurse and return a set with all children, grandChildren, and so on.
+Yet this is what the javadoc comment leads you to believe... :-(
+
+New hypothesis:
+This may very well be the cause of  many bugs with improper display of Grouped Subtasks like 
+- <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - subtasks causing false guaranteed visibility for their parent tasks"
+   href="show_bug.cgi?id=205202">bug 205202</a>: subtasks causing false guaranteed visibility for their parent tasks
+- <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - Group subtasks hides scheduled tasks in Focus on Workweek"
+   href="show_bug.cgi?id=204699">bug 204699</a>: Group subtasks hides scheduled tasks in Focus on Workweek
+
+tree/graph querying and navigation is a lot more complex than simple list navigation.
+The valid desire to group subtasks and show dependencies creates increased complexity and cost (CPU) problems
+
+Solution:
+The API should differentiate between looking for direct children and a deeper search:
+getChildren() is not the same as getDescendants()</pre>
+    </div>
+
+    <div id="c17" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c17">Comment 17</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-31 07:23:13 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Mik, please clarify what you want getChildren() to do, it has over a 100 callers so it must be something important!
+
+the contains() optimization is almost done, using a cheaper hasChildren() method that can be used in more places where ...getChildren.size() &gt; 0 is or ...getChildren().isEmpty() is used now.
+
+I think in some of the callers are interested in the children only, while others want to see all descendants with, cycles are a problem only to the recursive implementation.
+
+test case: task1 -&gt; task2 -&gt; task3 -&gt; (task1)
+
+task1.getChildren() returns [task2]
+task1.hasChildren() returns true
+task1.countChildren() returns 1
+task1.getDescendants() returns [task2, task3]
+
+More insidious is:
+test case: task1 -&gt; (task1)
+
+task1.getChildren() returns [] OR [task1]
+task1.hasChildren() returns false OR true
+task1.countChildren() returns 0 OR 1
+task1.getDescendants() returns [] OR [task1]
+
+Personally I think direct self reference should be prevented at creation or addition, throwing IllegalStateException</pre>
+    </div>
+
+    <div id="c18" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c18">Comment 18</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-31 10:12:40 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Mik,
+
+I think you (sometimes) want getChildren to do this:
+
+	/**
+	 * &#64;return an expanded set of all descendants, excluding itself;
+	 */
+	public Set&lt;AbstractTask&gt; getDescendants() {
+		Set&lt;AbstractTask&gt; childrenWithoutCycles = new HashSet&lt;AbstractTask&gt;();
+		this.getDescendantsHelper(childrenWithoutCycles, this);
+		return Collections.unmodifiableSet(childrenWithoutCycles);
+	}
+
+	protected void getDescendantsHelper(Set&lt;AbstractTask&gt; visited, AbstractTaskContainer root) {
+		for (AbstractTask child : children) {
+			if (!visited.contains(child) &amp;&amp; child != root) {
+				visited.add(child);
+				child.getDescendantsHelper(visited, root);
+			}
+		}
+	}
+</pre>
+    </div>
+
+    <div id="c19" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c19">Comment 19</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-01 03:51:24 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=81838&amp;action=diff" name="attach_81838" title="optimized contains()">attachment 81838</a> <a href="attachment.cgi?id=81838&amp;action=edit" title="optimized contains()">[details]</a></span>
+optimized contains()
+
+Less expensive contains with less stack overflow problems.
+Also added hasChildren() to replace ...getChildren().size() &gt; 0 and ...getChildren.isEmpty();
+Also added getDescendants() to get a set of all descendants in a container.
+
+Also added performance Unit Test to do some load testing. Parameters to be set.</pre>
+    </div>
+
+    <div id="c20" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c20">Comment 20</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-01 03:51:26 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=81839" name="attach_81839" title="mylyn/context/zip">attachment 81839</a> <a href="attachment.cgi?id=81839&amp;action=edit" title="mylyn/context/zip">[details]</a></span>
+mylyn/context/zip</pre>
+    </div>
+
+    <div id="c21" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c21">Comment 21</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-08 18:39:41 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I fully agree that we need to optimize this and some related parts of the code.  As with testing, I want us to follow Platform's example and ensure that important optimizations of this sort are captured by repeatable performance tests.  These will not only help us get rid of some of the hotspots, but will also provide long-term value to the project and help avoid future performance regressions.
+
+Maarten: it's great to see your interest in this.  Would you like to contribute a performance tests that highlights the underlying problem?  There's a great tutorial on how to do this linked from <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - create performance test harness"
+   href="show_bug.cgi?id=116487">bug 116487</a>.</pre>
+    </div>
+
+    <div id="c22" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c22">Comment 22</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-09 08:55:19 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">OK, I installed the test.performance stuff, wrote some test, and ran them. Quite easy actually.
+
+I've described prerequisites in <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - create performance test harness"
+   href="show_bug.cgi?id=116487">bug 116487</a>.
+
+Output of current version of containsHelper()
+Scenario 'org.eclipse.mylyn.tasks.tests.performance.<a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [performance] optimize AbstractTaskContainer.contains()"
+   href="show_bug.cgi?id=207659">Bug207659</a>Test#testContainsPerformanceMany()' (average over 2000 samples):
+  System Time:               1ms        (95% in [1ms, 1ms])            Measurable effect: 0ms (0.1 SDs)
+  Used Java Heap:         -195          (95% in [-162.39K, 162.01K])   Measurable effect: 327.01K (0.1 SDs) (required sample size for an effect of 5% of stdev: 6400)
+
+Scenario 'org.eclipse.mylyn.tasks.tests.performance.<a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [performance] optimize AbstractTaskContainer.contains()"
+   href="show_bug.cgi?id=207659">Bug207659</a>Test#testContainsPerformanceFew()' (average over 2000 samples):
+  System Time:              24ms        (95% in [24ms, 24ms])          Measurable effect: 0ms (0.1 SDs)
+  Used Java Heap:         2.44K         (95% in [-299.32K, 304.2K])    Measurable effect: 608.39K (0.1 SDs) (required sample size for an effect of 5% of stdev: 6401)
+
+
+Version with optimized containsHelper()
+
+Scenario 'org.eclipse.mylyn.tasks.tests.performance.<a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [performance] optimize AbstractTaskContainer.contains()"
+   href="show_bug.cgi?id=207659">Bug207659</a>Test#testContainsPerformanceMany()' (average over 2000 samples):
+  System Time:               0ms        (95% in [0ms, 0ms])            Measurable effect: 0ms (0.1 SDs) (required sample size for an effect of 5% of stdev: 6401)
+  Used Java Heap:         1.51K         (95% in [-13.67K, 16.69K])     Measurable effect: 30.6K (0.1 SDs) (required sample size for an effect of 5% of stdev: 6401)
+
+Scenario 'org.eclipse.mylyn.tasks.tests.performance.<a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [performance] optimize AbstractTaskContainer.contains()"
+   href="show_bug.cgi?id=207659">Bug207659</a>Test#testContainsPerformanceFew()' (average over 2000 samples):
+  System Time:               0ms        (95% in [0ms, 0ms])            Measurable effect: 0ms (0.1 SDs) (required sample size for an effect of 5% of stdev: 6400)
+  Used Java Heap:        -4.96K         (95% in [-26.32K, 16.41K])     Measurable effect: 43.07K (0.1 SDs) (required sample size for an effect of 5% of stdev: 6400)
+
+I think the biggest problem in the current code is the risk of stack overflow and excessive heap usage. I propose attached patch that does not change functionality be applied asap.
+So its more a functionality issue/breaker than a performance issue.
+
+ (In reply to <a href="show_bug.cgi?id=207659#c11">comment #11</a>)
+<span class="quote">&gt; Mik, it turns out that the code is also not working as expected. Please see the
+&gt; attached test case which has a cycle in the subtask hierarchy. It throws a
+&gt; StackOverflowError.</span >
+
+Please specify the desired behaviour in the javadoc comment, especially with regard to cyclic structures. I can then work on both functional and performance tests.</pre>
+    </div>
+
+    <div id="c23" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c23">Comment 23</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-09 08:57:52 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=82532&amp;action=diff" name="attach_82532" title="Resolving performance issue in contains()">attachment 82532</a> <a href="attachment.cgi?id=82532&amp;action=edit" title="Resolving performance issue in contains()">[details]</a></span>
+Resolving performance issue in contains()
+
+Functionality still to be resolved.
+Change is to build up the set only once instead of three times.</pre>
+    </div>
+
+    <div id="c24" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c24">Comment 24</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-09 08:57:55 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=82533" name="attach_82533" title="mylyn/context/zip">attachment 82533</a> <a href="attachment.cgi?id=82533&amp;action=edit" title="mylyn/context/zip">[details]</a></span>
+mylyn/context/zip</pre>
+    </div>
+
+    <div id="c25" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c25">Comment 25</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-09 13:51:24 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Maarten, could you attach the tests you created?</pre>
+    </div>
+
+    <div id="c26" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c26">Comment 26</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-09 15:57:26 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=82572&amp;action=diff" name="attach_82572" title="Changed AbstractTaskContainer plus test">attachment 82572</a> <a href="attachment.cgi?id=82572&amp;action=edit" title="Changed AbstractTaskContainer plus test">[details]</a></span>
+Changed AbstractTaskContainer plus test
+
+I've got a 15 trial of the YourKit profiler :-)
+The main caller of getChildren is CustomTaskListDecorator.hasIncoming() taht may also be optimized...</pre>
+    </div>
+
+    <div id="c27" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c27">Comment 27</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-09 15:57:28 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=82573" name="attach_82573" title="mylyn/context/zip">attachment 82573</a> <a href="attachment.cgi?id=82573&amp;action=edit" title="mylyn/context/zip">[details]</a></span>
+mylyn/context/zip</pre>
+    </div>
+
+    <div id="c28" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c28">Comment 28</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-09 22:15:28 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Steffen: assigning to you for review.</pre>
+    </div>
+
+    <div id="c29" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c29">Comment 29</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-12 08:49:33 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text"> (In reply to <a href="show_bug.cgi?id=207659#c26">comment #26</a>)
+<span class="quote">&gt; The main caller of getChildren is CustomTaskListDecorator.hasIncoming() that may
+&gt; also be optimized...</span >
+Indeed hasIncoming is building the getChildren list three times as well, where once would suffice...
+How serious are these performance problems and do we need a fix for 2.2?
+
+Then this is an easy improvement:
+	private boolean hasIncoming(AbstractTaskContainer container) {
+		for (AbstractTask task : container.getChildren()) {
+			if (task != null) {
+				AbstractTask containedRepositoryTask = task;
+				if (containedRepositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING) {
+					return true;
+//				} else if (task.getChildren() != null &amp;&amp; task.getChildren().size() &gt; 0 &amp;&amp; hasIncoming(task)) {
+				} else if (task.hasChildren() &amp;&amp; hasIncoming(task)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+I suspect adding grouped tasks presentation with subtasks beneath tasks introduced recursion performance problems in many places.
+Maybe we should introduce the optimized getDescendants(), see <a href="show_bug.cgi?id=207659#c18">comment 18</a>, and use that wherepossible in place of the current getChildren in another recursion.
+</pre>
+    </div>
+
+    <div id="c30" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c30">Comment 30</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-15 02:07:03 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=82946&amp;action=diff" name="attach_82946" title="patch in case changes need to be reverted">attachment 82946</a> <a href="attachment.cgi?id=82946&amp;action=edit" title="patch in case changes need to be reverted">[details]</a></span>
+patch in case changes need to be reverted</pre>
+    </div>
+
+    <div id="c31" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c31">Comment 31</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-15 02:07:29 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=82947" name="attach_82947" title="mylyn/context/zip">attachment 82947</a> <a href="attachment.cgi?id=82947&amp;action=edit" title="mylyn/context/zip">[details]</a></span>
+mylyn/context/zip</pre>
+    </div>
+
+    <div id="c32" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c32">Comment 32</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-15 02:10:58 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Maarten, I have committed changes that are along the lines of your patches. I will iterate more on this and plan to setup the performance test suite within the next few weeks so we can collect a few numbers.</pre>
+    </div>
+
+    <div id="c33" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c33">Comment 33</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-15 03:16:26 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text"> (In reply to <a href="show_bug.cgi?id=207659#c32">comment #32</a>)
+OK I see you've merged my ideas well. Now that this more hierarchical TaskList is here to stay, I think that AbstractRepositoryContainer should allow the visitor pattern for various checks.
+ So it should have an accept() method, with a visitor that includes a Object placeholder in the arguments for collecting a subset. like children or incoming, or whatever.
+ The visitor visit() method would be a more general case of the containsHelper(). What do you think of this?</pre>
+    </div>
+
+    <div id="c34" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c34">Comment 34</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">maarten meijer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mjmeijer&#64;eclipsophy.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mjmeijer&#64;eclipsophy.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-15 03:21:49 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text"> (In reply to <a href="show_bug.cgi?id=207659#c17">comment #17</a>)
+<span class="quote">&gt; I think in some of the callers are interested in the children only, while others
+&gt; want to see all descendants with, cycles are a problem only to the recursive
+&gt; implementation.
+&gt; 
+&gt; test case: task1 -&gt; task2 -&gt; task3 -&gt; (task1)
+&gt; 
+&gt; task1.getChildren() returns [task2]
+&gt; task1.hasChildren() returns true
+&gt; task1.countChildren() returns 1
+&gt; task1.getDescendants() returns [task2, task3]
+&gt; 
+&gt; More insidious is:
+&gt; test case: task1 -&gt; (task1)
+&gt; 
+&gt; task1.getChildren() returns [] OR [task1]
+&gt; task1.hasChildren() returns false OR true
+&gt; task1.countChildren() returns 0 OR 1
+&gt; task1.getDescendants() returns [] OR [task1]</span >
+Still to do:
+What do we want to happen when we call getChildren on a cyclic structure? I think it should return all the children, but only once.</pre>
+    </div>
+
+    <div id="c35" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c35">Comment 35</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-15 15:42:00 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">We will review these APIs for Mylyn 3.0 when we will be able to make larger changes to the task list model. Using a visitor or iterator for traversing the task list graph is certainly a possibility that will be considered.
+
+For the record here is the stack trace I encountered when I had a cycle in the task list:
+
+-- Error Log --
+Date: Thu Nov 15 02:47:00 GMT 2007
+Message: Unhandled event loop exception
+Severity: Error
+Plugin ID: org.eclipse.ui
+Stack Trace:
+org.eclipse.swt.SWTException: Failed to execute runnable (java.lang.StackOverflowError)
+at org.eclipse.swt.SWT.error(SWT.java:3706)
+at org.eclipse.swt.SWT.error(SWT.java:3624)
+at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:133)
+at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3312)
+at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:2985)
+at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:2395)
+at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2359)
+at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2225)
+at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:468)
+at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:288)
+at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:463)
+at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:106)
+at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:193)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:106)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:76)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:362)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:175)
+at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+at java.lang.reflect.Method.invoke(Method.java:597)
+at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:515)
+at org.eclipse.equinox.launcher.Main.basicRun(Main.java:455)
+at org.eclipse.equinox.launcher.Main.run(Main.java:1193)
+at org.eclipse.equinox.launcher.Main.main(Main.java:1169)
+Caused by: java.lang.StackOverflowError
+at org.eclipse.mylyn.tasks.core.AbstractTaskContainer.containsHelper(AbstractTaskContainer.java:91)
+at org.eclipse.mylyn.tasks.core.AbstractTaskContainer.contains(AbstractTaskContainer.java:87)
+at org.eclipse.mylyn.tasks.core.AbstractTaskContainer.getChildren(AbstractTaskContainer.java:74)
+at org.eclipse.mylyn.tasks.core.AbstractTaskContainer.containsHelper(AbstractTaskContainer.java:98)
+at org.eclipse.mylyn.tasks.core.AbstractTaskContainer.contains(AbstractTaskContainer.java:87)
+at org.eclipse.mylyn.tasks.core.AbstractTaskContainer.getChildren(AbstractTaskContainer.java:74)
+[...]</pre>
+    </div>
+
+    <div id="c36" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c36">Comment 36</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-16 01:20:11 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Steffen: in case you haven't already, please make sure that the end result of this chnage doesn't blow up the UI when there is a cycle.  It's not common, but possible to get into the scenario where a partially synched set of tasks forms a cycle.  Until we make this safe there has to be a safeguard somewhere.</pre>
+    </div>
+
+    <div id="c37" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c37">Comment 37</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steffen Pingel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=steffen.pingel&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=steffen.pingel&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-16 01:39:00 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Sorry, I should have pointed that out more clearly. The fix I made was to gracefully handle cycles that I had in my tasklist which could cause StackOverflowExceptions before (stacktrace on <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED FIXED - CVS and modification timestamps (1GCOIFN)"
+   href="show_bug.cgi?id=35">bug 35</a>). I have added a test case to verify that this works now.</pre>
+    </div>
+
+    <div id="c38" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=207659#c38">Comment 38</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mik Kersten</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=mik.kersten&#64;tasktop.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=mik.kersten&#64;tasktop.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-21 19:40:28 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Fyi, committed a change to not look down tree viewer in order to determine when to draw the incoming indicator on queries and categories.</pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=207659">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=207659">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=207659">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=207659&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=207659" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,1770 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>124889 &ndash; Crash using 64-bit VM when trying to open file dialog</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "124889 – Crash using 64-bit VM when trying to open file dialog",
+                             "show_bug.cgi?id=124889" );
+        document.title = "124889 – Crash using 64-bit VM when trying to open file dialog";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "124889 – Crash using 64-bit VM when trying to open file dialog", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_RESOLVED
+                 bz_product_Platform
+                 bz_component_SWT
+                 bz_bug_124889 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;124889</span>
+
+        <span id="subtitle" class="subheader">Crash using 64-bit VM when trying to open file dialog</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2006-01-30 13:19:00 EST</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=124889&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=124889" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2006-01-30 13:19:00">
+  <input type="hidden" name="id" value="124889">
+  <input type="hidden" name="token" value="1629874354-BZboWP-080hKj7gl4Svi7B15HUQcvcq3r2SA5LUfgbI">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=124889"><b>Bug&nbsp;124889</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">Crash using 64-bit VM when trying to open file dialog</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span>Crash using 64-bit VM when trying to open file dialog
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      'Crash using 64-bit VM when trying to open file dialog' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">RESOLVED
+          DUPLICATE
+            of <a class="bz_bug_link 
+          bz_status_CLOSED  bz_closed"
+   title="CLOSED WONTFIX - [64] Eclipse crashes when browsing for files in Gnome."
+   href="show_bug.cgi?id=101790">bug 101790</a>
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >Platform
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >Eclipse Project
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=Platform"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >SWT
+
+  (<a href="buglist.cgi?component=SWT&amp;product=Platform&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>3.1.1 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">PC
+        Linux-GTK
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P3
+       critical<span id="votes_container">
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=124889#vote_124889">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>--- &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">Billy Biggs</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=billy.biggs&#64;eclipse.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=billy.biggs&#64;eclipse.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard">
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'platform-swt-inbox\x40eclipse.org',
+        '');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+
+  </td>
+  </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2006-01-23 12:24 EST by <span class="vcard"><span class="fn">Chris Funk</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=chris&#64;thefunks.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=chris&#64;thefunks.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2006-01-30 13:19 EST
+      (<a href="show_activity.cgi?id=124889">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>1 
+          user
+          <span id="cc_edit_area_showhide_container" class="bz_default_hidden">
+            (<a href="#" id="cc_edit_area_showhide">show</a>)
+          </span>
+        <div id="cc_edit_area">
+          <br>
+            <select id="cc" multiple="multiple" size="5" >
+                <option value="azeem.jiva">azeem.jiva</option>
+            </select>
+        </div>
+          <script type="text/javascript">
+            hideEditableField( 'cc_edit_area_showhide_container', 
+                               'cc_edit_area', 
+                               'cc_edit_area_showhide', 
+                               '', 
+                               '');  
+          </script>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" >
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <a href="attachment.cgi?bugid=124889&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=124889&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=124889#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Chris Funk</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=chris&#64;thefunks.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=chris&#64;thefunks.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-01-23 12:24:54 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Running Mandriva 2006 on a Compaq R3000Z laptop with 1GB RAM.
+Running any of:
+  Blackdown 1.4.2_03 x64 VM
+  Sun 1.5.0_05/6 x86-64 VM
+  IBM amd64-142 VM
+
+When Eclipse tries to open a file dialog it crashes.
+
+From Sun 1.5.0_06: (removed some seemingly extraneous libraries for length, but if needed I'll provide them)
+
+#
+# An unexpected error has been detected by HotSpot Virtual Machine:
+#
+#  SIGSEGV (0xb) at pc=0x00002aaaaae4d270, pid=15492, tid=46912501791488
+#
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (1.5.0_06-b05 interpreted mode)
+# Problematic frame:
+# C  [libc.so.6+0x72270]  strncmp+0xd0
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x0000000040115bf0):  JavaThread &quot;main&quot; [_thread_in_native, id=15492]
+
+siginfo:si_signo=11, si_errno=0, si_code=1, si_addr=0x000000000f2c6110
+
+Registers:
+RAX=0x0000000000000008, RBX=0xfefefefefefefeff, RCX=0x0000000000000000, RDX=0x0000000000000008
+RSP=0x00007fffffcc9578, RBP=0x00000000fffffed0, RSI=0x000000000f2c6110, RDI=0x00002aab0f2c1e90
+R8 =0x0000000000000000, R9 =0x0000000000003c84, R10=0x0000000000000001, R11=0x0000000040001948
+R12=0x00002aab0f2c1dd0, R13=0x0000000000000301, R14=0x0000000000000008, R15=0x0000000000001000
+RIP=0x00002aaaaae4d270, EFL=0x0000000000010282, CSGSFS=0x0000000000000000, ERR=0x0000000000000004
+  TRAPNO=0x000000000000000e
+
+Top of Stack: (sp=0x00007fffffcc9578)
+0x00007fffffcc9578:   00002aab106acf12 0000000000000301
+0x00007fffffcc9588:   0000000000000002 0000000000000015
+0x00007fffffcc9598:   00000000000041ed 0000000000000004
+0x00007fffffcc95a8:   0000000000000000 0000000000001000
+0x00007fffffcc95b8:   0000000000001000 0000000000000008
+0x00007fffffcc95c8:   0000000043d35cf0 0000000000000000
+0x00007fffffcc95d8:   0000000043d4e765 0000000000000000
+0x00007fffffcc95e8:   0000000043d4e765 0000000000000000
+0x00007fffffcc95f8:   0000000000000000 0000000000000000
+0x00007fffffcc9608:   0000000000000000 00002aab0f2c1cd0
+0x00007fffffcc9618:   00002aab0d353f10 0000000000000000
+0x00007fffffcc9628:   0000000000000000 00002aab0f2bbce0
+0x00007fffffcc9638:   00002aab0a184e40 00002aab0d5212e0
+0x00007fffffcc9648:   00002aab1041acca 00002aab0d353f10
+0x00007fffffcc9658:   00002aab0f2c3e40 00002aab0d356180
+0x00007fffffcc9668:   00002aab0d356180 0000000000000001
+0x00007fffffcc9678:   0000000000000001 0000000000000000
+0x00007fffffcc9688:   00002aab0a532d1a 00002aab0a696790
+0x00007fffffcc9698:   0000000000000001 0000000200000000
+0x00007fffffcc96a8:   00002aaaaae4509e 000000000f2c2d30
+0x00007fffffcc96b8:   00002aab0f2c3e40 00002aab0d356180
+0x00007fffffcc96c8:   00002aab0f2c2c40 0000000000000001
+0x00007fffffcc96d8:   0000000000000001 0000000000000000
+0x00007fffffcc96e8:   00002aab0a53a03d 0000000000000000
+0x00007fffffcc96f8:   0000000000000000 00002aab0a2b2e60
+0x00007fffffcc9708:   00002aaaaae46d3b 00002aab0cbe3510
+0x00007fffffcc9718:   0000000000000000 00002aab0d3555c0
+0x00007fffffcc9728:   00002aab0cbe3538 0000000000000001
+0x00007fffffcc9738:   0000000000000001 0000000000000001
+0x00007fffffcc9748:   00002aab0b0aa640 00002aab0d367b90
+0x00007fffffcc9758:   00002aab0d3543e0 00002aab0a2ae080
+0x00007fffffcc9768:   0000000000000000 00002aab0cbe3740 
+
+Instructions: (pc=0x00002aaaaae4d270)
+0x00002aaaaae4d260:   c1 41 39 c8 77 da 66 66 66 90 66 66 90 66 66 90
+0x00002aaaaae4d270:   48 8b 04 0e 48 8b 14 0f 49 83 ee 08 0f 8c 51 02 
+
+Stack: [0x00007fffffacf000,0x00007fffffccf000),  sp=0x00007fffffcc9578,  free space=2025k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  [libc.so.6+0x72270]  strncmp+0xd0
+
+[error occurred during error reporting, step 120, id 0xb]
+
+Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
+j  org.eclipse.swt.internal.gtk.OS._gtk_file_chooser_dialog_new([BJIJIJIJ)J+0
+j  org.eclipse.swt.internal.gtk.OS.gtk_file_chooser_dialog_new([BJIJIJIJ)J+20
+j  org.eclipse.swt.widgets.FileDialog.openChooserDialog()Ljava/lang/String;+71
+j  org.eclipse.swt.widgets.FileDialog.open()Ljava/lang/String;+24
+j  org.eclipse.ui.internal.editors.text.OpenExternalFileAction.run()V+36
+j  org.eclipse.ui.internal.editors.text.OpenExternalFileAction.run(Lorg/eclipse/jface/action/IAction;)V+1
+j  org.eclipse.ui.internal.PluginAction.runWithEvent(Lorg/eclipse/swt/widgets/Event;)V+116
+j  org.eclipse.ui.internal.WWinPluginAction.runWithEvent(Lorg/eclipse/swt/widgets/Event;)V+9
+j  org.eclipse.jface.action.ActionContributionItem.handleWidgetSelection(Lorg/eclipse/swt/widgets/Event;Z)V+278
+j  org.eclipse.jface.action.ActionContributionItem.access$2(Lorg/eclipse/jface/action/ActionContributionItem;Lorg/eclipse/swt/widgets/Event;Z)V+3
+j  org.eclipse.jface.action.ActionContributionItem$5.handleEvent(Lorg/eclipse/swt/widgets/Event;)V+60
+j  org.eclipse.swt.widgets.EventTable.sendEvent(Lorg/eclipse/swt/widgets/Event;)V+71
+j  org.eclipse.swt.widgets.Widget.sendEvent(Lorg/eclipse/swt/widgets/Event;)V+25
+j  org.eclipse.swt.widgets.Display.runDeferredEvents()Z+84
+j  org.eclipse.swt.widgets.Display.readAndDispatch()Z+22
+j  org.eclipse.ui.internal.Workbench.runEventLoop(Lorg/eclipse/jface/window/Window$IExceptionHandler;Lorg/eclipse/swt/widgets/Display;)V+9
+j  org.eclipse.ui.internal.Workbench.runUI()I+108
+j  org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Lorg/eclipse/swt/widgets/Display;Lorg/eclipse/ui/application/WorkbenchAdvisor;)I+11
+j  org.eclipse.ui.PlatformUI.createAndRunWorkbench(Lorg/eclipse/swt/widgets/Display;Lorg/eclipse/ui/application/WorkbenchAdvisor;)I+2
+j  org.eclipse.ui.internal.ide.IDEApplication.run(Ljava/lang/Object;)Ljava/lang/Object;+98
+j  org.eclipse.core.internal.runtime.PlatformActivator$1.run(Ljava/lang/Object;)Ljava/lang/Object;+257
+j  org.eclipse.core.runtime.adaptor.EclipseStarter.run(Ljava/lang/Object;)Ljava/lang/Object;+170
+j  org.eclipse.core.runtime.adaptor.EclipseStarter.run([Ljava/lang/String;Ljava/lang/Runnable;)Ljava/lang/Object;+57
+v  ~StubRoutines::call_stub
+j  sun.reflect.NativeMethodAccessorImpl.invoke0(Ljava/lang/reflect/Method;Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+0
+j  sun.reflect.NativeMethodAccessorImpl.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+87
+j  sun.reflect.DelegatingMethodAccessorImpl.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+6
+j  java.lang.reflect.Method.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+111
+j  org.eclipse.core.launcher.Main.invokeFramework([Ljava/lang/String;[Ljava/net/URL;)V+181
+j  org.eclipse.core.launcher.Main.basicRun([Ljava/lang/String;)V+107
+j  org.eclipse.core.launcher.Main.run([Ljava/lang/String;)I+4
+j  org.eclipse.core.launcher.Main.main([Ljava/lang/String;)V+10
+v  ~StubRoutines::call_stub
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( =&gt; current thread )
+  0x00002aab0eea35a0 JavaThread &quot;Worker-6&quot; [_thread_blocked, id=15529]
+  0x00002aab0d48d240 JavaThread &quot;Worker-5&quot; [_thread_blocked, id=15527]
+  0x00002aab0cc67940 JavaThread &quot;Worker-4&quot; daemon [_thread_blocked, id=15526]
+  0x00002aab0d450d80 JavaThread &quot;Worker-3&quot; daemon [_thread_blocked, id=15525]
+  0x00002aab0cc63480 JavaThread &quot;Worker-2&quot; daemon [_thread_blocked, id=15524]
+  0x00002aab0d254270 JavaThread &quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon [_thread_blocked, id=15519]
+  0x00002aab0cc8cce0 JavaThread &quot;Java indexing&quot; daemon [_thread_blocked, id=15517]
+  0x00002aab0a0d2a00 JavaThread &quot;Worker-1&quot; daemon [_thread_in_Java, id=15511]
+  0x00002aab0a0d9d80 JavaThread &quot;Worker-0&quot; daemon [_thread_blocked, id=15510]
+  0x00002aab078deb70 JavaThread &quot;Start Level Event Dispatcher&quot; daemon [_thread_blocked, id=15508]
+  0x00002aab078ddd30 JavaThread &quot;Framework Event Dispatcher&quot; daemon [_thread_blocked, id=15507]
+  0x00002aab0542a3d0 JavaThread &quot;Low Memory Detector&quot; daemon [_thread_blocked, id=15500]
+  0x00002aab05428840 JavaThread &quot;CompilerThread1&quot; daemon [_thread_blocked, id=15499]
+  0x00002aab05427330 JavaThread &quot;CompilerThread0&quot; daemon [_thread_blocked, id=15498]
+  0x00002aab05425c70 JavaThread &quot;AdapterThread&quot; daemon [_thread_blocked, id=15497]
+  0x00002aab054249b0 JavaThread &quot;Signal Dispatcher&quot; daemon [_thread_blocked, id=15496]
+  0x0000000040177d40 JavaThread &quot;Finalizer&quot; daemon [_thread_blocked, id=15495]
+  0x0000000040176d60 JavaThread &quot;Reference Handler&quot; daemon [_thread_blocked, id=15494]
+=&gt;0x0000000040115bf0 JavaThread &quot;main&quot; [_thread_in_native, id=15492]
+
+Other Threads:
+  0x000000004016a1d0 VMThread [id=15493]
+  0x00002aab0542bf80 WatcherThread [id=15501]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap
+ def new generation   total 30080K, used 29908K [0x00002aaaf00c0000, 0x00002aaaf2160000, 0x00002aaaf5610000)
+  eden space 26752K,  99% used [0x00002aaaf00c0000, 0x00002aaaf1ab5148, 0x00002aaaf1ae0000)
+  from space 3328K, 100% used [0x00002aaaf1e20000, 0x00002aaaf2160000, 0x00002aaaf2160000)
+  to   space 3328K,   0% used [0x00002aaaf1ae0000, 0x00002aaaf1ae0000, 0x00002aaaf1e20000)
+ tenured generation   total 66772K, used 50324K [0x00002aaaf5610000, 0x00002aaaf9745000, 0x00002aab000c0000)
+   the space 66772K,  75% used [0x00002aaaf5610000, 0x00002aaaf8735028, 0x00002aaaf8735200, 0x00002aaaf9745000)
+ compacting perm gen  total 48448K, used 48361K [0x00002aab000c0000, 0x00002aab03010000, 0x00002aab052c0000)
+   the space 48448K,  99% used [0x00002aab000c0000, 0x00002aab02ffa580, 0x00002aab02ffa600, 0x00002aab03010000)
+No shared spaces configured.
+
+Dynamic libraries:
+40000000-4000e000 r-xp 00000000 03:09 814410                             /var/opt/jdk1.5.0_06/bin/java
+4000e000-4000f000 ---p 4000e000 00:00 0 
+4000f000-4004f000 rwxp 4000f000 00:00 0 
+4010d000-40110000 rwxp 0000d000 03:09 814410                             /var/opt/jdk1.5.0_06/bin/java
+40110000-4017a000 rwxp 40110000 00:00 0                                  [heap]
+4017a000-4017b000 ---p 4017a000 00:00 0 
+4017b000-4027b000 rwxp 4017b000 00:00 0 
+4027b000-4027e000 ---p 4027b000 00:00 0 
+4027e000-4037c000 rwxp 4027e000 00:00 0 
+4037c000-4037f000 ---p 4037c000 00:00 0 
+4037f000-4047d000 rwxp 4037f000 00:00 0 
+4047d000-40480000 ---p 4047d000 00:00 0 
+40480000-4057e000 rwxp 40480000 00:00 0 
+4057e000-40581000 ---p 4057e000 00:00 0 
+40581000-4067f000 rwxp 40581000 00:00 0 
+4067f000-40682000 ---p 4067f000 00:00 0 
+40682000-40780000 rwxp 40682000 00:00 0 
+40780000-40783000 ---p 40780000 00:00 0 
+40783000-40881000 rwxp 40783000 00:00 0 
+40881000-40884000 ---p 40881000 00:00 0 
+40884000-40982000 rwxp 40884000 00:00 0 
+40982000-40983000 ---p 40982000 00:00 0 
+40983000-40a83000 rwxp 40983000 00:00 0 
+40a83000-40a86000 ---p 40a83000 00:00 0 
+40a86000-40b84000 rwxp 40a86000 00:00 0 
+40b84000-40b87000 ---p 40b84000 00:00 0 
+40b87000-40c85000 rwxp 40b87000 00:00 0 
+40c85000-40c88000 ---p 40c85000 00:00 0 
+40c88000-40d86000 rwxp 40c88000 00:00 0 
+40d86000-40d89000 ---p 40d86000 00:00 0 
+40d89000-40e87000 rwxp 40d89000 00:00 0 
+40e87000-40e8a000 ---p 40e87000 00:00 0 
+40e8a000-40f88000 rwxp 40e8a000 00:00 0 
+40f88000-40f8b000 ---p 40f88000 00:00 0 
+40f8b000-41089000 rwxp 40f8b000 00:00 0 
+41089000-4108c000 ---p 41089000 00:00 0 
+4108c000-4118a000 rwxp 4108c000 00:00 0 
+4118a000-4118d000 ---p 4118a000 00:00 0 
+4118d000-4128b000 rwxp 4118d000 00:00 0 
+4128b000-4128e000 ---p 4128b000 00:00 0 
+4128e000-4138c000 rwxp 4128e000 00:00 0 
+4138c000-4138f000 ---p 4138c000 00:00 0 
+4138f000-4148d000 rwxp 4138f000 00:00 0 
+4148d000-41490000 ---p 4148d000 00:00 0 
+41490000-4158e000 rwxp 41490000 00:00 0 
+4158e000-41591000 rwxp 4158e000 00:00 0 
+41591000-4168f000 rwxp 41591000 00:00 0 
+2aaaaaaab000-2aaaaaac1000 r-xp 00000000 03:01 373890                     /lib64/ld-2.3.5.so
+2aaaaaac1000-2aaaaaac2000 rwxp 2aaaaaac1000 00:00 0 
+2aaaaaac2000-2aaaaaaca000 r-xs 00000000 03:07 229157                     /home/chris/opt/eclipse-3.1.1-x64/startup.jar
+2aaaaaaca000-2aaaaaacc000 r-xs 00000000 03:09 814890                     /var/opt/jdk1.5.0_06/jre/lib/ext/dnsns.jar
+2aaaaaacc000-2aaaaaaf2000 r-xs 00000000 03:09 814892                     /var/opt/jdk1.5.0_06/jre/lib/ext/sunjce_provider.jar
+2aaaaaaf2000-2aaaaabb6000 r-xs 00000000 03:09 814976                     /var/opt/jdk1.5.0_06/jre/lib/ext/localedata.jar
+2aaaaabb6000-2aaaaabb7000 r-xs 00000000 03:07 245115                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.ui.workbench.compatibility_3.1.0/compatibility.jar
+2aaaaabc0000-2aaaaabc1000 r-xp 00015000 03:01 373890                     /lib64/ld-2.3.5.so
+2aaaaabc1000-2aaaaabc2000 rwxp 00016000 03:01 373890                     /lib64/ld-2.3.5.so
+2aaaaabc2000-2aaaaabd1000 r-xp 00000000 03:01 373934                     /lib64/tls/libpthread-0.10.so
+2aaaaabd1000-2aaaaacd1000 ---p 0000f000 03:01 373934                     /lib64/tls/libpthread-0.10.so
+2aaaaacd1000-2aaaaacd3000 rwxp 0000f000 03:01 373934                     /lib64/tls/libpthread-0.10.so
+2aaaaacd3000-2aaaaacd8000 rwxp 2aaaaacd3000 00:00 0 
+2aaaaacd8000-2aaaaacda000 r-xp 00000000 03:01 373901                     /lib64/libdl-2.3.5.so
+2aaaaacda000-2aaaaadd9000 ---p 00002000 03:01 373901                     /lib64/libdl-2.3.5.so
+2aaaaadd9000-2aaaaaddb000 rwxp 00001000 03:01 373901                     /lib64/libdl-2.3.5.so
+2aaaaaddb000-2aaaaaf0a000 r-xp 00000000 03:01 373930                     /lib64/tls/libc-2.3.5.so
+2aaaaaf0a000-2aaaab009000 ---p 0012f000 03:01 373930                     /lib64/tls/libc-2.3.5.so
+2aaaab009000-2aaaab00c000 r-xp 0012e000 03:01 373930                     /lib64/tls/libc-2.3.5.so
+2aaaab00c000-2aaaab00f000 rwxp 00131000 03:01 373930                     /lib64/tls/libc-2.3.5.so
+2aaaab00f000-2aaaab015000 rwxp 2aaaab00f000 00:00 0 
+2aaaab015000-2aaaab6d3000 r-xp 00000000 03:09 814930                     /var/opt/jdk1.5.0_06/jre/lib/amd64/server/libjvm.so
+2aaaab6d3000-2aaaab7d5000 ---p 006be000 03:09 814930                     /var/opt/jdk1.5.0_06/jre/lib/amd64/server/libjvm.so
+2aaaab7d5000-2aaaab94e000 rwxp 006c0000 03:09 814930                     /var/opt/jdk1.5.0_06/jre/lib/amd64/server/libjvm.so
+2aaaab94e000-2aaaab97d000 rwxp 2aaaab94e000 00:00 0 
+2aaaab97d000-2aaaab97e000 r-xp 2aaaab97d000 00:00 0 
+2aaaab97e000-2aaaab97f000 rwxp 2aaaab97e000 00:00 0 
+2aaaab99f000-2aaaab9f4000 r-xp 00000000 03:01 373932                     /lib64/tls/libm-2.3.5.so
+2aaaab9f4000-2aaaabaf3000 ---p 00055000 03:01 373932                     /lib64/tls/libm-2.3.5.so
+2aaaabaf3000-2aaaabaf5000 rwxp 00054000 03:01 373932                     /lib64/tls/libm-2.3.5.so
+2aaaabaf5000-2aaaabafe000 r-xp 00000000 03:09 814916                     /var/opt/jdk1.5.0_06/jre/lib/amd64/native_threads/libhpi.so
+2aaaabafe000-2aaaabbfd000 ---p 00009000 03:09 814916                     /var/opt/jdk1.5.0_06/jre/lib/amd64/native_threads/libhpi.so
+2aaaabbfd000-2aaaabc01000 rwxp 00008000 03:09 814916                     /var/opt/jdk1.5.0_06/jre/lib/amd64/native_threads/libhpi.so
+2aaaabc01000-2aaaabc09000 rwxs 00000000 03:01 390170                     /tmp/hsperfdata_chris/15492
+2aaaabc23000-2aaaabc37000 r-xp 00000000 03:01 373905                     /lib64/libnsl-2.3.5.so
+2aaaabc37000-2aaaabd36000 ---p 00014000 03:01 373905                     /lib64/libnsl-2.3.5.so
+2aaaabd36000-2aaaabd38000 rwxp 00013000 03:01 373905                     /lib64/libnsl-2.3.5.so
+2aaaabd38000-2aaaabd3a000 rwxp 2aaaabd38000 00:00 0 
+2aaaabd3a000-2aaaabd44000 r-xp 00000000 03:01 373911                     /lib64/libnss_files-2.3.5.so
+2aaaabd44000-2aaaabe44000 ---p 0000a000 03:01 373911                     /lib64/libnss_files-2.3.5.so
+2aaaabe44000-2aaaabe46000 rwxp 0000a000 03:01 373911                     /lib64/libnss_files-2.3.5.so
+2aaaabe46000-2aaaabe53000 r-xp 00000000 03:09 814908                     /var/opt/jdk1.5.0_06/jre/lib/amd64/libverify.so
+2aaaabe53000-2aaaabf52000 ---p 0000d000 03:09 814908                     /var/opt/jdk1.5.0_06/jre/lib/amd64/libverify.so
+2aaaabf52000-2aaaabf55000 rwxp 0000c000 03:09 814908                     /var/opt/jdk1.5.0_06/jre/lib/amd64/libverify.so
+2aaaabf55000-2aaaabf7a000 r-xp 00000000 03:09 814925                     /var/opt/jdk1.5.0_06/jre/lib/amd64/libjava.so
+2aaaabf7a000-2aaaac079000 ---p 00025000 03:09 814925                     /var/opt/jdk1.5.0_06/jre/lib/amd64/libjava.so
+2aaaac079000-2aaaac07f000 rwxp 00024000 03:09 814925                     /var/opt/jdk1.5.0_06/jre/lib/amd64/libjava.so
+2aaaac07f000-2aaaac095000 r-xp 00000000 03:09 814914                     /var/opt/jdk1.5.0_06/jre/lib/amd64/libzip.so
+2aaaac095000-2aaaac197000 ---p 00016000 03:09 814914                     /var/opt/jdk1.5.0_06/jre/lib/amd64/libzip.so
+2aaaac197000-2aaaac19a000 rwxp 00018000 03:09 814914                     /var/opt/jdk1.5.0_06/jre/lib/amd64/libzip.so
+2aaaac19a000-2aaaae782000 r-xs 00000000 03:09 815006                     /var/opt/jdk1.5.0_06/jre/lib/rt.jar
+2aaaae782000-2aaaae7eb000 rwxp 2aaaae782000 00:00 0 
+2aaaae7eb000-2aaaae870000 r-xs 00000000 03:09 814964                     /var/opt/jdk1.5.0_06/jre/lib/jsse.jar
+2aaaae870000-2aaaae884000 r-xs 00000000 03:09 814992                     /var/opt/jdk1.5.0_06/jre/lib/jce.jar
+2aaaae884000-2aaaaf0bf000 r-xs 00000000 03:09 814970                     /var/opt/jdk1.5.0_06/jre/lib/charsets.jar
+2aaaaf0bf000-2aaaaf1bf000 rwxp 2aaaaf0bf000 00:00 0 
+2aaaaf1bf000-2aaaef0bf000 rwxp 2aaaaf1bf000 00:00 0 
+2aaaef0bf000-2aaaef0c3000 rwxp 2aaaef0bf000 00:00 0 
+2aaaef0c3000-2aaaf00bf000 rwxp 2aaaef0c3000 00:00 0 
+2aaaf00c0000-2aaaf2160000 rwxp 2aaaf00c0000 00:00 0 
+2aaaf2160000-2aaaf5610000 rwxp 2aaaf2160000 00:00 0 
+2aaaf5610000-2aaaf9745000 rwxp 2aaaf5610000 00:00 0 
+2aaaf9745000-2aab000c0000 rwxp 2aaaf9745000 00:00 0 
+2aab000c0000-2aab03010000 rwxp 2aab000c0000 00:00 0 
+2aab03010000-2aab052c0000 rwxp 2aab03010000 00:00 0 
+2aab052c0000-2aab052d1000 rwxp 2aab052c0000 00:00 0 
+2aab052d1000-2aab052ea000 rwxp 2aab052d1000 00:00 0 
+2aab052ea000-2aab0530c000 rwxp 2aab052ea000 00:00 0 
+2aab0530c000-2aab05340000 rwxp 2aab0530c000 00:00 0 
+2aab05340000-2aab05358000 rwxp 2aab05340000 00:00 0 
+2aab05358000-2aab05369000 rwxp 2aab05358000 00:00 0 
+2aab05369000-2aab0538b000 rwxp 2aab05369000 00:00 0 
+2aab0538b000-2aab053c0000 rwxp 2aab0538b000 00:00 0 
+2aab053c0000-2aab053d8000 rwxp 2aab053c0000 00:00 0 
+2aab053d8000-2aab053ea000 rwxp 2aab053d8000 00:00 0 
+2aab053ea000-2aab05512000 rwxp 2aab053ea000 00:00 0 
+2aab05512000-2aab0553e000 r-xp 00000000 03:08 1070883                    /usr/share/locale/ISO-8859-1/LC_CTYPE
+2aab0553e000-2aab055f5000 r-xs 00000000 03:07 228605                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.osgi_3.1.1.jar
+2aab055f5000-2aab0560a000 r-xp 00000000 03:09 814904                     /var/opt/jdk1.5.0_06/jre/lib/amd64/libnet.so
+2aab0560a000-2aab05709000 ---p 00015000 03:09 814904                     /var/opt/jdk1.5.0_06/jre/lib/amd64/libnet.so
+2aab05709000-2aab0570c000 rwxp 00014000 03:09 814904                     /var/opt/jdk1.5.0_06/jre/lib/amd64/libnet.so
+2aab0570c000-2aab05713000 r-xp 00000000 03:09 814905                     /var/opt/jdk1.5.0_06/jre/lib/amd64/libnio.so
+2aab05713000-2aab05812000 ---p 00007000 03:09 814905                     /var/opt/jdk1.5.0_06/jre/lib/amd64/libnio.so
+2aab05812000-2aab05814000 rwxp 00006000 03:09 814905                     /var/opt/jdk1.5.0_06/jre/lib/amd64/libnio.so
+2aab05814000-2aab05914000 rwxp 2aab05814000 00:00 0 
+2aab05914000-2aab05983000 r-xs 00000000 03:07 229113                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.core.runtime_3.1.1.jar
+2aab05983000-2aab0599a000 r-xs 00000000 03:07 229114                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.update.configurator_3.1.0.jar
+2aab0599a000-2aab05a90000 r-xs 00000000 03:07 228524                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.ant.ui_3.1.1.jar
+2aab05a90000-2aab05aae000 r-xs 00000000 03:07 228525                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.ui_3.1.1.jar
+2aab05aae000-2aab05bf4000 r-xs 00000000 03:07 228526                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.debug.ui_3.1.1.jar
+2aab05bf4000-2aab05bfb000 r-xs 00000000 03:07 228613                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.core.resources.linux_3.1.0.jar
+2aab05bfb000-2aab05c08000 r-xs 00000000 03:07 228614                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.core.expressions_3.1.0.jar
+2aab05c08000-2aab05c09000 r-xs 00000000 03:07 228615                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.core.boot_3.1.0.jar
+2aab05c09000-2aab05c0a000 r-xs 00000000 03:07 228733                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.update.core.linux_3.1.0.jar
+2aab05c0a000-2aab05e96000 r-xs 00000000 03:07 228734                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.pde.ui_3.1.1.jar
+2aab05e96000-2aab05e97000 r-xs 00000000 03:07 228735                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.swt_3.1.0.jar
+2aab05e97000-2aab05ea4000 r-xs 00000000 03:07 228736                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.osgi.services_3.1.1.jar
+2aab05ea4000-2aab05ea6000 r-xs 00000000 03:07 228737                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.rcp_3.1.0.jar
+2aab05ea6000-2aab05ec2000 r-xs 00000000 03:07 228738                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.core.resources.compatibility_3.1.0.jar
+2aab05ec2000-2aab05ed3000 r-xs 00000000 03:07 228739                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.core.commands_3.1.0.jar
+2aab05ed3000-2aab05f71000 r-xs 00000000 03:07 229033                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.team.ui_3.1.1.jar
+2aab05f71000-2aab05f77000 r-xs 00000000 03:07 229034                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.update.scheduler_3.1.0.jar
+2aab05f77000-2aab05fe0000 r-xs 00000000 03:07 229067                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.compare_3.1.1.jar
+2aab05fe0000-2aab05ff6000 r-xs 00000000 03:07 229100                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.core.filebuffers_3.1.0.jar
+2aab05ff6000-2aab06016000 r-xs 00000000 03:07 229101                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.ltk.core.refactoring_3.1.0.jar
+2aab06016000-2aab060ba000 r-xs 00000000 03:07 229109                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.jface.text_3.1.1.jar
+2aab060ba000-2aab0615e000 r-xs 00000000 03:07 229110                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.jface_3.1.1.jar
+2aab0615e000-2aab0616b000 r-xs 00000000 03:07 229111                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.team.cvs.ssh_3.1.0.jar
+2aab0616b000-2aab06198000 r-xs 00000000 03:07 229112                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.text_3.1.1.jar
+2aab06198000-2aab06298000 rwxp 2aab06198000 00:00 0 
+2aab06298000-2aab06310000 r-xs 00000000 03:07 229115                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.update.core_3.1.1.jar
+2aab06310000-2aab06345000 r-xs 00000000 03:07 229116                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.help.base_3.1.0.jar
+2aab06345000-2aab064bd000 r-xs 00000000 03:07 229117                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.ui.ide_3.1.1.jar
+2aab064bd000-2aab064d3000 r-xs 00000000 03:07 229118                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.ant.core_3.1.1.jar
+2aab064d3000-2aab06504000 r-xs 00000000 03:07 229119                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.jdt.launching_3.1.0.jar
+2aab06504000-2aab06537000 r-xs 00000000 03:07 229120                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.ui.forms_3.1.0.jar
+2aab06537000-2aab0653b000 r-xs 00000000 03:07 229121                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.osgi.util_3.1.1.jar
+2aab0653b000-2aab06595000 r-xs 00000000 03:07 229122                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.help.ui_3.1.1.jar
+2aab06595000-2aab06c2c000 r-xs 00000000 03:07 229123                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.jdt.ui_3.1.1.jar
+2aab06c2c000-2aab06c66000 r-xs 00000000 03:07 229124                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.debug.core_3.1.0.jar
+2aab06c66000-2aab06c7b000 r-xs 00000000 03:07 229125                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.core.runtime.compatibility_3.1.0.jar
+2aab06c7b000-2aab06c92000 r-xs 00000000 03:07 229126                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.ui.presentations.r21_3.1.0.jar
+2aab06c92000-2aab06cbc000 r-xs 00000000 03:07 229127                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.ui.browser_3.1.1.jar
+2aab06cbc000-2aab06d52000 r-xs 00000000 03:07 229128                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.core.resources_3.1.0.jar
+2aab06d52000-2aab06d88000 r-xs 00000000 03:07 229129                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.team.core_3.1.1.jar
+2aab06d88000-2aab06dfd000 r-xs 00000000 03:07 229130                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.pde.core_3.1.1.jar
+2aab06dfd000-2aab06efd000 rwxp 2aab06dfd000 00:00 0 
+2aab06efd000-2aab06f0e000 r-xs 00000000 03:07 229131                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.help_3.1.0.jar
+2aab06f0e000-2aab06f75000 r-xs 00000000 03:07 229132                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.ui.editors_3.1.1.jar
+2aab06f75000-2aab07234000 r-xs 00000000 03:07 229133                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.ui.workbench_3.1.1.jar
+2aab07234000-2aab0723c000 r-xs 00000000 03:07 229134                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.jdt_3.1.0.jar
+2aab0723c000-2aab07362000 r-xs 00000000 03:07 229135                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.team.cvs.ui_3.1.1.jar
+2aab07362000-2aab07372000 r-xs 00000000 03:07 229136                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.ui.views_3.1.1.jar
+2aab07372000-2aab07398000 r-xs 00000000 03:07 229137                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.pde_3.1.0.jar
+2aab07398000-2aab07408000 r-xs 00000000 03:07 229138                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.update.ui_3.1.1.jar
+2aab07408000-2aab07429000 r-xs 00000000 03:07 229139                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.ui.console_3.1.0.jar
+2aab07429000-2aab07487000 r-xs 00000000 03:07 229140                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.search_3.1.1.jar
+2aab07487000-2aab074af000 r-xs 00000000 03:07 229141                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.ui.cheatsheets_3.1.1.jar
+2aab074af000-2aab074b3000 r-xs 00000000 03:07 229142                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.help.appserver_3.1.0.jar
+2aab074b3000-2aab074d6000 r-xs 00000000 03:07 229143                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.pde.runtime_3.1.1.jar
+2aab074d6000-2aab074dd000 r-xs 00000000 03:07 229144                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.core.variables_3.1.0.jar
+2aab074dd000-2aab07547000 r-xs 00000000 03:07 229145                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.ui.workbench.texteditor_3.1.1.jar
+2aab07547000-2aab076a4000 r-xs 00000000 03:07 229146                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.swt.gtk.linux.x86_64_3.1.1.jar
+2aab076a4000-2aab076c7000 r-xs 00000000 03:07 229147                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.ltk.ui.refactoring_3.1.1.jar
+2aab076c7000-2aab077cf000 r-xs 00000000 03:07 229148                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.jdt.debug.ui_3.1.1.jar
+2aab077cf000-2aab07813000 r-xs 00000000 03:07 229149                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.ui.intro_3.1.1.jar
+2aab07813000-2aab07913000 rwxp 2aab07813000 00:00 0 
+2aab07913000-2aab07988000 r-xs 00000000 03:07 229150                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.team.cvs.core_3.1.1.jar
+2aab07988000-2aab07cef000 r-xs 00000000 03:07 229151                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.jdt.core_3.1.1.jar
+2aab07cef000-2aab07d0d000 r-xs 00000000 03:07 229152                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.ui.externaltools_3.1.1.jar
+2aab07d0d000-2aab07d1f000 r-xs 00000000 03:07 821599                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.uml2.resources_1.1.0.jar
+2aab07d1f000-2aab07d3d000 r-xs 00000000 03:07 819249                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.uml2.examples.ui_1.1.1.jar
+2aab07d3d000-2aab07d44000 r-xs 00000000 03:07 819224                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.uml2.examples_1.1.1.jar
+2aab07d44000-2aab07d48000 r-xs 00000000 03:07 819250                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.uml2.examples.emof2ecore_1.1.1.jar
+2aab07d48000-2aab07d7e000 r-xs 00000000 03:07 819252                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.uml2.codegen.ecore_1.1.1.jar
+2aab07d7e000-2aab07d85000 r-xs 00000000 03:07 819972                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.uml2.codegen.ecore.ui_1.1.1.jar
+2aab07d85000-2aab07d8e000 r-xs 00000000 03:07 819973                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.uml2.common_1.1.1.jar
+2aab07d8e000-2aab07d93000 r-xs 00000000 03:07 819974                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.uml2.common.edit_1.1.1.jar
+2aab07d93000-2aab07d97000 r-xs 00000000 03:07 819975                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.uml2.ecore.importer_1.1.1.jar
+2aab07d97000-2aab07e44000 r-xs 00000000 03:07 819976                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.uml2.edit_1.1.1.jar
+2aab07e44000-2aab07e56000 r-xs 00000000 03:07 820089                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.uml2.editor_1.1.1.jar
+2aab07e56000-2aab08030000 r-xs 00000000 03:07 819251                     /home/chris/opt/eclipse-3.1.1-x64/plugins/org.eclipse.uml2_1.1.1.jar
+2aab0a1ea000-2aab0a2ea000 rwxp 2aab0a1ea000 00:00 0 
+2aab0a2ea000-2aab0a340000 r-xp 00000000 03:07 312152                     /home/chris/opt/eclipse-3.1.1-x64/configuration/org.eclipse.osgi/bundles/87/1/.cp/libswt-pi-gtk-3139.so
+2aab0a340000-2aab0a43f000 ---p 00056000 03:07 312152                     /home/chris/opt/eclipse-3.1.1-x64/configuration/org.eclipse.osgi/bundles/87/1/.cp/libswt-pi-gtk-3139.so
+2aab0a43f000-2aab0a442000 rwxp 00055000 03:07 312152                     /home/chris/opt/eclipse-3.1.1-x64/configuration/org.eclipse.osgi/bundles/87/1/.cp/libswt-pi-gtk-3139.so
+2aab0a442000-2aab0a443000 rwxp 2aab0a442000 00:00 0 
+2aab0a443000-2aab0a444000 r-xp 00000000 03:08 1071486                    /usr/share/locale/en_US/LC_IDENTIFICATION
+2aab0a444000-2aab0a445000 r-xp 00000000 03:08 1071485                    /usr/share/locale/en_US/LC_MEASUREMENT
+2aab0a445000-2aab0a446000 r-xp 00000000 03:08 1071479                    /usr/share/locale/en_US/LC_TELEPHONE
+2aab0a446000-2aab0a447000 r-xp 00000000 03:08 1071487                    /usr/share/locale/en_US/LC_ADDRESS
+2aab0a447000-2aab0a448000 r-xp 00000000 03:08 1071482                    /usr/share/locale/en_US/LC_NAME
+2aab0a448000-2aab0a449000 r-xp 00000000 03:08 1071480                    /usr/share/locale/en_US/LC_PAPER
+2aab0a449000-2aab0a44a000 r-xp 00000000 03:08 1071484                    /usr/share/locale/en_US/LC_MESSAGES/SYS_LC_MESSAGES
+2aab0a44a000-2aab0a44b000 r-xp 00000000 03:08 1071483                    /usr/share/locale/en_US/LC_MONETARY
+2aab0a44b000-2aab0a451000 r-xp 00000000 03:08 1070882                    /usr/share/locale/ISO-8859-1/LC_COLLATE
+2aab0a451000-2aab0a452000 r-xp 00000000 03:08 1071478                    /usr/share/locale/en_US/LC_TIME
+2aab0a452000-2aab0a453000 r-xp 00000000 03:08 1071481                    /usr/share/locale/en_US/LC_NUMERIC
+2aab0a453000-2aab0a454000 r-xs 00000000 03:07 277457                     /home/chris/MyEclipse/eclipse/plugins/com.genuitec.eclipse.jface.text.wtpfragment_3.8.1/wtpfragment.jar
+2aab0a454000-2aab0a463000 r-xp 00000000 03:08 1220980                    /usr/share/fonts/ttf/dejavu/DejaVuSansMono-Roman.ttf
+2aab0a463000-2aab0a465000 r-xs 00000000 03:07 212457                     /home/chris/MyEclipse/eclipse/plugins/com.genuitec.eclipse.easie.jboss3_3.9.310/easiejboss3.jar
+2aab0a465000-2aab0a773000 r-xp 00000000 03:08 227635                     /usr/lib64/libgtk-x11-2.0.so.0.800.3
+2aab0a773000-2aab0a873000 ---p 0030e000 03:08 227635                     /usr/lib64/libgtk-x11-2.0.so.0.800.3
+2aab0a873000-2aab0a880000 rwxp 0030e000 03:08 227635                     /usr/lib64/libgtk-x11-2.0.so.0.800.3
+2aab0a880000-2aab0a884000 rwxp 2aab0a880000 00:00 0 
+2aab0a884000-2aab0a888000 r-xp 00000000 03:08 227544                     /usr/lib64/libgthread-2.0.so.0.800.1
+2aab0a888000-2aab0a987000 ---p 00004000 03:08 227544                     /usr/lib64/libgthread-2.0.so.0.800.1
+2aab0a987000-2aab0a988000 rwxp 00003000 03:08 227544                     /usr/lib64/libgthread-2.0.so.0.800.1
+2aab0a988000-2aab0a98d000 r-xp 00000000 03:08 843731                     /usr/X11R6/lib64/libXtst.so.6.1
+2aab0a98d000-2aab0aa8d000 ---p 00005000 03:08 843731                     /usr/X11R6/lib64/libXtst.so.6.1
+2aab0aa8d000-2aab0aa8e000 rwxp 00005000 03:08 843731                     /usr/X11R6/lib64/libXtst.so.6.1
+2aab0aa8e000-2aab0aaa5000 r-xp 00000000 03:08 227579                     /usr/lib64/libgdk_pixbuf-2.0.so.0.800.3
+2aab0aaa5000-2aab0aba4000 ---p 00017000 03:08 227579                     /usr/lib64/libgdk_pixbuf-2.0.so.0.800.3
+2aab0aba4000-2aab0aba5000 rwxp 00016000 03:08 227579                     /usr/lib64/libgdk_pixbuf-2.0.so.0.800.3
+2aab0aba5000-2aab0ac32000 r-xp 00000000 03:08 227633                     /usr/lib64/libgdk-x11-2.0.so.0.800.3
+2aab0ac32000-2aab0ad31000 ---p 0008d000 03:08 227633                     /usr/lib64/libgdk-x11-2.0.so.0.800.3
+2aab0ad31000-2aab0ad36000 rwxp 0008c000 03:08 227633                     /usr/lib64/libgdk-x11-2.0.so.0.800.3
+2aab0ad36000-2aab0ad37000 rwxp 2aab0ad36000 00:00 0 
+2aab0ad37000-2aab0ad3e000 r-xp 00000000 03:08 227588                     /usr/lib64/libpangocairo-1.0.so.0.1000.0
+2aab0ad3e000-2aab0ae3d000 ---p 00007000 03:08 227588                     /usr/lib64/libpangocairo-1.0.so.0.1000.0
+2aab0ae3d000-2aab0ae3e000 rwxp 00006000 03:08 227588                     /usr/lib64/libpangocairo-1.0.so.0.1000.0
+2aab0ae3e000-2aab0ae7a000 r-xp 00000000 03:08 227586                     /usr/lib64/libpango-1.0.so.0.1000.0
+2aab0ae7a000-2aab0af79000 ---p 0003c000 03:08 227586                     /usr/lib64/libpango-1.0.so.0.1000.0
+2aab0af79000-2aab0af7c000 rwxp 0003b000 03:08 227586                     /usr/lib64/libpango-1.0.so.0.1000.0
+2aab0af7c000-2aab0af96000 r-xp 00000000 03:08 227584                     /usr/lib64/libatk-1.0.so.0.1011.0
+2aab0af96000-2aab0b095000 ---p 0001a000 03:08 227584                     /usr/lib64/libatk-1.0.so.0.1011.0
+2aab0b095000-2aab0b09a000 rwxp 00019000 03:08 227584                     /usr/lib64/libatk-1.0.so.0.1011.0
+2aab0b09a000-2aab0b0d8000 r-xp 00000000 03:08 227542                     /usr/lib64/libgobject-2.0.so.0.800.1
+2aab0b0d8000-2aab0b1d8000 ---p 0003e000 03:08 227542                     /usr/lib64/libgobject-2.0.so.0.800.1
+2aab0b1d8000-2aab0b1da000 rwxp 0003e000 03:08 227542                     /usr/lib64/libgobject-2.0.so.0.800.1
+2aab0b1da000-2aab0b1dd000 r-xp 00000000 03:08 227540                     /usr/lib64/libgmodule-2.0.so.0.800.1
+2aab0b1dd000-2aab0b2dc000 ---p 00003000 03:08 227540                     /usr/lib64/libgmodule-2.0.so.0.800.1
+2aab0b2dc000-2aab0b2dd000 rwxp 00002000 03:08 227540                     /usr/lib64/libgmodule-2.0.so.0.800.1
+2aab0b2dd000-2aab0b36c000 r-xp 00000000 03:08 227538                     /usr/lib64/libglib-2.0.so.0.800.1
+2aab0b36c000-2aab0b46c000 ---p 0008f000 03:08 227538                     /usr/lib64/libglib-2.0.so.0.800.1
+2aab0b46c000-2aab0b46d000 rwxp 0008f000 03:08 227538                     /usr/lib64/libglib-2.0.so.0.800.1
+2aab0b46d000-2aab0b46e000 rwxp 2aab0b46d000 00:00 0 
+2aab0b46e000-2aab0b4c0000 r-xp 00000000 03:08 227555                     /usr/lib64/libcairo.so.2.2.2
+2aab0b4c0000-2aab0b5bf000 ---p 00052000 03:08 227555                     /usr/lib64/libcairo.so.2.2.2
+2aab0b5bf000-2aab0b5c1000 rwxp 00051000 03:08 227555                     /usr/lib64/libcairo.so.2.2.2
+2aab0b5c1000-2aab0b630000 r-xp 00000000 03:08 227408                     /usr/lib64/libfreetype.so.6.3.8
+2aab0b630000-2aab0b72f000 ---p 0006f000 03:08 227408                     /usr/lib64/libfreetype.so.6.3.8
+2aab0b72f000-2aab0b734000 rwxp 0006e000 03:08 227408                     /usr/lib64/libfreetype.so.6.3.8
+2aab0b734000-2aab0b76a000 r-xp 00000000 03:08 227520                     /usr/lib64/libfontconfig.so.1.0.4
+2aab0b76a000-2aab0b869000 ---p 00036000 03:08 227520                     /usr/lib64/libfontconfig.so.1.0.4
+2aab0b869000-2aab0b872000 rwxp 00035000 03:08 227520                     /usr/lib64/libfontconfig.so.1.0.4
+2aab0b872000-2aab0b873000 rwxp 2aab0b872000 00:00 0 
+2aab0b873000-2aab0b87c000 r-xp 00000000 03:08 843725                     /usr/X11R6/lib64/libXrender.so.1.2.2
+2aab0b87c000-2aab0b97b000 ---p 00009000 03:08 843725                     /usr/X11R6/lib64/libXrender.so.1.2.2
+2aab0b97b000-2aab0b97c000 rwxp 00008000 03:08 843725                     /usr/X11R6/lib64/libXrender.so.1.2.2
+2aab0b97c000-2aab0ba57000 r-xp 00000000 03:08 843683                     /usr/X11R6/lib64/libX11.so.6.2
+2aab0ba57000-2aab0bb56000 ---p 000db000 03:08 843683                     /usr/X11R6/lib64/libX11.so.6.2
+2aab0bb56000-2aab0bb5c000 rwxp 000da000 03:08 843683                     /usr/X11R6/lib64/libX11.so.6.2
+2aab0bb5c000-2aab0bb6c000 r-xp 00000000 03:08 843703                     /usr/X11R6/lib64/libXext.so.6.4
+2aab0bb6c000-2aab0bc6c000 ---p 00010000 03:08 843703                     /usr/X11R6/lib64/libXext.so.6.4
+2aab0bc6c000-2aab0bc6d000 rwxp 00010000 03:08 843703                     /usr/X11R6/lib64/libXext.so.6.4
+2aab0bc6d000-2aab0bc93000 r-xp 00000000 03:08 227536                     /usr/lib64/libpng12.so.0.1.2.8
+2aab0bc93000-2aab0bd93000 ---p 00026000 03:08 227536                     /usr/lib64/libpng12.so.0.1.2.8
+2aab0bd93000-2aab0bd94000 rwxp 00026000 03:08 227536                     /usr/lib64/libpng12.so.0.1.2.8
+2aab0bd94000-2aab0bda8000 r-xp 00000000 03:01 374008                     /lib64/libz.so.1.2.3
+2aab0bda8000-2aab0bea8000 ---p 00014000 03:01 374008                     /lib64/libz.so.1.2.3
+2aab0bea8000-2aab0bea9000 rwxp 00014000 03:01 374008                     /lib64/libz.so.1.2.3
+2aab0bea9000-2aab0beac000 r-xp 00000000 03:08 843723                     /usr/X11R6/lib64/libXrandr.so.2.0
+2aab0beac000-2aab0bfab000 ---p 00003000 03:08 843723                     /usr/X11R6/lib64/libXrandr.so.2.0
+2aab0bfab000-2aab0bfac000 rwxp 00002000 03:08 843723                     /usr/X11R6/lib64/libXrandr.so.2.0
+2aab0bfac000-2aab0bfb4000 r-xp 00000000 03:08 843713                     /usr/X11R6/lib64/libXi.so.6.0
+2aab0bfb4000-2aab0c0b3000 ---p 00008000 03:08 843713                     /usr/X11R6/lib64/libXi.so.6.0
+2aab0c0b3000-2aab0c0b4000 rwxp 00007000 03:08 843713                     /usr/X11R6/lib64/libXi.so.6.0
+2aab0c0b4000-2aab0c0b6000 r-xp 00000000 03:08 843715                     /usr/X11R6/lib64/libXinerama.so.1.0
+2aab0c0b6000-2aab0c1b5000 ---p 00002000 03:08 843715                     /usr/X11R6/lib64/libXinerama.so.1.0
+2aab0c1b5000-2aab0c1b6000 rwxp 00001000 03:08 843715                     /usr/X11R6/lib64/libXinerama.so.1.0
+2aab0c1b6000-2aab0c1c0000 r-xp 00000000 03:08 843697                     /usr/X11R6/lib64/libXcursor.so.1.0.2
+2aab0c1c0000-2aab0c2bf000 ---p 0000a000 03:08 843697                     /usr/X11R6/lib64/libXcursor.so.1.0.2
+2aab0c2bf000-2aab0c2c0000 rwxp 00009000 03:08 843697                     /usr/X11R6/lib64/libXcursor.so.1.0.2
+2aab0c2c0000-2aab0c2c5000 r-xp 00000000 03:08 843705                     /usr/X11R6/lib64/libXfixes.so.3.0
+2aab0c2c5000-2aab0c3c4000 ---p 00005000 03:08 843705                     /usr/X11R6/lib64/libXfixes.so.3.0
+2aab0c3c4000-2aab0c3c5000 rwxp 00004000 03:08 843705                     /usr/X11R6/lib64/libXfixes.so.3.0
+2aab0c3c5000-2aab0c3ed000 r-xp 00000000 03:08 227590                     /usr/lib64/libpangoft2-1.0.so.0.1000.0
+2aab0c3ed000-2aab0c4ec000 ---p 00028000 03:08 227590                     /usr/lib64/libpangoft2-1.0.so.0.1000.0
+2aab0c4ec000-2aab0c4ee000 rwxp 00027000 03:08 227590                     /usr/lib64/libpangoft2-1.0.so.0.1000.0
+2aab0c4ee000-2aab0c50f000 r-xp 00000000 03:08 227411                     /usr/lib64/libexpat.so.0.5.0
+2aab0c50f000-2aab0c60e000 ---p 00021000 03:08 227411                     /usr/lib64/libexpat.so.0.5.0
+2aab0c60e000-2aab0c611000 rwxp 00020000 03:08 227411                     /usr/lib64/libexpat.so.0.5.0
+2aab0c611000-2aab0c613000 r-xp 00000000 03:08 843663                     /usr/X11R6/lib/X11/locale/lib64/common/xlcDef.so.2
+2aab0c613000-2aab0c712000 ---p 00002000 03:08 843663                     /usr/X11R6/lib/X11/locale/lib64/common/xlcDef.so.2
+2aab0c712000-2aab0c713000 rwxp 00001000 03:08 843663                     /usr/X11R6/lib/X11/locale/lib64/common/xlcDef.so.2
+2aab0c713000-2aab0c719000 r-xs 00000000 03:08 227339                     /usr/lib64/gconv/gconv-modules.cache
+2aab0c719000-2aab0c71b000 r-xp 00000000 03:08 227276                     /usr/lib64/gconv/ISO8859-1.so
+2aab0c71b000-2aab0c81a000 ---p 00002000 03:08 227276                     /usr/lib64/gconv/ISO8859-1.so
+2aab0c81a000-2aab0c81c000 rwxp 00001000 03:08 227276                     /usr/lib64/gconv/ISO8859-1.so
+2aab0c81c000-2aab0c85b000 r-xp 00000000 03:07 312153                     /home/chris/opt/eclipse-3.1.1-x64/configuration/org.eclipse.osgi/bundles/87/1/.cp/libswt-gtk-3139.so
+2aab0c85b000-2aab0c95a000 ---p 0003f000 03:07 312153                     /home/chris/opt/eclipse-3.1.1-x64/configuration/org.eclipse.osgi/bundles/87/1/.cp/libswt-gtk-3139.so
+2aab0c95a000-2aab0c95e000 rwxp 0003e000 03:07 312153                     /home/chris/opt/eclipse-3.1.1-x64/configuration/org.eclipse.osgi/bundles/87/1/.cp/libswt-gtk-3139.so
+2aab0c95e000-2aab0c95f000 rwxp 2aab0c95e000 00:00 0 
+2aab0c95f000-2aab0c96c000 r-xp 00000000 03:08 230651                     /usr/lib64/gtk-2.0/2.4.0/engines/libgalaxy.so
+2aab0c96c000-2aab0ca6c000 ---p 0000d000 03:08 230651                     /usr/lib64/gtk-2.0/2.4.0/engines/libgalaxy.so
+2aab0ca6c000-2aab0ca6d000 rwxp 0000d000 03:08 230651                     /usr/lib64/gtk-2.0/2.4.0/engines/libgalaxy.so
+2aab0ca6d000-2aab0cb6d000 rwxp 2aab0ca6d000 00:00 0 
+2aab0cb6d000-2aab0cb81000 r-xp 00000000 03:08 1220969                    /usr/share/fonts/ttf/dejavu/DejaVuSans-Bold.ttf
+2aab0cb81000-2aab0cb90000 r-xp 00000000 03:08 1220977                    /usr/share/fonts/ttf/dejavu/DejaVuSansMono-Bold.ttf
+2aab0cb90000-2aab0cb93000 r-xs 00000000 03:07 212467                     /home/chris/MyEclipse/eclipse/plugins/com.genuitec.eclipse.easie.jboss4_3.9.310/easiejboss4.jar
+2aab0cb94000-2aab0cc94000 rwxp 2aab0cb94000 00:00 0 
+2aab0cc94000-2aab0ccf4000 rwxs 00000000 00:07 2588684                    /SYSV00000000 (deleted)
+2aab0ccf4000-2aab0ccf6000 r-xp 00000000 03:07 690532                     /home/chris/opt/eclipse-3.1.1-x64/configuration/org.eclipse.osgi/bundles/10/1/.cp/os/linux/x86_64/libcore_3_1_0.so
+2aab0ccf6000-2aab0cdf5000 ---p 00002000 03:07 690532                     /home/chris/opt/eclipse-3.1.1-x64/configuration/org.eclipse.osgi/bundles/10/1/.cp/os/linux/x86_64/libcore_3_1_0.so
+2aab0cdf5000-2aab0cdf6000 rwxp 00001000 03:07 690532                     /home/chris/opt/eclipse-3.1.1-x64/configuration/org.eclipse.osgi/bundles/10/1/.cp/os/linux/x86_64/libcore_3_1_0.so
+2aab0cdf6000-2aab0cdf9000 rwxs 00000000 00:07 2621453                    /SYSV00000000 (deleted)
+2aab0cdf9000-2aab0ce59000 rwxs 00000000 00:07 2654222                    /SYSV00000000 (deleted)
+2aab0ce59000-2aab0ce70000 r-xp 00000000 03:08 1220972                    /usr/share/fonts/ttf/dejavu/DejaVuSans.ttf
+2aab0ce70000-2aab0ce72000 r-xp 00000000 03:08 227599                     /usr/lib64/pango/1.4.0/modules/pango-basic-fc.so
+2aab0ce72000-2aab0cf71000 ---p 00002000 03:08 227599                     /usr/lib64/pango/1.4.0/modules/pango-basic-fc.so
+2aab0cf71000-2aab0cf72000 rwxp 00001000 03:08 227599                     /usr/lib64/pango/1.4.0/modules/pango-basic-fc.so
+2aab0cf72000-2aab0d372000 rwxp 2aab0cf72000 00:00 0 
+2aab0d372000-2aab0d386000 r-xp 00000000 03:08 1220971                    /usr/share/fonts/ttf/dejavu/DejaVuSans-Oblique.ttf
+2aab0d386000-2aab0d39c000 r-xp 00000000 03:08 1220970                    /usr/share/fonts/ttf/dejavu/DejaVuSans-BoldOblique.ttf
+2aab0d39c000-2aab0d3ad000 r-xp 00000000 03:08 1220978                    /usr/share/fonts/ttf/dejavu/DejaVuSansMono-BoldOb.ttf
+2aab0d3ad000-2aab0d5ad000 rwxp 2aab0d3ad000 00:00 0 
+2aab0d5ad000-2aab0d8e0000 r-xp 00000000 03:08 1087383                    /usr/share/icons/gnome/icon-theme.cache
+2aab0d8e0000-2aab0dfe0000 r-xp 00000000 03:08 1093040                    /usr/share/icons/hicolor/icon-theme.cache
+2aab10414000-2aab10427000 r-xp 00000000 03:08 227768                     /usr/lib64/gtk-2.0/2.4.0/filesystems/libgnome-vfs.so
+2aab10427000-2aab10527000 ---p 00013000 03:08 227768                     /usr/lib64/gtk-2.0/2.4.0/filesystems/libgnome-vfs.so
+2aab10527000-2aab10528000 rwxp 00013000 03:08 227768                     /usr/lib64/gtk-2.0/2.4.0/filesystems/libgnome-vfs.so
+2aab1054a000-2aab1055f000 r-xp 00000000 03:08 227757                     /usr/lib64/libgnome-2.so.0.1000.1
+2aab1055f000-2aab1065e000 ---p 00015000 03:08 227757                     /usr/lib64/libgnome-2.so.0.1000.1
+2aab1065e000-2aab10660000 rwxp 00014000 03:08 227757                     /usr/lib64/libgnome-2.so.0.1000.1
+2aab10660000-2aab106ca000 r-xp 00000000 03:08 227745                     /usr/lib64/libgnomevfs-2.so.0.1000.1
+2aab106ca000-2aab107ca000 ---p 0006a000 03:08 227745                     /usr/lib64/libgnomevfs-2.so.0.1000.1
+2aab107ca000-2aab107d2000 rwxp 0006a000 03:08 227745                     /usr/lib64/libgnomevfs-2.so.0.1000.1
+2aab107d2000-2aab107d3000 rwxp 2aab107d2000 00:00 0 
+2aab107d3000-2aab10835000 r-xp 00000000 03:08 227700                     /usr/lib64/libbonobo-2.so.0.0.0
+2aab10835000-2aab10935000 ---p 00062000 03:08 227700                     /usr/lib64/libbonobo-2.so.0.0.0
+2aab10935000-2aab10946000 rwxp 00062000 03:08 227700                     /usr/lib64/libbonobo-2.so.0.0.0
+2aab10946000-2aab1097c000 r-xp 00000000 03:08 227686                     /usr/lib64/libgconf-2.so.4.1.0
+2aab1097c000-2aab10a7c000 ---p 00036000 03:08 227686                     /usr/lib64/libgconf-2.so.4.1.0
+2aab10a7c000-2aab10a83000 rwxp 00036000 03:08 227686                     /usr/lib64/libgconf-2.so.4.1.0
+2aab10a83000-2aab10a98000 r-xp 00000000 03:08 227702                     /usr/lib64/libbonobo-activation.so.4.0.0
+2aab10a98000-2aab10b98000 ---p 00015000 03:08 227702                     /usr/lib64/libbonobo-activation.so.4.0.0
+2aab10b98000-2aab10b9c000 rwxp 00015000 03:08 227702                     /usr/lib64/libbonobo-activation.so.4.0.0
+2aab10b9c000-2aab10bf7000 r-xp 00000000 03:08 227672                     /usr/lib64/libORBit-2.so.0.0.0
+2aab10bf7000-2aab10cf6000 ---p 0005b000 03:08 227672                     /usr/lib64/libORBit-2.so.0.0.0
+2aab10cf6000-2aab10d08000 rwxp 0005a000 03:08 227672                     /usr/lib64/libORBit-2.so.0.0.0
+2aab10d08000-2aab10d9c000 r-xp 00000000 03:08 227771                     /usr/lib64/libgnomeui-2.so.0.1000.1
+2aab10d9c000-2aab10e9b000 ---p 00094000 03:08 227771                     /usr/lib64/libgnomeui-2.so.0.1000.1
+2aab10e9b000-2aab10ea1000 rwxp 00093000 03:08 227771                     /usr/lib64/libgnomeui-2.so.0.1000.1
+2aab10ea1000-2aab10ea8000 r-xp 00000000 03:01 374010                     /lib64/libpopt.so.0.0.0
+2aab10ea8000-2aab10fa8000 ---p 00007000 03:01 374010                     /lib64/libpopt.so.0.0.0
+2aab10fa8000-2aab10fa9000 rwxp 00007000 03:01 374010                     /lib64/libpopt.so.0.0.0
+2aab10fa9000-2aab10fb1000 r-xp 00000000 03:08 227619                     /usr/lib64/libesd.so.0.2.36
+2aab10fb1000-2aab110b1000 ---p 00008000 03:08 227619                     /usr/lib64/libesd.so.0.2.36
+2aab110b1000-2aab110b2000 rwxp 00008000 03:08 227619                     /usr/lib64/libesd.so.0.2.36
+2aab110b2000-2aab110da000 r-xp 00000000 03:08 227609                     /usr/lib64/libaudiofile.so.0.0.2
+2aab110da000-2aab111d9000 ---p 00028000 03:08 227609                     /usr/lib64/libaudiofile.so.0.0.2
+2aab111d9000-2aab111dd000 rwxp 00027000 03:08 227609                     /usr/lib64/libaudiofile.so.0.0.2
+2aab111dd000-2aab11306000 r-xp 00000000 03:08 227373                     /usr/lib64/libxml2.so.2.6.21
+2aab11306000-2aab11405000 ---p 00129000 03:08 227373                     /usr/lib64/libxml2.so.2.6.21
+2aab11405000-2aab11412000 rwxp 00128000 03:08 227373                     /usr/lib64/libxml2.so.2.6.21
+2aab11412000-2aab11413000 rwxp 2aab11412000 00:00 0 
+2aab11413000-2aab11452000 r-xp 00000000 03:08 230707                     /usr/lib64/libssl.so.0.9.7
+2aab11452000-2aab11552000 ---p 0003f000 03:08 230707                     /usr/lib64/libssl.so.0.9.7
+2aab11552000-2aab11557000 rwxp 0003f000 03:08 230707                     /usr/lib64/libssl.so.0.9.7
+2aab11557000-2aab116c5000 r-xp 00000000 03:08 230266                     /usr/lib64/libcrypto.so.0.9.7
+2aab116c5000-2aab117c5000 ---p 0016e000 03:08 230266                     /usr/lib64/libcrypto.so.0.9.7
+2aab117c5000-2aab117e4000 rwxp 0016e000 03:08 230266                     /usr/lib64/libcrypto.so.0.9.7
+2aab117e4000-2aab117e8000 rwxp 2aab117e4000 00:00 0 
+2aab117e8000-2aab117fd000 r-xp 00000000 03:08 227696                     /usr/lib64/libhowl.so.0.0.0
+2aab117fd000-2aab118fc000 ---p 00015000 03:08 227696                     /usr/lib64/libhowl.so.0.0.0
+2aab118fc000-2aab118ff000 rwxp 00014000 03:08 227696                     /usr/lib64/libhowl.so.0.0.0
+2aab118ff000-2aab11a1d000 rwxp 2aab118ff000 00:00 0 
+2aab11a1d000-2aab11a2e000 r-xp 00000000 03:01 373921                     /lib64/libresolv-2.3.5.so
+2aab11a2e000-2aab11b2e000 ---p 00011000 03:01 373921                     /lib64/libresolv-2.3.5.so
+2aab11b2e000-2aab11b30000 rwxp 00011000 03:01 373921                     /lib64/libresolv-2.3.5.so
+2aab11b30000-2aab11b32000 rwxp 2aab11b30000 00:00 0 
+2aab11b32000-2aab11b39000 r-xp 00000000 03:01 373936                     /lib64/tls/librt-2.3.5.so
+2aab11b39000-2aab11c38000 ---p 00007000 03:01 373936                     /lib64/tls/librt-2.3.5.so
+2aab11c38000-2aab11c3a000 rwxp 00006000 03:01 373936                     /lib64/tls/librt-2.3.5.so
+2aab11c3a000-2aab11c3f000 r-xp 00000000 03:08 227676                     /usr/lib64/libORBitCosNaming-2.so.0.0.0
+2aab11c3f000-2aab11d3e000 ---p 00005000 03:08 227676                     /usr/lib64/libORBitCosNaming-2.so.0.0.0
+2aab11d3e000-2aab11d40000 rwxp 00004000 03:08 227676                     /usr/lib64/libORBitCosNaming-2.so.0.0.0
+2aab11d40000-2aab11daa000 r-xp 00000000 03:08 227761                     /usr/lib64/libbonoboui-2.so.0.0.0
+2aab11daa000-2aab11eaa000 ---p 0006a000 03:08 227761                     /usr/lib64/libbonoboui-2.so.0.0.0
+2aab11eaa000-2aab11eaf000 rwxp 0006a000 03:08 227761                     /usr/lib64/libbonoboui-2.so.0.0.0
+2aab11eaf000-2aab11edb000 r-xp 00000000 03:08 227748                     /usr/lib64/libgnomecanvas-2.so.0.1000.2
+2aab11edb000-2aab11fda000 ---p 0002c000 03:08 227748                     /usr/lib64/libgnomecanvas-2.so.0.1000.2
+2aab11fda000-2aab11fdd000 rwxp 0002b000 03:08 227748                     /usr/lib64/libgnomecanvas-2.so.0.1000.2
+2aab11fdd000-2aab11ff4000 r-xp 00000000 03:08 227631                     /usr/lib64/libart_lgpl_2.so.2.3.17
+2aab11ff4000-2aab120f3000 ---p 00017000 03:08 227631                     /usr/lib64/libart_lgpl_2.so.2.3.17
+2aab120f3000-2aab120f4000 rwxp 00016000 03:08 227631                     /usr/lib64/libart_lgpl_2.so.2.3.17
+2aab120f4000-2aab12100000 r-xp 00000000 03:08 227751                     /usr/lib64/libgnome-keyring.so.0.0.1
+2aab12100000-2aab121ff000 ---p 0000c000 03:08 227751                     /usr/lib64/libgnome-keyring.so.0.0.1
+2aab121ff000-2aab12200000 rwxp 0000b000 03:08 227751                     /usr/lib64/libgnome-keyring.so.0.0.1
+2aab12200000-2aab12221000 r-xp 00000000 03:08 227532                     /usr/lib64/libjpeg.so.62.0.0
+2aab12221000-2aab12321000 ---p 00021000 03:08 227532                     /usr/lib64/libjpeg.so.62.0.0
+2aab12321000-2aab12322000 rwxp 00021000 03:08 227532                     /usr/lib64/libjpeg.so.62.0.0
+2aab12322000-2aab1232c000 r-xp 00000000 03:08 843681                     /usr/X11R6/lib64/libSM.so.6.0
+2aab1232c000-2aab1242b000 ---p 0000a000 03:08 843681                     /usr/X11R6/lib64/libSM.so.6.0
+2aab1242b000-2aab1242c000 rwxp 00009000 03:08 843681                     /usr/X11R6/lib64/libSM.so.6.0
+2aab1242c000-2aab12443000 r-xp 00000000 03:08 843677                     /usr/X11R6/lib64/libICE.so.6.4
+2aab12443000-2aab12542000 ---p 00017000 03:08 843677                     /usr/X11R6/lib64/libICE.so.6.4
+2aab12542000-2aab12544000 rwxp 00016000 03:08 843677                     /usr/X11R6/lib64/libICE.so.6.4
+2aab12544000-2aab12547000 rwxp 2aab12544000 00:00 0 
+2aab12547000-2aab1254e000 r-xp 00000000 03:08 227594                     /usr/lib64/libpangoxft-1.0.so.0.1000.0
+2aab1254e000-2aab1264d000 ---p 00007000 03:08 227594                     /usr/lib64/libpangoxft-1.0.so.0.1000.0
+2aab1264d000-2aab1264e000 rwxp 00006000 03:08 227594                     /usr/lib64/libpangoxft-1.0.so.0.1000.0
+2aab1264e000-2aab12659000 r-xp 00000000 03:08 227592                     /usr/lib64/libpangox-1.0.so.0.1000.0
+2aab12659000-2aab12759000 ---p 0000b000 03:08 227592                     /usr/lib64/libpangox-1.0.so.0.1000.0
+2aab12759000-2aab1275a000 rwxp 0000b000 03:08 227592                     /usr/lib64/libpangox-1.0.so.0.1000.0
+2aab1275a000-2aab1276e000 r-xp 00000000 03:08 843711                     /usr/X11R6/lib64/libXft.so.2.1.2
+2aab1276e000-2aab1286d000 ---p 00014000 03:08 843711                     /usr/X11R6/lib64/libXft.so.2.1.2
+2aab1286d000-2aab1286e000 rwxp 00013000 03:08 843711                     /usr/X11R6/lib64/libXft.so.2.1.2
+2aab1286e000-2aab12875000 r-xp 00000000 03:08 227731                     /usr/lib64/gnome-vfs-2.0/modules/libfile.so
+2aab12875000-2aab12975000 ---p 00007000 03:08 227731                     /usr/lib64/gnome-vfs-2.0/modules/libfile.so
+2aab12975000-2aab12976000 rwxp 00007000 03:08 227731                     /usr/lib64/gnome-vfs-2.0/modules/libfile.so
+2aab12998000-2aab1299f000 r-xp 00000000 03:08 227624                     /usr/lib64/libfam.so.0.0.0
+2aab1299f000-2aab12a9e000 ---p 00007000 03:08 227624                     /usr/lib64/libfam.so.0.0.0
+2aab12a9e000-2aab12a9f000 rwxp 00006000 03:08 227624                     /usr/lib64/libfam.so.0.0.0
+7fffffacf000-7fffffad2000 ---p 7fffffacf000 00:00 0 
+7fffffad2000-7fffffccf000 rwxp 7fffffad2000 00:00 0                      [stack]
+ffffffffff600000-ffffffffffe00000 ---p 00000000 00:00 0                  [vdso]
+
+VM Arguments:
+jvm_args: -Xms40m -Xmx256m -Djava.compiler=NONE
+java_command: /home/chris/opt/eclipse-3.1.1-x64/startup.jar -os linux -ws gtk -arch x86_64 -launcher /home/chris/opt/eclipse-3.1.1-x64/eclipse -name Eclipse -showsplash 600 -exitdata 26800a -vm /var/opt/java/bin/java -vmargs -Xms40m -Xmx256m -Djava.compiler=NONE -jar /home/chris/opt/eclipse-3.1.1-x64/startup.jar
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+JAVA_HOME=/var/opt/java
+PATH=.:/var/opt/java/bin:/var/opt/java/jre/bin:/home/chris/opt/merlin/bin:/home/chris/opt/maven/bin:/home/chris/opt/JProbe_Profiler_5.2.1/bin:/var/opt/cisco_vpn:/home/chris/bin:/usr/bin:/bin:/usr/bin:/usr/local/bin:/usr/X11R6/bin/:/usr/games:/usr/lib64/jre-1.4.2/bin
+LD_LIBRARY_PATH=/var/opt/jdk1.5.0_06/jre/lib/amd64/server:/var/opt/jdk1.5.0_06/jre/lib/amd64:/var/opt/jdk1.5.0_06/jre/../lib/amd64:/var/opt/java/jre/lib/i386:/var/opt/java/jre/lib/i386/client
+SHELL=/bin/bash
+DISPLAY=:0.0
+
+Signal Handlers:
+SIGSEGV: [libjvm.so+0x64a670], sa_mask[0]=0x7ffbfeff, sa_flags=0x14000004
+SIGBUS: [libjvm.so+0x64a670], sa_mask[0]=0x7ffbfeff, sa_flags=0x14000004
+SIGFPE: [libjvm.so+0x553120], sa_mask[0]=0x7ffbfeff, sa_flags=0x14000004
+SIGPIPE: SIG_IGN, sa_mask[0]=0x00001000, sa_flags=0x14000000
+SIGILL: [libjvm.so+0x553120], sa_mask[0]=0x7ffbfeff, sa_flags=0x14000004
+SIGUSR1: SIG_DFL, sa_mask[0]=0x00000000, sa_flags=0x00000000
+SIGUSR2: [libjvm.so+0x554f10], sa_mask[0]=0x00000800, sa_flags=0x14000000
+SIGHUP: [libjvm.so+0x5549e0], sa_mask[0]=0x7ffbfeff, sa_flags=0x14000004
+SIGINT: [libjvm.so+0x5549e0], sa_mask[0]=0x7ffbfeff, sa_flags=0x14000004
+SIGQUIT: [libjvm.so+0x5549e0], sa_mask[0]=0x7ffbfeff, sa_flags=0x14000004
+SIGTERM: [libjvm.so+0x5549e0], sa_mask[0]=0x7ffbfeff, sa_flags=0x14000004
+
+
+---------------  S Y S T E M  ---------------
+
+OS:Mandriva Linux release 2006.0 (Official) for x86_64
+
+uname:Linux 2.6.12-12mdk #1 Fri Sep 9 17:26:56 CEST 2005 x86_64
+libc:glibc 2.3.5 NPTL 2.3.5 
+rlimit: STACK 8192k, CORE 0k, NPROC 8187, NOFILE 1024, AS infinity
+load average:2.05 0.99 0.54
+
+CPU:total 1 amd64 3dnow
+
+Memory: 4k page, physical 1026064k(113484k free), swap 1630556k(1627868k free)
+
+vm_info: Java HotSpot(TM) 64-Bit Server VM (1.5.0_06-b05) for linux-amd64, built on Nov 10 2005 11:45:12 by java_re with gcc 3.2.2 (SuSE Linux)</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=124889#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Billy Biggs</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=billy.biggs&#64;eclipse.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=billy.biggs&#64;eclipse.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-01-23 13:13:15 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Can you confirm that this also occurs with the IBM JVM?  For other
+users it seemed that this crash was specific to the Sun VM.  Can you
+attach a crash log from the IBM VM to <a class="bz_bug_link 
+          bz_status_CLOSED  bz_closed"
+   title="CLOSED WONTFIX - [64] Eclipse crashes when browsing for files in Gnome."
+   href="show_bug.cgi?id=101790">bug 101790</a>?
+
+See the (long) history there, this problem is unfortunately hard to
+reproduce for some people, but easy for others.
+
+*** This bug has been marked as a duplicate of <a class="bz_bug_link 
+          bz_status_CLOSED  bz_closed"
+   title="CLOSED WONTFIX - [64] Eclipse crashes when browsing for files in Gnome."
+   href="show_bug.cgi?id=101790">101790</a> ***</pre>
+    </div>
+
+    <div id="c2" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=124889#c2">Comment 2</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Azeem Jiva</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=azeem.jiva&#64;sun.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=azeem.jiva&#64;sun.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-01-23 16:56:45 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The crash is in libc not the VM.  Might be related to JNI or maybe SWT?  Definitly not in the VM though.</pre>
+    </div>
+
+    <div id="c3" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=124889#c3">Comment 3</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Billy Biggs</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=billy.biggs&#64;eclipse.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=billy.biggs&#64;eclipse.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-01-24 12:44:03 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Azeem, the crash occurs in strncmp because it is comparing an invalid
+pointer.  The string being passed in is one of the arguments to
+gtk_file_chooser_dialog_new() which is a varargs function, and this
+is one of the parameters in the ...
+
+The reason I suspect a VM issue is that it is not reproducable when calling
+the same function through the same typed function pointer in a C application.
+If the stack alignment is not correct when calling JNI functions, this could
+mess up the calling conventions for varargs functions.
+
+At least, that's my best guess right now...  I still can't reproduce the problem
+at all myself.</pre>
+    </div>
+
+    <div id="c4" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=124889#c4">Comment 4</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Chris Funk</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=chris&#64;thefunks.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=chris&#64;thefunks.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-01-25 14:22:58 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Billy, Azeem:
+Let me know if there's more info I can provide or any tests I can run to assist.  This is quite a nuissance bug as it makes it difficult to do some everyday tasks.
+
+Thanks,
+Chris</pre>
+    </div>
+
+    <div id="c5" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=124889#c5">Comment 5</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Azeem Jiva</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=azeem.jiva&#64;sun.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=azeem.jiva&#64;sun.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-01-30 10:02:29 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I think I know what the problem is!  Check out this bug filed and it looks like its been fixed too:
+
+<a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6369541">http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6369541</a></pre>
+    </div>
+
+    <div id="c6" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=124889#c6">Comment 6</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Chris Funk</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=chris&#64;thefunks.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=chris&#64;thefunks.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-01-30 11:12:10 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">It doesn't appear that Eclipse is using Inet4AddressImpl, though I could be wrong.  This should all be local file access.
+
+Is there any way to download this patched version to give it a whirl?</pre>
+    </div>
+
+    <div id="c7" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=124889#c7">Comment 7</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Billy Biggs</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=billy.biggs&#64;eclipse.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=billy.biggs&#64;eclipse.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-01-30 13:19:00 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Azeem, what makes you think that bug is related?
+
+Given some of the (very small) snippets from the dup bug, I don't see how it can possibly be the same thing.</pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=124889">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=124889">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=124889">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=124889&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=124889" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>

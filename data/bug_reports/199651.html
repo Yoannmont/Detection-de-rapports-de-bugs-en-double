@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>199651 &ndash; double free</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "199651 – double free",
+                             "show_bug.cgi?id=199651" );
+        document.title = "199651 – double free";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "199651 – double free", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_RESOLVED
+                 bz_product_Equinox
+                 bz_component_Framework
+                 bz_bug_199651 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;199651</span>
+
+        <span id="subtitle" class="subheader">double free</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2009-06-16 15:50:45 EDT</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=199651&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=199651" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2009-06-16 15:50:45">
+  <input type="hidden" name="id" value="199651">
+  <input type="hidden" name="token" value="1629848338-oZo-qEs9Xup1Q7b_cX3YDVmzpsu0Xn91LoEaArCLakI">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=199651"><b>Bug&nbsp;199651</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">double free</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span>double free
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      'double free' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">RESOLVED
+          DUPLICATE
+            of <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [launcher] free called twice on exitData if default error dialog is displayed"
+   href="show_bug.cgi?id=197385">bug 197385</a>
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >Equinox
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >Eclipse Project
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=Equinox"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >Framework
+
+  (<a href="buglist.cgi?component=Framework&amp;product=Equinox&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>3.4 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">PC
+        Linux
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P3
+       blocker<span id="votes_container">
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=199651#vote_199651">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>--- &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">equinox.framework-inbox</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=equinox.framework-inbox&#64;eclipse.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=equinox.framework-inbox&#64;eclipse.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard">
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'equinox.framework-inbox\x40eclipse.org',
+        '');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+
+  </td>
+  </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2007-08-11 10:00 EDT by <span class="vcard"><span class="fn">candida lopez</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=candyisbest&#64;hotmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=candyisbest&#64;hotmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2009-06-16 15:50 EDT
+      (<a href="show_activity.cgi?id=199651">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>7 
+          users
+          <span id="cc_edit_area_showhide_container" class="bz_default_hidden">
+            (<a href="#" id="cc_edit_area_showhide">show</a>)
+          </span>
+        <div id="cc_edit_area">
+          <br>
+            <select id="cc" multiple="multiple" size="5" >
+                <option value="aniefer">aniefer</option>
+                <option value="bafco001">bafco001</option>
+                <option value="don.branson">don.branson</option>
+                <option value="eclipse">eclipse</option>
+                <option value="john.arthorne">john.arthorne</option>
+                <option value="kehua_chang">kehua_chang</option>
+                <option value="Mike_Wilson">Mike_Wilson</option>
+            </select>
+        </div>
+          <script type="text/javascript">
+            hideEditableField( 'cc_edit_area_showhide_container', 
+                               'cc_edit_area', 
+                               'cc_edit_area_showhide', 
+                               '', 
+                               '');  
+          </script>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" >
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <a href="attachment.cgi?bugid=199651&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=199651&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=199651#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">candida lopez</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=candyisbest&#64;hotmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=candyisbest&#64;hotmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-08-11 10:00:22 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">when launching eclipse europa I get a double free:
+
+Machine Athlon 64 3800+, 2GB memory, SATA 1TB, Nvidia 6800+
+OS OpenLinux 10.2
+
+
+se&gt; ./eclipse
+*** glibc detected *** /usr/local/java/eclipse-europa/eclipse-cpp-europa-linux-gtk/eclipse/eclipse: double free or corruption (out): 0x08072ea8 ***
+======= Backtrace: =========
+/lib/libc.so.6[0xf79b16e1]
+/lib/libc.so.6(cfree+0x89)[0xf79b2d79]
+/usr/local/java/eclipse-europa/eclipse-cpp-europa-linux-gtk/eclipse/plugins/org.eclipse.equinox.launcher.gtk.linux.x86_1.0.0.v20070606/eclipse_1017a.so(run+0x81d)[0xf7ecc665]
+/usr/local/java/eclipse-europa/eclipse-cpp-europa-linux-gtk/eclipse/eclipse[0x80492e7]
+/lib/libc.so.6(__libc_start_main+0xdc)[0xf7962f9c]
+/usr/local/java/eclipse-europa/eclipse-cpp-europa-linux-gtk/eclipse/eclipse[0x8048f61]
+======= Memory map: ========
+08048000-0804b000 r-xp 00000000 08:02 3169176                            /usr/local/java/eclipse-europa/eclipse-cpp-europa-linux-gtk/eclipse/eclipse
+0804b000-0804c000 rw-p 00002000 08:02 3169176                            /usr/local/java/eclipse-europa/eclipse-cpp-europa-linux-gtk/eclipse/eclipse
+0804c000-08157000 rw-p 0804c000 00:00 0                                  [heap]
+f7100000-f7121000 rw-p f7100000 00:00 0
+f7121000-f7200000 ---p f7121000 00:00 0
+f7215000-f721f000 r-xp 00000000 08:02 4678623                            /lib/libgcc_s.so.1
+f721f000-f7221000 rw-p 00009000 08:02 4678623                            /lib/libgcc_s.so.1
+f7255000-f72b5000 rw-s 00000000 00:08 26542086                           /SYSV00000000 (deleted)
+f72b5000-f72df000 r--p 00000000 08:02 1232027                            /usr/share/fonts/truetype/albw.ttf
+f72df000-f72e1000 r-xp 00000000 08:02 8606178                            /opt/gnome/lib/pango/1.5.0/modules/pango-basic-fc.so
+f72e1000-f72e3000 rw-p 00001000 08:02 8606178                            /opt/gnome/lib/pango/1.5.0/modules/pango-basic-fc.so
+f72e3000-f72ea000 r--s 00000000 08:02 8078336                            /var/cache/fontconfig/77e41c5059666d75f92e318d4be8c21e-x86.cache-2
+f72ea000-f7330000 r--s 00000000 08:02 8078332                            /var/cache/fontconfig/df311e82a1a24c41a75c2c930223552e-x86.cache-2
+f7330000-f7341000 r--s 00000000 08:02 8078341                            /var/cache/fontconfig/7ef2298fde41cc6eeb7af42e48b7d293-x86.cache-2
+f7341000-f7387000 r--s 00000000 08:02 8078333                            /var/cache/fontconfig/17090aa38d5c6f09fb8c5c354938f1d7-x86.cache-2
+f7387000-f738c000 r--s 00000000 08:02 8078335                            /var/cache/fontconfig/d62e99ef547d1d24cdb1bd22ec1a2976-x86.cache-2
+f738c000-f73af000 r--s 00000000 08:02 8078470                            /var/cache/fontconfig/8d4af663993b81a124ee82e610bb31f9-x86.cache-2
+f73af000-f73cd000 r-xp 00000000 08:02 8606278                            /opt/gnome/lib/gtk-2.0/2.10.0/engines/libqtcurve.so
+f73cd000-f73cf000 rw-p 0001d000 08:02 8606278                            /opt/gnome/lib/gtk-2.0/2.10.0/engines/libqtcurve.so
+f73cf000-f73d0000 rw-p f73cf000 00:00 0
+f73d0000-f7405000 r--s 00000000 08:02 8078384                            /var/run/nscd/passwd
+f7405000-f7440000 r--p 00000000 08:02 1200370                            /usr/lib/locale/en_US.utf8/LC_CTYPE
+f7440000-f7517000 r--p 00000000 08:02 1200371                            /usr/lib/locale/en_US.utf8/LC_COLLATE
+f7517000-f7519000 rw-p f7517000 00:00 0
+f7519000-f7543000 r-xp 00000000 08:02 8606169                            /opt/gnome/lib/libpangoft2-1.0.so.0.1400.5
+f7543000-f7545000 rw-p 00029000 08:02 8606169                            /opt/gnome/lib/libpangoft2-1.0.so.0.1400.5
+f7545000-f7546000 rw-p f7545000 00:00 0
+f7546000-f754a000 r-xp 00000000 08:02 1153460                            /usr/lib/libXfixes.so.3.1.0
+f754a000-f754c000 rw-p 00003000 08:02 1153460                            /usr/lib/libXfixes.so.3.1.0
+f754c000-f7554000 r-xp 00000000 08:02 6960418                            /usr/lib/libXcursor.so.1.0.2
+f7554000-f7556000 rw-p 00007000 08:02 6960418                            /usr/lib/libXcursor.so.1.0.2
+f7556000-f7563000 r-xp 00000000 08:02 1153458                            /usr/lib/libXext.so.6.4.0
+f7563000-f7565000 rw-p 0000c000 08:02 11Aborted</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=199651#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Don Branson</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=don.branson&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=don.branson&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-09-24 16:07:15 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">We've been seeing this regularly with Eclipse 3.2, but without the extra info that 3.3 provides on the failure.  In our manifestation of this problem, eclipse will run for a few hours before it crashes.
+
+OS: Linux yadayada 2.6.20-1.2933.fc6 #1 SMP Mon Mar 19 10:42:48 EDT 2007 i686 i686 i386 GNU/Linux
+
+Graphics: We're using NVIDIA GPU Quadro FX 550 cards on dual-head boxes
+
+The program 'Gecko' received an X Window System error.
+This probably reflects a bug in the program.
+The error was 'BadRequest (invalid request code or no such operation)'.
+  (Details: serial 9146732 error_code 1 request_code 0 minor_code 0)
+  (Note to programmers: normally, X errors are reported asynchronously;
+   that is, you will receive the error a while after causing it.
+   To debug your program, run it with the --sync command line
+   option to change this behavior. You can then get a meaningful
+   backtrace from your debugger if you break on the gdk_x_error() function.)
+*** glibc detected *** /shared/home/don.branson/apps/eclipse/eclipse: double free or corruption (!prev): 0x08721650 ***
+======= Backtrace: =========
+/lib/libc.so.6[0x1b5a96]
+/lib/libc.so.6(cfree+0x90)[0x1b8fb0]
+/shared/home/don.branson/apps/eclipse/plugins/org.eclipse.equinox.launcher.gtk.linux.x86_1.0.0.v20070606/eclipse_1017a.so(run+0x81d)[0x113665]
+/shared/home/don.branson/apps/eclipse/eclipse[0x80492e7]
+/lib/libc.so.6(__libc_start_main+0xdc)[0x164dec]
+/shared/home/don.branson/apps/eclipse/eclipse[0x8048f61]
+======= Memory map: ========
+00110000-00119000 r-xp 00000000 00:16 12573791   /shared/home/don.branson/apps/eclipse/plugins/org.eclipse.equinox.launcher.gtk.linux.x86_1.0.0.v20070606/eclipse_1017a.so
+00119000-0011a000 rwxp 00008000 00:16 12573791   /shared/home/don.branson/apps/eclipse/plugins/org.eclipse.equinox.launcher.gtk.linux.x86_1.0.0.v20070606/eclipse_1017a.so
+0011a000-0011f000 r-xp 00000000 08:02 4423770    /lib/libnss_winbind.so.2
+...</pre>
+    </div>
+
+    <div id="c2" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=199651#c2">Comment 2</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Colin Walls</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=bafco001&#64;btinternet.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=bafco001&#64;btinternet.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-11-22 05:00:02 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I get the same on OpenSUSE 10.3, also with an AMD Athlon 64 bit processor.
+
+The backtrace is
+
+*** glibc detected *** /usr/lib64/eclipse/eclipse: double free or corruption (!prev): 0x000000000053fc90 ***
+======= Backtrace: =========
+/lib64/libc.so.6[0x2b1316ca021d]
+/lib64/libc.so.6(cfree+0x76)[0x2b1316ca1f76]
+/usr/lib64/eclipse/plugins/org.eclipse.equinox.launcher.gtk.linux.x86_64_1.0.0.v20070606/eclipse_1017a.so(run+0x7cd)[0x2b131aeb5bb8]
+/usr/lib64/eclipse/eclipse(realpath+0x3c2)[0x4018ea]
+/lib64/libc.so.6(__libc_start_main+0xf4)[0x2b1316c4fb54]
+/usr/lib64/eclipse/eclipse(strcat+0x42)[0x40157a]
+======= Memory map: ========
+00400000-00403000 r-xp 00000000 08:02 155121                             /usr/lib64/eclipse/eclipse
+00503000-00504000 rw-p 00003000 08:02 155121                             /usr/lib64/eclipse/eclipse
+00504000-00786000 rw-p 00504000 00:00 0                                  [heap]
+2b131594b000-2b1315967000 r-xp 00000000 08:02 9190                       /lib64/ld-2.6.1.so
+2b1315967000-2b1315968000 rw-p 2b1315967000 00:00 0
+2b1315968000-2b1315969000 r--p 00000000 08:02 10006                      /usr/lib/locale/en_GB.utf8/LC_IDENTIFICATION
+2b1315969000-2b1315970000 r--s 00000000 08:02 135435                     /usr/lib64/gconv/gconv-modules.cache
+2b1315970000-2b1315971000 r--p 00000000 08:02 12616                      /usr/lib/locale/en_GB.utf8/LC_MEASUREMENT
+2b1315971000-2b1315972000 r--p 00000000 08:02 12470                      /usr/lib/locale/en_GB.utf8/LC_TELEPHONE
+2b1315972000-2b1315973000 r--p 00000000 08:02 12384                      /usr/lib/locale/en_GB.utf8/LC_ADDRESS
+2b1315973000-2b1315974000 r--p 00000000 08:02 12471                      /usr/lib/locale/en_GB.utf8/LC_NAME
+2b1315974000-2b1315975000 r--p 00000000 08:02 12612                      /usr/lib/locale/en_GB.utf8/LC_PAPER
+2b1315975000-2b1315976000 r--p 00000000 08:02 12582                      /usr/lib/locale/en_GB.utf8/LC_MESSAGES/SYS_LC_MESSAGES
+2b1315976000-2b1315977000 r--p 00000000 08:02 12472                      /usr/lib/locale/en_GB.utf8/LC_MONETARY
+2b1315988000-2b1315989000 rw-p 2b1315988000 00:00 0
+2b1315989000-2b1315a69000 r--p 00000000 08:02 12618                      /usr/lib/locale/en_GB.utf8/LC_COLLATE
+2b1315a69000-2b1315a6a000 r--p 00000000 08:02 12383                      /usr/lib/locale/en_GB.utf8/LC_TIME
+2b1315a6a000-2b1315a6b000 r--p 00000000 08:02 12592                      /usr/lib/locale/en_GB.utf8/LC_NUMERIC
+2b1315a6b000-2b1315aaa000 r--p 00000000 08:02 12617                      /usr/lib/locale/en_GB.utf8/LC_CTYPE
+2b1315b66000-2b1315b68000 rw-p 0001b000 08:02 9190                       /lib64/ld-2.6.1.so
+2b1315b68000-2b1315f10000 r-xp 00000000 08:02 55897                      /usr/lib64/libgtk-x11-2.0.so.0.1200.0
+2b1315f10000-2b1316110000 ---p 003a8000 08:02 55897                      /usr/lib64/libgtk-x11-2.0.so.0.1200.0
+2b1316110000-2b1316116000 r--p 003a8000 08:02 55897                      /usr/lib64/libgtk-x11-2.0.so.0.1200.0
+2b1316116000-2b131611b000 rw-p 003ae000 08:02 55897                      /usr/lib64/libgtk-x11-2.0.so.0.1200.0
+2b131611b000-2b131611d000 rw-p 2b131611b000 00:00 0
+2b131611d000-2b1316135000 r-xp 00000000 08:02 55893                      /usr/lib64/libgdk_pixbuf-2.0.so.0.1200.0
+2b1316135000-2b1316335000 ---p 00018000 08:02 55893                      /usr/lib64/libgdk_pixbuf-2.0.so.0.1200.0
+2b1316335000-2b1316337000 rw-p 00018000 08:02 55893                      /usr/lib64/libgdk_pixbuf-2.0.so.0.1200.0
+2b1316337000-2b1316376000 r-xp 00000000 08:02 46174                      /usr/lib64/libgobject-2.0.so.0.1400.1
+2b1316376000-2b1316576000 ---p 0003f000 08:02 46174                      /usr/lib64/libgobject-2.0.so.0.1400.1
+2b1316576000-2b1316578000 rw-p 0003f000 08:02 46174                      /usr/lib64/libgobject-2.0.so.0.1400.1
+2b1316578000-2b131657a000 rw-p 2b1316578000 00:00 0
+2b131657a000-2b131660c000 r-xp 00000000 08:02 55891                      /usr/lib64/libgdk-x11-2.0.so.0.1200.0
+2b131660c000-2b131680c000 ---p 00092000 08:02 55891                      /usr/lib64/libgdk-x11-2.0.so.0.1200.0
+2b131680c000-2b131680f000 r--p 000/usr/share/eclipse/eclipse: line 8:  7310 Aborted                 /usr/share/eclipse/eclipse.bin -startup $STARTUP_JAR &quot;&quot;
+
+
+Possibly due to a locale problem?</pre>
+    </div>
+
+    <div id="c3" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=199651#c3">Comment 3</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Mike Wilson</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=Mike_Wilson&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=Mike_Wilson&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-04-11 13:55:37 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">The stack trace in the description is for a crash that happens at startup. The one in <a href="show_bug.cgi?id=199651#c1">comment #1</a> looks like it's a GTK or XWindows (or SWT) bug that seems to be happening intermittently, and may be unrelated. The trace in <a href="show_bug.cgi?id=199651#c3">comment #3</a> looks like the original one; is it also happening at startup?
+
+Colin, what makes you think it's Locale related?
+
+</pre>
+    </div>
+
+    <div id="c4" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=199651#c4">Comment 4</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">John Arthorne</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=john.arthorne&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=john.arthorne&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-06-19 12:01:01 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Andrew, isn't this a dup of <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [launcher] free called twice on exitData if default error dialog is displayed"
+   href="show_bug.cgi?id=197385">bug 197385</a> (fixed in 3.4 and 3.3.1)?</pre>
+    </div>
+
+    <div id="c5" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=199651#c5">Comment 5</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Andrew Niefer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=aniefer&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=aniefer&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2008-06-19 14:54:01 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">although it is not completely clear, I am inclined to believe that yes, this is a duplicate of 197385.  Please reopen if this occurs in 3.4.
+
+*** This bug has been marked as a duplicate of <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED FIXED - [launcher] free called twice on exitData if default error dialog is displayed"
+   href="show_bug.cgi?id=197385">bug 197385</a> ***</pre>
+    </div>
+
+    <div id="c6" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=199651#c6">Comment 6</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Kehua Chang</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=kehua_chang&#64;yahoo.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=kehua_chang&#64;yahoo.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2009-06-16 15:50:45 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">We are using eclipse 3.3 on SUSE Linux 10 SP1 and had similiar issue as this PR. The failure happened at the startup time, and backtrace is the same as this PR.
+What is the workaround or fix on eclipse 3.3?
+If we move to SUSE Linux 10 SP2, then it worked fine with the problem.
+
+Following is the backtrace.
+
+*** glibc detected ***
+ide: double free or
+corruption (!prev): 0x000000000052b6e0 ***
+======= Backtrace: =========
+/lib64/libc.so.6[0x2b41bd34f34e]
+/lib64/libc.so.6(__libc_free+0x6c)[0x2b41bd35095c]
+/ide/client/plugins/org.eclipse.equinox.launcher.gtk.linux.x86_64_1.0.0.v20070606/eclipse_1017a.so(run+0x7cd)[0x2b41bef8fbb8]
+/ide/client/IDE(realpath+0x3c2)[0x4018ea]
+/lib64/libc.so.6(__libc_start_main+0xf4)[0x2b41bd301154]
+/ide/client/IDE(strcat+0x42)[0x40157a]
+======= Memory map: ========
+00400000-00403000 r-xp 00000000 08:03 3639431                           
+/ide/client/IDE
+00503000-00504000 rw-p 00003000 08:03 3639431                           
+/ide/client/IDE
+00504000-0070d000 rw-p 00504000 00:00 0                                  [heap]
+2b41bc783000-2b41bc79e000 r-xp 00000000 08:03 475138                    
+/lib64/ld-2.4.so
+2b41bc79e000-2b41bc79f000 rw-p 2b41bc79e000 00:00 0
+2b41bc79f000-2b41bc7a0000 r--p 00000000 08:03 29017131                  
+/usr/lib/locale/en_US/LC_IDENTIFICATION
+2b41bc7a0000-2b41bc7a1000 r--p 00000000 08:03 29017981                  
+/usr/lib/locale/en_US/LC_MEASUREMENT
+2b41bc7a1000-2b41bc7a2000 r--p 00000000 08:03 29033770                  
+/usr/lib/locale/en_US/LC_TELEPHONE
+2b41bc7a2000-2b41bc7a3000 r--p 00000000 08:03 29017130                  
+/usr/lib/locale/en_US/LC_ADDRESS
+2b41bc7a3000-2b41bc7a4000 r--p 00000000 08:03 29033771                  
+/usr/lib/locale/en_US/LC_NAME
+2b41bc7a4000-2b41bc7a5000 r--p 00000000 08:03 29018005                  
+/usr/lib/locale/en_US/LC_PAPER
+2b41bc7a5000-2b41bc7a6000 r--p 00000000 08:03 29033792                  
+/usr/lib/locale/en_US/LC_MESSAGES/SYS_LC_MESSAGES
+2b41bc7a6000-2b41bc7a7000 r--p 00000000 08:03 29017133                  
+/usr/lib/locale/en_US/LC_MONETARY
+2b41bc7a7000-2b41bc7ac000 r--p 00000000 08:03 29033867                  
+/usr/lib/locale/en_US/LC_COLLATE
+2b41bc7ac000-2b41bc7ad000 r--p 00000000 08:03 29017134                  
+/usr/lib/locale/en_US/LC_TIME
+2b41bc7ad000-2b41bc7ae000 r--p 00000000 08:03 29033850                  
+/usr/lib/locale/en_US/LC_NUMERIC
+2b41bc7bf000-2b41bc7c0000 rw-p 2b41bc7bf000 00:00 0
+2b41bc7c0000-2b41bc7ec000 r--p 00000000 08:03 29033866                  
+/usr/lib/locale/en_US/LC_CTYPE
+2b41bc89d000-2b41bc89f000 rw-p 0001a000 08:03 475138                    
+/lib64/ld-2.4.so
+2b41bc89f000-2b41bcbc7000 r-xp 00000000 08:03 26398665                  
+/opt/gnome/lib64/libgtk-x11-2.0.so.0.800.11
+2b41bcbc7000-2b41bccc6000 ---p 00328000 08:03 26398665                  
+/opt/gnome/lib64/libgtk-x11-2.0.so.0.800.11
+2b41bccc6000-2b41bccd4000 rw-p 00327000 08:03 26398665                  
+/opt/gnome/lib64/libgtk-x11-2.0.so.0.800.11
+2b41bccd4000-2b41bccd8000 rw-p 2b41bccd4000 00:00 0
+2b41bccd8000-2b41bccf0000 r-xp 00000000 08:03 26398661                  
+/opt/gnome/lib64/libgdk_pixbuf-2.0.so.0.800.11
+2b41bccf0000-2b41bcdef000 ---p 00018000 08:03 26398661                  
+/opt/gnome/lib64/libgdk_pixbuf-2.0.so.0.800.11
+2b41bcdef000-2b41bcdf0000 rw-p 00017000 08:03 26398661                  
+/opt/gnome/lib64/libgdk_pixbuf-2.0.so.0.800.11
+2b41bcdf0000-2b41bce2e000 r-xp 00000000 08:03 26398137                  
+/opt/gnome/lib64/libgobject-2.0.so.0.800.6
+2b41bce2e000-2b41bcf2d000 ---p 0003e000 08:03 26398137                  
+/opt/gnome/lib64/libgobject-2.0.so.0.800.6
+2b41bcf2d000-2b41bcf30000 rw-p 0003d000 08:03 26398137                  
+/opt/gnome/lib64/libgobject-2.0.so.0.800.6
+2b41bcf30000-2b41bcf31000 rw-p 2b41bcf30000 00:00 0
+2b41bcf31000-2b41bcfc2000 r-xp 00000000 08:03 26398659                  
+/opt/gnome/lib64/libgdk-x11-2.0.so.0.800.11
+2b41bcfc2000-2b41bd0c2000 ---p 00091000 08:03 26398659                  
+/opt/gnome/lib64/libgdk-x11-2.0.so.0.800.11
+2b41bd0c2000-2b41bd0c7000 rw-p 00091000 08:03 26398659     bmide.sh: line 63:
+24827 Aborted </pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=199651">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=199651">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=199651">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=199651&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=199651" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>

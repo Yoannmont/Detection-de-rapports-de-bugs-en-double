@@ -1,0 +1,1776 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>206027 &ndash; [performance] JavaCore#initializeAfterLoad - Util.setSourceAttachmentProperty performance</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "206027 – [performance] JavaCore#initializeAfterLoad - Util.setSourceAttachmentProperty performance",
+                             "show_bug.cgi?id=206027" );
+        document.title = "206027 – [performance] JavaCore#initializeAfterLoad - Util.setSourceAttachmentProperty performance";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "206027 – [performance] JavaCore#initializeAfterLoad - Util.setSourceAttachmentProperty performance", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_VERIFIED
+                 bz_product_JDT
+                 bz_component_Core
+                 bz_bug_206027 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;206027</span>
+
+        <span id="subtitle" class="subheader">[performance] JavaCore#initializeAfterLoad - Util.setSourceAttachmentProperty performance</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2007-10-31 10:11:17 EDT</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=206027&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=206027" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2007-10-31 10:11:17">
+  <input type="hidden" name="id" value="206027">
+  <input type="hidden" name="token" value="1629867476-3BnxY1JJ5pGH9oDJ22qRHqKR1gPmT9jLu-eOKv9lTcU">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=206027"><b>Bug&nbsp;206027</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">[performance] JavaCore#initializeAfterLoad - Util.setSourceAttachmentProperty performance</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span><span title="[performance] JavaCore#initializeAfterLoad - Util.setSourceAttachmentProperty performance">[performance] JavaCore#initializeAfterLoad - Util.setSourceAttachmentProperty...
+        </span>
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      '[performance] JavaCore#initializeAfterLoad - Util.setSourceAttachmentProperty performance' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">VERIFIED
+          FIXED
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >JDT
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >Eclipse Project
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=JDT"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >Core
+
+  (<a href="buglist.cgi?component=Core&amp;product=JDT&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>3.4 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">PC
+        Windows XP
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P3
+       normal<span id="votes_container">
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=206027#vote_206027">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>3.4 M3 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">Jerome Lanneluc</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jerome_lanneluc&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jerome_lanneluc&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard">
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'jdt-core-inbox\x40eclipse.org',
+        '');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >performance
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+
+  </td>
+  </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2007-10-11 07:49 EDT by <span class="vcard"><span class="fn">Eric Jodet</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eric_jodet&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eric_jodet&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2007-10-31 10:11 EDT
+      (<a href="show_activity.cgi?id=206027">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>4 
+          users
+          <span id="cc_edit_area_showhide_container" class="bz_default_hidden">
+            (<a href="#" id="cc_edit_area_showhide">show</a>)
+          </span>
+        <div id="cc_edit_area">
+          <br>
+            <select id="cc" multiple="multiple" size="5" >
+                <option value="daniel_megert">daniel_megert</option>
+                <option value="david_audel">david_audel</option>
+                <option value="frederic_fusier">frederic_fusier</option>
+                <option value="philippe_mulet">philippe_mulet</option>
+            </select>
+        </div>
+          <script type="text/javascript">
+            hideEditableField( 'cc_edit_area_showhide_container', 
+                               'cc_edit_area', 
+                               'cc_edit_area_showhide', 
+                               '', 
+                               '');  
+          </script>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" >
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+      <tr id="a1" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=80139"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">[draft patch]</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (2.18 KB,
+                patch)
+
+            <br>
+            <a href="#attach_80139"
+               title="Go to the comment associated with the attachment">2007-10-11 10:32 EDT</a>,
+
+            <span class="vcard"><span class="fn">Eric Jodet</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eric_jodet&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eric_jodet&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=80139&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=80139&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a2" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=80142"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">[proposed patch] using a HashSet and not a Vector</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (2.09 KB,
+                patch)
+
+            <br>
+            <a href="#attach_80142"
+               title="Go to the comment associated with the attachment">2007-10-11 10:48 EDT</a>,
+
+            <span class="vcard"><span class="fn">Eric Jodet</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eric_jodet&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eric_jodet&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=80142&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=80142&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a3" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=80539"
+               title="View the content of the attachment">
+          <b>Slightly improved patch</b></a>
+
+          <span class="bz_attach_extra_info">
+              (2.07 KB,
+                patch)
+
+            <br>
+            <a href="#attach_80539"
+               title="Go to the comment associated with the attachment">2007-10-17 06:29 EDT</a>,
+
+            <span class="vcard"><span class="fn">Jerome Lanneluc</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jerome_lanneluc&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jerome_lanneluc&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=80539&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=80539&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <span class="bz_attach_view_hide">
+            <a href="#a0" onclick="return toggle_display(this);">Show
+              Obsolete</a> (2)
+            <a id="view_all" href="attachment.cgi?bugid=206027&amp;action=viewall&amp;hide_obsolete=1">View All</a>
+        </span>
+        <a href="attachment.cgi?bugid=206027&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=206027&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=206027#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eric Jodet</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eric_jodet&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eric_jodet&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-11 07:49:37 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Version: 3.4.0
+Build id: I20071010-1200
+
+- both workspace and target platform contain 1600+ plug-ins / projects
+- launch the workbench
+- once UI is visible, open the progress view
+--&gt; the Initialization of the Java Tooling job is stucked for some time at 0% and takes a big amount of time
+
+As JavaCore#initializeAfterLoad consists in 2 major operation (initialize all containers and variables and a dummy search query), I'll open a separate issue to address the dummy search query improvement.
+
+Taking a Yourkit snapshot during JavaCore#initializeAfterLoad gave the following 2 hotspots:
+1 - (85%) org.eclipse.jdt.internal.core.util.Util.setSourceAttachmentProperty(IPath, String)
+2 - (12%) org.eclipse.jdt.internal.core.DeltaProcessingState.initializeRoots()</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=206027#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eric Jodet</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eric_jodet&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eric_jodet&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-11 07:57:23 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">see also <a class="bz_bug_link 
+          bz_status_VERIFIED  bz_closed"
+   title="VERIFIED INVALID - [search] Improve dummy search query performance"
+   href="show_bug.cgi?id=206028">bug 206028</a> for the dummy search query part.</pre>
+    </div>
+
+    <div id="c2" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=206027#c2">Comment 2</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jerome Lanneluc</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jerome_lanneluc&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jerome_lanneluc&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-11 09:30:56 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">This needs to be verified first, but I believe that this code is there to be able to migrate pre-3.3 workspaces (we used to store source attachments in the persistent property even if there was a sourceAttachment attribute on the classpath entry).
+
+In this case, we should store the version number in the workspace. If this version number is before 3.3, we would run the org.eclipse.jdt.internal.core.util.Util.setSourceAttachmentProperty(null) code.
+If the version number is not present, we would do it anyway. But this would not run on next session.</pre>
+    </div>
+
+    <div id="c3" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=206027#c3">Comment 3</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eric Jodet</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eric_jodet&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eric_jodet&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-11 10:32:01 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=80139&amp;action=diff" name="attach_80139" title="[draft patch]">attachment 80139</a> <a href="attachment.cgi?id=80139&amp;action=edit" title="[draft patch]">[details]</a></span>
+[draft patch]
+
+Still using my 1600+ plug-ins workspace, found that the same entries were added hundreds of times during init after load:
+Util.setSourceAttachmentProperty for C:/jdk6/jre/lib/resources.jar
+Util.setSourceAttachmentProperty for C:/jdk6/jre/lib/rt.jar
+Util.setSourceAttachmentProperty for C:/jdk6/jre/lib/jsse.jar
+Util.setSourceAttachmentProperty for C:/jdk6/jre/lib/jce.jar
+Util.setSourceAttachmentProperty for C:/jdk6/jre/lib/charsets.jar
+for a total of 5374 invocations of Util.setSourceAttachmentProperty
+
+The idea of this patch is to cache (in a list, anything cheaper might do the trick) already registered paths.
+
+Using this patch, Util.setSourceAttachmentProperty in only called 7 times (for the above listed JAR's + another one) and execution is skipped (thanks to the cache) 5365 times.</pre>
+    </div>
+
+    <div id="c4" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=206027#c4">Comment 4</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eric Jodet</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eric_jodet&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eric_jodet&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-11 10:48:21 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=80142&amp;action=diff" name="attach_80142" title="[proposed patch] using a HashSet and not a Vector">attachment 80142</a> <a href="attachment.cgi?id=80142&amp;action=edit" title="[proposed patch] using a HashSet and not a Vector">[details]</a></span>
+[proposed patch] using a HashSet and not a Vector</pre>
+    </div>
+
+    <div id="c5" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=206027#c5">Comment 5</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eric Jodet</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=eric_jodet&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=eric_jodet&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-11 13:52:09 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">(In reply to <a href="show_bug.cgi?id=206027#c4">comment #4</a>)
+<span class="quote">&gt; Created an attachment (id=80142) [details]
+&gt; [proposed patch] using a HashSet and not a Vector</span >
+--&gt; all jdt.core tests completed OK
+
+</pre>
+    </div>
+
+    <div id="c6" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=206027#c6">Comment 6</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jerome Lanneluc</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jerome_lanneluc&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jerome_lanneluc&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-17 06:29:32 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=80539&amp;action=diff" name="attach_80539" title="Slightly improved patch">attachment 80539</a> <a href="attachment.cgi?id=80539&amp;action=edit" title="Slightly improved patch">[details]</a></span>
+Slightly improved patch
+
+This patch is using the boolean returned by HashSet#add(...) instead of doing 2 look ups: one for contains(...) the other for add(...).</pre>
+    </div>
+
+    <div id="c7" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=206027#c7">Comment 7</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Jerome Lanneluc</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=jerome_lanneluc&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=jerome_lanneluc&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-17 06:33:56 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Released for 3.4M3.
+
+For the record, Philippe suggested another idea: we could detect the case where we are migrating by walking the classpath entries. On the first one that has a source attachment and a source attachment property, we would do the migration. If no entry has a source attachment property, then no need to do the migration.</pre>
+    </div>
+
+    <div id="c8" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=206027#c8">Comment 8</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Philipe Mulet</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=philippe_mulet&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=philippe_mulet&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-19 06:33:48 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Tried the patch and not much improvement (build 1.6.0_02-ea-b02).
+End-user behavior remains roughly the same  (resetting source attachments for a long time).
+
+</pre>
+    </div>
+
+    <div id="c9" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=206027#c9">Comment 9</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Philipe Mulet</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=philippe_mulet&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=philippe_mulet&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-19 06:37:00 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Full thread dump Java HotSpot(TM) Client VM (1.6.0_02-ea-b02 mixed mode):
+
+&quot;Worker-11&quot; prio=6 tid=0x03340800 nid=0xf68 in Object.wait() [0x052ef000..0x052efc94]
+   java.lang.Thread.State: TIMED_WAITING (on object monitor)
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x12d94f68&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.sleep(WorkerPool.java:185)
+        - locked &lt;0x12d94f68&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.startJob(WorkerPool.java:217)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:51)
+
+&quot;Worker-10&quot; prio=6 tid=0x0357f000 nid=0xc68 in Object.wait() [0x052af000..0x052afd14]
+   java.lang.Thread.State: TIMED_WAITING (on object monitor)
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x12d94f68&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.sleep(WorkerPool.java:185)
+        - locked &lt;0x12d94f68&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.startJob(WorkerPool.java:217)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:51)
+
+&quot;Worker-9&quot; prio=6 tid=0x03276400 nid=0x6d8 in Object.wait() [0x0526f000..0x0526fd94]
+   java.lang.Thread.State: TIMED_WAITING (on object monitor)
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x12d94f68&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.sleep(WorkerPool.java:185)
+        - locked &lt;0x12d94f68&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.startJob(WorkerPool.java:217)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:51)
+
+&quot;Worker-8&quot; prio=6 tid=0x03342400 nid=0x770 in Object.wait() [0x0522f000..0x0522fa14]
+   java.lang.Thread.State: TIMED_WAITING (on object monitor)
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x12d94f68&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.sleep(WorkerPool.java:185)
+        - locked &lt;0x12d94f68&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.startJob(WorkerPool.java:217)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:51)
+
+&quot;Worker-7&quot; prio=6 tid=0x0347c800 nid=0xfe4 in Object.wait() [0x051ef000..0x051efa94]
+   java.lang.Thread.State: TIMED_WAITING (on object monitor)
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x12d94f68&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.sleep(WorkerPool.java:185)
+        - locked &lt;0x12d94f68&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.startJob(WorkerPool.java:217)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:51)
+
+&quot;Worker-6&quot; prio=6 tid=0x03565c00 nid=0x9f8 runnable [0x051af000..0x051afb14]
+   java.lang.Thread.State: RUNNABLE
+        at java.io.FileOutputStream.close0(Native Method)
+        at java.io.FileOutputStream.close(FileOutputStream.java:279)
+        at java.io.FilterOutputStream.close(FilterOutputStream.java:143)
+        at java.io.FilterOutputStream.close(FilterOutputStream.java:143)
+        at org.eclipse.core.internal.localstore.Bucket.save(Bucket.java:348)
+        at org.eclipse.core.internal.properties.PropertyBucket.save(PropertyBucket.java:291)
+        at org.eclipse.core.internal.properties.PropertyManager2.setProperty(PropertyManager2.java:165)
+        - locked &lt;0x135b14c8&gt; (a org.eclipse.core.internal.properties.PropertyManager2)
+        at org.eclipse.core.internal.resources.Resource.setPersistentProperty(Resource.java:1534)
+        at org.eclipse.jdt.internal.core.util.Util.setSourceAttachmentProperty(Util.java:1114)
+        at org.eclipse.jdt.core.JavaCore.initializeAfterLoad(JavaCore.java:3406)
+        at org.eclipse.jdt.internal.ui.InitializeAfterLoadJob$RealJob.run(InitializeAfterLoadJob.java:35)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+&quot;Worker-5&quot; prio=6 tid=0x0347bc00 nid=0x944 in Object.wait() [0x0516f000..0x0516fb94]
+   java.lang.Thread.State: TIMED_WAITING (on object monitor)
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x12d94f68&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.sleep(WorkerPool.java:185)
+        - locked &lt;0x12d94f68&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.startJob(WorkerPool.java:217)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:51)
+
+&quot;Worker-4&quot; prio=6 tid=0x034d8800 nid=0x5c4 in Object.wait() [0x03f6f000..0x03f6fc14]
+   java.lang.Thread.State: TIMED_WAITING (on object monitor)
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x12d94f68&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.sleep(WorkerPool.java:185)
+        - locked &lt;0x12d94f68&gt; (a org.eclipse.core.internal.jobs.WorkerPool)
+        at org.eclipse.core.internal.jobs.WorkerPool.startJob(WorkerPool.java:217)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:51)
+
+&quot;Worker-3&quot; prio=6 tid=0x0351cc00 nid=0xed4 runnable [0x03ebf000..0x03ebfc94]
+   java.lang.Thread.State: RUNNABLE
+        at java.lang.String.indexOf(String.java:1734)
+        at java.lang.String.indexOf(String.java:1716)
+        at org.eclipse.core.runtime.Path.append(Path.java:260)
+        at org.eclipse.core.internal.dtree.DeltaDataTree.getChildren(DeltaDataTree.java:540)
+        at org.eclipse.core.internal.watson.ElementTree.getChildIDs(ElementTree.java:331)
+        at org.eclipse.core.internal.watson.ElementTree.getChildren(ElementTree.java:347)
+        - locked &lt;0x15348240&gt; (a org.eclipse.core.internal.watson.ElementTree)
+        at org.eclipse.core.internal.resources.Container.getChildren(Container.java:91)
+        at org.eclipse.core.internal.resources.Container.members(Container.java:185)
+        at org.eclipse.core.internal.resources.Container.members(Container.java:172)
+        at org.eclipse.team.internal.ccvs.core.resources.SynchronizerSyncInfoCache.members(SynchronizerSyncInfoCache.java:341)
+        at org.eclipse.team.internal.ccvs.core.resources.EclipseSynchronizer.members(EclipseSynchronizer.java:461)
+        at org.eclipse.team.internal.ccvs.core.resources.EclipseFolder.members(EclipseFolder.java:44)
+        at org.eclipse.team.internal.ccvs.core.resources.SynchronizerSyncInfoCache.calculateDirtyCountForPhantomFolder(SynchronizerSyncInfoCache.java:273)
+        at org.eclipse.team.internal.ccvs.core.resources.SynchronizerSyncInfoCache.getDirtyIndicator(SynchronizerSyncInfoCache.java:212)
+        at org.eclipse.team.internal.ccvs.core.resources.EclipseSynchronizer.getDirtyIndicator(EclipseSynchronizer.java:1515)
+        at org.eclipse.team.internal.ccvs.core.resources.EclipseSynchronizer.getModificationState(EclipseSynchronizer.java:1580)
+        at org.eclipse.team.internal.ccvs.core.CVSWorkspaceSubscriber.hasOutgoingChange(CVSWorkspaceSubscriber.java:242)
+        at org.eclipse.team.internal.ccvs.core.CVSWorkspaceSubscriber.isOutOfSync(CVSWorkspaceSubscriber.java:230)
+        at org.eclipse.team.internal.ccvs.core.CVSWorkspaceSubscriber$3.visit(CVSWorkspaceSubscriber.java:195)
+        at org.eclipse.team.internal.ccvs.core.CVSWorkspaceSubscriber.visit(CVSWorkspaceSubscriber.java:219)
+        at org.eclipse.team.internal.ccvs.core.CVSWorkspaceSubscriber.visit(CVSWorkspaceSubscriber.java:224)
+        at org.eclipse.team.internal.ccvs.core.CVSWorkspaceSubscriber.visit(CVSWorkspaceSubscriber.java:224)
+        at org.eclipse.team.internal.ccvs.core.CVSWorkspaceSubscriber.visit(CVSWorkspaceSubscriber.java:224)
+        at org.eclipse.team.internal.ccvs.core.CVSWorkspaceSubscriber.visit(CVSWorkspaceSubscriber.java:224)
+        at org.eclipse.team.internal.ccvs.core.CVSWorkspaceSubscriber.collectOutOfSync(CVSWorkspaceSubscriber.java:188)
+        at org.eclipse.team.internal.core.subscribers.SubscriberSyncInfoEventHandler.collectAll(SubscriberSyncInfoEventHandler.java:162)
+        at org.eclipse.team.internal.core.subscribers.SubscriberEventHandler.processEvent(SubscriberEventHandler.java:317)
+        at org.eclipse.team.internal.core.BackgroundEventHandler.processEvents(BackgroundEventHandler.java:369)
+        at org.eclipse.team.internal.core.BackgroundEventHandler$1.run(BackgroundEventHandler.java:203)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+&quot;Worker-2&quot; prio=6 tid=0x02d03800 nid=0x320 in Object.wait() [0x03e7f000..0x03e7fd14]
+   java.lang.Thread.State: WAITING (on object monitor)
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x13af2308&gt; (a java.lang.Object)
+        at java.lang.Object.wait(Object.java:485)
+        at org.eclipse.jdt.internal.ui.javaeditor.ASTProvider.getAST(ASTProvider.java:450)
+        - locked &lt;0x13af2308&gt; (a java.lang.Object)
+        at org.eclipse.jdt.ui.SharedASTProvider.getAST(SharedASTProvider.java:122)
+        at org.eclipse.jdt.ui.OverrideIndicatorLabelDecorator.getOverrideIndicators(OverrideIndicatorLabelDecorator.java:150)
+        at org.eclipse.jdt.ui.OverrideIndicatorLabelDecorator.computeAdornmentFlags(OverrideIndicatorLabelDecorator.java:127)
+        at org.eclipse.jdt.ui.OverrideIndicatorLabelDecorator.decorate(OverrideIndicatorLabelDecorator.java:259)
+        at org.eclipse.ui.internal.decorators.LightweightDecoratorDefinition.decorate(LightweightDecoratorDefinition.java:259)
+        at org.eclipse.ui.internal.decorators.LightweightDecoratorManager$LightweightRunnable.run(LightweightDecoratorManager.java:71)
+        at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+        at org.eclipse.core.runtime.Platform.run(Platform.java:857)
+        at org.eclipse.ui.internal.decorators.LightweightDecoratorManager.decorate(LightweightDecoratorManager.java:336)
+        at org.eclipse.ui.internal.decorators.LightweightDecoratorManager.getDecorations(LightweightDecoratorManager.java:322)
+        at org.eclipse.ui.internal.decorators.DecorationScheduler$1.ensureResultCached(DecorationScheduler.java:369)
+        at org.eclipse.ui.internal.decorators.DecorationScheduler$1.run(DecorationScheduler.java:329)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+&quot;org.eclipse.jdt.internal.ui.text.JavaReconciler&quot; daemon prio=2 tid=0x0457bc00 nid=0x9ec runnable [0x04edf000..0x04edfd94]
+   java.lang.Thread.State: RUNNABLE
+        at java.io.FileInputStream.open(Native Method)
+        at java.io.FileInputStream.&lt;init&gt;(FileInputStream.java:106)
+        at org.eclipse.core.internal.filesystem.local.LocalFile.openInputStream(LocalFile.java:335)
+        at org.eclipse.core.internal.localstore.FileSystemResourceManager.read(FileSystemResourceManager.java:615)
+        at org.eclipse.core.internal.resources.File.getContents(File.java:287)
+        at org.eclipse.core.internal.resources.ProjectPreferences.load(ProjectPreferences.java:436)
+        at org.eclipse.core.internal.preferences.EclipsePreferences.create(EclipsePreferences.java:307)
+        at org.eclipse.core.internal.preferences.EclipsePreferences.getChild(EclipsePreferences.java:412)
+        at org.eclipse.core.internal.preferences.EclipsePreferences.internalNode(EclipsePreferences.java:541)
+        at org.eclipse.core.internal.preferences.EclipsePreferences.node(EclipsePreferences.java:662)
+        at org.eclipse.core.resources.ProjectScope.getNode(ProjectScope.java:67)
+        at org.eclipse.jdt.internal.core.JavaProject.getEclipsePreferences(JavaProject.java:1374)
+        at org.eclipse.jdt.internal.core.JavaProject.getOption(JavaProject.java:1533)
+        at org.eclipse.jdt.internal.core.JarPackageFragmentRoot.computeChildren(JarPackageFragmentRoot.java:79)
+        at org.eclipse.jdt.internal.core.JavaProjectElementInfo.initializePackageNames(JavaProjectElementInfo.java:248)
+        at org.eclipse.jdt.internal.core.JavaProjectElementInfo.getProjectCache(JavaProjectElementInfo.java:221)
+        at org.eclipse.jdt.internal.core.JavaProject.getProjectCache(JavaProject.java:1801)
+        at org.eclipse.jdt.internal.core.JavaProjectElementInfo.newNameLookup(JavaProjectElementInfo.java:304)
+        at org.eclipse.jdt.internal.core.JavaProject.newNameLookup(JavaProject.java:2187)
+        at org.eclipse.jdt.internal.core.SearchableEnvironment.&lt;init&gt;(SearchableEnvironment.java:53)
+        at org.eclipse.jdt.internal.core.SearchableEnvironment.&lt;init&gt;(SearchableEnvironment.java:67)
+        at org.eclipse.jdt.internal.core.CancelableNameEnvironment.&lt;init&gt;(CancelableNameEnvironment.java:26)
+        at org.eclipse.jdt.internal.core.CompilationUnitProblemFinder.process(CompilationUnitProblemFinder.java:160)
+        at org.eclipse.jdt.internal.core.CompilationUnitProblemFinder.process(CompilationUnitProblemFinder.java:249)
+        at org.eclipse.jdt.internal.core.ReconcileWorkingCopyOperation.makeConsistent(ReconcileWorkingCopyOperation.java:190)
+        at org.eclipse.jdt.internal.core.ReconcileWorkingCopyOperation.executeOperation(ReconcileWorkingCopyOperation.java:89)
+        at org.eclipse.jdt.internal.core.JavaModelOperation.run(JavaModelOperation.java:720)
+        at org.eclipse.jdt.internal.core.JavaModelOperation.runOperation(JavaModelOperation.java:780)
+        at org.eclipse.jdt.internal.core.CompilationUnit.reconcile(CompilationUnit.java:1151)
+        at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:124)
+        at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.access$0(JavaReconcilingStrategy.java:108)
+        at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy$1.run(JavaReconcilingStrategy.java:89)
+        at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+        at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:87)
+        at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.initialReconcile(JavaReconcilingStrategy.java:176)
+        at org.eclipse.jdt.internal.ui.text.CompositeReconcilingStrategy.initialReconcile(CompositeReconcilingStrategy.java:114)
+        at org.eclipse.jdt.internal.ui.text.JavaCompositeReconcilingStrategy.initialReconcile(JavaCompositeReconcilingStrategy.java:133)
+        at org.eclipse.jface.text.reconciler.MonoReconciler.initialProcess(MonoReconciler.java:103)
+        at org.eclipse.jdt.internal.ui.text.JavaReconciler.initialProcess(JavaReconciler.java:395)
+        - locked &lt;0x13afb520&gt; (a java.lang.Object)
+        at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:170)
+
+&quot;Java indexing&quot; daemon prio=4 tid=0x04583c00 nid=0x3fc in Object.wait() [0x04d9f000..0x04d9fa14]
+   java.lang.Thread.State: WAITING (on object monitor)
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x139a53c0&gt; (a org.eclipse.jdt.internal.core.search.indexing.IndexManager)
+        at java.lang.Object.wait(Object.java:485)
+        at org.eclipse.jdt.internal.core.search.processing.JobManager.run(JobManager.java:369)
+        - locked &lt;0x139a53c0&gt; (a org.eclipse.jdt.internal.core.search.indexing.IndexManager)
+        at java.lang.Thread.run(Thread.java:619)
+
+&quot;Worker-1&quot; prio=6 tid=0x02fcfc00 nid=0xe0 runnable [0x03f2f000..0x03f2fb14]
+   java.lang.Thread.State: RUNNABLE
+        at org.eclipse.core.internal.filesystem.local.LocalFileNatives.internalGetFileInfoW(Native Method)
+        at org.eclipse.core.internal.filesystem.local.LocalFileNatives.fetchFileInfo(LocalFileNatives.java:99)
+        at org.eclipse.core.internal.filesystem.local.LocalFile.fetchInfo(LocalFile.java:126)
+        at org.eclipse.core.filesystem.provider.FileStore.fetchInfo(FileStore.java:277)
+        at org.eclipse.core.internal.localstore.UnifiedTree.addRootToQueue(UnifiedTree.java:244)
+        at org.eclipse.core.internal.localstore.UnifiedTree.initializeQueue(UnifiedTree.java:357)
+        at org.eclipse.core.internal.localstore.UnifiedTree.accept(UnifiedTree.java:88)
+        at org.eclipse.core.internal.localstore.FileSystemResourceManager.isSynchronized(FileSystemResourceManager.java:537)
+        at org.eclipse.core.internal.resources.Resource.isSynchronized(Resource.java:1280)
+        at org.eclipse.core.internal.refresh.PollingMonitor.poll(PollingMonitor.java:172)
+        at org.eclipse.core.internal.refresh.PollingMonitor.run(PollingMonitor.java:131)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+&quot;Worker-0&quot; prio=6 tid=0x033f6c00 nid=0xedc in Object.wait() [0x03e3f000..0x03e3fc14]
+   java.lang.Thread.State: WAITING (on object monitor)
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x13af2308&gt; (a java.lang.Object)
+        at java.lang.Object.wait(Object.java:485)
+        at org.eclipse.jdt.internal.ui.javaeditor.ASTProvider.getAST(ASTProvider.java:450)
+        - locked &lt;0x13af2308&gt; (a java.lang.Object)
+        at org.eclipse.jdt.ui.SharedASTProvider.getAST(SharedASTProvider.java:122)
+        at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup.calculateASTandInform(SelectionListenerWithASTManager.java:16
+        at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$3.run(SelectionListenerWithASTManager.java:153)
+        - locked &lt;0x13cc3ca0&gt; (a java.lang.Object)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+&quot;Bundle File Closer&quot; daemon prio=6 tid=0x03428c00 nid=0xdc0 in Object.wait() [0x0386f000..0x0386fd14]
+   java.lang.Thread.State: WAITING (on object monitor)
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x12912820&gt; (a org.eclipse.osgi.framework.eventmgr.EventManager$EventThread)
+        at java.lang.Object.wait(Object.java:485)
+        at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.getNextEvent(EventManager.java:375)
+        - locked &lt;0x12912820&gt; (a org.eclipse.osgi.framework.eventmgr.EventManager$EventThread)
+        at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:315)
+
+&quot;Start Level Event Dispatcher&quot; daemon prio=6 tid=0x031bd800 nid=0xf24 in Object.wait() [0x0382f000..0x0382fa14]
+   java.lang.Thread.State: WAITING (on object monitor)
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x12863a08&gt; (a org.eclipse.osgi.framework.eventmgr.EventManager$EventThread)
+        at java.lang.Object.wait(Object.java:485)
+        at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.getNextEvent(EventManager.java:375)
+        - locked &lt;0x12863a08&gt; (a org.eclipse.osgi.framework.eventmgr.EventManager$EventThread)
+        at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:315)
+
+&quot;OSGi Console&quot; prio=6 tid=0x0318f400 nid=0xc10 runnable [0x037af000..0x037afb14]
+   java.lang.Thread.State: RUNNABLE
+        at java.io.FileInputStream.readBytes(Native Method)
+        at java.io.FileInputStream.read(FileInputStream.java:199)
+        at java.io.BufferedInputStream.read1(BufferedInputStream.java:256)
+        at java.io.BufferedInputStream.read(BufferedInputStream.java:317)
+        - locked &lt;0x127d2ca0&gt; (a java.io.BufferedInputStream)
+        at java.io.FilterInputStream.read(FilterInputStream.java:116)
+        at sun.nio.cs.StreamDecoder.readBytes(StreamDecoder.java:264)
+        at sun.nio.cs.StreamDecoder.implRead(StreamDecoder.java:306)
+        at sun.nio.cs.StreamDecoder.read(StreamDecoder.java:158)
+        - locked &lt;0x12869c38&gt; (a java.io.InputStreamReader)
+        at java.io.InputStreamReader.read(InputStreamReader.java:167)
+        at java.io.BufferedReader.fill(BufferedReader.java:136)
+        at java.io.BufferedReader.readLine(BufferedReader.java:299)
+        - locked &lt;0x12869c38&gt; (a java.io.InputStreamReader)
+        at java.io.BufferedReader.readLine(BufferedReader.java:362)
+        at org.eclipse.osgi.framework.internal.core.FrameworkConsole.console(FrameworkConsole.java:271)
+        at org.eclipse.osgi.framework.internal.core.FrameworkConsole.run(FrameworkConsole.java:216)
+        at java.lang.Thread.run(Thread.java:619)
+
+&quot;Framework Event Dispatcher&quot; daemon prio=6 tid=0x031cf800 nid=0x1c8 in Object.wait() [0x0376f000..0x0376fb94]
+   java.lang.Thread.State: WAITING (on object monitor)
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x128545a0&gt; (a org.eclipse.osgi.framework.eventmgr.EventManager$EventThread)
+        at java.lang.Object.wait(Object.java:485)
+        at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.getNextEvent(EventManager.java:375)
+        - locked &lt;0x128545a0&gt; (a org.eclipse.osgi.framework.eventmgr.EventManager$EventThread)
+        at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:315)
+
+&quot;Low Memory Detector&quot; daemon prio=6 tid=0x02d14c00 nid=0x608 runnable [0x00000000..0x00000000]
+   java.lang.Thread.State: RUNNABLE
+
+&quot;CompilerThread0&quot; daemon prio=10 tid=0x02d14400 nid=0x57c waiting on condition [0x00000000..0x02f0f91c]
+   java.lang.Thread.State: RUNNABLE
+
+&quot;Attach Listener&quot; daemon prio=10 tid=0x02d33c00 nid=0xc88 runnable [0x00000000..0x00000000]
+   java.lang.Thread.State: RUNNABLE
+
+&quot;Signal Dispatcher&quot; daemon prio=10 tid=0x02d05800 nid=0x838 waiting on condition [0x00000000..0x00000000]
+   java.lang.Thread.State: RUNNABLE
+
+&quot;Finalizer&quot; daemon prio=8 tid=0x02d01400 nid=0xc54 in Object.wait() [0x02e3f000..0x02e3fa94]
+   java.lang.Thread.State: WAITING (on object monitor)
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x127c3cb8&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:116)
+        - locked &lt;0x127c3cb8&gt; (a java.lang.ref.ReferenceQueue$Lock)
+        at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:132)
+        at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:159)
+
+&quot;Reference Handler&quot; daemon prio=10 tid=0x02ceb800 nid=0xe80 in Object.wait() [0x02dff000..0x02dffb14]
+   java.lang.Thread.State: WAITING (on object monitor)
+        at java.lang.Object.wait(Native Method)
+        - waiting on &lt;0x127c3d48&gt; (a java.lang.ref.Reference$Lock)
+        at java.lang.Object.wait(Object.java:485)
+        at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:116)
+        - locked &lt;0x127c3d48&gt; (a java.lang.ref.Reference$Lock)
+
+&quot;main&quot; prio=6 tid=0x00296000 nid=0x618 runnable [0x003ff000..0x003ffe68]
+   java.lang.Thread.State: RUNNABLE
+        at org.eclipse.swt.internal.win32.OS.WaitMessage(Native Method)
+        at org.eclipse.swt.widgets.Display.sleep(Display.java:4136)
+        at org.eclipse.ui.application.WorkbenchAdvisor.eventLoopIdle(WorkbenchAdvisor.java:362)
+        at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:2390)
+        at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2353)
+        at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2219)
+        at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:466)
+        at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:289)
+        at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:461)
+        at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+        at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:106)
+        at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:174)
+        at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:106)
+        at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:76)
+        at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:363)
+        at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:176)
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+        at java.lang.reflect.Method.invoke(Method.java:597)
+        at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:515)
+        at org.eclipse.equinox.launcher.Main.basicRun(Main.java:455)
+        at org.eclipse.equinox.launcher.Main.run(Main.java:1193)
+        at org.eclipse.equinox.launcher.Main.main(Main.java:1169)
+
+&quot;VM Thread&quot; prio=10 tid=0x02ce6000 nid=0xb0c runnable
+
+&quot;VM Periodic Task Thread&quot; prio=10 tid=0x02d0dc00 nid=0x894 waiting on condition
+
+JNI global references: 954
+
+
+osgi&gt; Heap
+ def new generation   total 3904K, used 3571K [0x10020000, 0x10450000, 0x12780000)
+  eden space 3520K,  96% used [0x10020000, 0x1036dce8, 0x10390000)
+  from space 384K,  49% used [0x103f0000, 0x1041f2c0, 0x10450000)
+  to   space 384K,   0% used [0x10390000, 0x10390000, 0x103f0000)
+ tenured generation   total 51120K, used 46802K [0x12780000, 0x1596c000, 0x30020000)
+   the space 51120K,  91% used [0x12780000, 0x15534bb8, 0x15534c00, 0x1596c000)
+ compacting perm gen  total 43520K, used 43410K [0x30020000, 0x32aa0000, 0x40020000)
+   the space 43520K,  99% used [0x30020000, 0x32a84b88, 0x32a84c00, 0x32aa0000)
+No shared spaces configured.</pre>
+    </div>
+
+    <div id="c10" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=206027#c10">Comment 10</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Philipe Mulet</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=philippe_mulet&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=philippe_mulet&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-19 06:41:10 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Using other VM (build 1.5.0_12-ea-b01), similar behavior near initAfterLoad
+
+
+&quot;Worker-6&quot; prio=6 tid=0x03944e00 nid=0xad4 runnable [0x0606f000..0x0606fd68]
+        at java.io.FileOutputStream.close0(Native Method)
+        at java.io.FileOutputStream.close(FileOutputStream.java:279)
+        at java.io.FilterOutputStream.close(FilterOutputStream.java:143)
+        at java.io.FilterOutputStream.close(FilterOutputStream.java:143)
+        at org.eclipse.core.internal.localstore.Bucket.save(Bucket.java:348)
+        at org.eclipse.core.internal.properties.PropertyBucket.save(PropertyBucket.java:291)
+        at org.eclipse.core.internal.properties.PropertyManager2.setProperty(PropertyManager2.java:165)
+        - locked &lt;0x133ec4d0&gt; (a org.eclipse.core.internal.properties.PropertyManager2)
+        at org.eclipse.core.internal.resources.Resource.setPersistentProperty(Resource.java:1534)
+        at org.eclipse.jdt.internal.core.util.Util.setSourceAttachmentProperty(Util.java:1114)
+        at org.eclipse.jdt.core.JavaCore.initializeAfterLoad(JavaCore.java:3406)
+        at org.eclipse.jdt.internal.ui.InitializeAfterLoadJob$RealJob.run(InitializeAfterLoadJob.java:35)
+        at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)</pre>
+    </div>
+
+    <div id="c11" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=206027#c11">Comment 11</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Philipe Mulet</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=philippe_mulet&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=philippe_mulet&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-19 06:47:16 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Trying IBM VM 1.5 sr4, same behavior
+
+3XMTHREADINFO      &quot;Worker-6&quot; (TID:0x24A03A00, sys_thread_t:0x21B4E3F0, state:CW, native ID:0x00000984) prio=5
+4XESTACKTRACE          at java/io/FileOutputStream.close0(Native Method)
+4XESTACKTRACE          at java/io/FileOutputStream.close(FileOutputStream.java:310)
+4XESTACKTRACE          at java/io/FilterOutputStream.close(FilterOutputStream.java:160)
+4XESTACKTRACE          at java/io/FilterOutputStream.close(FilterOutputStream.java:160)
+4XESTACKTRACE          at org/eclipse/core/internal/localstore/Bucket.save(Bucket.java:348(Compiled Code))
+4XESTACKTRACE          at org/eclipse/core/internal/properties/PropertyBucket.save(PropertyBucket.java:291)
+4XESTACKTRACE          at org/eclipse/core/internal/properties/PropertyManager2.setProperty(PropertyManager2.java:165)
+4XESTACKTRACE          at org/eclipse/core/internal/resources/Resource.setPersistentProperty(Resource.java:1534)
+4XESTACKTRACE          at org/eclipse/jdt/internal/core/util/Util.setSourceAttachmentProperty(Util.java:1114)
+4XESTACKTRACE          at org/eclipse/jdt/core/JavaCore.initializeAfterLoad(JavaCore.java:3406)
+4XESTACKTRACE          at org/eclipse/jdt/internal/ui/InitializeAfterLoadJob$RealJob.run(InitializeAfterLoadJob.java:35)
+4XESTACKTRACE          at org/eclipse/core/internal/jobs/Worker.run(Worker.java:55)</pre>
+    </div>
+
+    <div id="c12" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=206027#c12">Comment 12</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Philipe Mulet</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=philippe_mulet&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=philippe_mulet&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-19 09:12:48 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Interestingly turning off the antivirus realtime check seems to make the problem go away entirely...</pre>
+    </div>
+
+    <div id="c13" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=206027#c13">Comment 13</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">David Audel</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=david_audel&#64;fr.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=david_audel&#64;fr.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2007-10-31 10:11:17 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Verified for 3.4M3 using I20071029-0010 build.</pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=206027">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=206027">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=206027">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=206027&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=206027" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>

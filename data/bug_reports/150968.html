@@ -1,0 +1,1794 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>150968 &ndash; JVM crash with -Xverify:none</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "150968 – JVM crash with -Xverify:none",
+                             "show_bug.cgi?id=150968" );
+        document.title = "150968 – JVM crash with -Xverify:none";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "150968 – JVM crash with -Xverify:none", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_RESOLVED
+                 bz_product_Platform
+                 bz_component_SWT
+                 bz_bug_150968 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;150968</span>
+
+        <span id="subtitle" class="subheader">JVM crash with -Xverify:none</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2006-08-08 12:38:45 EDT</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=150968&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=150968" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2006-08-08 12:38:45">
+  <input type="hidden" name="id" value="150968">
+  <input type="hidden" name="token" value="1629866443-iMag1jv_oIA4aqvHrf0JGMOYMSdD1bUqWBETQQr9Sd4">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=150968"><b>Bug&nbsp;150968</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">JVM crash with -Xverify:none</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span>JVM crash with -Xverify:none
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      'JVM crash with -Xverify:none' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">RESOLVED
+          DUPLICATE
+            of <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED NOT_ECLIPSE - [Workbench] Excessive amount of Permanent Generation memory reported by the VM"
+   href="show_bug.cgi?id=92250">bug 92250</a>
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >Platform
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >Eclipse Project
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=Platform"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >SWT
+
+  (<a href="buglist.cgi?component=SWT&amp;product=Platform&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>3.2 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">PC
+        Linux-GTK
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P3
+       normal<span id="votes_container">
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=150968#vote_150968">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>--- &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">Kevin Barnes</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=cocoakevin&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=cocoakevin&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard">
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'platform-swt-inbox\x40eclipse.org',
+        '');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+
+  </td>
+  </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2006-07-18 11:52 EDT by <span class="vcard"><span class="fn">Christopher G. Stach II</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=cstach-eclipse&#64;ldsys.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=cstach-eclipse&#64;ldsys.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2006-08-08 12:38 EDT
+      (<a href="show_activity.cgi?id=150968">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>4 
+          users
+          <span id="cc_edit_area_showhide_container" class="bz_default_hidden">
+            (<a href="#" id="cc_edit_area_showhide">show</a>)
+          </span>
+        <div id="cc_edit_area">
+          <br>
+            <select id="cc" multiple="multiple" size="5" >
+                <option value="billy.biggs">billy.biggs</option>
+                <option value="grant_gayed">grant_gayed</option>
+                <option value="Silenio_Quarti">Silenio_Quarti</option>
+                <option value="snorthov">snorthov</option>
+            </select>
+        </div>
+          <script type="text/javascript">
+            hideEditableField( 'cc_edit_area_showhide_container', 
+                               'cc_edit_area', 
+                               'cc_edit_area_showhide', 
+                               '', 
+                               '');  
+          </script>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" >
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+      <tr id="a1" class="bz_contenttype_text_plain">
+        <td>
+            <a href="attachment.cgi?id=46451"
+               title="View the content of the attachment">
+          <b>Eclipse configuration</b></a>
+
+          <span class="bz_attach_extra_info">
+              (6.80 KB,
+                text/plain)
+
+            <br>
+            <a href="#attach_46451"
+               title="Go to the comment associated with the attachment">2006-07-18 11:53 EDT</a>,
+
+            <span class="vcard"><span class="fn">Christopher G. Stach II</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=cstach-eclipse&#64;ldsys.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=cstach-eclipse&#64;ldsys.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=46451&amp;action=edit">Details</a>
+        </td>
+      </tr>
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <span class="bz_attach_view_hide">
+            <a id="view_all" href="attachment.cgi?bugid=150968&amp;action=viewall">View All</a>
+        </span>
+        <a href="attachment.cgi?bugid=150968&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=150968&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150968#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Christopher G. Stach II</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=cstach-eclipse&#64;ldsys.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=cstach-eclipse&#64;ldsys.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-07-18 11:52:13 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I get no logging to stderr or to the workspace .log.  It happens in a few places, but it seems to stabilize after running for a while.
+
+Some ways to get it to crash:
+
+Ctrl-S
+SSH2 Connection Methods-&gt;Key Management-&gt;Load existing key... (other file browsers crash it, as well, but this one is very reliable)</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150968#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Christopher G. Stach II</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=cstach-eclipse&#64;ldsys.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=cstach-eclipse&#64;ldsys.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-07-18 11:53:44 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=46451" name="attach_46451" title="Eclipse configuration">attachment 46451</a> <a href="attachment.cgi?id=46451&amp;action=edit" title="Eclipse configuration">[details]</a></span>
+Eclipse configuration
+
+This is a successful configuration.  The only difference in the failing one is -Xverify:none after the loggc argument.</pre>
+    </div>
+
+    <div id="c2" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150968#c2">Comment 2</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Grant Gayed</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=grant_gayed&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=grant_gayed&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-07-18 15:29:07 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I don't see the crash with your steps (I just tried them quickly with the specified VM switch, not over a prolonged period of time).  Which jre are you using?  And, 32 or 64-bit?
+</pre>
+    </div>
+
+    <div id="c3" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150968#c3">Comment 3</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Christopher G. Stach II</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=cstach-eclipse&#64;ldsys.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=cstach-eclipse&#64;ldsys.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-07-18 15:57:42 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Sun JDK 1.5.0_07, Gentoo Linux, ia32 and AMD64.  It happened on both.
+</pre>
+    </div>
+
+    <div id="c4" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150968#c4">Comment 4</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Christopher G. Stach II</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=cstach-eclipse&#64;ldsys.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=cstach-eclipse&#64;ldsys.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-07-18 16:01:54 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I have a lot of plugins loading.  Would you like the whole list?</pre>
+    </div>
+
+    <div id="c5" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150968#c5">Comment 5</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Grant Gayed</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=grant_gayed&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=grant_gayed&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-07-18 16:07:20 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Alternatively, if you can reproduce the problem somewhat reliably, can you see if it happens in an install that does not have the additional plugins?
+</pre>
+    </div>
+
+    <div id="c6" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150968#c6">Comment 6</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Christopher G. Stach II</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=cstach-eclipse&#64;ldsys.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=cstach-eclipse&#64;ldsys.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-07-18 16:14:27 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I just unzipped the original .tar.gz, ran with those arguments, went directly to the Load existing key, and it crashed:
+
+JVM terminated. Exit code=1
+/usr/bin/java
+-Dsun.java2d.opengl=true
+-Dswing.aatext=true
+-client
+-Xms192m
+-Xmx192m
+-Xss128k
+-Xloggc:eclipse-gc.log
+-Xverify:none
+-XX:NewRatio=2
+-XX:NewSize=96m
+-XX:SurvivorRatio=16
+-XX:PermSize=96m
+-XX:MaxPermSize=128m
+-XX:+DisableExplicitGC
+-XX:+UseLargePages
+-XX:+UseConcMarkSweepGC
+-XX:+CMSPermGenSweepingEnabled
+-XX:+CMSClassUnloadingEnabled
+-XX:+CMSPermGenSweepingEnabled
+-XX:+CMSIncrementalMode
+-XX:+CMSIncrementalPacing
+-XX:CMSIncrementalDutyCycleMin=0
+-XX:CMSIncrementalDutyCycle=10
+-jar /com/home/staff/cgs/eclipse/startup.jar
+-os linux
+-ws gtk
+-arch x86
+-launcher /com/home/staff/cgs/eclipse/eclipse
+-name Eclipse
+-showsplash 600
+-exitdata 67800f
+-vm /usr/bin/java
+-vmargs
+-Dsun.java2d.opengl=true
+-Dswing.aatext=true
+-client
+-Xms192m
+-Xmx192m
+-Xss128k
+-Xloggc:eclipse-gc.log
+-Xverify:none
+-XX:NewRatio=2
+-XX:NewSize=96m
+-XX:SurvivorRatio=16
+-XX:PermSize=96m
+-XX:MaxPermSize=128m
+-XX:+DisableExplicitGC
+-XX:+UseLargePages
+-XX:+UseConcMarkSweepGC
+-XX:+CMSPermGenSweepingEnabled
+-XX:+CMSClassUnloadingEnabled
+-XX:+CMSPermGenSweepingEnabled
+-XX:+CMSIncrementalMode
+-XX:+CMSIncrementalPacing
+-XX:CMSIncrementalDutyCycleMin=0
+-XX:CMSIncrementalDutyCycle=10
+-jar /com/home/staff/cgs/eclipse/startup.jar </pre>
+    </div>
+
+    <div id="c7" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150968#c7">Comment 7</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Grant Gayed</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=grant_gayed&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=grant_gayed&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-07-18 16:24:19 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Ed to investigate.
+</pre>
+    </div>
+
+    <div id="c8" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150968#c8">Comment 8</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Christopher G. Stach II</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=cstach-eclipse&#64;ldsys.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=cstach-eclipse&#64;ldsys.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-07-20 16:36:29 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Okay, today it is happening for both the ctrl-s and &quot;Load existing key...&quot; cases WITHOUT -Xverify:none.  It's not happening nearly as often, though.  I would have suspected that it might be related to our Xenified (3.0.2) 2.6.16.18 kernel, but I also have some initial reports from my developers of it happening on Windows XP (same JVM version.)
+
+It just happened to me with ctrl-f while editing the .classpath file in a &quot;XML Editor&quot;.
+
+Another dev on Linux reports &quot;Got this with emacs key bindings turned on in Eclipse.  Did a Ctrl + G Ctrl + R in an attempt to search for a word in a class file.&quot;
+</pre>
+    </div>
+
+    <div id="c9" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150968#c9">Comment 9</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Christopher G. Stach II</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=cstach-eclipse&#64;ldsys.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=cstach-eclipse&#64;ldsys.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-07-20 16:39:12 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Here is a crash dump from Windows XP doing ctrl-s to save a file.
+
+#
+
+# An unexpected error has been detected by HotSpot Virtual Machine:
+
+#
+
+#  EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x6d6c1e62, pid=3008, tid=420
+
+#
+
+# Java VM: Java HotSpot(TM) Client VM (1.5.0_07-b03 mixed mode)
+
+# Problematic frame:
+
+# V  [jvm.dll+0x1e62]
+
+#
+
+ 
+
+---------------  T H R E A D  ---------------
+
+ 
+
+Current thread (0x0035e1b8):  ConcurrentMarkSweepThread [id=420]
+
+ 
+
+siginfo: ExceptionCode=0xc0000005, reading address 0x0000004c
+
+ 
+
+Registers:
+
+EAX=0x00000000, EBX=0x00000380, ECX=0x04000008, EDX=0x04000008
+
+ESP=0x176ffc34, EBP=0x176ffcec, ESI=0x08a70000, EDI=0x176ffd7c
+
+EIP=0x6d6c1e62, EFLAGS=0x00010246
+
+ 
+
+Top of Stack: (sp=0x176ffc34)
+
+0x176ffc34:   08a70000 08a70000 6d71e911 04000008
+
+0x176ffc44:   08a70000 08a70000 6d712a7b 08a70000
+
+0x176ffc54:   08a70000 00000380 00000007 0035dda0
+
+0x176ffc64:   6d7ee2d0 6d71c9ee 08a70000 00000380
+
+0x176ffc74:   176ffd7c 00000000 0035dda0 00000001
+
+0x176ffc84:   0035e1b8 0035e688 0035e6a8 0035e6b0
+
+0x176ffc94:   0035ea9c 0035eaa8 00000001 009d59b8
+
+0x176ffca4:   0035de20 00000000 0035e270 0035e288 
+
+ 
+
+Instructions: (pc=0x6d6c1e62)
+
+0x6d6c1e52:   07 c1 e8 02 25 fe ff ff 3f eb 08 8b 02 56 8b ca
+
+0x6d6c1e62:   ff 50 4c 5e c2 04 00 e9 00 00 00 00 a1 74 ec 82 
+
+ 
+
+ 
+
+Stack: [0x176c0000,0x17700000),  sp=0x176ffc34,  free space=255k
+
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+
+V  [jvm.dll+0x1e62]
+
+V  [jvm.dll+0x5c4ac]
+
+V  [jvm.dll+0x5c1c9]
+
+V  [jvm.dll+0x5af2f]
+
+V  [jvm.dll+0x60133]
+
+V  [jvm.dll+0xd8ac0]
+
+C  [MSVCRT.dll+0x2a3b0]
+
+C  [kernel32.dll+0xb50b]
+
+ 
+
+ 
+
+---------------  P R O C E S S  ---------------
+
+ 
+
+Java Threads: ( =&gt; current thread )
+
+  0x17ebe3b8 JavaThread &quot;Java indexing&quot; daemon [_thread_blocked, id=1612]
+
+  0x17d279b8 JavaThread &quot;Startup Progress Printer&quot; [_thread_blocked, id=3412]
+
+  0x17d39de0 JavaThread &quot;Worker-0&quot; [_thread_blocked, id=1812]
+
+  0x17c4c878 JavaThread &quot;Start Level Event Dispatcher&quot; daemon [_thread_blocked, id=3456]
+
+  0x1783f0a0 JavaThread &quot;Framework Event Dispatcher&quot; daemon [_thread_blocked, id=3372]
+
+  0x17838e68 JavaThread &quot;State Data Manager&quot; daemon [_thread_blocked, id=3220]
+
+  0x177c6558 JavaThread &quot;Low Memory Detector&quot; daemon [_thread_blocked, id=940]
+
+  0x177c5270 JavaThread &quot;CompilerThread0&quot; daemon [_thread_blocked, id=3896]
+
+  0x00a6f3b8 JavaThread &quot;Signal Dispatcher&quot; daemon [_thread_blocked, id=3844]
+
+  0x177c4a18 JavaThread &quot;Surrogate Locker Thread (CMS)&quot; daemon [_thread_blocked, id=2268]
+
+  0x00a6a7a0 JavaThread &quot;Finalizer&quot; daemon [_thread_blocked, id=2936]
+
+  0x00a69308 JavaThread &quot;Reference Handler&quot; daemon [_thread_blocked, id=3556]
+
+  0x00356f98 JavaThread &quot;main&quot; [_thread_in_vm, id=2108]
+
+ 
+
+Other Threads:
+
+  0x00a651f8 VMThread [id=612]
+
+  0x177c7868 WatcherThread [id=1744]
+
+ 
+
+VM state:not at safepoint (normal execution)
+
+ 
+
+VM Mutex/Monitor currently owned by a thread:  ([mutex/lock_event])
+
+[0x003567e8/0x000006c4] Heap_lock - owner thread: 0x00356f98
+
+ 
+
+Heap
+
+ par new generation   total 92864K, used 99716K [0x02a70000, 0x08a70000, 0x08a70000)
+
+  eden space 87424K, 114% used [0x02a70000, 0x08bd1038, 0x07fd0000)
+
+  from space 5440K,   0% used [0x07fd0000, 0x07fd0000, 0x08520000)
+
+  to   space 5440K,   0% used [0x08520000, 0x08520000, 0x08a70000)
+
+ concurrent mark-sweep generation total 98304K, used 0K [0x08a70000, 0x0ea70000, 0x0ea70000)
+
+ concurrent-mark-sweep perm gen total 98304K, used 19656K [0x0ea70000, 0x14a70000, 0x16a70000)
+
+ 
+
+Dynamic libraries:
+
+0x00400000 - 0x0040d000          C:\WINDOWS\system32\javaw.exe
+
+0x7c900000 - 0x7c9b0000          C:\WINDOWS\system32\ntdll.dll
+
+0x7c800000 - 0x7c8f4000          C:\WINDOWS\system32\kernel32.dll
+
+0x77dd0000 - 0x77e6b000          C:\WINDOWS\system32\ADVAPI32.dll
+
+0x77e70000 - 0x77f01000          C:\WINDOWS\system32\RPCRT4.dll
+
+0x77d40000 - 0x77dd0000          C:\WINDOWS\system32\USER32.dll
+
+0x77f10000 - 0x77f57000           C:\WINDOWS\system32\GDI32.dll
+
+0x77c10000 - 0x77c68000          C:\WINDOWS\system32\MSVCRT.dll
+
+0x6d6c0000 - 0x6d857000          C:\Program Files\Java\jre1.5.0_07\bin\client\jvm.dll
+
+0x76b40000 - 0x76b6d000          C:\WINDOWS\system32\WINMM.dll
+
+0x6d280000 - 0x6d288000          C:\Program Files\Java\jre1.5.0_07\bin\hpi.dll
+
+0x76bf0000 - 0x76bfb000           C:\WINDOWS\system32\PSAPI.DLL
+
+0x6d690000 - 0x6d69c000          C:\Program Files\Java\jre1.5.0_07\bin\verify.dll
+
+0x6d300000 - 0x6d31d000          C:\Program Files\Java\jre1.5.0_07\bin\java.dll
+
+0x6d6b0000 - 0x6d6bf000          C:\Program Files\Java\jre1.5.0_07\bin\zip.dll
+
+0x6d4c0000 - 0x6d4d3000          C:\Program Files\Java\jre1.5.0_07\bin\net.dll
+
+0x71ab0000 - 0x71ac7000          C:\WINDOWS\system32\WS2_32.dll
+
+0x71aa0000 - 0x71aa8000          C:\WINDOWS\system32\WS2HELP.dll
+
+0x6d4e0000 - 0x6d4e9000          C:\Program Files\Java\jre1.5.0_07\bin\nio.dll
+
+0x18030000 - 0x18082000          C:\Program Files\eclipse-SDK-3.2-win32\configuration\org.eclipse.osgi\bundles\379\1\.cp\swt-win32-3232.dll
+
+0x774e0000 - 0x7761d000          C:\WINDOWS\system32\ole32.dll
+
+0x773d0000 - 0x774d2000          C:\WINDOWS\WinSxS\X86_Microsoft.Windows.Common-Controls_6595b64144ccf1df_6.0.2600.2180_x-ww_a84f1ff9\COMCTL32.dll
+
+0x77f60000 - 0x77fd6000           C:\WINDOWS\system32\SHLWAPI.dll
+
+0x763b0000 - 0x763f9000          C:\WINDOWS\system32\comdlg32.dll
+
+0x7c9c0000 - 0x7d1d5000          C:\WINDOWS\system32\SHELL32.dll
+
+0x77120000 - 0x771ac000          C:\WINDOWS\system32\OLEAUT32.dll
+
+0x76390000 - 0x763ad000          C:\WINDOWS\system32\IMM32.dll
+
+0x74d90000 - 0x74dfb000          C:\WINDOWS\system32\USP10.dll
+
+0x771b0000 - 0x77259000          C:\WINDOWS\system32\WININET.dll
+
+0x77a80000 - 0x77b14000          C:\WINDOWS\system32\CRYPT32.dll
+
+0x77b20000 - 0x77b32000          C:\WINDOWS\system32\MSASN1.dll
+
+0x75a70000 - 0x75a91000          C:\WINDOWS\system32\MSVFW32.dll
+
+0x5d090000 - 0x5d127000          C:\WINDOWS\system32\comctl32.dll
+
+0x18120000 - 0x18128000          C:\Program Files\eclipse-SDK-3.2-win32\configuration\org.eclipse.osgi\bundles\88\1\.cp\os\win32\x86\localfile_1_0_0.dll
+
+0x18150000 - 0x18158000          C:\Program Files\eclipse-SDK-3.2-win32\configuration\org.eclipse.osgi\bundles\92\1\.cp\os\win32\x86\win32refresh.dll
+
+0x23000000 - 0x23007000          C:\Program Files\Plaxo\2.6.2.15\plx_hook.dll
+
+0x5ad70000 - 0x5ada8000          C:\WINDOWS\system32\uxtheme.dll
+
+0x74c80000 - 0x74cac000          C:\WINDOWS\system32\oleacc.dll
+
+0x76080000 - 0x760e5000          C:\WINDOWS\system32\MSVCP60.dll
+
+0x18d40000 - 0x18d53000          C:\Program Files\eclipse-SDK-3.2-win32\configuration\org.eclipse.osgi\bundles\379\1\.cp\swt-gdip-win32-3232.dll
+
+0x4ec50000 - 0x4edf3000             C:\WINDOWS\WinSxS\x86_Microsoft.Windows.GdiPlus_6595b64144ccf1df_1.0.2600.2180_x-ww_522f9f82\gdiplus.dll
+
+0x20000000 - 0x202c5000          C:\WINDOWS\system32\xpsp2res.dll
+
+ 
+
+VM Arguments:
+
+jvm_args: -Dsun.java2d.opengl=true -Dswing.aatext=true -Xms192m -Xmx192m -Xss128k -Xloggc:eclipse-gc.log -XX:NewRatio=2 -XX:NewSize=96m -XX:SurvivorRatio=16 -XX:PermSize=96m -XX:MaxPermSize=128m -XX:+DisableExplicitGC -XX:+UseConcMarkSweepGC -XX:+CMSPermGenSweepingEnabled -XX:+CMSClassUnloadingEnabled -XX:+CMSPermGenSweepingEnabled -XX:+CMSIncrementalMode -XX:+CMSIncrementalPacing
+
+java_command: C:\Program Files\eclipse-SDK-3.2-win32\startup.jar -os win32 -ws win32 -arch x86 -launcher C:\Program Files\eclipse-SDK-3.2-win32\eclipse.exe -name Eclipse -showsplash 600 -exitdata d44_7b8 \eclipse.exe -vm C:\WINDOWS\system32\javaw.exe -vmargs -Dsun.java2d.opengl=true -Dswing.aatext=true -client -Xms192m -Xmx192m -Xss128k -Xloggc:eclipse-gc.log -XX:NewRatio=2 -XX:NewSize=96m -XX:SurvivorRatio=16 -XX:PermSize=96m -XX:MaxPermSize=128m -XX:+DisableExplicitGC -XX:+UseConcMarkSweepGC -XX:+CMSPermGenSweepingEnabled -XX:+CMSClassUnloadingEnabled -XX:+CMSPermGenSweepingEnabled -XX:+CMSIncrementalMode -XX:+CMSIncrementalPacing -jar C:\Program Files\eclipse-SDK-3.2-win32\startup.jar
+
+Launcher Type: SUN_STANDARD
+
+ 
+
+Environment Variables:
+
+JAVA_HOME=C:\Program Files\Java\jdk1.5.0_07
+
+CLASSPATH=C:\Program Files\Java\jre1.5.0_07\lib
+
+PATH=C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\Program Files\ATI Technologies\ATI Control Panel;C:\Program Files\Common Files\Roxio Shared\DLLShared\;C:\Program Files\MySQL\MySQL Server 5.0\bin;c:\canoo\bin
+
+USERNAME=xxx
+
+OS=Windows_NT
+
+PROCESSOR_IDENTIFIER=x86 Family 15 Model 4 Stepping 4, GenuineIntel
+
+ 
+
+ 
+
+ 
+
+---------------  S Y S T E M  ---------------
+
+ 
+
+OS: Windows XP Build 2600 Service Pack 2
+
+ 
+
+CPU:total 2 family 15, cmov, cx8, fxsr, mmx, sse, sse2, ht
+
+ 
+
+Memory: 4k page, physical 1046604k(141096k free), swap 2518280k(1299148k free)
+
+ 
+
+vm_info: Java HotSpot(TM) Client VM (1.5.0_07-b03) for windows-x86, built on May  3 2006 01:04:38 by &quot;java_re&quot; with MS VC++ 6.0
+
+ 
+</pre>
+    </div>
+
+    <div id="c10" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150968#c10">Comment 10</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Kevin Barnes</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=cocoakevin&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=cocoakevin&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-08-02 10:39:07 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I have not been able to reproduce this on a plain install of the eclipse SDK running with Sun 1.5.0_07 and all of the mentioned vmargs. I've been testing on gtk 2.8.18.
+Does the crash still occur if you use other VMs or is this strictly an issue on Sun 1.5.0_07?</pre>
+    </div>
+
+    <div id="c11" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150968#c11">Comment 11</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Christopher G. Stach II</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=cstach-eclipse&#64;ldsys.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=cstach-eclipse&#64;ldsys.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-08-04 10:53:50 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I also managed to get it to crash with 1.4.2_10.  After adjusting the JVM args, it seems to be stable.  Here is the new list:
+
+/opt/eclipse-3.2/eclipse -vmargs -Dsun.java2d.opengl=true -Dswing.aatext=true -client -Xms256m -Xmx256m -Xss256k -Xverify:none -XX:NewRatio=2 -XX:NewSize=128m -XX:SurvivorRatio=16 -XX:PermSize=96m -XX:MaxPermSize=128m -XX:+DisableExplicitGC -XX:+UseLargePages -XX:+UseConcMarkSweepGC -XX:+CMSPermGenSweepingEnabled -XX:+CMSClassUnloadingEnabled -XX:+CMSPermGenSweepingEnabled -XX:+CMSIncrementalMode -XX:+CMSIncrementalPacing -XX:CMSIncrementalDutyCycleMin=0 -XX:CMSIncrementalDutyCycle=10
+
+I think it may have been a stack space issue.
+</pre>
+    </div>
+
+    <div id="c12" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150968#c12">Comment 12</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Christopher G. Stach II</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=cstach-eclipse&#64;ldsys.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=cstach-eclipse&#64;ldsys.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-08-04 10:56:01 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">We're using gtk+-2.8.19.</pre>
+    </div>
+
+    <div id="c13" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150968#c13">Comment 13</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Grant Gayed</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=grant_gayed&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=grant_gayed&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-08-08 09:06:07 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">re: <a href="show_bug.cgi?id=150968#c11">comment 11</a>
+That is quite possible, as the trace in <a href="show_bug.cgi?id=150968#c9">comment 9</a> does not indicate an swt issue.  In 3.2 there have been problems with sun vm users running out of permgen space (see <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED NOT_ECLIPSE - [Workbench] Excessive amount of Permanent Generation memory reported by the VM"
+   href="show_bug.cgi?id=92250">bug 92250</a>).  I don't think there's anything for swt to do here.
+</pre>
+    </div>
+
+    <div id="c14" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150968#c14">Comment 14</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Steve Northover</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=snorthov&#64;ca.ibm.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=snorthov&#64;ca.ibm.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-08-08 10:29:13 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Ok, mark it as a dup of the famous permgen bug or close it.  Note that althougth the bug is marked OS:Linux-GTK, <a href="show_bug.cgi?id=150968#c9">comment #9</a> contains a VM dump with references to Windows DLLSs, which is confusing.</pre>
+    </div>
+
+    <div id="c15" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150968#c15">Comment 15</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Christopher G. Stach II</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=cstach-eclipse&#64;ldsys.net" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=cstach-eclipse&#64;ldsys.net" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-08-08 10:43:32 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I'm pretty certain it was stack space based on the last gdb session I ran, which was pretty obvious. :)  I increased the stack and it was fine.  The heap changes were for WST and unrelated.  The Windows VM dump is to illustrate that it was happening not only on the Linux JVM.</pre>
+    </div>
+
+    <div id="c16" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=150968#c16">Comment 16</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Kevin Barnes</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=cocoakevin&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=cocoakevin&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2006-08-08 12:38:45 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">
+
+*** This bug has been marked as a duplicate of <a class="bz_bug_link 
+          bz_status_RESOLVED  bz_closed"
+   title="RESOLVED NOT_ECLIPSE - [Workbench] Excessive amount of Permanent Generation memory reported by the VM"
+   href="show_bug.cgi?id=92250">92250</a> ***</pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=150968">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=150968">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=150968">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=150968&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=150968" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>

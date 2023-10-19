@@ -1,0 +1,2553 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>88847 &ndash; Move Generic Publisher API to server tooling</title>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="https://bugs.eclipse.org/bugs/data/assets/03c4bb46b12126a79867f9a9f5323634.css?1593441374" rel="stylesheet" type="text/css">
+
+
+
+    
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/a7c2f3a028f17a9aa60f56dc9d6e732d.js?1593441374"></script>
+
+    <script type="text/javascript">
+    <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+               if ( ("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") { sType = "pagehide"; };
+               var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+               return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+         };
+        if ( "onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload", 
+                                           YAHOO.util.Event._unload);
+        }
+        
+        function unhide_language_selector() { 
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            ); 
+        } 
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+        
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/bugs',
+                maxusermatches: 10
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+                
+
+                attach_desc_required:
+                    "You must enter a Description for this attachment.",
+                component_required:
+                    "You must select a Component for this bug.",
+                description_required:
+                    "You must enter a Description for this bug.",
+                short_desc_required:
+                    "You must enter a Summary for this bug.",
+                version_required:
+                    "You must select a Version for this bug."
+            }
+              , api_token: ''
+        };
+
+    if (history && history.replaceState) {
+      if(!document.location.href.match(/show_bug\.cgi/)) {
+        history.replaceState( null,
+                             "88847 – Move Generic Publisher API to server tooling",
+                             "show_bug.cgi?id=88847" );
+        document.title = "88847 – Move Generic Publisher API to server tooling";
+      }
+      if (document.location.href.match(/show_bug\.cgi\?.*list_id=/)) {
+        var href = document.location.href;
+        href = href.replace(/[\?&]+list_id=(\d+|cookie)/, '');
+        history.replaceState(null, "88847 – Move Generic Publisher API to server tooling", href);
+      }
+    }
+    YAHOO.util.Event.onDOMReady(function() {
+      initDirtyFieldTracking();
+
+    });
+    // -->
+    </script>
+<script type="text/javascript" src="https://bugs.eclipse.org/bugs/data/assets/daf5e0fb6826e6a35280e622913f0c4a.js?1593441374"></script>
+
+    
+
+    
+    <link rel="search" type="application/opensearchdescription+xml"
+                       title="Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+  </head>
+
+  <body 
+        class="bugs-eclipse-org-bugs
+                 bz_bug
+                 bz_status_CLOSED
+                 bz_product_WTP_ServerTools
+                 bz_component_jst.server
+                 bz_bug_88847 yui-skin-sam">
+
+  <div id="header"><!-- 1.0@bugzilla.org -->
+
+
+
+
+
+<!--  START OF SOLSTICE HEADER -->
+ <link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+ <script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+ <style type="text/css">
+    @import url('https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/barebone.min.css')
+    </style>
+    <script
+      src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/barebone.min.js">
+    </script><header role="banner" class="barebone-layout thin-header padding-top-5 padding-bottom-5"  id="header-wrapper">
+  <div class="container-fluid reset">
+    <div class="row-fluid" id="header-row">
+            <div class="col-sm-8 col-md-6 col-lg-4" id="header-left">
+        <div class="wrapper-logo-default"><a href="https://www.eclipse.org/"><img class="logo-eclipse-default img-responsive hidden-xs" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-426x100.png"/></a></div>
+      </div>            <div class="col-sm-16 col-md-18 col-lg-20" id="main-menu-wrapper">
+  <div class="navbar yamm" id="main-menu">
+    <div id="navbar-collapse-1" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="visible-thin"><a href="https://www.eclipse.org/downloads/" target="_self">Download</a></li><li><a href="https://www.eclipse.org/users/" target="_self">Getting Started</a></li><li><a href="https://www.eclipse.org/membership/" target="_self">Members</a></li><li><a href="https://www.eclipse.org/projects/" target="_self">Projects</a></li>                  <li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Community <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Participate <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul></li><li class="dropdown visible-xs"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Working Groups <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul></li>          <!-- More -->
+          <li class="dropdown eclipse-more hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle">More<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- Content container to add padding -->
+                <div class="yamm-content">
+                  <div class="row">
+                    <ul class="col-sm-8 list-unstyled"><li><p><strong>Community</strong></p></li><li><a href="http://marketplace.eclipse.org">Marketplace</a></li><li><a href="http://events.eclipse.org">Events</a></li><li><a href="http://www.planeteclipse.org/">Planet Eclipse</a></li><li><a href="https://www.eclipse.org/community/eclipse_newsletter/">Newsletter</a></li><li><a href="https://www.youtube.com/user/EclipseFdn">Videos</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Participate</strong></p></li><li><a href="https://bugs.eclipse.org/bugs/">Report a Bug</a></li><li><a href="https://www.eclipse.org/forums/">Forums</a></li><li><a href="https://www.eclipse.org/mail/">Mailing Lists</a></li><li><a href="https://wiki.eclipse.org/">Wiki</a></li><li><a href="https://wiki.eclipse.org/IRC">IRC</a></li><li><a href="https://www.eclipse.org/contribute/">How to Contribute</a></li></ul><ul class="col-sm-8 list-unstyled"><li><p><strong>Working Groups</strong></p></li><li><a href="http://wiki.eclipse.org/Auto_IWG">Automotive</a></li><li><a href="http://iot.eclipse.org">Internet of Things</a></li><li><a href="http://locationtech.org">LocationTech</a></li><li><a href="http://lts.eclipse.org">Long-Term Support</a></li><li><a href="http://polarsys.org">PolarSys</a></li><li><a href="http://science.eclipse.org">Science</a></li><li><a href="http://www.openmdm.org">OpenMDM</a></li></ul>                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+              </ul>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <div class="wrapper-logo-mobile"><a class="navbar-brand visible-xs" href="https://www.eclipse.org/"><img class="logo-eclipse-default-mobile img-responsive" alt="logo" src="https://bugs.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse-800x188.png"/></a></div>    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</header>
+<!--  END OF SOLSTICE HEADER -->
+
+    <div id="titles">
+      <span id="title">Bugzilla &ndash; Bug&nbsp;88847</span>
+
+        <span id="subtitle" class="subheader">Move Generic Publisher API to server tooling</span>
+
+        <span id="information" class="header_addl_info">Last modified: 2017-10-11 17:04:02 EDT</span>
+    </div>
+
+
+    <div id="common_links"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_top");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_top" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_top"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_top">
+  <span class="separator">| </span>
+  <a id="login_link_top" href="show_bug.cgi?id=88847&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_top')">Log In</a>
+
+  <form action="show_bug.cgi?id=88847" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_top">
+    <input id="Bugzilla_login_top" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_top" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_top">
+    <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+    </div>
+  </div>
+
+  <div id="bugzilla-body">
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+</script>
+
+<form name="changeform" id="changeform" method="post" action="process_bug.cgi">
+
+  <input type="hidden" name="delta_ts" value="2017-10-11 17:04:02">
+  <input type="hidden" name="id" value="88847">
+  <input type="hidden" name="token" value="1629859633-EzfzMzi6IMw8KcJi4JjvmPkESRihYX1yqXzv9nwCcPo">
+<div class="bz_short_desc_container edit_form">
+     <a href="show_bug.cgi?id=88847"><b>Bug&nbsp;88847</b></a> <span id="summary_container" class="bz_default_hidden">
+      - <span id="short_desc_nonedit_display">Move Generic Publisher API to server tooling</span>
+     </span>
+
+    <div id="summary_input"><span class="field_label "
+    id="field_label_short_desc">
+
+
+  <a 
+      title="The bug summary is a short sentence which succinctly describes what the bug is about."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#short_desc"
+  >Summary:</a>
+
+</span>Move Generic Publisher API to server tooling
+    </div>
+  </div>
+  <script type="text/javascript">
+    hideEditableField('summary_container',
+                      'summary_input',
+                      'summary_edit_action',
+                      'short_desc',
+                      'Move Generic Publisher API to server tooling' );
+  </script>
+  <table class="edit_form">
+    <tr>
+      
+      <td id="bz_show_bug_column_1" class="bz_show_bug_column">     
+        <table>
+          <tr>
+    <th class="field_label">
+      <a href="page.cgi?id=fields.html#bug_status">Status</a>:
+    </th>
+    <td id="bz_field_status">
+      <span id="static_bug_status">CLOSED
+          INVALID
+      </span>
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_alias">
+
+
+  <a 
+      title="A short, unique name assigned to a bug in order to assist with looking it up and referring to it in other places in Bugzilla."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#alias"
+  >Alias:</a>
+
+</th>
+    <td>
+        None
+    </td>
+  </tr>
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_product">
+
+
+  <a 
+      title="Bugs are categorised into Products and Components. Select a Classification to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi"
+  >Product:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_product" >WTP ServerTools
+
+</td>
+    </tr>
+
+    
+    <tr class="bz_default_hidden"><th class="field_label "
+    id="field_label_classification">
+
+
+  <a 
+      title="Bugs are categorised into Classifications, Products and Components. classifications is the top-level categorisation."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#classification"
+  >Classification:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_classification" >WebTools
+
+</td>
+    </tr>
+        
+    
+    
+    <tr><th class="field_label "
+    id="field_label_component">
+
+
+  <a 
+      title="Components are second-level categories; each belongs to a particular Product. Select a Product to narrow down this list."
+      class="field_help_link"
+      href="describecomponents.cgi?product=WTP ServerTools"
+  >Component:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_component" >jst.server
+
+  (<a href="buglist.cgi?component=jst.server&amp;product=WTP%20ServerTools&amp;bug_status=__open__"
+      target="_blank">show other bugs</a>)
+</td>
+    </tr>
+    <tr><th class="field_label "
+    id="field_label_version">
+
+
+  <a 
+      title="The version field defines the version of the software the bug was found in."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#version"
+  >Version:</a>
+
+</th>
+
+      <td>0.7 &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+    </tr>
+        
+    
+        
+    <tr><th class="field_label "
+    id="field_label_rep_platform">
+
+
+  <a 
+      title="The hardware platform the bug was observed on. Note: When searching, selecting the option &quot;All&quot; only finds bugs whose value for this field is literally the word &quot;All&quot;."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#rep_platform"
+  >Hardware:</a>
+
+</th>
+      <td class="field_value">PC
+        Windows XP
+      </td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          
+          <tr>
+      <th class="field_label">
+        <label  accesskey="i">
+          <a href="page.cgi?id=fields.html#importance"><u>I</u>mportance</a></label>:
+      </th>
+      <td>P3
+       enhancement<span id="votes_container">
+    (<a href="page.cgi?id=voting/user.html&amp;bug_id=88847#vote_88847">vote</a>)
+  </span>
+      </td>
+    </tr>
+
+      <tr><th class="field_label "
+    id="field_label_target_milestone">
+
+
+  <a 
+      title="The Target Milestone field is used to define when the engineer the bug is assigned to expects to fix it."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#target_milestone"
+  >Target Milestone:</a>
+
+</th>
+        <td>--- &#160; <a href="https://dev.eclipse.org/committers/bugs/bugz_manager.php"><img src="//dev.eclipse.org/small_icons/apps/accessories-text-editor.png" alt="Edit" title="Edit these values" /></a></td>
+      </tr>
+          
+          <tr><th class="field_label "
+    id="field_label_assigned_to">
+
+
+  <a 
+      title="The person in charge of resolving the bug."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#assigned_to"
+  >Assignee:</a>
+
+</th>
+      <td><span class="vcard"><span class="fn">Gorkem Ercan</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=gorkem.ercan&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=gorkem.ercan&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+      </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_qa_contact">
+
+
+  <a 
+      title="The person responsible for confirming this bug if it is unconfirmed, and for verifying the fix once the bug has been resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#qa_contact"
+  >QA Contact:</a>
+
+</th>
+      <td><span class="vcard">
+</span>
+      </td>
+    </tr>
+    <script type="text/javascript">
+      assignToDefaultOnChange(['product', 'component'],
+        'jst.server-inbox\x40eclipse.org',
+        'eyuen7\x40gmail.com');
+    </script>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+          <tr><th class="field_label "
+    id="field_label_bug_file_loc">
+
+
+  <a 
+      title="Bugs can have a URL associated with them - for example, a pointer to a web site where the problem is seen."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#bug_file_loc"
+  >URL:</a>
+
+</th>
+    <td>
+      <span id="bz_url_input_area">
+      </span>
+    </td>
+  </tr>
+
+    <tr><th class="field_label "
+    id="field_label_status_whiteboard">
+
+
+  <a 
+      title="Each bug has a free-form single line text entry box for adding tags and status information."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#status_whiteboard"
+  >Whiteboard:</a>
+
+</th><td>  
+  </td>
+    </tr>
+
+    <tr><th class="field_label "
+    id="field_label_keywords">
+
+
+  <a 
+      title="You can add keywords from a defined list to bugs, in order to easily identify and group them."
+      class="field_help_link"
+      href="describekeywords.cgi"
+  >Keywords:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_keywords" >
+
+</td>
+    </tr>
+          <tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+          
+<tr><th class="field_label "
+    id="field_label_dependson">
+
+
+  <a 
+      title="The bugs listed here must be resolved before this bug can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#dependson"
+  >Depends on:</a>
+
+</th>
+
+  <td>
+    <span id="dependson_input_area">
+    </span>
+
+  </td>
+  </tr>
+  
+  <tr><th class="field_label "
+    id="field_label_blocked">
+
+
+  <a 
+      title="This bug must be resolved before the bugs listed in this field can be resolved."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#blocked"
+  >Blocks:</a>
+
+</th>
+
+  <td>
+    <span id="blocked_input_area">
+    </span>
+
+  </td>
+  </tr>
+          
+        </table>
+      </td>
+      <td>
+        <div class="bz_column_spacer">&nbsp;</div>
+      </td>
+      
+      <td id="bz_show_bug_column_2" class="bz_show_bug_column">
+        <table>
+        <tr>
+    <th class="field_label">
+      Reported:
+    </th>
+    <td>2005-03-23 08:56 EST by <span class="vcard"><span class="fn">Gorkem Ercan</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=gorkem.ercan&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=gorkem.ercan&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+    </td>
+  </tr>
+  
+  <tr>
+    <th class="field_label">
+      Modified:
+    </th>
+    <td>2017-10-11 17:04 EDT
+      (<a href="show_activity.cgi?id=88847">History</a>)
+    </td>
+  
+  </tr>
+<tr>
+      <th class="field_label">
+        <label  accesskey="a">
+          CC List:
+        </label>
+      </th>
+      <td>3 
+          users
+          <span id="cc_edit_area_showhide_container" class="bz_default_hidden">
+            (<a href="#" id="cc_edit_area_showhide">show</a>)
+          </span>
+        <div id="cc_edit_area">
+          <br>
+            <select id="cc" multiple="multiple" size="5" >
+                <option value="deboer">deboer</option>
+                <option value="tbashor">tbashor</option>
+                <option value="tyip">tyip</option>
+            </select>
+        </div>
+          <script type="text/javascript">
+            hideEditableField( 'cc_edit_area_showhide_container', 
+                               'cc_edit_area', 
+                               'cc_edit_area_showhide', 
+                               '', 
+                               '');  
+          </script>
+      </td>
+    </tr>
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+<tr><th class="field_label "
+    id="field_label_see_also">
+
+
+  <a 
+      title="This allows you to refer to bugs in other installations. You can enter a URL to a bug in the 'Add Bug URLs' field to note that that bug is related to this one. You can enter multiple URLs at once by separating them with whitespace. You should normally use this field to refer to bugs in other installations. For bugs in this installation, it is better to use the Depends on and Blocks fields."
+      class="field_help_link"
+      href="page.cgi?id=fields.html#see_also"
+  >See Also:</a>
+
+</th>
+  <td class="field_value "
+      id="field_container_see_also" ><ul class="bug_urls">
+          <li><img src="//dev.eclipse.org/images/gerrit-16x16.gif"> <a href="https://git.eclipse.org/r/107032">
+        Gerrit Change</a>
+          </li>
+          <li><img src="//dev.eclipse.org/images/gerrit-16x16.gif"> <a href="https://git.eclipse.org/r/107031">
+        Gerrit Change</a>
+          </li>
+          <li><img src="//dev.eclipse.org/images/gerrit-16x16.gif"> <a href="https://git.eclipse.org/r/109483">
+        Gerrit Change</a>
+          </li>
+          <li><img src="//dev.eclipse.org/images/git-16x16.png"> <a href="https://git.eclipse.org/c/servertools/webtools.servertools.git/commit/?id=78bd8e1200b576a3c6c8506a6307f93d66219c63">
+        Git Commit</a>
+          </li></ul>
+
+</td>
+    </tr> 
+
+<tr>
+    <td colspan="2" class="bz_section_spacer"></td>
+  </tr>
+
+
+
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+          <hr id="bz_top_half_spacer">
+      </td>
+    </tr>
+  </table>
+
+  <table id="bz_big_form_parts">
+  <tr>
+  <td>
+
+    
+<script type="text/javascript">
+<!--
+function toggle_display(link) {
+    var table = document.getElementById("attachment_table");
+    var view_all = document.getElementById("view_all");
+    var hide_obsolete_url_parameter = "&hide_obsolete=1";
+    // Store current height for scrolling later
+    var originalHeight = table.offsetHeight;
+    var rows = YAHOO.util.Dom.getElementsByClassName(
+        'bz_tr_obsolete', 'tr', table);
+
+    for (var i = 0; i < rows.length; i++) {
+        bz_toggleClass(rows[i], 'bz_default_hidden');
+    }
+
+    if (YAHOO.util.Dom.hasClass(rows[0], 'bz_default_hidden')) {
+        link.innerHTML = "Show Obsolete";
+        view_all.href = view_all.href + hide_obsolete_url_parameter 
+    }
+    else {
+        link.innerHTML = "Hide Obsolete";
+        view_all.href = view_all.href.replace(hide_obsolete_url_parameter,"");
+    }
+
+    var newHeight = table.offsetHeight;
+    // This scrolling makes the window appear to not move at all.
+    window.scrollBy(0, newHeight - originalHeight);
+
+    return false;
+}
+//-->
+</script>
+
+<br>
+<table id="attachment_table">
+  <tr id="a0">
+    <th colspan="3" class="left">
+      Attachments
+    </th>
+  </tr>
+
+
+      <tr id="a1" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=19455"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Publisher API</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (11.77 KB,
+                patch)
+
+            <br>
+            <a href="#attach_19455"
+               title="Go to the comment associated with the attachment">2005-04-01 15:09 EST</a>,
+
+            <span class="vcard"><span class="fn">Gorkem Ercan</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=gorkem.ercan&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=gorkem.ercan&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=19455&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=19455&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a2" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=19456"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Publisher API generic server impl</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (19.91 KB,
+                patch)
+
+            <br>
+            <a href="#attach_19456"
+               title="Go to the comment associated with the attachment">2005-04-01 15:10 EST</a>,
+
+            <span class="vcard"><span class="fn">Gorkem Ercan</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=gorkem.ercan&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=gorkem.ercan&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=19456&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=19456&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a3" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=19824"
+               title="View the content of the attachment">
+          <b>Publisher API</b></a>
+
+          <span class="bz_attach_extra_info">
+              (16.20 KB,
+                patch)
+
+            <br>
+            <a href="#attach_19824"
+               title="Go to the comment associated with the attachment">2005-04-12 16:52 EDT</a>,
+
+            <span class="vcard"><span class="fn">Gorkem Ercan</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=gorkem.ercan&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=gorkem.ercan&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=19824&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=19824&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a4" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=19825"
+               title="View the content of the attachment">
+          <b>Publisher API generic server impl</b></a>
+
+          <span class="bz_attach_extra_info">
+              (20.39 KB,
+                patch)
+
+            <br>
+            <a href="#attach_19825"
+               title="Go to the comment associated with the attachment">2005-04-12 16:53 EDT</a>,
+
+            <span class="vcard"><span class="fn">Gorkem Ercan</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=gorkem.ercan&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=gorkem.ercan&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=19825&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=19825&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a5" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=19901"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">Proposed patch for publisher.</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (62.90 KB,
+                patch)
+
+            <br>
+            <a href="#attach_19901"
+               title="Go to the comment associated with the attachment">2005-04-14 06:30 EDT</a>,
+
+            <span class="vcard"><span class="fn">Thomas</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tyip.os&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tyip.os&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=19901&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=19901&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a6" class="bz_contenttype_text_plain bz_patch bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=20046"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">New proposed patch. No publisher extension point. </span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (72.25 KB,
+                patch)
+
+            <br>
+            <a href="#attach_20046"
+               title="Go to the comment associated with the attachment">2005-04-19 07:16 EDT</a>,
+
+            <span class="vcard"><span class="fn">Thomas</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tyip.os&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tyip.os&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=20046&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=20046&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a7" class="bz_contenttype_application_octet-stream bz_tr_obsolete bz_default_hidden">
+        <td>
+            <a href="attachment.cgi?id=20047"
+               title="View the content of the attachment">
+          <b><span class="bz_obsolete">New proposed patch. No publisher extension point. (affected server adapter impls)</span></b></a>
+
+          <span class="bz_attach_extra_info">
+              (4.52 KB,
+                application/octet-stream)
+
+            <br>
+            <a href="#attach_20047"
+               title="Go to the comment associated with the attachment">2005-04-19 07:19 EDT</a>,
+
+            <span class="vcard"><span class="fn">Thomas</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tyip.os&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tyip.os&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=20047&amp;action=edit">Details</a>
+        </td>
+      </tr>
+      <tr id="a8" class="bz_contenttype_text_plain bz_patch">
+        <td>
+            <a href="attachment.cgi?id=20111"
+               title="View the content of the attachment">
+          <b>Replace org.eclipse.wst.server.core_Apr19_05. A one line change. Fixed a divide by zero error.</b></a>
+
+          <span class="bz_attach_extra_info">
+              (72.25 KB,
+                patch)
+
+            <br>
+            <a href="#attach_20111"
+               title="Go to the comment associated with the attachment">2005-04-20 05:48 EDT</a>,
+
+            <span class="vcard"><span class="fn">Thomas</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tyip.os&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tyip.os&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=20111&amp;action=edit">Details</a>
+            | <a href="attachment.cgi?id=20111&amp;action=diff">Diff</a>
+        </td>
+      </tr>
+      <tr id="a9" class="bz_contenttype_application_octet-stream">
+        <td>
+            <a href="attachment.cgi?id=20112"
+               title="View the content of the attachment">
+          <b>Replace the 2nd zip file on Apr 19. Added back missing publisherClass=&quot;&quot; in some tomcat versions.</b></a>
+
+          <span class="bz_attach_extra_info">
+              (4.61 KB,
+                application/octet-stream)
+
+            <br>
+            <a href="#attach_20112"
+               title="Go to the comment associated with the attachment">2005-04-20 05:53 EDT</a>,
+
+            <span class="vcard"><span class="fn">Thomas</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tyip.os&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tyip.os&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+          </span>
+        </td>
+
+          <td class="bz_attach_flags">
+              <i>no flags</i>
+          </td>
+
+        <td>
+          <a href="attachment.cgi?id=20112&amp;action=edit">Details</a>
+        </td>
+      </tr>
+
+  <tr class="bz_attach_footer">
+    <td colspan="3">
+        <span class="bz_attach_view_hide">
+            <a href="#a0" onclick="return toggle_display(this);">Show
+              Obsolete</a> (5)
+            <a id="view_all" href="attachment.cgi?bugid=88847&amp;action=viewall&amp;hide_obsolete=1">View All</a>
+        </span>
+        <a href="attachment.cgi?bugid=88847&amp;action=enter">Add an attachment</a>
+        (proposed patch, testcase, etc.)
+    </td>
+  </tr>
+</table>
+<br>
+<div id="add_comment" class="bz_section_additional_comments">
+      <table>
+        <tr>
+          <td>
+            <fieldset>
+              <legend>Note</legend>
+              You need to
+              <a href="show_bug.cgi?id=88847&amp;GoAheadAndLogIn=1">log in</a>
+              before you can comment on or make changes to this bug.
+            </fieldset>
+          </td>
+        </tr> 
+      </table>
+  </div>
+  </td>
+  <td>
+  </td>
+  </tr></table>
+
+  
+  <div id="comments"><script src="https://bugs.eclipse.org/bugs/js/comments.js?1463425338" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+<!--
+  /* Adds the reply text to the 'comment' textarea */
+  function replyToComment(id, real_id, name) {
+      var prefix = "(In reply to " + name + " from comment #" + id + ")\n";
+      var replytext = "";
+        /* pre id="comment_name_N" */
+        var text_elem = document.getElementById('comment_text_'+id);
+        var text = getText(text_elem);
+        replytext = prefix + wrapReplyText(text);
+
+
+      /* <textarea id="comment"> */
+      var textarea = document.getElementById('comment');
+      if (textarea.value != replytext) {
+          textarea.value += replytext;
+      }
+
+      textarea.focus();
+  } 
+//-->
+</script>
+
+
+<!-- This auto-sizes the comments and positions the collapse/expand links 
+     to the right. -->
+<table class="bz_comment_table">
+<tr>
+<td>
+<div id="c0" class="bz_comment bz_first_comment">
+
+      <div class="bz_first_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c0">Description</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Gorkem Ercan</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=gorkem.ercan&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=gorkem.ercan&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-03-23 08:56:02 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Create a publisher API and extension point that may fulfill the below requirements.
+1. Ability to create a general purpose publishers that may or may not be
+specific to a server.
+2. Ability to associate a publisher with a module in the workspace and a server
+instance 
+3. Ability to chain several publishers, change their orders in deployment time.
+4. Provide UI to users so that users can enable disable additional publishers.</pre>
+    </div>
+
+    <div id="c1" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c1">Comment 1</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Gorkem Ercan</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=gorkem.ercan&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=gorkem.ercan&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-01 15:09:56 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=19455&amp;action=diff" name="attach_19455" title="Publisher API">attachment 19455</a> <a href="attachment.cgi?id=19455&amp;action=edit" title="Publisher API">[details]</a></span>
+Publisher API</pre>
+    </div>
+
+    <div id="c2" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c2">Comment 2</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Gorkem Ercan</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=gorkem.ercan&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=gorkem.ercan&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-01 15:10:57 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=19456&amp;action=diff" name="attach_19456" title="Publisher API generic server impl">attachment 19456</a> <a href="attachment.cgi?id=19456&amp;action=edit" title="Publisher API generic server impl">[details]</a></span>
+Publisher API generic server impl</pre>
+    </div>
+
+    <div id="c3" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c3">Comment 3</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Thomas</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tyip.os&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tyip.os&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-01 16:39:27 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Gorkem. Thank for the good work.
+
+The API is certainly in the right direction.
+
+I would like see the API to go deeper. For example, anything from
+Server.doPublish() should go to the new publisher API/Impl.
+
+After some more thinking, I definitely need the ablity to skip that method
+completely:
+
+    public abstract IStatus[] publish(int kind, int deltaKind, IModule[] module,
+        IProgressMonitor monitor)throws CoreException
+
+Instead, my publisher need to be called for the whole server publish. Module
+level of publisher might need for some publisher, and it is probably not be
+flexible for some other. For example, I might need generate some artifact file
+on the EAR directory for a WEB project.
+
+</pre>
+    </div>
+
+    <div id="c4" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c4">Comment 4</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Gorkem Ercan</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=gorkem.ercan&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=gorkem.ercan&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-02 03:08:49 EST
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I did go in that direction at first, but my thought was if a publisher is needed
+to be associated with a module, than publisher would/should not know anything
+about publishing the entire server, so I should not give the responsibility of
+the whole server to a publisher. 
+If you really think server wide publishing is needed than we need two types of
+publishers. The first one is what we have for the moment the ones that may be
+associated with a module instance and a server type. And a second server
+publisher  that is associated with the server only.
+What is the difficulity you have, when you are creating an artifact in ear level
+when publishing a war?
+</pre>
+    </div>
+
+    <div id="c5" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c5">Comment 5</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Thomas</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tyip.os&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tyip.os&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-06 20:42:37 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Sorry for delay, I didn't notice your reply earlier.
+
+Yes. I think that the API needs to allow system wide publishing. 
+
+I have mainly two reasons: control of the ordering, and control of error
+handling and reporting.
+
+Depends on situation, I need vastly different order of calling the module. Let's
+take clean publish as an example, I need a publisher to generate some artifact
+file on the EAR depending on sub modules. This publisher order is WEB modules
+first, and then the EAR. 
+
+Another publisher will simply call the deployer with a path in the EAR project.
+The publish only need to be run on EAR.
+
+For unpublish, I might want the publisher to be called on each sub modules, so
+that each module is stopped. Then, I undeploy the EAR.
+
+Also, a connector module that is not under the EAR might need to be publish
+before a EAR does. They are not even in child/root relationship.
+
+(Of course, we can make the life easier for who implements the SPI by providing
+a simply visitor for typical ordering.)
+
+Also, the failure of publishing a module matter to the deployment of other
+dependent modules. I don't have the flexiblty now to decide what module should
+still be publish, or not be publish if failure is detected earlier. I don't not
+have such control, unless I do server wide publshing.
+
+</pre>
+    </div>
+
+    <div id="c6" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c6">Comment 6</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Thomas</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tyip.os&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tyip.os&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-06 21:11:15 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Regarding two types of publishers, I think that we can keep one publisher. 
+
+A Publisher has only one method .publish(IServer server, IModule module, ...)
+which in turn call PublisherDelegate.doPublish(IServer server, IModule module, ...).
+
+The delegate method will walk the modules tree and call the abstract
+PublisherDelegate.publish(IServer server, IModule module, ...) much like what
+the Server does now.
+
+If it is not the behavior the publisher wants, it simple overrides doPublish()
+and skip the default ordering.
+
+
+Another apporach would be to publish against a Publish Set, in which each
+publisher can add item to the set. But, I am not sure it brings any real
+benifit. I need spend some more thinking along this line.</pre>
+    </div>
+
+    <div id="c7" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c7">Comment 7</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Gorkem Ercan</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=gorkem.ercan&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=gorkem.ercan&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-10 14:32:56 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Here is what I will be providing as a patch again this week. I will provide a
+PublishingChain object which is basically a view to the chain of publishers.
+Using this view a publisher can find out about the status of the other
+publishers in the chain and act accordingly. I do not wish to give the freedom
+to change the manipulate the publishing order to a publisher since, the
+publishing order is determined by the server and a publisher is a discrete thing
+and may not have the knowledge about the needs of a particular server.
+I think good behaviour for a publisher should be acting on the module that is
+publishing but I will go ahead and provide the means for reaching other modules
+in the server so a publisher may do server publishing.
+I would like to postpone the user configurable publishers to a release after 1.0
+since there is very limited time. </pre>
+    </div>
+
+    <div id="c8" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c8">Comment 8</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Thomas</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tyip.os&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tyip.os&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-11 02:03:04 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Gorkem, I had been also working on a patch. For reasons, it took more than two
+days... :-P
+
+In my patch, I propose another layer of indirection. I am callilng it
+PublisherGenre extension point for now. A publish genre has a publisher id and
+associates a server and module (component). A wildcard “*” can be used in place
+of server and module. It promotes the reuse of a common Publisher, such as
+JSR-88, or an EAR packager etc. A priority can also be defined.
+
+A server.publish() method calls PublisherManager.publish(). And,
+PublisherManager.publish() obtains all publish genres, and filter out those that
+doesn’t match the current server, and those doesn’t match modules reachable from
+the root modules of the server. At the end, a list of publishers following the
+defined priority is returned. 
+
+Attributes are saved in Server to override the order of the publishers, and
+disable unwanted publishers. Before release 1.0, we can leave the attribute
+unused, and always return the list publishers intact as the PublisherManager
+returns it. And, it gives us the option of implements the behavior and the UI
+later without breaking any API.
+
+There is a common delegate for all publishers to implement. The first one is
+PublisherDelegate, which has a publish() method. Those publishers intent to take
+care the whole server extends this delegate and implements the method, and has
+all freedom to call modules in any order its like.
+
+The second delegate is ModulePublisherDelegate extends PublisherDelegate. A
+default implementation is provided for the publish() method. It visits all the
+modules much like what the Server.java does today, and call each
+publish(IModule) in an order. 
+
+I intent to provide additional methods in the delegate for simple ordering. For
+example, int getModulePublishOrder(), and getModuleUnpublishOrder… option
+includes DeepFirst, BreathFirst, etc.
+
+Arguably, the ModulePublisherDelegate.publish() method automatically skips all
+module unless there is a publish genre matches the publisher id of the delegate,
+matches the server in action, and matches the current module.
+
+I think my proposal meet all the following requirements:
+    1/ can be implemented in short enough time for 1.0 (and, I have been working
+on it for a few days already). 
+    2/ it makes minimal assumptions about what a publisher does, 
+    3/ supports all 3 common use cases*, 
+    4/ leaves the option for ordering and disabling of publishers open, 
+    5/ enable reuse of common Publishers, 
+    6/ Publisher that is not needed for current publish action will not be
+loaded (filtering is done according to publish genre and is not obtained if it
+doesn’t match the filter),
+    7/ Additional filtering can be added by additional configuration element in
+publisher genre extension point, to a future version without affecting
+publisher/server/module defined in 1.0, and
+    8/ makes common publisher as simple as to implement as what we have today
+(implements only publish(IModule[] module) and defines a PublisherGenre
+configuration in a plugin.xml). 
+
+*The 3 common use cases are: 
+    1/ a publisher associates with a server, for example a JSR-88. 
+    2/ a publisher associates with only a specific module, like artifacts files
+need to be generated for J2EE module; or, an ant script target should be invoked
+pre-publishing.
+    3/ a publisher associates with a specific server, for example, Pollinate
+artifacts that only support a few servers, but not all.
+</pre>
+    </div>
+
+    <div id="c9" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c9">Comment 9</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Gorkem Ercan</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=gorkem.ercan&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=gorkem.ercan&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-11 03:13:23 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">OK Thomas, why don' t you go ahead and publish your patch. I will have look and
+merge it with what I already have. </pre>
+    </div>
+
+    <div id="c10" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c10">Comment 10</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Gorkem Ercan</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=gorkem.ercan&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=gorkem.ercan&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-12 16:52:34 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=19824&amp;action=diff" name="attach_19824" title="Publisher API">attachment 19824</a> <a href="attachment.cgi?id=19824&amp;action=edit" title="Publisher API">[details]</a></span>
+Publisher API</pre>
+    </div>
+
+    <div id="c11" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c11">Comment 11</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Gorkem Ercan</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=gorkem.ercan&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=gorkem.ercan&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-12 16:53:43 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=19825&amp;action=diff" name="attach_19825" title="Publisher API generic server impl">attachment 19825</a> <a href="attachment.cgi?id=19825&amp;action=edit" title="Publisher API generic server impl">[details]</a></span>
+Publisher API generic server impl</pre>
+    </div>
+
+    <div id="c12" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c12">Comment 12</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Gorkem Ercan</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=gorkem.ercan&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=gorkem.ercan&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-12 16:56:06 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">With this patch the publishers are still optional but this is due to the fact
+that the milestone is very close and we may not have time to implement it for
+every server. </pre>
+    </div>
+
+    <div id="c13" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c13">Comment 13</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Thomas</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tyip.os&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tyip.os&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-14 06:25:06 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">So, I made the first version of my patch. (The patch should compile but does not
+run. I am still working on it.)
+
+A few items are changed from what I had described previously.
+
+There wasn't much reason to have an extra Publisher class. So, PublisherDelegate
+becomes Publisher; and ModulePublisherDelegate becomes ModulePublisher.
+
+Because of way that deltaKind is generated in ModulePublisher (and original
+ServerBehaviour), there is no need for unpublish method. And, I have not added
+getModulePublishOrder() to my patch.
+
+
+To Do:
+------
+- exsd for publisher and publisher genre
+- I made a few method in PublishInfo and ServerPublishInfo to public in order to
+get the code to compile. The Infos should probably be moved to model package as
+well.
+
+Question:
+--------
+Actually, I found that the IServerTask extension point can be used for many of
+the use cases where I need multiple Publishers. A reference search also revealed
+that the tasks are executed only within publish operation. It also has ordering
+capacity that I want. Is there any reason that it not called IPublishTask?
+</pre>
+    </div>
+
+    <div id="c14" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c14">Comment 14</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Thomas</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tyip.os&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tyip.os&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-14 06:30:06 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=19901&amp;action=diff" name="attach_19901" title="Proposed patch for publisher.">attachment 19901</a> <a href="attachment.cgi?id=19901&amp;action=edit" title="Proposed patch for publisher.">[details]</a></span>
+Proposed patch for publisher.
+
+Main work in the patch is to factor out publishModules() so that it can be
+overridden. It enable a server adapter to have complete freedom over the
+ordering and error handling.</pre>
+    </div>
+
+    <div id="c15" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c15">Comment 15</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Thomas</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tyip.os&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tyip.os&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-19 07:16:58 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=20046&amp;action=diff" name="attach_20046" title="New proposed patch. No publisher extension point.">attachment 20046</a> <a href="attachment.cgi?id=20046&amp;action=edit" title="New proposed patch. No publisher extension point.">[details]</a></span>
+New proposed patch. No publisher extension point. 
+
+Factored publish method into a delegate so that a sever adapter have enough
+freedom on ordering of module publishing and error handling.</pre>
+    </div>
+
+    <div id="c16" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c16">Comment 16</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Thomas</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tyip.os&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tyip.os&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-19 07:19:03 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class="bz_obsolete"><a href="attachment.cgi?id=20047" name="attach_20047" title="New proposed patch. No publisher extension point. (affected server adapter impls)">attachment 20047</a> <a href="attachment.cgi?id=20047&amp;action=edit" title="New proposed patch. No publisher extension point. (affected server adapter impls)">[details]</a></span>
+New proposed patch. No publisher extension point. (affected server adapter impls)</pre>
+    </div>
+
+    <div id="c17" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c17">Comment 17</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Thomas</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tyip.os&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tyip.os&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-19 19:02:09 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Comment on <span class="bz_obsolete"><a href="attachment.cgi?id=19901&amp;action=diff" name="attach_19901" title="Proposed patch for publisher.">attachment 19901</a> <a href="attachment.cgi?id=19901&amp;action=edit" title="Proposed patch for publisher.">[details]</a></span>
+Proposed patch for publisher.
+
+I obsolete the old pactch on Apr 14, because I found that IPublishTask
+extension fit the requirement and it is richer in feature that we can come up
+for M4.</pre>
+    </div>
+
+    <div id="c18" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c18">Comment 18</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Thomas</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tyip.os&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tyip.os&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-19 19:29:13 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">I discovered that IServerTask actually covered the original requirements. 
+
+    1/ IServerTask can be general and may or may not be specific to a server.
+    2/ Can be associated with a Server and module
+    3/ Ability to chain server tasks and have ordering.
+ 
+(But, I propose that we rename it to IPublishTask. It is the only place they're
+invoked. The name &quot;server task&quot; and &quot;publish task&quot; implies different lifecycle,
+will have impact of how this API evolve in the future.)
+
+
+The IPublishTask (IServerTask) itself is richer in features than the patch I
+proposed on Apr 14. For example, it supports Ordering, and has some UI support
+already in place. With IPublishTask, I think we don't need chaining ablity from
+the publisher extension point.
+
+
+The new patch I proposed on Apr 19th focus on enabling the server adapter to
+have freedom of the module publishing order, and freedom of error handling,
+which is not covered by previous patches, nor by IServerTask.
+
+The patch factored the publish mechanism into a ServerPublishDelegate, which
+enable the publish behaviour to be overridden by the implementation.
+
+During the patching, I have a choice to pull the publish mechanism into a
+current delegate (ServerBehaviourDelegate), or make a new one. I found that
+making a new one make more sense. The original delegate provide to two aspects
+of logical functionalities. First is the lifecycle of the server (ie,
+starting/stopping/restarting). The other is to manage the modules in the server
+(publish, starting/stopping/restarting). As the publish code over-complicate the
+delegate quite a bit, it makes sense to divide them into two separate unit.
+After the patch, the two delegates of both tomcat and generic (and weblogic)
+never need to invoke method on each other. The separate is pretty logical.
+
+There is some slight behaviour change associated with the patch. The
+publishStart() event is fired before IPublishTask is executed. I think it is
+more appropriate. The server connection might be obtained by IPublishTask. It is
+helpful if the code guarantee that publishStart() is called before hand. It is
+also helpful to be sure that publishFinish() is called if error occurs even
+before the Publisher is invoked.
+
+Effort has been made to make sure the patch will not introduce new API
+violation. IServerPublishInfo, and IPublishInfo are introduced, the visiblilty
+of some methods are make public. IServerTask (to be renamed to IPublishTask) is
+moved.
+</pre>
+    </div>
+
+    <div id="c19" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c19">Comment 19</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Gorkem Ercan</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=gorkem.ercan&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=gorkem.ercan&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-20 02:10:47 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Thomas, I had a chance to look at the patch, it good and it will adress the
+problem of server implementations not having full control over the publishing
+process. 
+In the original request for publisher API, Ted asked for ability to define
+general purpose publishers that may be shared among different server
+implementations. Your patch does not include that so can I conclude that a
+publisher API is not really necessary at this point?</pre>
+    </div>
+
+    <div id="c20" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c20">Comment 20</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Thomas</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tyip.os&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tyip.os&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-20 03:35:54 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Thank Gorkem. We want the feature of chaining up generic publisher. But, we also
+need it to go deeper.
+
+In addition to chain up a few generic publishers, we also want the ability of
+choosing a publishers chain instead of another depending on settings. For
+example, to support local and remote server, we have a pretty dissimilar
+publisher steps. We also want the flexiblity of adding and removing a step. For
+example, depend on user's setting, we might want JARing up the modules as an
+EAR, or deploy the app as a directory structure. It calls for more works on the
+publisher API. An extension point somehow static. Making it flexible enough to
+cover the use case requires still quite a bit of work. It is not easy to get it
+into M4, and is hard to get it right in such a timeframe. It would also be
+easier for the first run to be done in code. And, we should know exactly how the
+publisher chain to be define after we at least have some prototype. 
+
+I think it is better if we can hold publisher chain and come back to visit this
+topic after 1.0.</pre>
+    </div>
+
+    <div id="c21" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c21">Comment 21</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Thomas</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tyip.os&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tyip.os&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-20 03:39:59 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">For sharing of generic implementations, we might limit it to java class level of
+reuse. We probably not able to have extension-point level of reuse.</pre>
+    </div>
+
+    <div id="c22" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c22">Comment 22</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Thomas</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tyip.os&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tyip.os&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-20 05:48:35 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=20111&amp;action=diff" name="attach_20111" title="Replace org.eclipse.wst.server.core_Apr19_05. A one line change. Fixed a divide by zero error.">attachment 20111</a> <a href="attachment.cgi?id=20111&amp;action=edit" title="Replace org.eclipse.wst.server.core_Apr19_05. A one line change. Fixed a divide by zero error.">[details]</a></span>
+Replace org.eclipse.wst.server.core_Apr19_05. A one line change. Fixed a divide by zero error.</pre>
+    </div>
+
+    <div id="c23" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c23">Comment 23</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Thomas</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tyip.os&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tyip.os&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-20 05:53:56 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Created <span class=""><a href="attachment.cgi?id=20112" name="attach_20112" title="Replace the 2nd zip file on Apr 19. Added back missing publisherClass=&quot;&quot; in some tomcat versions.">attachment 20112</a> <a href="attachment.cgi?id=20112&amp;action=edit" title="Replace the 2nd zip file on Apr 19. Added back missing publisherClass=&quot;&quot; in some tomcat versions.">[details]</a></span>
+Replace the 2nd zip file on Apr 19. Added back missing publisherClass=&quot;&quot; in some tomcat versions.
+
+Gorkem, I need help on adding the publishClass=&quot;&quot; to generic server core.
+Normally, there is a definition for serverType extension in plugin.xml. But, it
+doesn’t has one for the generic...</pre>
+    </div>
+
+    <div id="c24" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c24">Comment 24</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tim deBoer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=deboer&#64;redhat.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=deboer&#64;redhat.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-20 10:13:32 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Hi Thomas,
+
+I went over the proposed patch with my team today, and we had a few questions
+and concerns:
+
+* We do not understand the separation of the ServerPublishDelegate and think
+that there would be many places where these two delegates would need to work
+together. What are the reasons that you split this out?
+* There are several methods that are allowed to be overridden by service
+providers (e.g. publishModules(int, IProgressMonitor)), but the existing
+implementation requires internal access to Server to be able to do it's job.
+Either these methods should be implemented without access to Server, or they
+should be marked final to avoid internal API access. The server instance
+variable should be private.
+* A fair bit of new API has been exposed (e.g. via IServerTask,
+IServerPublishInfo, IModulePublishInfo, and on the delegate) and we don't
+understand why all of it is necessary. We need to keep the new API minimal for
+this release.
+* Why does the publish delegate have it's own copy of the server modules, and
+the ability to overwrite the server's copy?
+* There is lots of missing javadoc and code cleanup still to be done.
+
+We were wondering if it might make more sense to take this one step at a time,
+adding support and exposing features one by one so that we stay close to clean
+API and stable code instead of dropping a large change in all at once.</pre>
+    </div>
+
+    <div id="c25" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c25">Comment 25</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Thomas</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tyip.os&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tyip.os&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-20 15:55:51 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Separation of Delegates
+-----------------------
+I found the separation make the code less clustered. I don't find that many
+cases where the spitted delegate need to access each other. I think separating
+them logically helps code to evolve. However, I am open if you think they should
+be merged back.
+
+Server internal access
+----------------------
+I intent to avoid client code to have no access to Server.java. But, I think I
+still missed some cases. I agree that &quot;either these methods should be
+implemented without access to Server, or they should be marked final to avoid
+internal API access&quot;. I will make the change. It was a good point.
+
+On the other hand, exposing IServerPublishInfo, IModulePublishInfo was my
+attempt to avoid implementation to have access to Server.java. We can either
+expose them as interface, and add ServerBehaviourDelegate.getServerPublishInfo()
+or expose them as a utility.
+
+Even publishModules call server.visit(), but it is not the only way that the
+list to be computed. A server adapter who implements its own publishModules()
+can compute the list directly from IServer. So, the occurrence of call
+server.visit() is purely implementation choice that I inherited from original
+code, and doesn't imply anything for the API. (I personally do not like
+Server.visit() method. I think at least it should be exposed as a utility and
+give user choice of the order that it should visit. 
+I personally favor a utility that give me a tree. But, it is probably out of the
+scope of this patch.)
+
+<span class="quote">&gt; Why does the publish delegate have it’s own copy of the server modules</span >
+
+The list is purely for caching purpose. I notice that the previous
+implementation attempts to minimize the number of times that the modules list is
+visited. I thought it would help to cache it. I agree for minimizing the API
+standpoint, I think it is a good idea to remove it.
+
+<span class="quote">&gt; and the ability to overwrite the server's copy?</span >
+
+The method is faithfully inherited from ServerBehaviourDelegate. In fact, I was
+really puzzled when I saw that as well. I even notice code that does it in
+tomcat or generic server adapter (I forgot which):
+    ServerBehaviourDelegate.setModules(server.getModules())
+
+<span class="quote">&gt; We were wondering if it might make more sense to take this one step at a time</span >
+
+We are certainly on the same pace on the idea to keep the API simple, and not
+exposing Server internal. I think my patch was pretty minimal. A few change that
+ you questioned was around the way I avoid exposing Server internal. I am
+totally open for better solutions.
+</pre>
+    </div>
+
+    <div id="c26" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c26">Comment 26</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Thomas</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tyip.os&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tyip.os&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-21 16:27:05 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Tim, I notice that you have made some changes to the CVS already. Like renaming
+IPublishTask, moved down where PublishTask got executed etc.
+
+I have an idea. Should we move the implementation of publishModules() into a
+“provisional.model” package? 
+
+We can pull down publish(int, IProgressMonitor) into ServerBehaviourDelegate.
+Add only an “abstract publishModules()” method.
+
+Then, we can have the ServerBehaviourExtra [need a better name, of course] in
+the package of “provisional.model”. We can expose the “resource delta”
+management as a utility there. 
+
+- Typical server adapter will extend ServerBehaviourExtra. It requires minimal
+changes to any existing implementation.
+
+- Complicated server adapter will override publishModules() method in
+ServerBehaviourExtra, and can keep the “resource delta” functionality, by
+assuming the risk of API change.
+
+- Server adapter that cannot take the risk of API change can implements it own
+publishModules() and extends ServerBehaviourDelegate directly.
+
+- It will buy us time till 1.1 and enables enough flexibility.
+
+
+If you think it is ok, I can take some time, and create a brand new patch along
+this line. 
+</pre>
+    </div>
+
+    <div id="c27" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c27">Comment 27</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Thomas</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=tyip.os&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=tyip.os&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-04-29 21:16:54 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Looking at the pre-M4 code, the change we requested was committed by Tim. It
+enables our use cases to be implemented.
+
+I think we can close this bug
+
+Thank you very much Tim and Gorkam for helping us on this. It was a very
+important enhancement to us. :-)</pre>
+    </div>
+
+    <div id="c28" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c28">Comment 28</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Gorkem Ercan</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=gorkem.ercan&#64;gmail.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=gorkem.ercan&#64;gmail.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-05-01 17:13:19 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Closing, since the original enhancement requestor decided it is not really needed.</pre>
+    </div>
+
+    <div id="c29" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c29">Comment 29</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">David Williams</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=david_williams&#64;acm.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=david_williams&#64;acm.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-06-15 01:32:51 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Changed Version field given new release numbering.
+</pre>
+    </div>
+
+    <div id="c30" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c30">Comment 30</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Tim deBoer</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=deboer&#64;redhat.com" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=deboer&#64;redhat.com" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2005-07-26 09:37:59 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Closing</pre>
+    </div>
+
+    <div id="c31" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c31">Comment 31</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eclipse Genie</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=genie&#64;eclipse.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=genie&#64;eclipse.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2017-10-11 15:43:32 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">New Gerrit change created: <a href="https://git.eclipse.org/r/107032">https://git.eclipse.org/r/107032</a></pre>
+    </div>
+
+    <div id="c32" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c32">Comment 32</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eclipse Genie</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=genie&#64;eclipse.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=genie&#64;eclipse.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2017-10-11 15:43:34 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">New Gerrit change created: <a href="https://git.eclipse.org/r/107031">https://git.eclipse.org/r/107031</a></pre>
+    </div>
+
+    <div id="c33" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c33">Comment 33</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eclipse Genie</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=genie&#64;eclipse.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=genie&#64;eclipse.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2017-10-11 16:47:08 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">New Gerrit change created: <a href="https://git.eclipse.org/r/109483">https://git.eclipse.org/r/109483</a></pre>
+    </div>
+
+    <div id="c34" class="bz_comment">
+
+      <div class="bz_comment_head">
+
+
+        <span class="bz_comment_number">
+          <a 
+             href="show_bug.cgi?id=88847#c34">Comment 34</a>
+        </span>
+
+        <span class="bz_comment_user">
+          <span class="vcard"><span class="fn">Eclipse Genie</span> <a href="http://wiki.eclipse.org/ECA"><img class="cla_dec" src="https://accounts.eclipse.org/user/eca/badge?mail=genie&#64;eclipse.org" alt="CLA" title="Eclipse Contributor Agreement" /></a> <a href="https://eclipse.org/donate/"><img class="cla_dec" src="//www.eclipse.org/donate/web-api/friends_decorator.php?email=genie&#64;eclipse.org" alt="Friend" title="Friend of Eclipse" /></a>
+</span>
+        </span>
+
+        <span class="bz_comment_user_images">
+        </span>
+
+        <span class="bz_comment_time">
+          2017-10-11 17:04:02 EDT
+        </span>
+
+      </div>
+
+
+
+
+<pre class="bz_comment_text">Gerrit change <a href="https://git.eclipse.org/r/109483">https://git.eclipse.org/r/109483</a> was merged to [master].
+Commit: <a href="http://git.eclipse.org/c/servertools/webtools.servertools.git/commit/?id=78bd8e1200b576a3c6c8506a6307f93d66219c63">http://git.eclipse.org/c/servertools/webtools.servertools.git/commit/?id=78bd8e1200b576a3c6c8506a6307f93d66219c63</a></pre>
+    </div>
+
+
+  
+
+</td>
+<td>
+</td>
+</tr></table>
+  </div>
+        
+
+</form>
+
+<hr>
+<ul class="related_actions">
+    <li><a href="show_bug.cgi?format=multiple&amp;id=88847">Format For Printing</a></li>
+    <li>&nbsp;-&nbsp;<a href="show_bug.cgi?ctype=xml&amp;id=88847">XML</a></li>
+    <li>&nbsp;-&nbsp;<a href="enter_bug.cgi?cloned_bug_id=88847">Clone This Bug</a></li>
+    
+    <li>&nbsp;-&nbsp;<a href="#">Top of page </a></li>
+    </ul>
+
+<br>
+</div>
+
+    <div id="footer">
+      <div class="intro"></div>
+<ul id="useful-links">
+  <li id="links-actions"><ul class="links">
+  <li><a href="./">Home</a></li>
+  <li><span class="separator">| </span><a href="enter_bug.cgi">New</a></li>
+  <li><span class="separator">| </span><a href="describecomponents.cgi">Browse</a></li>
+  <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+  <li class="form">
+    <span class="separator">| </span>
+    <form action="buglist.cgi" method="get"
+        onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+    <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+    <script type="text/javascript">
+      if (history && history.replaceState) {
+        var no_redirect = document.getElementById("no_redirect_bottom");
+        no_redirect.value = 1;
+      }
+    </script>
+    <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch" 
+           title="Quick Search" value="">
+    <input class="btn" type="submit" value="Search" 
+           id="find_bottom"></form>
+  <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+  <li><span class="separator">| </span><a href="report.cgi">Reports</a></li>
+
+  <li>
+      <span class="separator">| </span>
+        <a href="request.cgi">Requests</a></li>
+
+
+  <li>
+        <span class="separator">| </span>
+        <a href="https://bugzilla.readthedocs.org/en/5.0/using/understanding.html" target="_blank">Help</a>
+      </li>
+    
+
+    <li id="mini_login_container_bottom">
+  <span class="separator">| </span>
+  <a id="login_link_bottom" href="show_bug.cgi?id=88847&amp;GoAheadAndLogIn=1"
+     onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+  <form action="show_bug.cgi?id=88847" method="POST"
+        class="mini_login bz_default_hidden"
+        id="mini_login_bottom">
+    <input id="Bugzilla_login_bottom" required
+           name="Bugzilla_login" class="bz_login"
+        placeholder="Login">
+    <input class="bz_password" name="Bugzilla_password" type="password"
+           id="Bugzilla_password_bottom" required
+           placeholder="Password">
+    <input type="hidden" name="Bugzilla_login_token"
+           value="">
+    <input type="submit" name="GoAheadAndLogIn" value="Log in"
+            id="log_in_bottom">
+    <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+  </form>
+</li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+  <span class="separator">| </span>
+  <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+</ul>
+  </li>
+
+  
+
+
+
+
+  
+</ul>
+
+      <div class="outro"></div>
+    </div>
+
+  </body>
+</html>
